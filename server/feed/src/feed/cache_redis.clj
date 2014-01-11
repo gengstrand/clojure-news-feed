@@ -1,10 +1,11 @@
 (ns feed.cache-redis)
 
 (require '[taoensso.carmine :as redis :refer (wcar)])
+(require '[feed.settings :as prop])
 
 (def cache-server-connection 
   {:pool {:max-active 8}
-   :spec {:host "localhost"
+   :spec {:host prop/cache-host
    :port 6379
    :timeout 4000}})
 

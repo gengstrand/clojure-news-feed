@@ -6,6 +6,7 @@
                  [org.clojure/java.jdbc "0.3.0-alpha5"]
                  [mysql/mysql-connector-java "5.0.8"]
                  [postgresql "9.1-901.jdbc4"]
+                 [com.mchange/c3p0 "0.9.2.1"]
                  [com.taoensso/carmine "2.4.0"]
                  [clj-kafka "0.1.2-0.8"]
                  [cc.qbits/alia "1.10.2"]

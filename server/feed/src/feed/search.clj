@@ -1,6 +1,8 @@
 (ns feed.search)
 
-(def outbound-core (com.dynamicalsoftware.support.Search/server "/home/glenn/oss/solr/solr-4.5.1/solr/example/multicore" "outbound"))
+(require '[feed.settings :as prop])
+
+(def outbound-core (com.dynamicalsoftware.support.Search/server prop/search-host "outbound"))
 
 (defn index
   "add this story to the search index"

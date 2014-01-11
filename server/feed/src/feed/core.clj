@@ -77,14 +77,14 @@
 (defn load-participant-from-db 
   "fetch this participant from the db"
   [id]
-  (j/with-connection db/connection
+  (j/with-connection (db/connection)
     (j/with-query-results rs [db/load-participant-from-db-command id]
       (doall (map #(Participant. id (:moniker %)) rs)))))
 
 (defn save-participant-to-db 
   "store this participant to the db"
   [participant]
-  (j/with-connection db/connection
+  (j/with-connection (db/connection)
     (j/with-query-results rs [(to-db participant)]
       (doall (map #(Participant. (:id %) (:moniker participant)) rs)))))
 
@@ -132,14 +132,14 @@
 (defn load-friends-from-db 
   "fetch the friends for this participant from the db"
   [id]
-  (j/with-connection db/connection
+  (j/with-connection (db/connection)
     (j/with-query-results rs [db/load-friends-from-db-command id]
       (doall (map #(Friend. (:friendsid %) id (:participantid %)) rs)))))
 
 (defn save-friend-to-db 
   "store this friend relationship to the db"
   [friend]
-  (j/with-connection db/connection
+  (j/with-connection (db/connection)
     (j/with-query-results rs [(to-db friend)]
       (doall (map #(Friend. (:id %) (:from friend) (:to friend)) rs)))))
 

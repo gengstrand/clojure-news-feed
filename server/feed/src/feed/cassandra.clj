@@ -1,10 +1,9 @@
 (ns feed.cassandra)
 
 (require '[qbits.alia :as alia])
+(require '[feed.settings :as prop])
 
-; https://github.com/mpenet/alia
-
-(def cluster (alia/cluster "localhost"))
+(def cluster (alia/cluster prop/nosql-host))
 (def session (alia/connect cluster "activity"))
 
 (def load-inbound-from-db-command "select dateOf(occurred), fromparticipantid, subject, story from Inbound where participantid = ? order by occurred desc")
