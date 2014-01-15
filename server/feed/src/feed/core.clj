@@ -40,9 +40,9 @@
 (defrecord Participant [id moniker]
   ValueObject
   (to-client [this]
-    (str "{id: "
+    (str "{\"id\": "
          (:id this)
-         ", name: \""
+         ", \"name\": \""
          (:moniker this)
          "\" }"))
   (to-db [this]
@@ -91,11 +91,11 @@
 (defrecord Friend [id from to]
   ValueObject
   (to-client [this]
-    (str "{id: "
+    (str "{\"id\": "
          (:id this)
-         ", from: "
+         ", \"from\": "
          (to-client (first (logging-load (:from this) "Participant" load-participant-from-cache save-participant-to-cache load-participant-from-db)))
-         ", to: "
+         ", \"to\": "
          (to-client (first (logging-load (:to this) "Participant" load-participant-from-cache save-participant-to-cache load-participant-from-db)))
          " }"))
   (to-db [this]
@@ -146,15 +146,18 @@
 (defrecord Inbound [to from occurred subject story]
   ValueObject
   (to-client [this]
-    (str "{to: "
+    (str "{\"to\": "
          (:to this)
-         ", from: "
-         (to-client (first (logging-load (:from this) "Participant" load-participant-from-cache save-participant-to-cache load-participant-from-db)))
-         ", occurred: \""
+         (if
+           (number? (:from this))
+           (str 
+		         ", \"from\": "
+		         (to-client (first (logging-load (:from this) "Participant" load-participant-from-cache save-participant-to-cache load-participant-from-db)))))
+         ", \"occurred\": \""
          (format-possible-date (:occurred this))
-         "\", subject: \""
+         "\", \"subject\": \""
          (:subject this)
-         "\", story: \""
+         "\", \"story\": \""
          (:story this)
          "\" }"))
   (to-db [this]

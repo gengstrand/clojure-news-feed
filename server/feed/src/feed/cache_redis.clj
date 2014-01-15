@@ -14,14 +14,26 @@
 (defn fetch-from-cache
   "attempt to fetch an item from the cache"
   [key]
-  (wcar* (redis/get key)))
+  (try
+    (wcar* (redis/get key))
+    (catch Exception e 
+      (println "cache not available")
+      nil)))
 
 (defn save-to-cache
   "save a value to the cache by the given key"
   [key value]
-  (wcar* (redis/set key value)))
+  (try 
+    (wcar* (redis/set key value))
+    (catch Exception e 
+      (println "cache not available")
+      nil)))
 
 (defn add-to-cache
   "add a value to a cached list of values"
   [key value]
-  (wcar* (redis/append key value)))
+  (try 
+    (wcar* (redis/append key value))
+    (catch Exception e 
+      (println "cache  not available")
+      nil)))

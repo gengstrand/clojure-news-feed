@@ -9,4 +9,8 @@
 (defn log
   "log a message to topic via kafka"
   [topic msg]
-  (send-message p (message topic (.getBytes msg))))
+  (try 
+    (send-message p (message topic (.getBytes msg)))
+    (catch Exception e 
+      (println "messaging not available")
+      nil)))
