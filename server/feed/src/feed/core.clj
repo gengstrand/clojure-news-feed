@@ -26,7 +26,7 @@
     (if (nil? result-from-cache)
       (let [before (System/currentTimeMillis)
             result-from-db (load-from-db id)]
-        (l/log msg-queue-name (str "fetching " type-name ": " id ", duration: " (- (System/currentTimeMillis) before)))
+        (l/log msg-queue-name type-name "load" (- (System/currentTimeMillis) before))
         (save-to-cache result-from-db)
         result-from-db)
       (load-string (str "[" result-from-cache "]")))))
@@ -94,9 +94,9 @@
     (str "{\"id\": "
          (:id this)
          ", \"from\": "
-         (to-client (first (logging-load (:from this) "Participant" load-participant-from-cache save-participant-to-cache load-participant-from-db)))
+         (to-client (first (logging-load (:from this) "class feed.core.Participant" load-participant-from-cache save-participant-to-cache load-participant-from-db)))
          ", \"to\": "
-         (to-client (first (logging-load (:to this) "Participant" load-participant-from-cache save-participant-to-cache load-participant-from-db)))
+         (to-client (first (logging-load (:to this) "class feed.core.Participant" load-participant-from-cache save-participant-to-cache load-participant-from-db)))
          " }"))
   (to-db [this]
     (-> db/save-friend-to-db-command
@@ -152,7 +152,7 @@
            (number? (:from this))
            (str 
 		         ", \"from\": "
-		         (to-client (first (logging-load (:from this) "Participant" load-participant-from-cache save-participant-to-cache load-participant-from-db)))))
+		         (to-client (first (logging-load (:from this) "class feed.core.Participant" load-participant-from-cache save-participant-to-cache load-participant-from-db)))))
          ", \"occurred\": \""
          (format-possible-date (:occurred this))
          "\", \"subject\": \""
@@ -298,6 +298,6 @@
   [entity save-to-cache]
   (let [before (System/currentTimeMillis)
         result (save-to-db entity)]
-    (l/log msg-queue-name (str "saving " (to-cache entity) ", duration: " (- (System/currentTimeMillis) before)))
+    (l/log msg-queue-name (type entity) "store" (- (System/currentTimeMillis) before))
     (save-to-cache result)
     result))
