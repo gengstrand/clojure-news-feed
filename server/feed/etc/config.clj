@@ -1,0 +1,9 @@
+{:sql-host "127.0.0.1"
+ :sql-db-name "feed"
+ :sql-db-user "feed"
+ :sql-db-password "feed"
+ :sql-vendor "mysql"
+ :nosql-host "localhost"
+ :cache-host "localhost"
+ :messaging-host "localhost"
+ :search-host "http://localhost:8983/solr/outbound"}

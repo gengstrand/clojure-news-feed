@@ -3,7 +3,7 @@
 (use 'clj-kafka.producer)
 (require '[feed.settings :as prop])
 
-(def p (producer {"metadata.broker.list" (str prop/messaging-host ":9092")
+(def p (producer {"metadata.broker.list" (str (:messaging-host prop/service-config) ":9092")
                   "serializer.class" "kafka.serializer.DefaultEncoder"
                   "partitioner.class" "kafka.producer.DefaultPartitioner"}))
 

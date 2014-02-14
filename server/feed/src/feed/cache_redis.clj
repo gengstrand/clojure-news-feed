@@ -5,7 +5,7 @@
 
 (def cache-server-connection 
   {:pool {:max-active 8}
-   :spec {:host prop/cache-host
+   :spec {:host (:cache-host prop/service-config)
    :port 6379
    :timeout 4000}})
 

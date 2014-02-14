@@ -24,7 +24,6 @@ This is a fun learning adventure for writing non-trivial web services in clojure
 
 ### starting all the services
 
-`
 cd ~/oss/apache-cassandra-1.2.2/bin
 
 ./cassandra -f
@@ -41,34 +40,40 @@ cd ~/oss/redis/redis-2.8.2/src
 
 ./redis-server
 
-cd ~/workspaceFeed
+cd ~/oss/solr/solr-4.5.1/solr/example
 
-lein ring server-headless 3000
-`
+java -Dsolr.solr.home=multicore -jar start.jar
+
+cd ~/git/clojure-news-feed/server/feed
+
+APP_CONFIG="/home/glenn/git/clojure-news-feed/server/feed/etc/config.clj"
+export APP_CONFIG
+
+lein ring uberjar
+
+java -jar target/feed-0.1.0-SNAPSHOT-standalone.jar
 
 ### Initial, one time set up
 
-`
 cd ~/oss/kafka/kafka_2.8.0-0.8.0
 
 bin/kafka-create-topic.sh --zookeeper localhost:2181 --replica 1 --partition 1 --topic feed
 
-cd ~/workspaceFeed/etc
-`
+cd ~/git/clojure-news-feed/server/solr/example/multicore
+cp solr.xml ~/oss/solr/solr-4.5.1/solr/example/multicore
+mkdir ~/oss/solr/solr-4.5.1/solr/example/multicore/outbound
+mkdir ~/oss/solr/solr-4.5.1/solr/example/multicore/outbound/conf
+cp outbound/conf/* ~/oss/solr/solr-4.5.1/solr/example/multicore/outbound/conf
 
 create a feed database with a user/password of feed/feed
 
-`
-psql feed <schema.postgre.sql
+psql feed <~/git/clojure-news-feed/server/feed/etc/schema.postgre.sql
 
 cd ~/oss/apache-cassandra-1.2.2/bin
-`
 
-create an activity keyspace
+./cqlsh <~/git/clojure-news-feed/server/feed/etc/schema.cassandra.sql
 
-`
-./cqlsh -k activity <schema.cassandra.sql
-`
+You may need to edit ~/git/clojure-news-feed/server/feed/etc/config.cli
 
 ### Testing
 

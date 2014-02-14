@@ -1,10 +1,4 @@
 (ns feed.settings)
 
-(def sql-host "127.0.0.1")
-(def sql-db-name "feed")
-(def sql-db-user "feed")
-(def sql-db-password "feed")
-(def nosql-host "localhost")
-(def cache-host "localhost")
-(def messaging-host "localhost")
-(def search-host "/home/glenn/oss/solr/solr-4.5.1/solr/example/multicore")
+(def service-config (load-file (System/getenv "APP_CONFIG")))
+

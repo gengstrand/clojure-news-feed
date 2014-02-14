@@ -3,7 +3,7 @@
 (require '[qbits.alia :as alia])
 (require '[feed.settings :as prop])
 
-(def cluster (alia/cluster prop/nosql-host))
+(def cluster (alia/cluster (:nosql-host prop/service-config)))
 (def session (alia/connect cluster "activity"))
 
 (def load-inbound-from-db-command "select dateOf(occurred), fromparticipantid, subject, story from Inbound where participantid = ? order by occurred desc")

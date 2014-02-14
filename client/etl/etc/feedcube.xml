@@ -1,0 +1,33 @@
+<?xml version="1.0"?>
+<Schema name="feed">
+
+<Cube name="feed" defaultMeasure="throughput">
+  <Table name="fact"/>
+  <Dimension name="Activity" foreignKey="activity_id">
+    <Hierarchy hasAll="true" primaryKey="activity_id" allMemberName="All Activities" defaultMember="All Activities">
+      <Table name="activity"/>
+      <Level name="name" column="name" uniqueMembers="true"/>
+    </Hierarchy>
+  </Dimension>
+  <Dimension name="Entity" foreignKey="entity_id">
+    <Hierarchy hasAll="true" primaryKey="entity_id" allMemberName="All Entities" defaultMember="All Entities">
+      <Table name="entity"/>
+      <Level name="name" column="name" uniqueMembers="true"/>
+    </Hierarchy>
+  </Dimension>
+  <Dimension name="Time" foreignKey="time_id" type="TimeDimension">
+    <Hierarchy hasAll="false" primaryKey="time_id" defaultMember="[Time].[2014].[1].[3].[0].[33]">
+      <Table name="timeperiod"/>
+      <Level name="year" ordinalColumn="year" type="Numeric" column="year" uniqueMembers="false" levelType="TimeYears"/>
+      <Level name="month" ordinalColumn="month" type="Numeric" column="month" uniqueMembers="false" levelType="TimeMonths"/>
+      <Level name="day" ordinalColumn="day" type="Numeric" column="day" uniqueMembers="false" levelType="TimeDays"/>
+      <Level name="hour" ordinalColumn="day" type="Numeric" column="hour" uniqueMembers="false" levelType="TimeHours"/>
+      <Level name="minute" ordinalColumn="day" type="Numeric" column="minute" uniqueMembers="false" levelType="TimeMinutes"/>
+    </Hierarchy>
+  </Dimension>
+  <Measure name="throughput" column="throughput" aggregator="sum"/>
+  <Measure name="mode" column="mode" aggregator="sum"/>
+  <Measure name="vigintile" column="vigintile" aggregator="sum"/>
+</Cube>
+
+</Schema>

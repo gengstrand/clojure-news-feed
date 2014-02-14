@@ -65,7 +65,7 @@
   (POST "/outbound/search" [terms]
        (let [before (System/currentTimeMillis)
              results (search/search terms)]
-         (log-performance m/outbound-mbean "feed.core.Outbound" "search" (- (System/currentTimeMillis) before))
+         (log-performance m/outbound-mbean "class feed.core.Outbound" "search" (- (System/currentTimeMillis) before))
          (str results)))
   (route/resources "/outbound/search")
         

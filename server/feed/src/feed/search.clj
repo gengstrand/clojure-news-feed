@@ -2,7 +2,14 @@
 
 (require '[feed.settings :as prop])
 
-(def outbound-core (com.dynamicalsoftware.support.Search/server prop/search-host "outbound"))
+(def outbound-core 
+  (if 
+    (nil? (:search-host prop/service-config))
+    nil
+    (if 
+      (.startsWith (:search-host prop/service-config) "http")
+      (com.dynamicalsoftware.support.Search/server (:search-host prop/service-config))
+      (com.dynamicalsoftware.support.Search/server (:search-host prop/service-config) "outbound"))))
 
 (defn index
   "add this story to the search index"

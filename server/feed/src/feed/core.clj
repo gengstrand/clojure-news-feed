@@ -1,6 +1,6 @@
 (ns feed.core)
 
-(require '[feed.postgre :as db])
+(require '[feed.rdbms :as db])
 (require '[feed.cassandra :as cql])
 (require '[feed.search :as search])
 (require '[clojure.string :as s])
