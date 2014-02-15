@@ -21,13 +21,13 @@
       <Level name="year" ordinalColumn="year" type="Numeric" column="year" uniqueMembers="false" levelType="TimeYears"/>
       <Level name="month" ordinalColumn="month" type="Numeric" column="month" uniqueMembers="false" levelType="TimeMonths"/>
       <Level name="day" ordinalColumn="day" type="Numeric" column="day" uniqueMembers="false" levelType="TimeDays"/>
-      <Level name="hour" ordinalColumn="day" type="Numeric" column="hour" uniqueMembers="false" levelType="TimeHours"/>
-      <Level name="minute" ordinalColumn="day" type="Numeric" column="minute" uniqueMembers="false" levelType="TimeMinutes"/>
+      <Level name="hour" ordinalColumn="hour" type="Numeric" column="hour" uniqueMembers="false" levelType="TimeHours"/>
+      <Level name="minute" ordinalColumn="minute" type="Numeric" column="minute" uniqueMembers="false" levelType="TimeMinutes"/>
     </Hierarchy>
   </Dimension>
   <Measure name="throughput" column="throughput" aggregator="sum"/>
-  <Measure name="mode" column="mode" aggregator="sum"/>
-  <Measure name="vigintile" column="vigintile" aggregator="sum"/>
+  <Measure name="mode" column="mode" aggregator="avg"/>
+  <Measure name="vigintile" column="vigintile" aggregator="avg"/>
 </Cube>
 
 </Schema>

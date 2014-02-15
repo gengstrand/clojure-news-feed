@@ -1,97 +1,40 @@
-# feed
+# clojure-news-feed
 
-An illustrative sample web service implementing a basic news feed capability. This was developed with the following dependencies...
+I wanted to find out how the latest crop of modern web service technologies scale. So I wrote a basic news feed service in Clojure that uses a lot of modern open source supporting technology.
 
-clojure 1.5.1
+There is a big trend in Java right now to use new programming languages, designed to run in the Java Virtual Machine, that support Functional Programming concepts. Clojure is a variant of Lisp that is one of the leaders in this trend. The question that I wanted to answer was this. Is Clojure ready for deliverying services at web scale?
 
-iced tea 1.12.6
+## server
 
-cassandra 1.2.2
+These components are expected to be run on the server(s).
 
-postgresql 9.1
+### feed
 
-zookeeper 3.4.5
+A basic news feed web service written in Clojure.
 
-kafka 2.8.0
+### solr
 
-redis 2.8.2
+The supporting directory structure and configuration files needed to augment an instance of Solr to support keyword search capability for the news feed on outbound activity.
 
-solr 4.5.1
+### support
 
-## Usage
+This Java project builds a library used by the feed service for Solr integration and for publishing custom JMX performance metrics.
 
-This is a fun learning adventure for writing non-trivial web services in clojure so you have to start a lot of services in order to get it to work.
+## client
 
-### starting all the services
+These applications are expected to be run on the client(s).
 
-cd ~/oss/apache-cassandra-1.2.2/bin
+### load
 
-./cassandra -f
+This Clojure application is what I used to load test the feed web service on AWS.
 
-cd ~/oss/zk/zookeeper-3.4.5
+### NewsFeedPerformance
 
-bin/zkServer.sh start
+This Java project builds a Hadoop map reduce job that inputs the Kafka feed topic performance data and outputs a per minute summary of various metrics used to load the OLAP cube.
 
-cd ~/oss/kafka/kafka_2.8.0-0.8.0
+### etl
 
-bin/kafka-server-start.sh config/server.properties
-
-cd ~/oss/redis/redis-2.8.2/src 
-
-./redis-server
-
-cd ~/oss/solr/solr-4.5.1/solr/example
-
-java -Dsolr.solr.home=multicore -jar start.jar
-
-cd ~/git/clojure-news-feed/server/feed
-
-APP_CONFIG="/home/glenn/git/clojure-news-feed/server/feed/etc/config.clj"
-export APP_CONFIG
-
-lein ring uberjar
-
-java -jar target/feed-0.1.0-SNAPSHOT-standalone.jar
-
-### Initial, one time set up
-
-cd ~/oss/kafka/kafka_2.8.0-0.8.0
-
-bin/kafka-create-topic.sh --zookeeper localhost:2181 --replica 1 --partition 1 --topic feed
-
-cd ~/git/clojure-news-feed/server/solr/example/multicore
-cp solr.xml ~/oss/solr/solr-4.5.1/solr/example/multicore
-mkdir ~/oss/solr/solr-4.5.1/solr/example/multicore/outbound
-mkdir ~/oss/solr/solr-4.5.1/solr/example/multicore/outbound/conf
-cp outbound/conf/* ~/oss/solr/solr-4.5.1/solr/example/multicore/outbound/conf
-
-create a feed database with a user/password of feed/feed
-
-psql feed <~/git/clojure-news-feed/server/feed/etc/schema.postgre.sql
-
-cd ~/oss/apache-cassandra-1.2.2/bin
-
-./cqlsh <~/git/clojure-news-feed/server/feed/etc/schema.cassandra.sql
-
-You may need to edit ~/git/clojure-news-feed/server/feed/etc/config.cli
-
-### Testing
-
-curl -d name=Moe http://localhost:3000/participant/new
-
-curl -d name=Larry http://localhost:3000/participant/new
-
-curl -d name=Curly http://localhost:3000/participant/new
-
-curl -d from=1 -d to=2 http://localhost:3000/friends/new
-
-curl -d from=1 -d to=3 http://localhost:3000/friends/new
-
-curl -d from=1 -d occurred="2014-01-03" -d subject="testing service" -d story="full end to end testing of the service" http://localhost:3000/outbound/new
-
-curl http://localhost:3000/inbound/2
-
-curl -d terms=testing http://localhost:3000/outbound/search
+This Clojure project takes the output from the Hadoop news feed performance map reduce job and loads a MySql database ready for use by Mondrian's Pentaho OLAP server.
 
 ## License
 
