@@ -6,7 +6,7 @@
 (require '[feed.mysql :as m])
 
 (defn is-postgres 
-  ""
+  "determines whether or not we are using postgresql as the RDBMS"
   []
   (.equals (:sql-vendor prop/service-config) "postgresql"))
 
