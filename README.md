@@ -4,6 +4,14 @@ I wanted to find out how the latest crop of modern web service technologies scal
 
 There is a big trend in Java right now to use new programming languages, designed to run in the Java Virtual Machine, that support Functional Programming concepts. Clojure is a variant of Lisp that is one of the leaders in this trend. The question that I wanted to answer was this. Is Clojure ready for deliverying services at web scale?
 
+I blogged about it here.
+
+http://www.dynamicalsoftware.com/software/architecture/oss/clojure
+
+Here is the article with more details.
+
+http://www.docstoc.com//docs/166905017/clojureNewsFeed
+
 ## server
 
 These components are expected to be run on the server(s).
