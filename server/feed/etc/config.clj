@@ -4,6 +4,8 @@
  :sql-db-password "feed"
  :sql-vendor "mysql"
  :nosql-host "localhost"
+ :nosql-consistency "one" 
+ :nosql-ttl 7776000 
  :cache-host "localhost"
  :messaging-host "localhost"
  :search-host "http://localhost:8983/solr/outbound"}

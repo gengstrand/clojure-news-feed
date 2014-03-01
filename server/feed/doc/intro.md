@@ -46,7 +46,8 @@ maven clean compile install
 
 cd ~/git/clojure-news-feed/server/feed
 
-You may need to edit ~/git/clojure-news-feed/server/feed/etc/config.cli
+You may need to edit ~/git/clojure-news-feed/server/feed/etc/config.cli 
+and you will also need to set the APP_CONFIG environment variable too (see below).
 
 lein ring uberjar
 
@@ -74,7 +75,9 @@ java -Dsolr.solr.home=multicore -jar start.jar
 
 cd ~/git/clojure-news-feed/server/feed
 
-export APP_CONFIG="~/git/clojure-news-feed/server/feed/etc/config.clj"
+the tilde notation does not get honored here
+
+export APP_CONFIG="/home/glenn/git/clojure-news-feed/server/feed/etc/config.clj"
 
 java -jar target/feed-0.1.0-SNAPSHOT-standalone.jar
 
