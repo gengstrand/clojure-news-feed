@@ -8,6 +8,67 @@
 (defn parse-int [s]
    (Integer. (re-find  #"\d+" s )))
 
+(defn flatten-one-level [coll]  
+  (mapcat  #(if (sequential? %) % [%]) coll))
+
+(defn extract-entity-action 
+  ""
+  [tuple]
+  [(first tuple) (second tuple)])
+
+(defn extract-entity-actions 
+  ""
+  [tuples]
+  (into 
+    #{}
+    (for [tuple tuples]
+      (extract-entity-action tuple))))
+
+(defn entity-action-match 
+  ""
+  [entity-action tuple]
+  (let [test (extract-entity-action tuple)]
+	  (and 
+	    (= (first entity-action) (first test))
+      (= (second entity-action) (second test)))))
+
+; https://github.com/nathanmarz/cascalog/wiki/Guide-to-custom-operations
+
+(c/defbufferfn agg-perf-data 
+  ""
+  [tuples]
+  (println "in agg-perf-data")
+  (println tuples)
+  (let [entity-actions (extract-entity-actions tuples)
+        retVal
+			    (for [entity-action entity-actions]
+			      (let [entity-action-counts 
+                  (sort 
+                    (map 
+                      (fn [x] (parse-int (nth x 2))) 
+                       (doall 
+                         (filter 
+                           (fn [x] (entity-action-match entity-action x)) 
+                           tuples))))]
+           (println entity-action)
+           (println entity-action-counts)
+		           (str 
+		             (first entity-action)
+		             "|"
+		             (second entity-action)
+		             "="
+		             (count entity-action-counts)
+		             ","
+		             (nth entity-action-counts (/ (count entity-action-counts) 2))
+		             ","
+		             (nth entity-action-counts 
+                    (/ 
+                      (* 
+                        (count entity-action-counts)
+                        95)
+                      100)))))]
+       [(s/join ":" retVal)]))
+
 (defn parse-data-line
   ""
   [line]
@@ -20,7 +81,7 @@
           (parse-data-line ?line :> ?year ?month ?day ?hour ?minute ?entity ?action ?count)
           (:distinct false))))
 
-(defn roll-up-by-minute 
+(defn roll-up-by-minute-entity-action 
   ""
   [input-directory output-directory]
   (let [data-point (metrics input-directory)
@@ -30,6 +91,16 @@
               (data-point ?year ?month ?day ?hour ?minute ?entity ?action ?count) 
               (parse-int ?count :> ?cnt) 
               (o/sum ?cnt :> ?total))))
+
+(defn roll-up-by-minute 
+  ""
+  [input-directory output-directory]
+  (let [data-point (metrics input-directory)
+        output (hfs-delimited output-directory :sinkmode :replace :delimiter ",")]
+       (c/?<- output 
+              [?year ?month ?day ?hour ?minute ?rpt] 
+              (data-point ?year ?month ?day ?hour ?minute ?entity ?action ?count) 
+              (agg-perf-data ?entity ?action ?count :> ?rpt))))
 
 (defn -main
   ""
