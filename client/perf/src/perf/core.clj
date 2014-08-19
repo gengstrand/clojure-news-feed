@@ -29,8 +29,6 @@
 	    (= (first entity-action) (first test))
       (= (second entity-action) (second test)))))
 
-; https://github.com/nathanmarz/cascalog/wiki/Guide-to-custom-operations
-
 (c/defbufferfn agg-perf-data 
   "aggregate performance data into a format compatible with the NewsFeedPerformance map reduce job"
   [tuples]
@@ -90,17 +88,6 @@
           (source ?line) 
           (parse-data-line ?line :> ?year ?month ?day ?hour ?minute ?entity ?action ?count)
           (:distinct false))))
-
-(defn roll-up-by-minute-entity-action 
-  "select year, month, day, hour, minute, entity, action, sum(count) group by year, month, day, hour, minute, entity, action"
-  [input-directory output-directory]
-  (let [data-point (metrics input-directory)
-        output (hfs-delimited output-directory :sinkmode :replace :delimiter ",")]
-       (c/?<- output 
-              [?year ?month ?day ?hour ?minute ?entity ?action ?total] 
-              (data-point ?year ?month ?day ?hour ?minute ?entity ?action ?count) 
-              (parse-int ?count :> ?cnt) 
-              (o/sum ?cnt :> ?total))))
 
 (defn roll-up-by-minute 
   "map reduce job that produces output usable by the etl program"
