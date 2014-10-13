@@ -21,6 +21,6 @@ bin/hadoop jar /path/to/perf/project/target/perf-0.1.0-SNAPSHOT-standalone.jar /
 
 ## License
 
-Copyright © 2014 FIXME
+Copyright © 2014 Glenn Engstrand
 
 Distributed under the Eclipse Public License, the same as Clojure.
