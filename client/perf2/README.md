@@ -14,25 +14,23 @@ cd /path/to/spark/sbin
 
 ./start-all.sh
 
-review the log output and edit the scala file src/main/scala/perf/NewsFeedPerformance.scala to set the correct master URL
-
 cd /path/to/perf2/project
 
 sbt
-
 compile
 package
-show full-classpath
+exit
 
-replace CLASSPATH data with the output from that show command. 
-In the end it should be a comma delimited string of jar files.
+export SPARK_HOME=/path/to/where/spark/was/installed
 
-rm -Rf /path/to/output/folder
+./run.sh /path/to/input/file /path/to/output/folder
 
-./run.sh
+cd /path/to/spark/sbin
+
+./stop-all.sh
 
 ## License
 
 Copyright © 2014 Glenn Engstrand
 
-Distributed under the Eclipse Public License, the same as Clojure.
+Distributed under the Eclipse Public License.
