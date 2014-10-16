@@ -23,7 +23,7 @@ exit
 
 export SPARK_HOME=/path/to/where/spark/was/installed
 
-./run.sh /path/to/input/file /path/to/output/folder
+./run.sh /path/to/input/file /path/to/output/file
 
 cd /path/to/spark/sbin
 
