@@ -89,6 +89,12 @@ object Cassandra {
       case _ => retVal.put(fn, r.getString(fn))
     }
   }
+  def tupleFromRow(f: Tuple2[String, String], r: Row): Tuple2[String, Any] = {
+    f._2 match {
+      case "Long" => (f._1, r.getLong(f._1))
+      case _ => (f._1, r.getString(f._1))
+    }
+  }
   def bindInputs(stmt: PreparedStatement, o: PersistentDataStoreBindings, criteria: Map[String, Any]): BoundStatement = {
     val retVal = new BoundStatement(stmt)
     var index = 1
@@ -102,11 +108,9 @@ object Cassandra {
     val rs = Cassandra.session.execute(binding.bind())
     var index = 1
     val r = rs.one()
-    val retVal: scala.collection.mutable.Map[String, Any] = scala.collection.mutable.Map()
-    o.fetchOutputs.foreach(f => {
-      mapResults(retVal, r, f)
-    })
-    retVal.toMap
+    o.fetchOutputs.map(f => {
+      tupleFromRow(f, r)
+    }).toMap
   }
 }
 

@@ -44,27 +44,33 @@ object MySql {
     }
   }
 
+  def tupleFromResultSet(f: Tuple2[String, String], rs: ResultSet): Tuple2[String, Any] = {
+    val value = f._2 match {
+      case "Long" => rs.getLong(f._1)
+      case _ => rs.getString(f._1)
+    }
+    ( f._1, value )
+  }
+
   def prepare(stmt: PreparedStatement, inputs: Iterable[String], criteria: Map[String, Any]): Unit = {
     var fii = 1
     inputs.map { f => {
       val v = criteria.get(f).getOrElse(0)
-      MySql.setStatementParameterFromValue(stmt, v, fii)
+      setStatementParameterFromValue(stmt, v, fii)
       fii += 1
     }}
   }
 
-  def execute(stmt: PreparedStatement, outputs: Iterable[(String, String)]): mutable.Map[_ <: String, _] = {
+  def execute(stmt: PreparedStatement, outputs: Iterable[(String, String)]): Map[_ <: String, Any] = {
     val rs = stmt.executeQuery()
     val retVal = rs.next() match {
       case true => {
-        val d: scala.collection.mutable.Map[String, Any] = scala.collection.mutable.Map()
         outputs.map { f => {
-          MySql.setMapFromResultSet(f, d, rs)
-        }}
-        d
+          tupleFromResultSet(f, rs)
+        }}.toMap
       }
-      case false => {
-        scala.collection.mutable.Map()
+      case _ => {
+        Map()
       }
     }
     rs.close()
