@@ -112,15 +112,28 @@ object Cassandra {
       tupleFromRow(f, r)
     }).toMap
   }
+  def bindMultiRowOutputs(binding: BoundStatement, o: PersistentDataStoreBindings): Iterable[Map[String, Any]] = {
+    val rs = Cassandra.session.execute(binding.bind())
+    val r = rs.iterator()
+    new Iterator[Map[String, Any]] {
+      def hasNext = r.hasNext
+      def next() = {
+        val row = r.next()
+        o.fetchOutputs.map(f => {
+          tupleFromRow(f, row)
+        }).toMap
+      }
+    }.toStream
+  }
 }
 
 class CassandraReader extends PersistentDataStoreReader {
   val fetch: String = "Fetch"
 
-  def read(o: PersistentDataStoreBindings, criteria: Map[String, Any]): Map[String, Any] = {
+  def read(o: PersistentDataStoreBindings, criteria: Map[String, Any]): Iterable[Map[String, Any]] = {
     val stmt = Cassandra.prepareFetch(fetch, o)
     val binding = Cassandra.bindInputs(stmt, o, criteria)
-    Cassandra.bindSingleRowOutputs(binding, o)
+    Cassandra.bindMultiRowOutputs(binding, o)
   }
 }
 

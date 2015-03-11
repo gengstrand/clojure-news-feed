@@ -28,7 +28,7 @@ object Participant {
   val bindings = new ParticipantBindings
   def apply(id: Long) : Participant = {
     val criteria: Map[String, Any] = Map("id" -> id)
-    val state: Map[String, Any] = IO.cacheAwareRead(bindings, criteria, reader, cache)
+    val state: Map[String, Any] = IO.cacheAwareRead(bindings, criteria, reader, cache).head
     new Participant(id, state("Moniker").asInstanceOf[String]) with MySqlWriter with RedisCacheAware
   }
   def apply(state: String): Participant = {

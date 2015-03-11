@@ -11,11 +11,15 @@ trait MockWriter extends PersistentDataStoreWriter {
 }
 
 trait MockCacheAware extends CacheAware {
-  def load(o: PersistentDataStoreBindings, criteria: Map[String, Any]): Map[String, Any] = {
+  def load(o: PersistentDataStoreBindings, criteria: Map[String, Any]): Iterable[Map[String, Any]] = {
     // TODO: implement this
-    Map()
+    List(Map())
   }
   def store(o: PersistentDataStoreBindings, state: Map[String, Any], criteria: Map[String, Any]): Unit = {
+    // TODO: implement this
+
+  }
+  def append(o: PersistentDataStoreBindings, state: Map[String, Any], criteria: Map[String, Any]): Unit = {
     // TODO: implement this
 
   }

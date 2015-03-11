@@ -61,6 +61,20 @@ object MySql {
     }}
   }
 
+  def query(stmt: PreparedStatement, outputs: Iterable[(String, String)]): Iterable[Map[String, Any]] = {
+    val rs = stmt.executeQuery()
+    val retVal = new Iterator[Map[String, Any]] {
+      def hasNext = rs.next()
+      def next() = {
+        outputs.map { f => {
+          tupleFromResultSet(f, rs)
+        }}.toMap
+      }
+    }
+    rs.close()
+    retVal.toStream
+  }
+
   def execute(stmt: PreparedStatement, outputs: Iterable[(String, String)]): Map[_ <: String, Any] = {
     val rs = stmt.executeQuery()
     val retVal = rs.next() match {
@@ -83,10 +97,10 @@ class MySqlReader extends PersistentDataStoreReader with PooledRelationalDataSto
   val fetch: String = "Fetch"
   lazy val db: Connection = getDbConnection
 
-  def read(o: PersistentDataStoreBindings, criteria: Map[String, Any]): Map[String, Any] = {
+  def read(o: PersistentDataStoreBindings, criteria: Map[String, Any]): Iterable[Map[String, Any]] = {
     val stmt = MySql.prepare(fetch, o.entity, o.fetchInputs, db)
     MySql.prepare(stmt, o.fetchInputs, criteria)
-    MySql.execute(stmt, o.fetchOutputs).toMap[String, Any]
+    MySql.query(stmt, o.fetchOutputs)
   }
 }
 

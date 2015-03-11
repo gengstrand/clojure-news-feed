@@ -19,10 +19,13 @@ object IO {
   val nosqlKeyspace: String = "nosql_keyspace"
   val nosqlReadConsistencyLevel: String = "nosql_read_consistency_level"
 
-  def cacheAwareRead(o: PersistentDataStoreBindings, criteria: Map[String, Any], reader: PersistentDataStoreReader, cache: CacheAware): Map[String, Any] = {
-    def loadFromDbAndCache: Map[String, Any] = {
+  def cacheAwareRead(o: PersistentDataStoreBindings, criteria: Map[String, Any], reader: PersistentDataStoreReader, cache: CacheAware): Iterable[Map[String, Any]] = {
+    def loadFromDbAndCache: Iterable[Map[String, Any]] = {
       val fromDb = reader.read(o, criteria)
-      cache.store(o, fromDb, criteria)
+      fromDb.size match {
+        case 0 =>
+        case _ => cache.store(o, fromDb.head, criteria)
+      }
       fromDb
     }
     val fromCache = cache.load(o, criteria)
@@ -35,8 +38,14 @@ object IO {
     val s = state.map(kv => "\"" + kv._1 + "\":\"" + kv._2.toString + "\"").reduce(_ + "," + _)
     "{" + s + "}"
   }
-  def fromJson(json: String): Map[String, Option[Any]] = {
-    JSON.parseFull(json).getOrElse(Map()).asInstanceOf[Map[String, Option[Any]]]
+  def toJson(state: Iterable[Map[String, Any]]): String = {
+    val s = state.map{ li => {
+      "{" +li.map(kv => "\"" + kv._1 + "\":\"" + kv._2.toString + "\"").reduce(_ + "," + _) + "}"
+    }}.reduce(_ + "," + _)
+    "[" + s + "]"
+  }
+  def fromJson(json: String): Iterable[Map[String, Option[Any]]] = {
+    JSON.parseFull(json).getOrElse(List(Map())).asInstanceOf[List[Map[String, Option[Any]]]]
   }
   def fromFormPost(state: String) : Map[String, Any] = {
     state.split("&").map(kv => kv.split("=")).map(t => (t(0), t(1))).toMap
@@ -67,7 +76,7 @@ abstract class PersistentDataStoreBindings {
 }
 
 trait PersistentDataStoreReader {
-  def read(o: PersistentDataStoreBindings, criteria: Map[String, Any]): Map[String, Any]
+  def read(o: PersistentDataStoreBindings, criteria: Map[String, Any]): Iterable[Map[String, Any]]
 }
 
 trait PersistentDataStoreWriter {
@@ -75,8 +84,9 @@ trait PersistentDataStoreWriter {
 }
 
 trait CacheAware {
-  def load(o: PersistentDataStoreBindings, criteria: Map[String, Any]): Map[String, Any]
+  def load(o: PersistentDataStoreBindings, criteria: Map[String, Any]): Iterable[Map[String, Any]]
   def store(o: PersistentDataStoreBindings, state: Map[String, Any], criteria: Map[String, Any]): Unit
+  def append(o: PersistentDataStoreBindings, state: Map[String, Any], criteria: Map[String, Any]): Unit
   def invalidate(o: PersistentDataStoreBindings, criteria: Map[String, Any]): Unit
 }
 

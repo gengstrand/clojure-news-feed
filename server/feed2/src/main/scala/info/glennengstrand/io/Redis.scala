@@ -22,22 +22,24 @@ trait RedisCacheAware extends CacheAware {
     o.entity + ":" + criteria.map((f) => f._2).reduce(_ + ":" + _)
   }
 
-  def load(o: PersistentDataStoreBindings, criteria: Map[String, Any]): Map[String, Any] = {
+  def load(o: PersistentDataStoreBindings, criteria: Map[String, Any]): Iterable[Map[String, Any]] = {
     val fr: Future[Option[String]] = RedisService.redis.get[String](key(o, criteria))
     val frc: Try[Option[String]] = Await.ready(fr, Duration.Inf).value.get
-    val retVal: scala.collection.mutable.Map[String, Any] = scala.collection.mutable.Map()
     frc match {
       case Success(Some(value)) => {
-        IO.fromJson(value.asInstanceOf[String]).foreach(kv => retVal.put(kv._1, kv._2))
+        IO.fromJson(value.asInstanceOf[String])
       }
-      case Success(None) => Map()
-      case Failure(e) => Map()
+      case Success(None) => List(Map())
+      case Failure(e) => List(Map())
     }
-    retVal.toMap[String, Any]
   }
 
   def store(o: PersistentDataStoreBindings, state: Map[String, Any], criteria: Map[String, Any]): Unit = {
     RedisService.redis.set(key(o, criteria), IO.toJson(state))
+  }
+
+  def append(o: PersistentDataStoreBindings, state: Map[String, Any], criteria: Map[String, Any]): Unit = {
+    RedisService.redis.append(key(o, criteria), IO.toJson(state))
   }
 
   def invalidate(o: PersistentDataStoreBindings, criteria: Map[String, Any]): Unit = {
