@@ -4,6 +4,8 @@ import akka.actor.Actor
 import info.glennengstrand.io.{EmptyFactoryClass, FactoryClass}
 import spray.routing._
 import spray.http._
+import spray.http.{StatusCodes, ContentType}
+import spray.http.HttpEntity
 import MediaTypes._
 
 object Feed {
@@ -32,7 +34,15 @@ trait Feed extends HttpService {
     path("participant" / LongNumber) { id =>
       get {
         respondWithMediaType(`application/json`) {
-          complete(Feed.factory.getObject("participant", id).get.asInstanceOf[Participant].toJson)
+          complete(
+            try {
+              Feed.factory.getObject("participant", id).get.asInstanceOf[Participant].toJson
+            } catch {
+              case e: Exception => {
+                e.printStackTrace()
+                HttpResponse(StatusCodes.InternalServerError, e.getLocalizedMessage)
+              }
+            })
         }
       }
     } ~

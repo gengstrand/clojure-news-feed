@@ -29,8 +29,8 @@ trait RedisCacheAware extends CacheAware {
       case Success(Some(value)) => {
         IO.fromJson(value.asInstanceOf[String])
       }
-      case Success(None) => List(Map())
-      case Failure(e) => List(Map())
+      case Success(None) => List()
+      case Failure(e) => List()
     }
   }
 

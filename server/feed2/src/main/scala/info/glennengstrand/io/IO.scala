@@ -45,7 +45,12 @@ object IO {
     "[" + s + "]"
   }
   def fromJson(json: String): Iterable[Map[String, Option[Any]]] = {
-    JSON.parseFull(json).getOrElse(List(Map())).asInstanceOf[List[Map[String, Option[Any]]]]
+    val retVal = JSON.parseFull(json).getOrElse(List())
+    retVal match {
+      case l: List[Map[String, Option[Any]]] => l
+      case m: Map[String, Option[Any]] => List(m)
+      case _ => List()
+    }
   }
   def fromFormPost(state: String) : Map[String, Any] = {
     state.split("&").map(kv => kv.split("=")).map(t => (t(0), t(1))).toMap

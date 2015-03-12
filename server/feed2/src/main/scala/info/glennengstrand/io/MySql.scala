@@ -63,16 +63,21 @@ object MySql {
 
   def query(stmt: PreparedStatement, outputs: Iterable[(String, String)]): Iterable[Map[String, Any]] = {
     val rs = stmt.executeQuery()
-    val retVal = new Iterator[Map[String, Any]] {
-      def hasNext = rs.next()
+    new Iterator[Map[String, Any]] {
+      def hasNext = {
+        val rv = rs.next()
+        rv match {
+          case false => rs.close()
+          case _ =>
+        }
+        rv
+      }
       def next() = {
         outputs.map { f => {
           tupleFromResultSet(f, rs)
         }}.toMap
       }
-    }
-    rs.close()
-    retVal.toStream
+    }.toStream
   }
 
   def execute(stmt: PreparedStatement, outputs: Iterable[(String, String)]): Map[_ <: String, Any] = {
