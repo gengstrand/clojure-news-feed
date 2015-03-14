@@ -24,7 +24,7 @@ object IO {
       val fromDb = reader.read(o, criteria)
       fromDb.size match {
         case 0 =>
-        case _ => cache.store(o, fromDb.head, criteria)
+        case _ => cache.store(o, fromDb, criteria)
       }
       fromDb
     }
@@ -34,13 +34,21 @@ object IO {
       case _ => fromCache
     }
   }
+  def toJsonValue(v: Any): String = {
+    v match {
+      case l: Long => l.toString
+      case i: Int => i.toString
+      case s: String => "\"" + s + "\""
+      case _ => "\"" + v.toString + "\""
+    }
+  }
   def toJson(state: Map[String, Any]): String = {
-    val s = state.map(kv => "\"" + kv._1 + "\":\"" + kv._2.toString + "\"").reduce(_ + "," + _)
+    val s = state.map(kv => "\"" + kv._1 + "\":" + toJsonValue(kv._2)).reduce(_ + "," + _)
     "{" + s + "}"
   }
   def toJson(state: Iterable[Map[String, Any]]): String = {
     val s = state.map{ li => {
-      "{" +li.map(kv => "\"" + kv._1 + "\":\"" + kv._2.toString + "\"").reduce(_ + "," + _) + "}"
+      "{" +li.map(kv => "\"" + kv._1 + "\":" +  toJsonValue(kv._2)).reduce(_ + "," + _) + "}"
     }}.reduce(_ + "," + _)
     "[" + s + "]"
   }
@@ -54,6 +62,14 @@ object IO {
   }
   def fromFormPost(state: String) : Map[String, Any] = {
     state.split("&").map(kv => kv.split("=")).map(t => (t(0), t(1))).toMap
+  }
+  def convertToLong(v: Any) : Long = {
+    v match {
+      case l: Long => l
+      case d: Double => d.toLong
+      case i: Int => i.toLong
+      case s: String => s.toLong
+    }
   }
 }
 
@@ -91,6 +107,7 @@ trait PersistentDataStoreWriter {
 trait CacheAware {
   def load(o: PersistentDataStoreBindings, criteria: Map[String, Any]): Iterable[Map[String, Any]]
   def store(o: PersistentDataStoreBindings, state: Map[String, Any], criteria: Map[String, Any]): Unit
+  def store(o: PersistentDataStoreBindings, state: Iterable[Map[String, Any]], criteria: Map[String, Any]): Unit
   def append(o: PersistentDataStoreBindings, state: Map[String, Any], criteria: Map[String, Any]): Unit
   def invalidate(o: PersistentDataStoreBindings, criteria: Map[String, Any]): Unit
 }

@@ -16,12 +16,14 @@ class ServiceFactoryClass extends FactoryClass {
   def getObject(name: String, id: Long): Option[Object] = {
     name match {
       case "participant" => Some(Participant(id))
+      case "friends" => Some(Friends(id))
       case _ => None
     }
   }
   def getObject(name: String, state: String): Option[Object] = {
     name match {
       case "participant" => Some(Participant(state))
+      case "friend" => Some(Friends(state))
       case _ => None
     }
   }

@@ -56,5 +56,31 @@ trait Feed extends HttpService {
           }
         }
       }
-    }
+    } ~
+      path("friends" / LongNumber) { id =>
+        get {
+          respondWithMediaType(`application/json`) {
+            complete(
+              try {
+                Feed.factory.getObject("friends", id).get.asInstanceOf[Friends].toJson
+              } catch {
+                case e: Exception => {
+                  e.printStackTrace()
+                  HttpResponse(StatusCodes.InternalServerError, e.getLocalizedMessage)
+                }
+              })
+          }
+        }
+      } ~
+      path("friends.new") {
+        post {
+          entity(as[String]) { body =>
+            val retVal = Feed.factory.getObject("friend", body).get.asInstanceOf[Friend]
+            retVal.save
+            respondWithMediaType(`application/json`) {
+              complete(retVal.toJson)
+            }
+          }
+        }
+      }
 }

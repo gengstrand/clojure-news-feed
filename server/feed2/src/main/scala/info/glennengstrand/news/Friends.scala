@@ -11,10 +11,10 @@ object Friends {
       "Friends"
     }
     def fetchInputs: Iterable[String] = {
-      List("id")
+      List("ParticipantID")
     }
     def fetchOutputs: Iterable[(String, String)] = {
-      List(("ParticipantID", "Long"))
+      List(("FriendsID", "Long"), ("ParticipantID", "Long"))
     }
     def upsertInputs: Iterable[String] = {
       List("fromParticipantID", "toParticipantID")
@@ -28,12 +28,12 @@ object Friends {
   }
   val bindings = new FriendsBindings
   def apply(id: Long) : Friends = {
-    val criteria: Map[String, Any] = Map("fromParticipantId" -> id)
-    new Friends(IO.cacheAwareRead(bindings, criteria, reader, cache))
+    val criteria: Map[String, Any] = Map("ParticipantID" -> id)
+    new Friends(id, IO.cacheAwareRead(bindings, criteria, reader, cache))
   }
   def apply(state: String): Friend = {
     val s = IO.fromFormPost(state)
-    new Friend(s("id").asInstanceOf[String].toLong, s("fromParticipantID").asInstanceOf[String].toLong, s("toParticipantID").asInstanceOf[String].toLong) with MySqlWriter with RedisCacheAware
+    new Friend(s("FriendsID").asInstanceOf[String].toLong, s("fromParticipantID").asInstanceOf[String].toLong, s("toParticipantID").asInstanceOf[String].toLong) with MySqlWriter with RedisCacheAware
   }
 }
 
@@ -44,11 +44,11 @@ class Friend(id: Long, fromParticipantID: Long, toParticipantID: Long) extends F
 
   def save: Unit = {
     val state: Map[String, Any] = Map(
-      "fromParticipantID" -> fromParticipantID,
-      "toParticipantID" -> toParticipantID
+      "FromParticipantID" -> fromParticipantID,
+      "ToParticipantID" -> toParticipantID
     )
     val criteria: Map[String, Any] = Map(
-      "id" -> id
+      "FriendsID" -> id
     )
     write(Participant.bindings, state, criteria)
     invalidate(Friends.bindings, criteria)
@@ -56,19 +56,23 @@ class Friend(id: Long, fromParticipantID: Long, toParticipantID: Long) extends F
 
   def toJson: String = {
     val state: Map[String, Any] = Map(
-      "fromParticipantID" -> fromParticipantID,
-      "toParticipantID" -> toParticipantID,
-      "id" -> id
+      "FromParticipantID" -> fromParticipantID,
+      "ToParticipantID" -> toParticipantID,
+      "FriendsID" -> id
     )
     IO.toJson(state)
   }
 
 }
 
-class Friends(state: Iterable[Map[String, Any]]) extends Iterator[Friend] {
-  def hasNext = state.tail.eq(Nil)
+class Friends(id: Long, state: Iterable[Map[String, Any]]) extends Iterator[Friend] {
+  val i = state.iterator
+  def hasNext = i.hasNext
   def next() = {
-    val kv = state.head
-    new Friend(kv("id").asInstanceOf[Long], kv("fromParticipantID").asInstanceOf[Long], kv("toParticipantID").asInstanceOf[Long]) with MySqlWriter with RedisCacheAware
+    val kv = i.next()
+    new Friend(IO.convertToLong(kv("FriendsID")), id, IO.convertToLong(kv("ParticipantID"))) with MySqlWriter with RedisCacheAware
+  }
+  def toJson: String = {
+    "[" +  map(f => f.toJson).reduce(_ + "," + _) + "]"
   }
 }

@@ -19,6 +19,10 @@ trait MockCacheAware extends CacheAware {
     // TODO: implement this
 
   }
+  def store(o: PersistentDataStoreBindings, state: Iterable[Map[String, Any]], criteria: Map[String, Any]): Unit = {
+    // TODO: implement this
+
+  }
   def append(o: PersistentDataStoreBindings, state: Map[String, Any], criteria: Map[String, Any]): Unit = {
     // TODO: implement this
 
@@ -38,15 +42,30 @@ class MockFactoryClass extends FactoryClass {
     val s = IO.fromFormPost(state)
     new Participant(s("id").asInstanceOf[String].toLong, s("name").asInstanceOf[String]) with MockWriter with MockCacheAware
   }
+  def getFriends(id: Long): Friends = {
+    val state: Iterable[Map[String, Any]] = List(
+      Map[String, Any](
+      "FriendsID" -> "1",
+      "ParticipantID" -> "2"
+      )
+    )
+    new Friends(1l, state)
+  }
+  def getFriend(state: String): Friend = {
+    val s = IO.fromFormPost(state)
+    new Friend(s("FriendsID").asInstanceOf[String].toLong, s("FromParticipantID").asInstanceOf[String].toLong, s("ToParticipantID").asInstanceOf[String].toLong) with MockWriter with MockCacheAware
+  }
   def getObject(name: String, id: Long): Option[Object] = {
     name match {
       case "participant" => Some(getParticipant(id))
+      case "friends" => Some(getFriends(id))
       case _ => None
     }
   }
   def getObject(name: String, state: String): Option[Object] = {
     name match {
       case "participant" => Some(getParticipant(state))
+      case "friend" => Some(getFriend(state))
       case _ => None
     }
   }
@@ -61,6 +80,12 @@ class FeedSpec extends Specification with Specs2RouteTest with Feed {
     "return the correct data when fetching a participant" in {
       Get("/participant/2") ~> myRoute ~> check {
         responseAs[String] must contain("test")
+      }
+    }
+
+    "return the correct data when fetching friends" in {
+      Get("/friends/1") ~> myRoute ~> check {
+        responseAs[String] must contain("2")
       }
     }
 

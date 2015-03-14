@@ -21,11 +21,11 @@ object MySql {
               sql.put(key, retVal)
               retVal
             }
-            case true => sql.get(operation).get
+            case true => sql.get(key).get
           }
         }
       }
-      case true => sql.get(operation).get
+      case true => sql.get(key).get
     }
   }
 

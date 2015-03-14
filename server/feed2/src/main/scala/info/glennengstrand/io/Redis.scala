@@ -38,6 +38,10 @@ trait RedisCacheAware extends CacheAware {
     RedisService.redis.set(key(o, criteria), IO.toJson(state))
   }
 
+  def store(o: PersistentDataStoreBindings, state: Iterable[Map[String, Any]], criteria: Map[String, Any]): Unit = {
+    RedisService.redis.set(key(o, criteria), IO.toJson(state))
+  }
+
   def append(o: PersistentDataStoreBindings, state: Map[String, Any], criteria: Map[String, Any]): Unit = {
     RedisService.redis.append(key(o, criteria), IO.toJson(state))
   }
