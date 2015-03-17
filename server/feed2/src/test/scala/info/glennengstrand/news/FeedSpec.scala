@@ -10,29 +10,6 @@ trait MockWriter extends PersistentDataStoreWriter {
   }
 }
 
-trait MockCacheAware extends CacheAware {
-  def load(o: PersistentDataStoreBindings, criteria: Map[String, Any]): Iterable[Map[String, Any]] = {
-    // TODO: implement this
-    List(Map())
-  }
-  def store(o: PersistentDataStoreBindings, state: Map[String, Any], criteria: Map[String, Any]): Unit = {
-    // TODO: implement this
-
-  }
-  def store(o: PersistentDataStoreBindings, state: Iterable[Map[String, Any]], criteria: Map[String, Any]): Unit = {
-    // TODO: implement this
-
-  }
-  def append(o: PersistentDataStoreBindings, state: Map[String, Any], criteria: Map[String, Any]): Unit = {
-    // TODO: implement this
-
-  }
-  def invalidate(o: PersistentDataStoreBindings, criteria: Map[String, Any]): Unit = {
-    // TODO: implement this
-
-  }
-}
-
 class MockFactoryClass extends FactoryClass {
 
   def getParticipant(id: Long): Participant = {
@@ -55,6 +32,22 @@ class MockFactoryClass extends FactoryClass {
     val s = IO.fromFormPost(state)
     new Friend(s("FriendsID").asInstanceOf[String].toLong, s("FromParticipantID").asInstanceOf[String].toLong, s("ToParticipantID").asInstanceOf[String].toLong) with MockWriter with MockCacheAware
   }
+  def getInbound(id: Int): InboundFeed = {
+    val state: Iterable[Map[String, Any]] = List(
+      Map[String, Any](
+        "participantID" -> "1",
+        "occurred" -> "2014-01-12 22:56:36-0800",
+        "fromParticipantID" -> "2",
+        "subject" -> "test",
+        "story" -> "this is a unit test"
+      )
+    )
+    new InboundFeed(1, state)
+  }
+  def getInbound(state: String): Inbound = {
+    val s = IO.fromFormPost(state)
+    new Inbound(s("participantID").asInstanceOf[String].toLong, IO.df.parse(s("occurred").asInstanceOf[String]), s("fromParticipantID").asInstanceOf[String].toLong, s("subject").asInstanceOf[String], s("story").asInstanceOf[String]) with MockWriter with MockCacheAware
+  }
   def getObject(name: String, id: Long): Option[Object] = {
     name match {
       case "participant" => Some(getParticipant(id))
@@ -62,10 +55,17 @@ class MockFactoryClass extends FactoryClass {
       case _ => None
     }
   }
+  def getObject(name: String, id: Int): Option[Object] = {
+    name match {
+      case "inbound" => Some(getInbound(id))
+      case _ => None
+    }
+  }
   def getObject(name: String, state: String): Option[Object] = {
     name match {
       case "participant" => Some(getParticipant(state))
       case "friend" => Some(getFriend(state))
+      case "inbound" => Some(getInbound(state))
       case _ => None
     }
   }
@@ -86,6 +86,12 @@ class FeedSpec extends Specification with Specs2RouteTest with Feed {
     "return the correct data when fetching friends" in {
       Get("/friends/1") ~> myRoute ~> check {
         responseAs[String] must contain("2")
+      }
+    }
+
+    "return the correct data when fetching inbound" in {
+      Get("/inbound/1") ~> myRoute ~> check {
+        responseAs[String] must contain("test")
       }
     }
 

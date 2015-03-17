@@ -82,5 +82,31 @@ trait Feed extends HttpService {
             }
           }
         }
+      } ~
+      path("inbound" / IntNumber) { id =>
+        get {
+          respondWithMediaType(`application/json`) {
+            complete(
+              try {
+                Feed.factory.getObject("inbound", id).get.asInstanceOf[InboundFeed].toJson
+              } catch {
+                case e: Exception => {
+                  e.printStackTrace()
+                  HttpResponse(StatusCodes.InternalServerError, e.getLocalizedMessage)
+                }
+              })
+          }
+        }
+      } ~
+      path("inbound.new") {
+        post {
+          entity(as[String]) { body =>
+            val retVal = Feed.factory.getObject("inbound", body).get.asInstanceOf[Inbound]
+            retVal.save
+            respondWithMediaType(`application/json`) {
+              complete(retVal.toJson)
+            }
+          }
+        }
       }
 }

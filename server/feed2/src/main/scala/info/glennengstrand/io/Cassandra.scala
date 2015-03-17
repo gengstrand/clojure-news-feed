@@ -1,6 +1,8 @@
 package info.glennengstrand.io
 
 import com.datastax.driver.core._
+import java.util.logging.Logger
+import java.util.Date
 
 /**
  * Created by glenn on 2/28/15.
@@ -8,6 +10,7 @@ import com.datastax.driver.core._
  */
 
 object Cassandra {
+  val log = Logger.getLogger("info.glennengstrand.io.Cassandra")
   val sql: scala.collection.mutable.Map[String, PreparedStatement] = scala.collection.mutable.Map()
 
   def getConsistencyLevel(level: String): ConsistencyLevel = {
@@ -37,8 +40,9 @@ object Cassandra {
               val sl = for (f <- o.fetchOutputs) yield f._1
               val wl = for (f <- o.fetchInputs) yield  f + " = ?"
               val fo = o.fetchOrder
-              val ol = for (k <- fo.keys) yield k + " " + fo.get(k)
+              val ol = for (k <- fo.keys) yield k + " " + fo.get(k).getOrElse("desc")
               val select = "select " + sl.reduce(_ + ", " + _) + " from " + o.entity + " where " + wl.reduce(_ + " and " + _) + " order by " + ol.reduce(_ + ", " + _)
+              log.finest(select)
               val stmt = session.prepare(select)
               val cl = getConsistencyLevel(IO.settings.get(IO.nosqlReadConsistencyLevel).asInstanceOf[String])
               stmt.setConsistencyLevel(cl)
@@ -77,27 +81,35 @@ object Cassandra {
     }
   }
   def setBinding(binding: BoundStatement, fieldName: String, state: Map[String, Any], index: Int): Unit = {
-    state.get(fieldName).getOrElse(0) match {
+    log.finest("setting parameter " + index + " to " + state.get(fieldName).getOrElse(0))
+    state.get(fieldName).get match {
       case l: Long => binding.setLong(index, l)
+      case i: Int => binding.setInt(index, i)
       case s: String => binding.setString(index, s)
+      case d: Date => binding.setDate(index, d)
+      case None =>
     }
   }
   def mapResults(retVal: scala.collection.mutable.Map[String, Any], r: Row, field: Tuple2[String, String]): Unit = {
     val fn = field._1.asInstanceOf[String]
     field._2 match {
       case "Long" => retVal.put(fn, r.getLong(fn))
+      case "Int" => retVal.put(fn, r.getInt(fn))
+      case "Date" => retVal.put(fn, r.getDate(fn))
       case _ => retVal.put(fn, r.getString(fn))
     }
   }
   def tupleFromRow(f: Tuple2[String, String], r: Row): Tuple2[String, Any] = {
     f._2 match {
       case "Long" => (f._1, r.getLong(f._1))
+      case "Int" => (f._1, r.getInt(f._1))
+      case "Date" => (f._1, r.getDate(f._1))
       case _ => (f._1, r.getString(f._1))
     }
   }
   def bindInputs(stmt: PreparedStatement, o: PersistentDataStoreBindings, criteria: Map[String, Any]): BoundStatement = {
     val retVal = new BoundStatement(stmt)
-    var index = 1
+    var index = 0
     o.fetchInputs.foreach(f => {
       setBinding(retVal, f, criteria, index)
       index += 1

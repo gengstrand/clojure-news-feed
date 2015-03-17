@@ -50,7 +50,7 @@ class Friend(id: Long, fromParticipantID: Long, toParticipantID: Long) extends F
     val criteria: Map[String, Any] = Map(
       "FriendsID" -> id
     )
-    write(Participant.bindings, state, criteria)
+    write(Friends.bindings, state, criteria)
     invalidate(Friends.bindings, criteria)
   }
 

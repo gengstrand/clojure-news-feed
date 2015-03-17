@@ -20,10 +20,17 @@ class ServiceFactoryClass extends FactoryClass {
       case _ => None
     }
   }
+  def getObject(name: String, id: Int): Option[Object] = {
+    name match {
+      case "inbound" => Some(Inbound(id))
+      case _ => None
+    }
+  }
   def getObject(name: String, state: String): Option[Object] = {
     name match {
       case "participant" => Some(Participant(state))
       case "friend" => Some(Friends(state))
+      case "inbound" => Some(Inbound(state))
       case _ => None
     }
   }

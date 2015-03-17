@@ -1,12 +1,15 @@
 package info.glennengstrand.io
 
+import java.text.{SimpleDateFormat, DateFormat}
+
 import com.mchange.v2.c3p0.ComboPooledDataSource
-import java.util.Properties
+import java.util.{Date, Properties}
 import scala.util.parsing.json.JSON
 import java.sql.{PreparedStatement, Connection}
 
 object IO {
   val settings: Properties = new Properties
+  val df: DateFormat = new SimpleDateFormat("yyyy-MM-dd HH:mm:ssZ")
   val jdbcDriveName: String = "jdbc_driver"
   val jdbcUrl: String = "jdbc_url"
   val jdbcUser: String = "jdbc_user"
@@ -71,15 +74,26 @@ object IO {
       case s: String => s.toLong
     }
   }
+  def convertToDate(v: Any): Date = {
+    v match {
+      case l: Long => new Date(l)
+      case d: Date => d
+      case s: String => df.parse(s)
+    }
+  }
 }
 
 abstract class FactoryClass {
   def getObject(name: String, id: Long): Option[Object]
+  def getObject(name: String, id: Int): Option[Object]
   def getObject(name: String, state: String): Option[Object]
 }
 
 class EmptyFactoryClass extends FactoryClass {
   def getObject(name: String, id: Long): Option[Object] = {
+    None
+  }
+  def getObject(name: String, id: Int): Option[Object] = {
     None
   }
   def getObject(name: String, state: String): Option[Object] = {
@@ -111,6 +125,31 @@ trait CacheAware {
   def append(o: PersistentDataStoreBindings, state: Map[String, Any], criteria: Map[String, Any]): Unit
   def invalidate(o: PersistentDataStoreBindings, criteria: Map[String, Any]): Unit
 }
+
+trait MockCacheAware extends CacheAware {
+  def load(o: PersistentDataStoreBindings, criteria: Map[String, Any]): Iterable[Map[String, Any]] = {
+    // TODO: implement this
+    List()
+  }
+  def store(o: PersistentDataStoreBindings, state: Map[String, Any], criteria: Map[String, Any]): Unit = {
+    // TODO: implement this
+
+  }
+  def store(o: PersistentDataStoreBindings, state: Iterable[Map[String, Any]], criteria: Map[String, Any]): Unit = {
+    // TODO: implement this
+
+  }
+  def append(o: PersistentDataStoreBindings, state: Map[String, Any], criteria: Map[String, Any]): Unit = {
+    // TODO: implement this
+
+  }
+  def invalidate(o: PersistentDataStoreBindings, criteria: Map[String, Any]): Unit = {
+    // TODO: implement this
+
+  }
+}
+
+class MockCache extends MockCacheAware
 
 trait PooledRelationalDataStore {
 
