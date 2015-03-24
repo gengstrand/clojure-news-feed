@@ -22,6 +22,7 @@ libraryDependencies ++= {
     "org.scala-lang.modules"  %%  "scala-parser-combinators"  % "1.0.3",
     "mysql"               %   "mysql-connector-java"  % "5.0.8",
     "com.datastax.cassandra"  % "cassandra-driver-core" % "2.1.4",
+    "org.apache.kafka"    %   "kafka-clients"    % "0.8.2.0",
     "com.mchange"         %   "c3p0"          % "0.9.5"
   )
 }

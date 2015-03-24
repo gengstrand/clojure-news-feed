@@ -21,6 +21,7 @@ object IO {
   val nosqlHost: String = "nosql_host"
   val nosqlKeyspace: String = "nosql_keyspace"
   val nosqlReadConsistencyLevel: String = "nosql_read_consistency_level"
+  val messagingBrokers = "messaging_brokers"
 
   def cacheAwareRead(o: PersistentDataStoreBindings, criteria: Map[String, Any], reader: PersistentDataStoreReader, cache: CacheAware): Iterable[Map[String, Any]] = {
     def loadFromDbAndCache: Iterable[Map[String, Any]] = {
