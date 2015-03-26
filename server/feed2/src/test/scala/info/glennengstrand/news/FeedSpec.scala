@@ -10,8 +10,15 @@ trait MockWriter extends PersistentDataStoreWriter {
   }
 }
 
+class MockPerformanceLogger extends PerformanceLogger {
+  def log(topic: String, entity: String, operation: String, duration: Long): Unit = {
+
+  }
+}
+
 class MockFactoryClass extends FactoryClass {
 
+  val performanceLogger = new MockPerformanceLogger
   def getParticipant(id: Long): Participant = {
     new Participant(id, "test") with MockWriter with MockCacheAware
   }
@@ -66,6 +73,12 @@ class MockFactoryClass extends FactoryClass {
       case "participant" => Some(getParticipant(state))
       case "friend" => Some(getFriend(state))
       case "inbound" => Some(getInbound(state))
+      case _ => None
+    }
+  }
+  def getObject(name: String): Option[Object] = {
+    name match {
+      case "logger" => Some(performanceLogger)
       case _ => None
     }
   }

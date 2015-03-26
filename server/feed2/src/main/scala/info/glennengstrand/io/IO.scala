@@ -3,7 +3,7 @@ package info.glennengstrand.io
 import java.text.{SimpleDateFormat, DateFormat}
 
 import com.mchange.v2.c3p0.ComboPooledDataSource
-import java.util.{Date, Properties}
+import java.util.{Calendar, Date, Properties}
 import scala.util.parsing.json.JSON
 import java.sql.{PreparedStatement, Connection}
 
@@ -88,6 +88,7 @@ abstract class FactoryClass {
   def getObject(name: String, id: Long): Option[Object]
   def getObject(name: String, id: Int): Option[Object]
   def getObject(name: String, state: String): Option[Object]
+  def getObject(name: String): Option[Object]
 }
 
 class EmptyFactoryClass extends FactoryClass {
@@ -98,6 +99,9 @@ class EmptyFactoryClass extends FactoryClass {
     None
   }
   def getObject(name: String, state: String): Option[Object] = {
+    None
+  }
+  def getObject(name: String): Option[Object] = {
     None
   }
 }
@@ -117,6 +121,15 @@ trait PersistentDataStoreReader {
 
 trait PersistentDataStoreWriter {
   def write(o: PersistentDataStoreBindings, state: Map[String, Any], criteria: Map[String, Any]): Map[String, Any]
+}
+
+trait PerformanceLogger {
+  def logRecord(entity: String, operation: String, duration: Long): String = {
+    val now = Calendar.getInstance()
+    val ts = now.get(Calendar.YEAR).toString + "|" + now.get(Calendar.MONTH).toString + "|" + now.get(Calendar.DAY_OF_MONTH).toString + "|" + now.get(Calendar.HOUR_OF_DAY).toString + "|" + now.get(Calendar.MINUTE).toString
+    ts + "|" + entity + "|" + operation + "|" + duration.toString
+  }
+  def log(topic: String, entity: String, operation: String, duration: Long): Unit
 }
 
 trait CacheAware {

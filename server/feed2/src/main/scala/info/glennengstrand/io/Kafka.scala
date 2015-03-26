@@ -4,7 +4,7 @@ import java.util.{Properties, Calendar}
 import org.apache.kafka.clients.producer.{ProducerRecord, Producer, KafkaProducer}
 import java.util.logging.{Level, Logger}
 
-object Kafka {
+class Kafka extends PerformanceLogger {
   val log = Logger.getLogger("info.glennengstrand.io.Kafka")
   def connect(): Producer[String, String] = {
     val config = new Properties
@@ -13,13 +13,12 @@ object Kafka {
   }
   lazy val logger = connect
   def log(topic: String, entity: String, operation: String, duration: Long): Unit = {
-    val now = Calendar.getInstance()
-    val ts = now.get(Calendar.YEAR).toString + "|" + now.get(Calendar.MONTH).toString + "|" + now.get(Calendar.DAY_OF_MONTH).toString + "|" + now.get(Calendar.HOUR_OF_DAY).toString + "|" + now.get(Calendar.MINUTE).toString
-    val msg = ts + "|" + entity + "|" + operation + "|" + duration.toString
+    val msg = logRecord(entity, operation, duration)
     try {
       logger.send(new ProducerRecord[String, String](topic, msg))
     } catch {
-      case e: Exception => log.log(Level.SEVERE, "messaging now available\n", e)
+      case e: Exception => log.log(Level.SEVERE, "messaging not available\n", e)
     }
   }
 }
+

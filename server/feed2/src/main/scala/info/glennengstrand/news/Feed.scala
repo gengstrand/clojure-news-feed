@@ -1,7 +1,7 @@
 package info.glennengstrand.news
 
 import akka.actor.Actor
-import info.glennengstrand.io.{EmptyFactoryClass, FactoryClass}
+import info.glennengstrand.io.{EmptyFactoryClass, FactoryClass, PerformanceLogger}
 import spray.routing._
 import spray.http._
 import spray.http.{StatusCodes, ContentType}
@@ -36,7 +36,11 @@ trait Feed extends HttpService {
         respondWithMediaType(`application/json`) {
           complete(
             try {
-              Feed.factory.getObject("participant", id).get.asInstanceOf[Participant].toJson
+              val before = System.currentTimeMillis()
+              val retVal = Feed.factory.getObject("participant", id).get.asInstanceOf[Participant].toJson
+              val after = System.currentTimeMillis()
+              Feed.factory.getObject("logger").get.asInstanceOf[PerformanceLogger].log("", "participant", "get", after - before)
+              retVal
             } catch {
               case e: Exception => {
                 e.printStackTrace()
@@ -49,8 +53,11 @@ trait Feed extends HttpService {
     path("participant.new") {
       post {
         entity(as[String]) { body =>
+          val before = System.currentTimeMillis()
           val retVal = Feed.factory.getObject("participant", body).get.asInstanceOf[Participant]
           retVal.save
+          val after = System.currentTimeMillis()
+          Feed.factory.getObject("logger").get.asInstanceOf[PerformanceLogger].log("", "participant", "post", after - before)
           respondWithMediaType(`application/json`) {
             complete(retVal.toJson)
           }
@@ -62,7 +69,11 @@ trait Feed extends HttpService {
           respondWithMediaType(`application/json`) {
             complete(
               try {
-                Feed.factory.getObject("friends", id).get.asInstanceOf[Friends].toJson
+                val before = System.currentTimeMillis()
+                val retVal = Feed.factory.getObject("friends", id).get.asInstanceOf[Friends].toJson
+                val after = System.currentTimeMillis()
+                Feed.factory.getObject("logger").get.asInstanceOf[PerformanceLogger].log("", "friends", "get", after - before)
+                retVal
               } catch {
                 case e: Exception => {
                   e.printStackTrace()
@@ -75,8 +86,11 @@ trait Feed extends HttpService {
       path("friends.new") {
         post {
           entity(as[String]) { body =>
+            val before = System.currentTimeMillis()
             val retVal = Feed.factory.getObject("friend", body).get.asInstanceOf[Friend]
             retVal.save
+            val after = System.currentTimeMillis()
+            Feed.factory.getObject("logger").get.asInstanceOf[PerformanceLogger].log("", "friends", "post", after - before)
             respondWithMediaType(`application/json`) {
               complete(retVal.toJson)
             }
@@ -88,7 +102,11 @@ trait Feed extends HttpService {
           respondWithMediaType(`application/json`) {
             complete(
               try {
-                Feed.factory.getObject("inbound", id).get.asInstanceOf[InboundFeed].toJson
+                val before = System.currentTimeMillis()
+                val retVal = Feed.factory.getObject("inbound", id).get.asInstanceOf[InboundFeed].toJson
+                val after = System.currentTimeMillis()
+                Feed.factory.getObject("logger").get.asInstanceOf[PerformanceLogger].log("", "inbound", "get", after - before)
+                retVal
               } catch {
                 case e: Exception => {
                   e.printStackTrace()
@@ -101,8 +119,44 @@ trait Feed extends HttpService {
       path("inbound.new") {
         post {
           entity(as[String]) { body =>
+            val before = System.currentTimeMillis()
             val retVal = Feed.factory.getObject("inbound", body).get.asInstanceOf[Inbound]
             retVal.save
+            val after = System.currentTimeMillis()
+            Feed.factory.getObject("logger").get.asInstanceOf[PerformanceLogger].log("", "inbound", "post", after - before)
+            respondWithMediaType(`application/json`) {
+              complete(retVal.toJson)
+            }
+          }
+        }
+      } ~
+      path("outbound" / IntNumber) { id =>
+        get {
+          respondWithMediaType(`application/json`) {
+            complete(
+              try {
+                val before = System.currentTimeMillis()
+                val retVal = Feed.factory.getObject("outbound", id).get.asInstanceOf[OutboundFeed].toJson
+                val after = System.currentTimeMillis()
+                Feed.factory.getObject("logger").get.asInstanceOf[PerformanceLogger].log("", "outbound", "get", after - before)
+                retVal
+              } catch {
+                case e: Exception => {
+                  e.printStackTrace()
+                  HttpResponse(StatusCodes.InternalServerError, e.getLocalizedMessage)
+                }
+              })
+          }
+        }
+      } ~
+      path("outbound.new") {
+        post {
+          entity(as[String]) { body =>
+            val before = System.currentTimeMillis()
+            val retVal = Feed.factory.getObject("outbound", body).get.asInstanceOf[Outbound]
+            retVal.save
+            val after = System.currentTimeMillis()
+            Feed.factory.getObject("logger").get.asInstanceOf[PerformanceLogger].log("", "outbound", "post", after - before)
             respondWithMediaType(`application/json`) {
               complete(retVal.toJson)
             }
