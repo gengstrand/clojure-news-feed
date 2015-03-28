@@ -8,20 +8,21 @@ import scala.util.parsing.json.JSON
 import java.sql.{PreparedStatement, Connection}
 
 object IO {
-  val settings: Properties = new Properties
-  val df: DateFormat = new SimpleDateFormat("yyyy-MM-dd HH:mm:ssZ")
-  val jdbcDriveName: String = "jdbc_driver"
-  val jdbcUrl: String = "jdbc_url"
-  val jdbcUser: String = "jdbc_user"
-  val jdbcPassword: String = "jdbc_password"
-  val jdbcMinPoolSize: String = "jdbc_min_pool_size"
-  val jdbcMaxPoolSize: String = "jdbc_max_pool_size"
-  val jdbcAcquireIncrement: String = "jdbc_acquire_increment"
-  val jdbcMaxStatements: String = "jdbc_max_statements"
-  val nosqlHost: String = "nosql_host"
-  val nosqlKeyspace: String = "nosql_keyspace"
-  val nosqlReadConsistencyLevel: String = "nosql_read_consistency_level"
+  val settings = new Properties
+  val df = new SimpleDateFormat("yyyy-MM-dd HH:mm:ssZ")
+  val jdbcDriveName = "jdbc_driver"
+  val jdbcUrl = "jdbc_url"
+  val jdbcUser = "jdbc_user"
+  val jdbcPassword = "jdbc_password"
+  val jdbcMinPoolSize = "jdbc_min_pool_size"
+  val jdbcMaxPoolSize = "jdbc_max_pool_size"
+  val jdbcAcquireIncrement = "jdbc_acquire_increment"
+  val jdbcMaxStatements = "jdbc_max_statements"
+  val nosqlHost = "nosql_host"
+  val nosqlKeyspace = "nosql_keyspace"
+  val nosqlReadConsistencyLevel = "nosql_read_consistency_level"
   val messagingBrokers = "messaging_brokers"
+  val zookeeperServers = "zookeeper_servers"
 
   def cacheAwareRead(o: PersistentDataStoreBindings, criteria: Map[String, Any], reader: PersistentDataStoreReader, cache: CacheAware): Iterable[Map[String, Any]] = {
     def loadFromDbAndCache: Iterable[Map[String, Any]] = {

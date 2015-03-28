@@ -8,7 +8,12 @@ class Kafka extends PerformanceLogger {
   val log = Logger.getLogger("info.glennengstrand.io.Kafka")
   def connect(): Producer[String, String] = {
     val config = new Properties
+    config.setProperty("bootstrap.servers", IO.settings.getProperty(IO.messagingBrokers))
     config.setProperty("metadata.broker.list", IO.settings.getProperty(IO.messagingBrokers))
+    config.setProperty("zk.connect", IO.settings.getProperty(IO.zookeeperServers))
+    config.setProperty("request.required.acks", "0")
+    config.setProperty("value.serializer", "org.apache.kafka.common.serialization.StringSerializer");
+    config.setProperty("key.serializer", "org.apache.kafka.common.serialization.StringSerializer");
     new KafkaProducer[String, String](config)
   }
   lazy val logger = connect
