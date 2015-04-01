@@ -23,6 +23,7 @@ object IO {
   val nosqlReadConsistencyLevel = "nosql_read_consistency_level"
   val messagingBrokers = "messaging_brokers"
   val zookeeperServers = "zookeeper_servers"
+  val searchHost = "search_host"
 
   def cacheAwareRead(o: PersistentDataStoreBindings, criteria: Map[String, Any], reader: PersistentDataStoreReader, cache: CacheAware): Iterable[Map[String, Any]] = {
     def loadFromDbAndCache: Iterable[Map[String, Any]] = {
@@ -122,6 +123,11 @@ trait PersistentDataStoreReader {
 
 trait PersistentDataStoreWriter {
   def write(o: PersistentDataStoreBindings, state: Map[String, Any], criteria: Map[String, Any]): Map[String, Any]
+}
+
+trait PersistentDataStoreSearcher {
+  def search(terms: String): Iterable[Long]
+  def index(id: Long, content: String): Unit
 }
 
 trait PerformanceLogger {

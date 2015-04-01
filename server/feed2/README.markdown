@@ -17,6 +17,9 @@ cd /home/glenn/oss/redis/redis-2.8.2/src
 cd /home/glenn/Apps/apache-cassandra-1.2.2/bin
 ./cassandra -f
 
+cd ~/oss/solr/solr-4.5.1/solr/example
+java -Dsolr.solr.home=multicore -jar start.jar
+
 cd /home/glenn/git/clojure-news-feed/server/feed2
 sbt
 compile
@@ -24,5 +27,14 @@ assembly
 exit
 java -jar target/scala-2.11/feed2-assembly-0.1.jar src/main/resources/settings.properties
 
+## some sample test curl calls
+
+curl http://127.0.0.1:8080/participant/3
+
+curl http://127.0.0.1:8080/friends/19
+
+curl http://127.0.0.1:8080/inbound/3
+
+curl -d 'terms=27309' http://127.0.0.1:8080/outbound/search
 
 

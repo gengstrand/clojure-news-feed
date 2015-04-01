@@ -54,11 +54,11 @@ class Friend(id: Long, fromParticipantID: Long, toParticipantID: Long) extends F
     invalidate(Friends.bindings, criteria)
   }
 
-  def toJson: String = {
+  def toJson(factory: FactoryClass): String = {
     val state: Map[String, Any] = Map(
-      "FromParticipantID" -> fromParticipantID,
-      "ToParticipantID" -> toParticipantID,
-      "FriendsID" -> id
+      "from" -> factory.getObject("participant", fromParticipantID).get.asInstanceOf[Participant].toJson,
+      "to" -> factory.getObject("participant", toParticipantID).get.asInstanceOf[Participant].toJson,
+      "id" -> id
     )
     IO.toJson(state)
   }
@@ -72,7 +72,7 @@ class Friends(id: Long, state: Iterable[Map[String, Any]]) extends Iterator[Frie
     val kv = i.next()
     new Friend(IO.convertToLong(kv("FriendsID")), id, IO.convertToLong(kv("ParticipantID"))) with MySqlWriter with RedisCacheAware
   }
-  def toJson: String = {
-    "[" +  map(f => f.toJson).reduce(_ + "," + _) + "]"
+  def toJson(factory: FactoryClass): String = {
+    "[" +  map(f => f.toJson(factory)).reduce(_ + "," + _) + "]"
   }
 }

@@ -50,7 +50,7 @@ trait Feed extends HttpService {
         }
       }
     } ~
-    path("participant.new") {
+    path("participant" / "new") {
       post {
         entity(as[String]) { body =>
           val before = System.currentTimeMillis()
@@ -70,7 +70,7 @@ trait Feed extends HttpService {
             complete(
               try {
                 val before = System.currentTimeMillis()
-                val retVal = Feed.factory.getObject("friends", id).get.asInstanceOf[Friends].toJson
+                val retVal = Feed.factory.getObject("friends", id).get.asInstanceOf[Friends].toJson(Feed.factory)
                 val after = System.currentTimeMillis()
                 Feed.factory.getObject("logger").get.asInstanceOf[PerformanceLogger].log("feed", "friends", "get", after - before)
                 retVal
@@ -83,16 +83,17 @@ trait Feed extends HttpService {
           }
         }
       } ~
-      path("friends.new") {
+      path("friends" / "new") {
         post {
           entity(as[String]) { body =>
             val before = System.currentTimeMillis()
-            val retVal = Feed.factory.getObject("friend", body).get.asInstanceOf[Friend]
-            retVal.save
+            val friend = Feed.factory.getObject("friend", body).get.asInstanceOf[Friend]
+            friend.save
+            val retVal = friend.toJson(Feed.factory)
             val after = System.currentTimeMillis()
             Feed.factory.getObject("logger").get.asInstanceOf[PerformanceLogger].log("feed", "friends", "post", after - before)
             respondWithMediaType(`application/json`) {
-              complete(retVal.toJson)
+              complete(retVal)
             }
           }
         }
@@ -116,7 +117,7 @@ trait Feed extends HttpService {
           }
         }
       } ~
-      path("inbound.new") {
+      path("inbound" / "new") {
         post {
           entity(as[String]) { body =>
             val before = System.currentTimeMillis()
@@ -149,7 +150,7 @@ trait Feed extends HttpService {
           }
         }
       } ~
-      path("outbound.new") {
+      path("outbound" / "new") {
         post {
           entity(as[String]) { body =>
             val before = System.currentTimeMillis()
@@ -159,6 +160,19 @@ trait Feed extends HttpService {
             Feed.factory.getObject("logger").get.asInstanceOf[PerformanceLogger].log("feed", "outbound", "post", after - before)
             respondWithMediaType(`application/json`) {
               complete(retVal.toJson)
+            }
+          }
+        }
+      } ~
+      path("outbound" / "search") {
+        post {
+          entity(as[String]) { body =>
+            val before = System.currentTimeMillis()
+            val retVal = "[" + Outbound.lookup(body).map(o => o.toJson).reduce(_ + "," + _) + "]"
+            val after = System.currentTimeMillis()
+            Feed.factory.getObject("logger").get.asInstanceOf[PerformanceLogger].log("feed", "outbound", "search", after - before)
+            respondWithMediaType(`application/json`) {
+              complete(retVal)
             }
           }
         }

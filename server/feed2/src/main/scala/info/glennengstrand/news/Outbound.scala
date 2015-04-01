@@ -5,7 +5,7 @@ import java.util.logging.Logger
 
 import info.glennengstrand.io._
 
-object Outbound {
+object Outbound extends SolrSearcher {
   val log = Logger.getLogger("info.glennengstrand.news.Outbound")
   val reader: PersistentDataStoreReader = new CassandraReader
   val cache: CacheAware = new MockCache
@@ -32,11 +32,19 @@ object Outbound {
   val bindings = new OutboundBindings
   def apply(id: Int) : OutboundFeed = {
     val criteria: Map[String, Any] = Map("participantID" -> id)
-    new OutboundFeed(id, IO.cacheAwareRead(bindings, criteria, reader, cache)) with CassandraWriter with MockCacheAware
+    new OutboundFeed(id, IO.cacheAwareRead(bindings, criteria, reader, cache)) with CassandraWriter with MockCacheAware with SolrSearcher
   }
   def apply(state: String): Outbound = {
     val s = IO.fromFormPost(state)
-    new Outbound(s("participantID").asInstanceOf[String].toLong, IO.df.parse(s("occurred").asInstanceOf[String]), s("subject").asInstanceOf[String], s("story").asInstanceOf[String]) with CassandraWriter with MockCacheAware
+    val id = s("participantID").asInstanceOf[String].toLong
+    val story = s("story").asInstanceOf[String]
+    index(id, story)
+    new Outbound(id, IO.df.parse(s("occurred").asInstanceOf[String]), s("subject").asInstanceOf[String], story) with CassandraWriter with MockCacheAware
+  }
+  def lookup(state: String): Iterable[OutboundFeed] = {
+    val s = IO.fromFormPost(state)
+    val terms = s("terms").asInstanceOf[String]
+    search(terms).map(id => Outbound(id.toInt))
   }
 }
 
@@ -60,7 +68,6 @@ class Outbound(participantID: Long, occurred: Date, subject: String, story: Stri
     write(Outbound.bindings, getState, criteria)
     invalidate(Outbound.bindings, criteria)
   }
-
   def toJson: String = {
     IO.toJson(getState)
   }
@@ -77,7 +84,7 @@ class OutboundFeed(id: Int, state: Iterable[Map[String, Any]]) extends Iterator[
       case true => kv("dateOf(occurred)")
       case _ => kv("occurred")
     }
-    new Outbound(id, IO.convertToDate(occurred), kv("subject").toString, kv("story").toString) with CassandraWriter with MockCacheAware
+    new Outbound(id, IO.convertToDate(occurred), kv("subject").toString, kv("story").toString) with CassandraWriter with MockCacheAware with SolrSearcher
   }
   def toJson: String = {
     "[" +  map(f => f.toJson).reduce(_ + "," + _) + "]"
