@@ -26,7 +26,9 @@ libraryDependencies ++= {
     "com.datastax.cassandra"  % "cassandra-driver-core" % "2.1.4",
     "org.apache.kafka"    %   "kafka-clients"    % "0.8.2.0",
     "com.mchange"         %   "c3p0"          % "0.9.5",
-    "com.dynamicalsoftware"   %   "feed.support.services"   %   "0.0.1-SNAPSHOT"
+    "com.dynamicalsoftware"   %   "feed.support.services"   %   "0.0.1-SNAPSHOT", 
+    "org.apache.solr"	      %	  "solr-core"		    %	"4.5.0", 
+    "org.apache.solr"	      %	  "solr-solrj"		    %	"4.5.0"
   )
 }
 

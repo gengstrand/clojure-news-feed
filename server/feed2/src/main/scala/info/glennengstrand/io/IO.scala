@@ -126,7 +126,7 @@ trait PersistentDataStoreWriter {
 }
 
 trait PersistentDataStoreSearcher {
-  def search(terms: String): Iterable[Long]
+  def search(terms: String): Iterable[java.lang.Long]
   def index(id: Long, content: String): Unit
 }
 

@@ -11,7 +11,7 @@ trait MockWriter extends PersistentDataStoreWriter {
 }
 
 trait MockSearcher extends PersistentDataStoreSearcher {
-  def search(terms: String): Iterable[Long] = {
+  def search(terms: String): Iterable[java.lang.Long] = {
     List(1, 2, 3)
   }
   def index(id: Long, content: String): Unit = {
