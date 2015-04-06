@@ -115,7 +115,7 @@ trait MySqlWriter extends PersistentDataStoreWriter with PooledRelationalDataSto
   lazy val db: Connection = getDbConnection
   def write(o: PersistentDataStoreBindings, state: Map[String, Any], criteria: Map[String, Any]): Map[String, Any] = {
     val stmt = MySql.prepare(upsert, o.entity, o.upsertInputs, db)
-    MySql.prepare(stmt, o.upsertInputs, criteria)
+    MySql.prepare(stmt, o.upsertInputs, state)
     MySql.execute(stmt, o.upsertOutputs).toMap[String, Any]
   }
 }

@@ -33,7 +33,11 @@ object Friends {
   }
   def apply(state: String): Friend = {
     val s = IO.fromFormPost(state)
-    new Friend(s("FriendsID").asInstanceOf[String].toLong, s("fromParticipantID").asInstanceOf[String].toLong, s("toParticipantID").asInstanceOf[String].toLong) with MySqlWriter with RedisCacheAware
+    val id = s.contains("FriendsID") match {
+      case true => s("FriendsID").asInstanceOf[String].toLong
+      case _ => 0l
+    }
+    new Friend(id, s("fromParticipantID").asInstanceOf[String].toLong, s("toParticipantID").asInstanceOf[String].toLong) with MySqlWriter with RedisCacheAware
   }
 }
 
@@ -42,7 +46,7 @@ case class FriendState(id: Long, fromParticipantID: Long, toParticipantID: Long)
 class Friend(id: Long, fromParticipantID: Long, toParticipantID: Long) extends FriendState(id, fromParticipantID, toParticipantID) {
   this: PersistentDataStoreWriter with CacheAware =>
 
-  def save: Unit = {
+  def save: Friend = {
     val state: Map[String, Any] = Map(
       "FromParticipantID" -> fromParticipantID,
       "ToParticipantID" -> toParticipantID
@@ -50,8 +54,10 @@ class Friend(id: Long, fromParticipantID: Long, toParticipantID: Long) extends F
     val criteria: Map[String, Any] = Map(
       "FriendsID" -> id
     )
-    write(Friends.bindings, state, criteria)
+    val result = write(Friends.bindings, state, criteria)
     invalidate(Friends.bindings, criteria)
+    val newId = result.get("id").asInstanceOf[Long]
+    new Friend(newId, fromParticipantID, toParticipantID) with MySqlWriter with RedisCacheAware
   }
 
   def toJson(factory: FactoryClass): String = {

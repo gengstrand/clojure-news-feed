@@ -37,4 +37,5 @@ curl http://127.0.0.1:8080/inbound/3
 
 curl -d 'terms=27309' http://127.0.0.1:8080/outbound/search
 
+curl -d name=Griff http://localhost:8080/participant/new
 

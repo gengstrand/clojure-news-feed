@@ -6,7 +6,7 @@ import spray.testkit.Specs2RouteTest
 
 trait MockWriter extends PersistentDataStoreWriter {
   def write(o: PersistentDataStoreBindings, state: Map[String, Any], criteria: Map[String, Any]): Map[String, Any] = {
-    Map()
+    Map("id" -> 1l)
   }
 }
 

@@ -33,7 +33,11 @@ object Participant {
   }
   def apply(state: String): Participant = {
     val s = IO.fromFormPost(state)
-    new Participant(s("id").asInstanceOf[String].toLong, s("name").asInstanceOf[String]) with MySqlWriter with RedisCacheAware
+    val id = s.contains("id") match {
+      case true => s("id").asInstanceOf[String].toLong
+      case _ => 0l
+    }
+    new Participant(id, s("name").asInstanceOf[String]) with MySqlWriter with RedisCacheAware
   }
 }
 
@@ -42,15 +46,17 @@ case class ParticipantState(id: Long, name: String)
 class Participant(id: Long, name: String) extends ParticipantState(id, name) {
   this: PersistentDataStoreWriter with CacheAware =>
 
-  def save: Unit = {
+  def save: Participant = {
     val state: Map[String, Any] = Map(
       "name" -> name
     )
     val criteria: Map[String, Any] = Map(
       "id" -> id
     )
-    write(Participant.bindings, state, criteria)
+    val result = write(Participant.bindings, state, criteria)
+    val newId = result("id").asInstanceOf[Long]
     invalidate(Participant.bindings, criteria)
+    new Participant(newId, name) with MySqlWriter with RedisCacheAware
   }
 
   def toJson: String = {
