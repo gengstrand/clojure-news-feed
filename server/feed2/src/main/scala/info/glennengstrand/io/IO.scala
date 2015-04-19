@@ -9,7 +9,7 @@ import java.sql.{PreparedStatement, Connection}
 
 object IO {
   val settings = new Properties
-  val df = new SimpleDateFormat("yyyy-MM-dd HH:mm:ssZ")
+  val df = new SimpleDateFormat("yyyy-MM-dd")
   val jdbcDriveName = "jdbc_driver"
   val jdbcUrl = "jdbc_url"
   val jdbcUser = "jdbc_user"
@@ -21,6 +21,7 @@ object IO {
   val nosqlHost = "nosql_host"
   val nosqlKeyspace = "nosql_keyspace"
   val nosqlReadConsistencyLevel = "nosql_read_consistency_level"
+  val nosqlTimeToLiveInSeconds = "nosql_ttl"
   val messagingBrokers = "messaging_brokers"
   val zookeeperServers = "zookeeper_servers"
   val searchHost = "search_host"
@@ -77,6 +78,14 @@ object IO {
       case s: String => s.toLong
     }
   }
+  def convertToInt(v: Any) : Int = {
+    v match {
+      case l: Long => l.toInt
+      case d: Double => d.toInt
+      case i: Int => i
+      case s: String => s.toInt
+    }
+  }
   def convertToDate(v: Any): Date = {
     v match {
       case l: Long => new Date(l)
@@ -115,6 +124,13 @@ abstract class PersistentDataStoreBindings {
   def fetchOrder: Map[String, String]
   def upsertInputs: Iterable[String]
   def upsertOutputs: Iterable[(String, String)]
+  def getTypeOf(fieldName: String): String = {
+    val retVal = for ((fn, ft) <- fetchOutputs if fieldName == fn) yield ft
+    retVal.isEmpty match {
+      case true => "Int"
+      case _ => retVal.head
+    }
+  }
 }
 
 trait PersistentDataStoreReader {

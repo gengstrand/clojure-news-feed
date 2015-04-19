@@ -17,7 +17,7 @@ object Inbound {
       List("participantID")
     }
     def fetchOutputs: Iterable[(String, String)] = {
-      List(("dateOf(occurred)", "Date"), ("fromParticipantID", "Int"), ("subject", "String"), ("story", "String"))
+      List(("occurred", "Date"), ("fromParticipantID", "Int"), ("subject", "String"), ("story", "String"))
     }
     def upsertInputs: Iterable[String] = {
       List("participantID", "fromParticipantID", "occurred", "subject", "story")
@@ -36,13 +36,13 @@ object Inbound {
   }
   def apply(state: String): Inbound = {
     val s = IO.fromFormPost(state)
-    new Inbound(s("participantID").asInstanceOf[String].toLong, IO.df.parse(s("occurred").asInstanceOf[String]), s("fromParticipantID").asInstanceOf[String].toLong, s("subject").asInstanceOf[String], s("story").asInstanceOf[String]) with CassandraWriter with MockCacheAware
+    new Inbound(s("participantID").asInstanceOf[String].toInt, IO.df.parse(s("occurred").asInstanceOf[String]), s("fromParticipantID").asInstanceOf[String].toInt, s("subject").asInstanceOf[String], s("story").asInstanceOf[String]) with CassandraWriter with MockCacheAware
   }
 }
 
-case class InboundState(participantID: Long, occurred: Date, fromParticipantID: Long, subject: String, story: String)
+case class InboundState(participantID: Int, occurred: Date, fromParticipantID: Int, subject: String, story: String)
 
-class Inbound(participantID: Long, occurred: Date, fromParticipantID: Long, subject: String, story: String) extends InboundState(participantID, occurred, fromParticipantID, subject, story) {
+class Inbound(participantID: Int, occurred: Date, fromParticipantID: Int, subject: String, story: String) extends InboundState(participantID, occurred, fromParticipantID, subject, story) {
   this: PersistentDataStoreWriter with CacheAware =>
 
   def getState: Map[String, Any] = {
@@ -78,7 +78,7 @@ class InboundFeed(id: Int, state: Iterable[Map[String, Any]]) extends Iterator[I
       case true => kv("dateOf(occurred)")
       case _ => kv("occurred")
     }
-    new Inbound(id, IO.convertToDate(occurred), IO.convertToLong(kv("fromParticipantID")), kv("subject").toString, kv("story").toString) with CassandraWriter with MockCacheAware
+    new Inbound(id, IO.convertToDate(occurred), IO.convertToInt(kv("fromParticipantID")), kv("subject").toString, kv("story").toString) with CassandraWriter with MockCacheAware
   }
   def toJson: String = {
     "[" +  map(f => f.toJson).reduce(_ + "," + _) + "]"

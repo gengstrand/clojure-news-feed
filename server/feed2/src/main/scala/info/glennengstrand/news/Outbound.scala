@@ -17,7 +17,7 @@ object Outbound extends SolrSearcher {
       List("participantID")
     }
     def fetchOutputs: Iterable[(String, String)] = {
-      List(("dateOf(occurred)", "Date"), ("subject", "String"), ("story", "String"))
+      List(("occurred", "Date"), ("subject", "String"), ("story", "String"))
     }
     def upsertInputs: Iterable[String] = {
       List("participantID", "occurred", "subject", "story")
@@ -36,7 +36,7 @@ object Outbound extends SolrSearcher {
   }
   def apply(state: String): Outbound = {
     val s = IO.fromFormPost(state)
-    val id = s("participantID").asInstanceOf[String].toLong
+    val id = s("from").asInstanceOf[String].toInt
     val story = s("story").asInstanceOf[String]
     index(id, story)
     new Outbound(id, IO.df.parse(s("occurred").asInstanceOf[String]), s("subject").asInstanceOf[String], story) with CassandraWriter with MockCacheAware
@@ -48,9 +48,9 @@ object Outbound extends SolrSearcher {
   }
 }
 
-case class OutboundState(participantID: Long, occurred: Date, subject: String, story: String)
+case class OutboundState(participantID: Int, occurred: Date, subject: String, story: String)
 
-class Outbound(participantID: Long, occurred: Date, subject: String, story: String) extends OutboundState(participantID, occurred, subject, story) {
+class Outbound(participantID: Int, occurred: Date, subject: String, story: String) extends OutboundState(participantID, occurred, subject, story) {
   this: PersistentDataStoreWriter with CacheAware =>
 
   def getState: Map[String, Any] = {
@@ -67,6 +67,11 @@ class Outbound(participantID: Long, occurred: Date, subject: String, story: Stri
     )
     write(Outbound.bindings, getState, criteria)
     invalidate(Outbound.bindings, criteria)
+    val broadcast = Friends(participantID)
+    broadcast.foreach( f => {
+      val inbound =  new Inbound(f.toParticipantID.toInt, occurred, participantID, subject, story) with CassandraWriter with MockCacheAware
+      inbound.save
+    })
   }
   def toJson: String = {
     IO.toJson(getState)

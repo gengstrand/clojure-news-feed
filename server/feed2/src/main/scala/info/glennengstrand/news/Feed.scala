@@ -13,22 +13,13 @@ object Feed {
   var factory: FactoryClass = new EmptyFactoryClass
 }
 
-// we don't implement our route structure directly in the service actor because
-// we want to be able to test it independently, without having to spin up an actor
 class FeedActor extends Actor with Feed {
 
-  // the HttpService trait defines only one abstract member, which
-  // connects the services environment to the enclosing actor or test
   def actorRefFactory = context
 
-  // this actor only runs our route, but you could add
-  // other things here, like request stream processing
-  // or timeout handling
   def receive = runRoute(myRoute)
 }
 
-
-// this trait defines our service behavior independently from the service actor
 trait Feed extends HttpService {
   val log = Logger.getLogger("info.glennengstrand.news.Feed")
   val myRoute =
@@ -55,8 +46,8 @@ trait Feed extends HttpService {
         entity(as[String]) { body =>
           val before = System.currentTimeMillis()
           try {
-            val retVal = Feed.factory.getObject("participant", body).get.asInstanceOf[Participant]
-            retVal.save
+            val p = Feed.factory.getObject("participant", body).get.asInstanceOf[Participant]
+            val retVal = p.save
             val after = System.currentTimeMillis()
             Feed.factory.getObject("logger").get.asInstanceOf[PerformanceLogger].log("feed", "participant", "post", after - before)
             respondWithMediaType(`application/json`) {
@@ -95,8 +86,8 @@ trait Feed extends HttpService {
             val before = System.currentTimeMillis()
             try {
               val friend = Feed.factory.getObject("friend", body).get.asInstanceOf[Friend]
-              friend.save
-              val retVal = friend.toJson(Feed.factory)
+              val f = friend.save
+              val retVal = f.toJson(Feed.factory)
               val after = System.currentTimeMillis()
               Feed.factory.getObject("logger").get.asInstanceOf[PerformanceLogger].log("feed", "friends", "post", after - before)
               respondWithMediaType(`application/json`) {
@@ -125,27 +116,6 @@ trait Feed extends HttpService {
             case e: Exception => {
               log.log(Level.SEVERE, "cannot fetch inbound\n", e)
               complete(HttpResponse(StatusCodes.InternalServerError, e.getLocalizedMessage))
-            }
-          }
-        }
-      } ~
-      path("inbound" / "new") {
-        post {
-          entity(as[String]) { body =>
-            val before = System.currentTimeMillis()
-            try {
-              val retVal = Feed.factory.getObject("inbound", body).get.asInstanceOf[Inbound]
-              retVal.save
-              val after = System.currentTimeMillis()
-              Feed.factory.getObject("logger").get.asInstanceOf[PerformanceLogger].log("feed", "inbound", "post", after - before)
-              respondWithMediaType(`application/json`) {
-                complete(retVal.toJson)
-              }
-            } catch {
-              case e: Exception => {
-                log.log(Level.SEVERE, "cannot upsert inbound\n", e)
-                complete(HttpResponse(StatusCodes.InternalServerError, e.getLocalizedMessage))
-              }
             }
           }
         }

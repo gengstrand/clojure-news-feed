@@ -39,3 +39,7 @@ curl -d 'terms=27309' http://127.0.0.1:8080/outbound/search
 
 curl -d name=Griff http://localhost:8080/participant/new
 
+curl -d from=702 -d to=703 http://localhost:8080/friends/new
+
+curl -d from=19 -d occurred=2015-04-18 -d subject=test -d story=test http://localhost:8080/outbound/new
+

@@ -1,11 +1,14 @@
 package info.glennengstrand.io
 
+import java.util.logging.Logger
+
 import info.glennengstrand.io._
 import java.sql.{ResultSet, PreparedStatement, Connection}
 
 import scala.collection.mutable
 
 object MySql {
+  val log = Logger.getLogger("info.glennengstrand.io.MySql")
   val sql: scala.collection.mutable.Map[String, PreparedStatement] = scala.collection.mutable.Map()
 
   def prepare(operation: String, entity: String, inputs: Iterable[String], db: Connection): PreparedStatement = {
@@ -59,6 +62,7 @@ object MySql {
       setStatementParameterFromValue(stmt, v, fii)
       fii += 1
     }}
+    log.warning(stmt.toString)
   }
 
   def query(stmt: PreparedStatement, outputs: Iterable[(String, String)]): Iterable[Map[String, Any]] = {

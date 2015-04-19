@@ -63,7 +63,7 @@ class MockFactoryClass extends FactoryClass {
   }
   def getInbound(state: String): Inbound = {
     val s = IO.fromFormPost(state)
-    new Inbound(s("participantID").asInstanceOf[String].toLong, IO.df.parse(s("occurred").asInstanceOf[String]), s("fromParticipantID").asInstanceOf[String].toLong, s("subject").asInstanceOf[String], s("story").asInstanceOf[String]) with MockWriter with MockCacheAware
+    new Inbound(s("participantID").asInstanceOf[String].toInt, IO.df.parse(s("occurred").asInstanceOf[String]), s("fromParticipantID").asInstanceOf[String].toInt, s("subject").asInstanceOf[String], s("story").asInstanceOf[String]) with MockWriter with MockCacheAware
   }
   def getOutbound(id: Int): OutboundFeed = {
     val state: Iterable[Map[String, Any]] = List(
@@ -79,7 +79,7 @@ class MockFactoryClass extends FactoryClass {
   }
   def getOutbound(state: String): Outbound = {
     val s = IO.fromFormPost(state)
-    new Outbound(s("participantID").asInstanceOf[String].toLong, IO.df.parse(s("occurred").asInstanceOf[String]), s("subject").asInstanceOf[String], s("story").asInstanceOf[String]) with MockWriter with MockCacheAware
+    new Outbound(s("participantID").asInstanceOf[String].toInt, IO.df.parse(s("occurred").asInstanceOf[String]), s("subject").asInstanceOf[String], s("story").asInstanceOf[String]) with MockWriter with MockCacheAware
   }
   def getObject(name: String, id: Long): Option[Object] = {
     name match {

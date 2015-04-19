@@ -37,7 +37,7 @@ object Friends {
       case true => s("FriendsID").asInstanceOf[String].toLong
       case _ => 0l
     }
-    new Friend(id, s("fromParticipantID").asInstanceOf[String].toLong, s("toParticipantID").asInstanceOf[String].toLong) with MySqlWriter with RedisCacheAware
+    new Friend(id, s("from").asInstanceOf[String].toLong, s("to").asInstanceOf[String].toLong) with MySqlWriter with RedisCacheAware
   }
 }
 
@@ -79,6 +79,9 @@ class Friends(id: Long, state: Iterable[Map[String, Any]]) extends Iterator[Frie
     new Friend(IO.convertToLong(kv("FriendsID")), id, IO.convertToLong(kv("ParticipantID"))) with MySqlWriter with RedisCacheAware
   }
   def toJson(factory: FactoryClass): String = {
-    "[" +  map(f => f.toJson(factory)).reduce(_ + "," + _) + "]"
+    isEmpty match {
+      case true => "[]"
+      case _ => "[" +  map(f => f.toJson(factory)).reduce(_ + "," + _) + "]"
+    }
   }
 }
