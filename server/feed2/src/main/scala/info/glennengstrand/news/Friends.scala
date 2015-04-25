@@ -37,7 +37,11 @@ object Friends {
       case true => s("FriendsID").asInstanceOf[String].toLong
       case _ => 0l
     }
-    new Friend(id, s("from").asInstanceOf[String].toLong, s("to").asInstanceOf[String].toLong) with MySqlWriter with RedisCacheAware
+    IO.settings.getProperty(IO.jdbcVendor) match {
+      case "mysql" => new Friend(id, s("from").asInstanceOf[String].toLong, s("to").asInstanceOf[String].toLong) with MySqlWriter with RedisCacheAware
+      case _ => new Friend(id, s("from").asInstanceOf[String].toLong, s("to").asInstanceOf[String].toLong) with PostgreSqlWriter with RedisCacheAware
+    }
+
   }
 }
 
@@ -76,7 +80,10 @@ class Friends(id: Long, state: Iterable[Map[String, Any]]) extends Iterator[Frie
   def hasNext = i.hasNext
   def next() = {
     val kv = i.next()
-    new Friend(IO.convertToLong(kv("FriendsID")), id, IO.convertToLong(kv("ParticipantID"))) with MySqlWriter with RedisCacheAware
+    IO.settings.getProperty(IO.jdbcVendor) match {
+      case "mysql" => new Friend(IO.convertToLong(kv("FriendsID")), id, IO.convertToLong(kv("ParticipantID"))) with MySqlWriter with RedisCacheAware
+      case _ => new Friend(IO.convertToLong(kv("FriendsID")), id, IO.convertToLong(kv("ParticipantID"))) with PostgreSqlWriter with RedisCacheAware
+    }
   }
   def toJson(factory: FactoryClass): String = {
     isEmpty match {

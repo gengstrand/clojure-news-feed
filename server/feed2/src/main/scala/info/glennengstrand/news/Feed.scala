@@ -164,7 +164,11 @@ trait Feed extends HttpService {
           entity(as[String]) { body =>
             val before = System.currentTimeMillis()
             try {
-                  val retVal = "[" + Outbound.lookup(body).map(o => o.toJson).reduce(_ + "," + _) + "]"
+		  val results = Outbound.lookup(body).map(o => o.toJson)
+		  val retVal = results.isEmpty match {
+		  	case true => "[]"
+			case _ => "[" + results.reduce(_ + "," + _) + "]"
+		  }
                   val after = System.currentTimeMillis()
                   Feed.factory.getObject("logger").get.asInstanceOf[PerformanceLogger].log("feed", "outbound", "search", after - before)
                   respondWithMediaType(`application/json`) {

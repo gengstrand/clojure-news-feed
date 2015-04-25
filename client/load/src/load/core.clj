@@ -4,7 +4,7 @@
 (require '[clj-http.client :as client])
 
 (def host "localhost")
-(def port "3000")
+(def port "8080")
 
 (defn service-url
   "generate the proper RESTful service url"

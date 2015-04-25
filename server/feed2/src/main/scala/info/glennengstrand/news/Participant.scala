@@ -29,7 +29,10 @@ object Participant {
   def apply(id: Long) : Participant = {
     val criteria: Map[String, Any] = Map("id" -> id)
     val state: Map[String, Any] = IO.cacheAwareRead(bindings, criteria, reader, cache).head
-    new Participant(id, state("Moniker").asInstanceOf[String]) with MySqlWriter with RedisCacheAware
+    IO.settings.getProperty(IO.jdbcVendor) match {
+      case "mysql" => new Participant(id, state("Moniker").asInstanceOf[String]) with MySqlWriter with RedisCacheAware
+      case _ => new Participant(id, state("Moniker").asInstanceOf[String]) with PostgreSqlWriter with RedisCacheAware
+    }
   }
   def apply(state: String): Participant = {
     val s = IO.fromFormPost(state)
@@ -37,7 +40,10 @@ object Participant {
       case true => s("id").asInstanceOf[String].toLong
       case _ => 0l
     }
-    new Participant(id, s("name").asInstanceOf[String]) with MySqlWriter with RedisCacheAware
+    IO.settings.getProperty(IO.jdbcVendor) match {
+      case "mysql" => new Participant(id, s("name").asInstanceOf[String]) with MySqlWriter with RedisCacheAware
+      case _ => new Participant(id, s("name").asInstanceOf[String]) with PostgreSqlWriter with RedisCacheAware
+    }
   }
 }
 

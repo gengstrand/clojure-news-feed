@@ -35,7 +35,6 @@ object MySql {
 }
 
 class MySqlReader extends PersistentDataStoreReader with PooledRelationalDataStore {
-  val vendor: String = "mysql"
   val fetch: String = "Fetch"
   lazy val db: Connection = getDbConnection
 
@@ -47,7 +46,6 @@ class MySqlReader extends PersistentDataStoreReader with PooledRelationalDataSto
 }
 
 trait MySqlWriter extends PersistentDataStoreWriter with PooledRelationalDataStore {
-  val vendor: String = "mysql"
   val upsert: String = "Upsert"
   lazy val db: Connection = getDbConnection
   def write(o: PersistentDataStoreBindings, state: Map[String, Any], criteria: Map[String, Any]): Map[String, Any] = {

@@ -34,7 +34,6 @@ object PostgreSql {
   }
 }
 class PostgreSqlReader extends PersistentDataStoreReader with PooledRelationalDataStore {
-  val vendor: String = "postgresql"
   val fetch: String = "Fetch"
   lazy val db: Connection = getDbConnection
 
@@ -46,7 +45,6 @@ class PostgreSqlReader extends PersistentDataStoreReader with PooledRelationalDa
 }
 
 trait PostgreSqlWriter extends PersistentDataStoreWriter with PooledRelationalDataStore {
-  val vendor: String = "postgresql"
   val upsert: String = "Upsert"
   lazy val db: Connection = getDbConnection
   def write(o: PersistentDataStoreBindings, state: Map[String, Any], criteria: Map[String, Any]): Map[String, Any] = {

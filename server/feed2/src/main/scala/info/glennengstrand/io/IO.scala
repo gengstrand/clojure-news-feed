@@ -10,6 +10,7 @@ import java.sql.{PreparedStatement, Connection}
 object IO {
   val settings = new Properties
   val df = new SimpleDateFormat("yyyy-MM-dd")
+  val jdbcVendor = "jdbc_vendor"
   val jdbcDriveName = "jdbc_driver"
   val jdbcUrl = "jdbc_url"
   val jdbcUser = "jdbc_user"
@@ -46,6 +47,7 @@ object IO {
       case l: Long => l.toString
       case i: Int => i.toString
       case s: String => "\"" + s + "\""
+      case d: Date => "\"" + df.format(d) + "\""
       case _ => "\"" + v.toString + "\""
     }
   }
@@ -190,20 +192,18 @@ class MockCache extends MockCacheAware
 
 trait PooledRelationalDataStore {
 
-  val vendor: String
-
   lazy val ds: ComboPooledDataSource = getPooledDataSource
 
   private def getPooledDataSource: ComboPooledDataSource = {
     val ds = new ComboPooledDataSource
-    ds.setDriverClass(IO.settings.getProperty(vendor + "_" + IO.jdbcDriveName))
-    ds.setJdbcUrl(IO.settings.getProperty(vendor + "_" + IO.jdbcUrl))
-    ds.setUser(IO.settings.getProperty(vendor + "_" + IO.jdbcUser))
-    ds.setPassword(IO.settings.getProperty(vendor + "_" + IO.jdbcPassword))
-    ds.setMinPoolSize(IO.settings.getProperty(vendor + "_" + IO.jdbcMinPoolSize).toInt)
-    ds.setAcquireIncrement(IO.settings.getProperty(vendor + "_" + IO.jdbcMinPoolSize).toInt)
-    ds.setMaxPoolSize(IO.settings.getProperty(vendor + "_" + IO.jdbcMaxPoolSize).toInt)
-    ds.setMaxStatements(IO.settings.getProperty(vendor + "_" + IO.jdbcMaxStatements).toInt)
+    ds.setDriverClass(IO.settings.getProperty(IO.jdbcDriveName))
+    ds.setJdbcUrl(IO.settings.getProperty(IO.jdbcUrl))
+    ds.setUser(IO.settings.getProperty(IO.jdbcUser))
+    ds.setPassword(IO.settings.getProperty(IO.jdbcPassword))
+    ds.setMinPoolSize(IO.settings.getProperty(IO.jdbcMinPoolSize).toInt)
+    ds.setAcquireIncrement(IO.settings.getProperty(IO.jdbcMinPoolSize).toInt)
+    ds.setMaxPoolSize(IO.settings.getProperty(IO.jdbcMaxPoolSize).toInt)
+    ds.setMaxStatements(IO.settings.getProperty(IO.jdbcMaxStatements).toInt)
     ds
   }
   def getDbConnection: Connection = {
