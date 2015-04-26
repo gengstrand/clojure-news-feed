@@ -51,7 +51,7 @@ trait Feed extends HttpService {
             val after = System.currentTimeMillis()
             Feed.factory.getObject("logger").get.asInstanceOf[PerformanceLogger].log("feed", "participant", "post", after - before)
             respondWithMediaType(`application/json`) {
-              complete(retVal.toJson)
+              complete("[" + retVal.toJson + "]")
             }
           } catch {
             case e: Exception => {

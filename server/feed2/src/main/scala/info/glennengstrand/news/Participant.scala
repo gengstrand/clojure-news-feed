@@ -26,13 +26,16 @@ object Participant {
     }
   }
   val bindings = new ParticipantBindings
+  def create(id: Long, name: String): Participant = {
+    IO.settings.getProperty(IO.jdbcVendor) match {
+      case "mysql" => new Participant(id, name) with MySqlWriter with RedisCacheAware
+      case _ => new Participant(id, name) with PostgreSqlWriter with RedisCacheAware
+    }
+  }
   def apply(id: Long) : Participant = {
     val criteria: Map[String, Any] = Map("id" -> id)
     val state: Map[String, Any] = IO.cacheAwareRead(bindings, criteria, reader, cache).head
-    IO.settings.getProperty(IO.jdbcVendor) match {
-      case "mysql" => new Participant(id, state("Moniker").asInstanceOf[String]) with MySqlWriter with RedisCacheAware
-      case _ => new Participant(id, state("Moniker").asInstanceOf[String]) with PostgreSqlWriter with RedisCacheAware
-    }
+    create(id, state("Moniker").asInstanceOf[String])
   }
   def apply(state: String): Participant = {
     val s = IO.fromFormPost(state)
@@ -40,10 +43,7 @@ object Participant {
       case true => s("id").asInstanceOf[String].toLong
       case _ => 0l
     }
-    IO.settings.getProperty(IO.jdbcVendor) match {
-      case "mysql" => new Participant(id, s("name").asInstanceOf[String]) with MySqlWriter with RedisCacheAware
-      case _ => new Participant(id, s("name").asInstanceOf[String]) with PostgreSqlWriter with RedisCacheAware
-    }
+    create(id, s("name").asInstanceOf[String])
   }
 }
 
@@ -62,7 +62,7 @@ class Participant(id: Long, name: String) extends ParticipantState(id, name) {
     val result = write(Participant.bindings, state, criteria)
     val newId = result("id").asInstanceOf[Long]
     invalidate(Participant.bindings, criteria)
-    new Participant(newId, name) with MySqlWriter with RedisCacheAware
+    Participant.create(newId, name)
   }
 
   def toJson: String = {

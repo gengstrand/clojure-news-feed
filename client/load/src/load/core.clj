@@ -74,14 +74,12 @@
 (defn test-create-participant
   "create a participant"
   [name]
-  (-> (:results
-        (test-create-entity-service-call
-          "participant"
-          {:name name}))
-     first
-     first
-     rest
-     first))
+  (get 
+       (first 
+       	      (:results
+		(test-create-entity-service-call
+          	"participant"
+          	{:name name}))) "id"))
 
 (defn test-fetch-participant
   "fetch a participant"

@@ -70,7 +70,10 @@ object IO {
     }
   }
   def fromFormPost(state: String) : Map[String, Any] = {
-    state.split("&").map(kv => kv.split("=")).map(t => (t(0), t(1))).toMap
+    state.isEmpty match {
+      case false => state.split("&").map(kv => kv.split("=")).map(t => (t(0), t(1))).toMap
+      case _ => Map()
+    }
   }
   def convertToLong(v: Any) : Long = {
     v match {

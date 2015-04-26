@@ -3,9 +3,9 @@
 
 (require '[load.core :as service])
 
-(def participant-batch-size 50)
+(def participant-batch-size 10)
 (def min-friends 5)
-(def max-friends 20)
+(def max-friends 10)
 (def subject-words 5)
 (def story-words 150)
 (def stories-per-user 10)
@@ -63,6 +63,7 @@
                   (map
                     #(rand-int %)
                     (take (+ min-friends (rand-int (- max-friends min-friends))) (repeat participant-batch-size))))]
+    (println participants)
     (doseq
       [from (map #(nth participants %) inviters)]
       (doseq 

@@ -27,6 +27,12 @@ object Friends {
     }
   }
   val bindings = new FriendsBindings
+  def create(id: Long, from: Long, to: Long): Friend = {
+    IO.settings.getProperty(IO.jdbcVendor) match {
+      case "mysql" => new Friend(id, from, to) with MySqlWriter with RedisCacheAware
+      case _ => new Friend(id, from, to) with PostgreSqlWriter with RedisCacheAware
+    }
+  }
   def apply(id: Long) : Friends = {
     val criteria: Map[String, Any] = Map("ParticipantID" -> id)
     new Friends(id, IO.cacheAwareRead(bindings, criteria, reader, cache))
@@ -37,11 +43,7 @@ object Friends {
       case true => s("FriendsID").asInstanceOf[String].toLong
       case _ => 0l
     }
-    IO.settings.getProperty(IO.jdbcVendor) match {
-      case "mysql" => new Friend(id, s("from").asInstanceOf[String].toLong, s("to").asInstanceOf[String].toLong) with MySqlWriter with RedisCacheAware
-      case _ => new Friend(id, s("from").asInstanceOf[String].toLong, s("to").asInstanceOf[String].toLong) with PostgreSqlWriter with RedisCacheAware
-    }
-
+    create(id, s("from").asInstanceOf[String].toLong, s("to").asInstanceOf[String].toLong)
   }
 }
 
@@ -52,16 +54,16 @@ class Friend(id: Long, fromParticipantID: Long, toParticipantID: Long) extends F
 
   def save: Friend = {
     val state: Map[String, Any] = Map(
-      "FromParticipantID" -> fromParticipantID,
-      "ToParticipantID" -> toParticipantID
+      "fromParticipantID" -> fromParticipantID,
+      "toParticipantID" -> toParticipantID
     )
     val criteria: Map[String, Any] = Map(
       "FriendsID" -> id
     )
     val result = write(Friends.bindings, state, criteria)
     invalidate(Friends.bindings, criteria)
-    val newId = result.get("id").asInstanceOf[Long]
-    new Friend(newId, fromParticipantID, toParticipantID) with MySqlWriter with RedisCacheAware
+    val newId = result.getOrElse("id", 0l).asInstanceOf[Long]
+    Friends.create(newId, fromParticipantID, toParticipantID)
   }
 
   def toJson(factory: FactoryClass): String = {
@@ -80,10 +82,7 @@ class Friends(id: Long, state: Iterable[Map[String, Any]]) extends Iterator[Frie
   def hasNext = i.hasNext
   def next() = {
     val kv = i.next()
-    IO.settings.getProperty(IO.jdbcVendor) match {
-      case "mysql" => new Friend(IO.convertToLong(kv("FriendsID")), id, IO.convertToLong(kv("ParticipantID"))) with MySqlWriter with RedisCacheAware
-      case _ => new Friend(IO.convertToLong(kv("FriendsID")), id, IO.convertToLong(kv("ParticipantID"))) with PostgreSqlWriter with RedisCacheAware
-    }
+    Friends.create(IO.convertToLong(kv("FriendsID")), id, IO.convertToLong(kv("ParticipantID")))
   }
   def toJson(factory: FactoryClass): String = {
     isEmpty match {
