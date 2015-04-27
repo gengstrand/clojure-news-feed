@@ -53,7 +53,7 @@ object Boot extends App {
     case _ => args(0)
   }
   info.glennengstrand.io.IO.settings.load(new FileInputStream(settingsFile))
-  val service = system.actorOf(Props[FeedActor], "demo-service")
+  val service = system.actorOf(Props[FeedActor], "news-feed-service")
 
   implicit val timeout = Timeout(5.seconds)
   Feed.factory = new ServiceFactoryClass

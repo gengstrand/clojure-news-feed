@@ -36,7 +36,7 @@ object Sql {
       setStatementParameterFromValue(stmt, v, fii)
       fii += 1
     }}
-    log.warning(stmt.toString)
+    log.fine(stmt.toString)
   }
 
   def query(stmt: PreparedStatement, outputs: Iterable[(String, String)]): Iterable[Map[String, Any]] = {

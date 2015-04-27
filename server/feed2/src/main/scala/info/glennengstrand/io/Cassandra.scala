@@ -49,7 +49,7 @@ object Cassandra {
               val fo = o.fetchOrder
               val ol = for (k <- fo.keys) yield k + " " + fo.get(k).getOrElse("desc")
               val select = "select " + sl.reduce(_ + ", " + _) + " from " + o.entity + " where " + wl.reduce(_ + " and " + _) + " order by " + ol.reduce(_ + ", " + _)
-              log.warning(select)
+              log.fine(select)
               val stmt = session.prepare(select)
               val cl = getConsistencyLevel(IO.settings.get(IO.nosqlReadConsistencyLevel).asInstanceOf[String])
               stmt.setConsistencyLevel(cl)
@@ -79,7 +79,7 @@ object Cassandra {
               val vl = for (f <- o.upsertInputs) yield generateUpsertFieldValue(f, o)
               val fl = for (f <- o.upsertInputs) yield  f
               val upsert = "insert into " + o.entity + "("  + fl.reduce(_ + ", " + _) + ") values (" + vl.reduce(_ + ", " + _) + ")" + " using ttl " + ttl
-              log.warning(upsert)
+              log.fine(upsert)
               val stmt = session.prepare(upsert)
               val cl = getConsistencyLevel(IO.settings.get(IO.nosqlReadConsistencyLevel).asInstanceOf[String])
               stmt.setConsistencyLevel(cl)
@@ -94,7 +94,7 @@ object Cassandra {
     }
   }
   def setBinding(binding: BoundStatement, fieldName: String, state: Map[String, Any], index: Int): Unit = {
-    log.warning("setting " + fieldName + " parameter " + index + " to " + state.get(fieldName).getOrElse(0))
+    log.finest("setting " + fieldName + " parameter " + index + " to " + state.get(fieldName).getOrElse(0))
     state.get(fieldName).get match {
       case l: Long => binding.setLong(index, l)
       case i: Int => binding.setInt(index, i)
@@ -131,7 +131,6 @@ object Cassandra {
   }
   def bindSingleRowOutputs(binding: BoundStatement, o: PersistentDataStoreBindings): Map[String, Any] = {
     val b = binding.bind()
-    log.warning(b.toString())
     val rs = Cassandra.session.execute(b)
     var index = 1
     val r = rs.one()
