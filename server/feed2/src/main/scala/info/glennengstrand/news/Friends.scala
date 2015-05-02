@@ -50,7 +50,7 @@ object Friends {
 case class FriendState(id: Long, fromParticipantID: Long, toParticipantID: Long)
 
 class Friend(id: Long, fromParticipantID: Long, toParticipantID: Long) extends FriendState(id, fromParticipantID, toParticipantID) {
-  this: PersistentDataStoreWriter with CacheAware =>
+  this: PersistentRelationalDataStoreWriter with CacheAware =>
 
   def save: Friend = {
     val state: Map[String, Any] = Map(

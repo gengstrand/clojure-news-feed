@@ -50,7 +50,7 @@ object Participant {
 case class ParticipantState(id: Long, name: String)
 
 class Participant(id: Long, name: String) extends ParticipantState(id, name) {
-  this: PersistentDataStoreWriter with CacheAware =>
+  this: PersistentRelationalDataStoreWriter with CacheAware =>
 
   def save: Participant = {
     val state: Map[String, Any] = Map(
@@ -60,7 +60,7 @@ class Participant(id: Long, name: String) extends ParticipantState(id, name) {
       "id" -> id
     )
     val result = write(Participant.bindings, state, criteria)
-    val newId = result("id").asInstanceOf[Long]
+    val newId = result.getOrElse("id", 0l).asInstanceOf[Long]
     invalidate(Participant.bindings, criteria)
     Participant.create(newId, name)
   }

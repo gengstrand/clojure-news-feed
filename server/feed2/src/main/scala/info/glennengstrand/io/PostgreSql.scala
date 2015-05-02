@@ -3,15 +3,19 @@ package info.glennengstrand.io
 import java.util.logging.Logger
 
 import info.glennengstrand.io._
-import java.sql.{ResultSet, PreparedStatement, Connection}
+import java.sql.{SQLException, ResultSet, PreparedStatement, Connection}
 
 import scala.collection.mutable
 
 object PostgreSql {
   val log = Logger.getLogger("info.glennengstrand.io.PostgreSql")
   val sql: scala.collection.mutable.Map[String, PreparedStatement] = scala.collection.mutable.Map()
-
-  def prepare(operation: String, entity: String, inputs: Iterable[String], outputs: Iterable[(String, String)], db: Connection): PreparedStatement = {
+  def reset: Unit = {
+    sql.synchronized {
+      sql.clear()
+    }
+  }
+  def prepare(operation: String, entity: String, inputs: Iterable[String], outputs: Iterable[(String, String)], pool: PooledRelationalDataStore): PreparedStatement = {
     val key = operation + ":" + entity
     sql.contains(key) match {
       case false => {
@@ -20,8 +24,8 @@ object PostgreSql {
             case false => {
               val i = for (x <- inputs) yield "?"
               val o = for ((fn, ft) <- outputs) yield fn
-              val select = "select " + o.reduce(_ + "," + _) + " from " + operation + entity + "(" + i.reduce(_ + "," + _) + ")"
-              val retVal = db.prepareStatement(select)
+              val stmt = "select " + o.reduce(_ + "," + _) + " from " + operation + entity + "(" + i.reduce(_ + "," + _) + ")"
+              val retVal = pool.getDbConnection.prepareStatement(stmt)
               sql.put(key, retVal)
               retVal
             }
@@ -33,24 +37,23 @@ object PostgreSql {
     }
   }
 }
-class PostgreSqlReader extends PersistentDataStoreReader with PooledRelationalDataStore {
+class PostgreSqlReader extends PersistentRelationalDataStoreReader {
   val fetch: String = "Fetch"
-  lazy val db: Connection = getDbConnection
-
-  def read(o: PersistentDataStoreBindings, criteria: Map[String, Any]): Iterable[Map[String, Any]] = {
-    val stmt = PostgreSql.prepare(fetch, o.entity, o.fetchInputs, o.fetchOutputs, db)
-    Sql.prepare(stmt, o.fetchInputs, criteria)
-    Sql.query(stmt, o.fetchOutputs)
+  def reset: Unit = {
+    PostgreSql.reset
+  }
+  def prepare(entity: String, inputs: Iterable[String], outputs: Iterable[(String, String)], pool: PooledRelationalDataStore): PreparedStatement = {
+    PostgreSql.prepare(fetch, entity, inputs, outputs, pool)
   }
 }
 
-trait PostgreSqlWriter extends PersistentDataStoreWriter with PooledRelationalDataStore {
+trait PostgreSqlWriter extends PersistentRelationalDataStoreWriter {
   val upsert: String = "Upsert"
-  lazy val db: Connection = getDbConnection
-  def write(o: PersistentDataStoreBindings, state: Map[String, Any], criteria: Map[String, Any]): Map[String, Any] = {
-    val stmt = PostgreSql.prepare(upsert, o.entity, o.upsertInputs, o.upsertOutputs, db)
-    Sql.prepare(stmt, o.upsertInputs, state)
-    Sql.execute(stmt, o.upsertOutputs).toMap[String, Any]
+  def reset: Unit = {
+    PostgreSql.reset
+  }
+  def prepare(entity: String, inputs: Iterable[String], outputs: Iterable[(String, String)], pool: PooledRelationalDataStore): PreparedStatement = {
+    PostgreSql.prepare(upsert, entity, inputs, outputs, pool)
   }
 }
 

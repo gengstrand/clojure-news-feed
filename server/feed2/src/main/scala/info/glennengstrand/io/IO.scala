@@ -1,15 +1,17 @@
 package info.glennengstrand.io
 
 import java.text.{SimpleDateFormat, DateFormat}
+import java.util.logging.{Logger, Level}
 
 import com.mchange.v2.c3p0.ComboPooledDataSource
 import java.util.{Calendar, Date, Properties}
 import scala.util.parsing.json.JSON
-import java.sql.{PreparedStatement, Connection}
+import java.sql.{SQLException, PreparedStatement, Connection}
 
 object IO {
   val settings = new Properties
   val df = new SimpleDateFormat("yyyy-MM-dd")
+  val log = Logger.getLogger("info.glennengstrand.io.IO")
   val jdbcVendor = "jdbc_vendor"
   val jdbcDriveName = "jdbc_driver"
   val jdbcUrl = "jdbc_url"
@@ -138,12 +140,53 @@ abstract class PersistentDataStoreBindings {
   }
 }
 
+trait PersistentRelationalDataStoreStatementAware {
+  def reset: Unit
+  def prepare(entity: String, inputs: Iterable[String], outputs: Iterable[(String, String)], pool: PooledRelationalDataStore): PreparedStatement
+}
+
 trait PersistentDataStoreReader {
   def read(o: PersistentDataStoreBindings, criteria: Map[String, Any]): Iterable[Map[String, Any]]
 }
 
+trait PersistentRelationalDataStoreReader extends PersistentDataStoreReader with PooledRelationalDataStore with PersistentRelationalDataStoreStatementAware {
+  def read(o: PersistentDataStoreBindings, criteria: Map[String, Any]): Iterable[Map[String, Any]] = {
+    val stmt = prepare(o.entity, o.fetchInputs, o.fetchOutputs, this)
+    try {
+      Sql.prepare(stmt, o.fetchInputs, criteria)
+      Sql.query(stmt, o.fetchOutputs)
+    } catch {
+      case e: SQLException => {
+        IO.log.log(Level.WARNING, "cannot fetch data\n", e)
+        reset
+        val stmt = prepare(o.entity, o.fetchInputs, o.fetchOutputs, this)
+        Sql.prepare(stmt, o.fetchInputs, criteria)
+        Sql.query(stmt, o.fetchOutputs)
+      }
+    }
+  }
+}
+
 trait PersistentDataStoreWriter {
   def write(o: PersistentDataStoreBindings, state: Map[String, Any], criteria: Map[String, Any]): Map[String, Any]
+}
+
+trait PersistentRelationalDataStoreWriter extends PersistentDataStoreWriter with PooledRelationalDataStore with PersistentRelationalDataStoreStatementAware {
+  def write(o: PersistentDataStoreBindings, state: Map[String, Any], criteria: Map[String, Any]): Map[String, Any] = {
+    val stmt = prepare(o.entity, o.upsertInputs, o.upsertOutputs, this)
+    try {
+      Sql.prepare(stmt, o.upsertInputs, state)
+      Sql.execute(stmt, o.upsertOutputs).toMap[String, Any]
+    } catch {
+      case e: SQLException => {
+        IO.log.log(Level.WARNING, "cannot upsert data\n", e)
+        reset
+        val stmt = prepare( o.entity, o.upsertInputs, o.upsertOutputs, this)
+        Sql.prepare(stmt, o.upsertInputs, state)
+        Sql.execute(stmt, o.upsertOutputs).toMap[String, Any]
+      }
+    }
+  }
 }
 
 trait PersistentDataStoreSearcher {

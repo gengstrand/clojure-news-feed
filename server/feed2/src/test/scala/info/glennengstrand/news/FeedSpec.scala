@@ -1,5 +1,7 @@
 package info.glennengstrand.news
 
+import java.sql.PreparedStatement
+
 import info.glennengstrand.io._
 import org.specs2.mutable.Specification
 import spray.testkit.Specs2RouteTest
@@ -10,9 +12,17 @@ trait MockWriter extends PersistentDataStoreWriter {
   }
 }
 
+trait MockRelationalWriter extends PersistentRelationalDataStoreWriter {
+  def reset: Unit = {
+  }
+  def prepare(entity: String, inputs: Iterable[String], outputs: Iterable[(String, String)], pool: PooledRelationalDataStore): PreparedStatement = {
+    new MockPreparedStatement
+  }
+}
+
 trait MockSearcher extends PersistentDataStoreSearcher {
   def search(terms: String): Iterable[java.lang.Long] = {
-    List(1, 2, 3)
+    List(1l, 2l, 3l)
   }
   def index(id: Long, content: String): Unit = {
 
@@ -30,11 +40,11 @@ class MockFactoryClass extends FactoryClass {
 
   val performanceLogger = new MockPerformanceLogger
   def getParticipant(id: Long): Participant = {
-    new Participant(id, "test") with MockWriter with MockCacheAware
+    new Participant(id, "test") with MockRelationalWriter with MockCacheAware
   }
   def getParticipant(state: String): Participant = {
     val s = IO.fromFormPost(state)
-    new Participant(s("id").asInstanceOf[String].toLong, s("name").asInstanceOf[String]) with MockWriter with MockCacheAware
+    new Participant(s("id").asInstanceOf[String].toLong, s("name").asInstanceOf[String]) with MockRelationalWriter with MockCacheAware
   }
   def getFriends(id: Long): Friends = {
     val state: Iterable[Map[String, Any]] = List(
@@ -47,7 +57,7 @@ class MockFactoryClass extends FactoryClass {
   }
   def getFriend(state: String): Friend = {
     val s = IO.fromFormPost(state)
-    new Friend(s("FriendsID").asInstanceOf[String].toLong, s("FromParticipantID").asInstanceOf[String].toLong, s("ToParticipantID").asInstanceOf[String].toLong) with MockWriter with MockCacheAware
+    new Friend(s("FriendsID").asInstanceOf[String].toLong, s("FromParticipantID").asInstanceOf[String].toLong, s("ToParticipantID").asInstanceOf[String].toLong) with MockRelationalWriter with MockCacheAware
   }
   def getInbound(id: Int): InboundFeed = {
     val state: Iterable[Map[String, Any]] = List(

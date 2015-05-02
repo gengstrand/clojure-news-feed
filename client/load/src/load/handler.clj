@@ -4,8 +4,8 @@
 (require '[load.core :as service])
 
 (def participant-batch-size 10)
-(def min-friends 5)
-(def max-friends 10)
+(def min-friends 2)
+(def max-friends 4)
 (def subject-words 5)
 (def story-words 150)
 (def stories-per-user 10)
