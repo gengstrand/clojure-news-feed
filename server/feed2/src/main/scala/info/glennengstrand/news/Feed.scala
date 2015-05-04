@@ -1,7 +1,7 @@
 package info.glennengstrand.news
 
 import akka.actor.Actor
-import info.glennengstrand.io.{EmptyFactoryClass, FactoryClass, PerformanceLogger}
+import info.glennengstrand.io.{MicroServiceSerializable, EmptyFactoryClass, FactoryClass, PerformanceLogger}
 import spray.routing._
 import spray.http._
 import spray.http.{StatusCodes, ContentType}
@@ -27,7 +27,7 @@ trait Feed extends HttpService {
       get {
         try {
           val before = System.currentTimeMillis()
-          val retVal = Feed.factory.getObject("participant", id).get.asInstanceOf[Participant].toJson
+          val retVal = Feed.factory.getObject("participant", id).get.asInstanceOf[MicroServiceSerializable].toJson
           val after = System.currentTimeMillis()
           Feed.factory.getObject("logger").get.asInstanceOf[PerformanceLogger].log("feed", "participant", "get", after - before)
           respondWithMediaType(`application/json`) {
@@ -68,7 +68,7 @@ trait Feed extends HttpService {
         get {
           val before = System.currentTimeMillis()
           try {
-            val retVal = Feed.factory.getObject("friends", id).get.asInstanceOf[Friends].toJson(Feed.factory)
+            val retVal = Feed.factory.getObject("friends", id).get.asInstanceOf[MicroServiceSerializable].toJson(Feed.factory)
             val after = System.currentTimeMillis()
             Feed.factory.getObject("logger").get.asInstanceOf[PerformanceLogger].log("feed", "friends", "get", after - before)
             respondWithMediaType(`application/json`) {
@@ -110,7 +110,7 @@ trait Feed extends HttpService {
         get {
           val before = System.currentTimeMillis()
           try {
-            val retVal = Feed.factory.getObject("inbound", id).get.asInstanceOf[InboundFeed].toJson
+            val retVal = Feed.factory.getObject("inbound", id).get.asInstanceOf[MicroServiceSerializable].toJson
             val after = System.currentTimeMillis()
             Feed.factory.getObject("logger").get.asInstanceOf[PerformanceLogger].log("feed", "inbound", "get", after - before)
             respondWithMediaType(`application/json`) {
@@ -128,7 +128,7 @@ trait Feed extends HttpService {
         get {
           val before = System.currentTimeMillis()
           try {
-            val retVal = Feed.factory.getObject("outbound", id).get.asInstanceOf[OutboundFeed].toJson
+            val retVal = Feed.factory.getObject("outbound", id).get.asInstanceOf[MicroServiceSerializable].toJson
             val after = System.currentTimeMillis()
             Feed.factory.getObject("logger").get.asInstanceOf[PerformanceLogger].log("feed", "outbound", "get", after - before)
             respondWithMediaType(`application/json`) {

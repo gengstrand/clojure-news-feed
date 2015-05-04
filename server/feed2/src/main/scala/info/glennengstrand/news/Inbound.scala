@@ -42,7 +42,7 @@ object Inbound {
 
 case class InboundState(participantID: Int, occurred: Date, fromParticipantID: Int, subject: String, story: String)
 
-class Inbound(participantID: Int, occurred: Date, fromParticipantID: Int, subject: String, story: String) extends InboundState(participantID, occurred, fromParticipantID, subject, story) {
+class Inbound(participantID: Int, occurred: Date, fromParticipantID: Int, subject: String, story: String) extends InboundState(participantID, occurred, fromParticipantID, subject, story) with MicroServiceSerializable {
   this: PersistentDataStoreWriter with CacheAware =>
 
   def getState: Map[String, Any] = {
@@ -62,13 +62,15 @@ class Inbound(participantID: Int, occurred: Date, fromParticipantID: Int, subjec
     invalidate(Inbound.bindings, criteria)
   }
 
-  def toJson: String = {
+  override def toJson: String = {
     IO.toJson(getState)
   }
 
+  override def toJson(factory: FactoryClass): String = toJson
+
 }
 
-class InboundFeed(id: Int, state: Iterable[Map[String, Any]]) extends Iterator[Inbound] {
+class InboundFeed(id: Int, state: Iterable[Map[String, Any]]) extends Iterator[Inbound] with MicroServiceSerializable {
   val i = state.iterator
   def hasNext = i.hasNext
   def next() = {
@@ -80,8 +82,10 @@ class InboundFeed(id: Int, state: Iterable[Map[String, Any]]) extends Iterator[I
     }
     new Inbound(id, IO.convertToDate(occurred), IO.convertToInt(kv("fromParticipantID")), kv("subject").toString, kv("story").toString) with CassandraWriter with MockCacheAware
   }
-  def toJson: String = {
+  override def toJson: String = {
     "[" +  map(f => f.toJson).reduce(_ + "," + _) + "]"
   }
+
+  override def toJson(factory: FactoryClass): String = toJson
 }
 

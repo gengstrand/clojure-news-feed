@@ -50,7 +50,7 @@ object Outbound extends SolrSearcher {
 
 case class OutboundState(participantID: Int, occurred: Date, subject: String, story: String)
 
-class Outbound(participantID: Int, occurred: Date, subject: String, story: String) extends OutboundState(participantID, occurred, subject, story) {
+class Outbound(participantID: Int, occurred: Date, subject: String, story: String) extends OutboundState(participantID, occurred, subject, story) with MicroServiceSerializable {
   this: PersistentDataStoreWriter with CacheAware =>
 
   def getState: Map[String, Any] = {
@@ -73,13 +73,13 @@ class Outbound(participantID: Int, occurred: Date, subject: String, story: Strin
       inbound.save
     })
   }
-  def toJson: String = {
+  override def toJson: String = {
     IO.toJson(getState)
   }
-
+  override def toJson(factory: FactoryClass): String = toJson
 }
 
-class OutboundFeed(id: Int, state: Iterable[Map[String, Any]]) extends Iterator[Outbound] {
+class OutboundFeed(id: Int, state: Iterable[Map[String, Any]]) extends Iterator[Outbound] with MicroServiceSerializable {
   val i = state.iterator
   def hasNext = i.hasNext
   def next() = {
@@ -91,9 +91,10 @@ class OutboundFeed(id: Int, state: Iterable[Map[String, Any]]) extends Iterator[
     }
     new Outbound(id, IO.convertToDate(occurred), kv("subject").toString, kv("story").toString) with CassandraWriter with MockCacheAware with SolrSearcher
   }
-  def toJson: String = {
+  override def toJson: String = {
     "[" +  map(f => f.toJson).reduce(_ + "," + _) + "]"
   }
+  override def toJson(factory: FactoryClass): String = toJson
 }
 
 

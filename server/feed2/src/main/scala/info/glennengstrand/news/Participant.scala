@@ -49,7 +49,7 @@ object Participant {
 
 case class ParticipantState(id: Long, name: String)
 
-class Participant(id: Long, name: String) extends ParticipantState(id, name) {
+class Participant(id: Long, name: String) extends ParticipantState(id, name) with MicroServiceSerializable {
   this: PersistentRelationalDataStoreWriter with CacheAware =>
 
   def save: Participant = {
@@ -65,12 +65,14 @@ class Participant(id: Long, name: String) extends ParticipantState(id, name) {
     Participant.create(newId, name)
   }
 
-  def toJson: String = {
+  override def toJson: String = {
     val state: Map[String, Any] = Map(
       "name" -> name,
       "id" -> id
     )
     IO.toJson(state)
   }
+
+  override def toJson(factory: FactoryClass): String = toJson
 
 }

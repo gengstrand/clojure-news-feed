@@ -49,6 +49,7 @@ object IO {
       case l: Long => l.toString
       case i: Int => i.toString
       case s: String => "\"" + s + "\""
+      case o: MicroServiceSerializable => o.toJson
       case d: Date => "\"" + df.format(d) + "\""
       case _ => "\"" + v.toString + "\""
     }
@@ -244,5 +245,7 @@ trait MockCacheAware extends CacheAware {
 
 class MockCache extends MockCacheAware
 
-
-
+trait MicroServiceSerializable {
+  def toJson: String
+  def toJson(factory: FactoryClass): String
+}

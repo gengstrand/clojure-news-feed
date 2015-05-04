@@ -49,7 +49,7 @@ object Friends {
 
 case class FriendState(id: Long, fromParticipantID: Long, toParticipantID: Long)
 
-class Friend(id: Long, fromParticipantID: Long, toParticipantID: Long) extends FriendState(id, fromParticipantID, toParticipantID) {
+class Friend(id: Long, fromParticipantID: Long, toParticipantID: Long) extends FriendState(id, fromParticipantID, toParticipantID) with MicroServiceSerializable {
   this: PersistentRelationalDataStoreWriter with CacheAware =>
 
   def save: Friend = {
@@ -66,28 +66,44 @@ class Friend(id: Long, fromParticipantID: Long, toParticipantID: Long) extends F
     Friends.create(newId, fromParticipantID, toParticipantID)
   }
 
-  def toJson(factory: FactoryClass): String = {
+  override def toJson(factory: FactoryClass): String = {
     val state: Map[String, Any] = Map(
-      "from" -> factory.getObject("participant", fromParticipantID).get.asInstanceOf[Participant].toJson,
-      "to" -> factory.getObject("participant", toParticipantID).get.asInstanceOf[Participant].toJson,
+      "from" -> factory.getObject("participant", fromParticipantID).get.asInstanceOf[MicroServiceSerializable],
+      "to" -> factory.getObject("participant", toParticipantID).get.asInstanceOf[MicroServiceSerializable],
       "id" -> id
     )
     IO.toJson(state)
   }
 
+  override def toJson: String = {
+    val state: Map[String, Any] = Map(
+      "from" -> fromParticipantID,
+      "to" -> toParticipantID,
+      "id" -> id
+    )
+    IO.toJson(state)
+
+  }
+
 }
 
-class Friends(id: Long, state: Iterable[Map[String, Any]]) extends Iterator[Friend] {
+class Friends(id: Long, state: Iterable[Map[String, Any]]) extends Iterator[Friend] with MicroServiceSerializable {
   val i = state.iterator
   def hasNext = i.hasNext
   def next() = {
     val kv = i.next()
     Friends.create(IO.convertToLong(kv("FriendsID")), id, IO.convertToLong(kv("ParticipantID")))
   }
-  def toJson(factory: FactoryClass): String = {
+  override def toJson(factory: FactoryClass): String = {
     isEmpty match {
       case true => "[]"
       case _ => "[" +  map(f => f.toJson(factory)).reduce(_ + "," + _) + "]"
+    }
+  }
+  override def toJson: String = {
+    isEmpty match {
+      case true => "[]"
+      case _ => "[" +  map(f => f.toJson).reduce(_ + "," + _) + "]"
     }
   }
 }
