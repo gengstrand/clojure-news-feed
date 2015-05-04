@@ -153,15 +153,19 @@ trait PersistentRelationalDataStoreReader extends PersistentDataStoreReader with
   def read(o: PersistentDataStoreBindings, criteria: Map[String, Any]): Iterable[Map[String, Any]] = {
     val stmt = prepare(o.entity, o.fetchInputs, o.fetchOutputs, this)
     try {
-      Sql.prepare(stmt, o.fetchInputs, criteria)
-      Sql.query(stmt, o.fetchOutputs)
+      stmt.synchronized {
+        Sql.prepare(stmt, o.fetchInputs, criteria)
+        Sql.query(stmt, o.fetchOutputs)
+      }
     } catch {
       case e: SQLException => {
         IO.log.log(Level.WARNING, "cannot fetch data\n", e)
         reset
         val stmt = prepare(o.entity, o.fetchInputs, o.fetchOutputs, this)
-        Sql.prepare(stmt, o.fetchInputs, criteria)
-        Sql.query(stmt, o.fetchOutputs)
+        stmt.synchronized {
+          Sql.prepare(stmt, o.fetchInputs, criteria)
+          Sql.query(stmt, o.fetchOutputs)
+        }
       }
     }
   }
@@ -175,15 +179,19 @@ trait PersistentRelationalDataStoreWriter extends PersistentDataStoreWriter with
   def write(o: PersistentDataStoreBindings, state: Map[String, Any], criteria: Map[String, Any]): Map[String, Any] = {
     val stmt = prepare(o.entity, o.upsertInputs, o.upsertOutputs, this)
     try {
-      Sql.prepare(stmt, o.upsertInputs, state)
-      Sql.execute(stmt, o.upsertOutputs).toMap[String, Any]
+      stmt.synchronized {
+        Sql.prepare(stmt, o.upsertInputs, state)
+        Sql.execute(stmt, o.upsertOutputs).toMap[String, Any]
+      }
     } catch {
       case e: SQLException => {
         IO.log.log(Level.WARNING, "cannot upsert data\n", e)
         reset
         val stmt = prepare( o.entity, o.upsertInputs, o.upsertOutputs, this)
-        Sql.prepare(stmt, o.upsertInputs, state)
-        Sql.execute(stmt, o.upsertOutputs).toMap[String, Any]
+        stmt.synchronized {
+          Sql.prepare(stmt, o.upsertInputs, state)
+          Sql.execute(stmt, o.upsertOutputs).toMap[String, Any]
+        }
       }
     }
   }

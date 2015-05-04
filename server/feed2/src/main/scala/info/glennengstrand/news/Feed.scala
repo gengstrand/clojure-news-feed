@@ -46,12 +46,14 @@ trait Feed extends HttpService {
         entity(as[String]) { body =>
           val before = System.currentTimeMillis()
           try {
+            log.finest("create participant: " + body)
             val p = Feed.factory.getObject("participant", body).get.asInstanceOf[Participant]
-            val retVal = p.save
+            val retVal = "[" + p.save.toJson + "]"
             val after = System.currentTimeMillis()
             Feed.factory.getObject("logger").get.asInstanceOf[PerformanceLogger].log("feed", "participant", "post", after - before)
+            log.finest(retVal)
             respondWithMediaType(`application/json`) {
-              complete("[" + retVal.toJson + "]")
+              complete(retVal)
             }
           } catch {
             case e: Exception => {
@@ -83,6 +85,7 @@ trait Feed extends HttpService {
       path("friends" / "new") {
         post {
           entity(as[String]) { body =>
+	          log.finest("create friends: " + body)
             val before = System.currentTimeMillis()
             try {
               val friend = Feed.factory.getObject("friend", body).get.asInstanceOf[Friend]
@@ -90,6 +93,7 @@ trait Feed extends HttpService {
               val retVal = f.toJson(Feed.factory)
               val after = System.currentTimeMillis()
               Feed.factory.getObject("logger").get.asInstanceOf[PerformanceLogger].log("feed", "friends", "post", after - before)
+              log.finest(retVal)
               respondWithMediaType(`application/json`) {
                 complete(retVal)
               }
@@ -141,6 +145,7 @@ trait Feed extends HttpService {
       path("outbound" / "new") {
         post {
           entity(as[String]) { body =>
+            log.finest("create outbound: " + body)
             val before = System.currentTimeMillis()
             try {
               val retVal = Feed.factory.getObject("outbound", body).get.asInstanceOf[Outbound]
@@ -164,16 +169,16 @@ trait Feed extends HttpService {
           entity(as[String]) { body =>
             val before = System.currentTimeMillis()
             try {
-		  val results = Outbound.lookup(body).map(o => o.toJson)
-		  val retVal = results.isEmpty match {
-		  	case true => "[]"
-			case _ => "[" + results.reduce(_ + "," + _) + "]"
-		  }
-                  val after = System.currentTimeMillis()
-                  Feed.factory.getObject("logger").get.asInstanceOf[PerformanceLogger].log("feed", "outbound", "search", after - before)
-                  respondWithMediaType(`application/json`) {
-                    complete(retVal)
-                  }
+              val results = Outbound.lookup(body).map(o => o.toJson)
+              val retVal = results.isEmpty match {
+                case true => "[]"
+              case _ => "[" + results.reduce(_ + "," + _) + "]"
+              }
+              val after = System.currentTimeMillis()
+              Feed.factory.getObject("logger").get.asInstanceOf[PerformanceLogger].log("feed", "outbound", "search", after - before)
+              respondWithMediaType(`application/json`) {
+                complete(retVal)
+              }
             } catch {
               case e: Exception => {
                 log.log(Level.SEVERE, "cannot search outbound\n", e)

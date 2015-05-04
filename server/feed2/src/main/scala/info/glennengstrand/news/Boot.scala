@@ -1,6 +1,8 @@
 package info.glennengstrand.news
 
-import akka.actor.{ActorSystem, Props}
+import java.util.logging.Logger
+
+import akka.actor.{ActorSystem, Props, Actor, DeadLetter}
 import akka.io.IO
 import info.glennengstrand.io._
 import info.glennengstrand.news._
@@ -54,8 +56,18 @@ object Boot extends App {
   }
   info.glennengstrand.io.IO.settings.load(new FileInputStream(settingsFile))
   val service = system.actorOf(Props[FeedActor], "news-feed-service")
-
-  implicit val timeout = Timeout(5.seconds)
+  val listener = system.actorOf(Props[Listener], "dead-letter-listener")
+  system.eventStream.subscribe(listener, classOf[DeadLetter])
+  implicit val timeout = Timeout(60.seconds)
   Feed.factory = new ServiceFactoryClass
   IO(Http) ? Http.Bind(service, interface = "localhost", port = 8080)
 }
+
+  class Listener extends Actor {
+  val log = Logger.getLogger("info.glennengstrand.news.Listener")
+  def actorRefFactory = context
+
+    def receive = {
+      case DeadLetter(msg, from, to) => log.warning(msg.toString)
+    }
+  }

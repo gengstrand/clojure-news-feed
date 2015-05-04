@@ -9,6 +9,7 @@ import scala.collection.mutable
 
 object MySql {
   val log = Logger.getLogger("info.glennengstrand.io.MySql")
+  val CACHE_STATEMENTS = true
   val sql: scala.collection.mutable.Map[String, PreparedStatement] = scala.collection.mutable.Map()
 
   def reset: Unit = {
@@ -21,22 +22,27 @@ object MySql {
       val callProcedure = "{ call " + operation + entity + "(" + i.reduce(_ + "," + _) + ") }"
       pool.getDbConnection.prepareStatement(callProcedure)
     }
-    val key = operation + ":" + entity
-    sql.contains(key) match {
-      case false => {
-        sql.synchronized {
-          sql.contains(key) match {
-            case false => {
-              val i = for (x <- inputs) yield "?"
-              val retVal = createStatement(i)
-              sql.put(key, retVal)
-              retVal
+    if (CACHE_STATEMENTS) {
+      val key = operation + ":" + entity
+      sql.contains(key) match {
+        case false => {
+          sql.synchronized {
+            sql.contains(key) match {
+              case false => {
+                val i = for (x <- inputs) yield "?"
+                val retVal = createStatement(i)
+                sql.put(key, retVal)
+                retVal
+              }
+              case true => sql.get(key).get
             }
-            case true => sql.get(key).get
           }
         }
+        case true => sql.get(key).get
       }
-      case true => sql.get(key).get
+    } else {
+      val i = for (x <- inputs) yield "?"
+      createStatement(i)
     }
   }
 }
