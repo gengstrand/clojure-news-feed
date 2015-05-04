@@ -57,27 +57,7 @@ use activity;
 truncate Inbound;
 truncate Outbound;
 
-got a problem while running the load test
+how to run the load test
 
 java -jar target/load-0.1.0-SNAPSHOT-standalone.jar 3 30
-
-this creates 50 participants, then I start seeing this in the log and nothing else completes correctly
-
-Apr 25, 2015 12:33:32 PM info.glennengstrand.io.Sql$ prepare
-WARNING: com.mchange.v2.c3p0.impl.NewProxyPreparedStatement@103ec0d [wrapping: com.mysql.jdbc.PreparedStatement@1b26604: CALL UpsertParticipant('user+263497') ]
-[WARN] [04/25/2015 12:33:33.186] [on-spray-can-akka.actor.default-dispatcher-7] [akka://on-spray-can/user/IO-HTTP/listener-0/52] Configured registration timeout of 1 second expired, stopping
-[WARN] [04/25/2015 12:33:33.216] [on-spray-can-akka.actor.default-dispatcher-11] [akka://on-spray-can/user/IO-HTTP/listener-0/53] Configured registration timeout of 1 second expired, stopping
-
-this might be the problem. looks like the response to create friends is not valid JSON
-
-May 03, 2015 12:17:46 PM info.glennengstrand.news.Feed$$anonfun$4 apply
-FINEST: create friends: from=3957&to=3955
-May 03, 2015 12:17:46 PM info.glennengstrand.io.Sql$ prepare
-FINE: com.mchange.v2.c3p0.impl.NewProxyPreparedStatement@19c1438 [wrapping: com.mysql.jdbc.PreparedStatement@1356c94: CALL UpsertFriends(3957,3955) ]
-May 03, 2015 12:17:46 PM info.glennengstrand.io.Sql$ prepare
-FINE: com.mchange.v2.c3p0.impl.NewProxyPreparedStatement@41bc41 [wrapping: com.mysql.jdbc.PreparedStatement@1fad24e: CALL FetchParticipant(3957) ]
-May 03, 2015 12:17:46 PM info.glennengstrand.io.Sql$ prepare
-FINE: com.mchange.v2.c3p0.impl.NewProxyPreparedStatement@41bc41 [wrapping: com.mysql.jdbc.PreparedStatement@1fad24e: CALL FetchParticipant(3955) ]
-May 03, 2015 12:17:46 PM info.glennengstrand.news.Feed$$anonfun$4 apply
-FINEST: {"from":"{"name":"user+688813","id":3957}","to":"{"name":"user+688813","id":3955}","id":360}
 
