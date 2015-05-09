@@ -13,10 +13,8 @@ trait MockWriter extends PersistentDataStoreWriter {
 }
 
 trait MockRelationalWriter extends PersistentRelationalDataStoreWriter {
-  def reset: Unit = {
-  }
-  def prepare(entity: String, inputs: Iterable[String], outputs: Iterable[(String, String)], pool: PooledRelationalDataStore): PreparedStatement = {
-    new MockPreparedStatement
+  def generatePreparedStatement(operation: String, entity: String, inputs: Iterable[String], outputs: Iterable[(String, String)]): String = {
+    null
   }
 }
 
@@ -125,6 +123,8 @@ class MockFactoryClass extends FactoryClass {
 class FeedSpec extends Specification with Specs2RouteTest with Feed {
   def actorRefFactory = system
   Feed.factory = new MockFactoryClass
+  IO.cacheStatements = false
+  IO.unitTesting = true
 
   "Feed" should {
 

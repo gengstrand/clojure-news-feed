@@ -11,7 +11,7 @@ import scala.util.{Try, Failure, Success}
  */
 object RedisService {
   def connect: Redis = {
-    new Redis("/home/glenn/Documents/workspaceScalaNewsFeed/feed2/src/main/resources/redis.conf", "scredis")
+    new Redis(IO.settings.get(IO.cacheConfig).asInstanceOf[String], "scredis")
   }
   lazy val redis = connect
   val timeout: Long = 60000

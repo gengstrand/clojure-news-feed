@@ -5,12 +5,10 @@ import java.util.logging.Logger
 import akka.actor.{ActorSystem, Props, Actor, DeadLetter}
 import akka.io.IO
 import info.glennengstrand.io._
-import info.glennengstrand.news._
 import spray.can.Http
 import akka.pattern.ask
 import akka.util.Timeout
 import scala.concurrent.duration._
-import java.util.Properties
 import java.io.FileInputStream
 
 class ServiceFactoryClass extends FactoryClass {
@@ -63,11 +61,11 @@ object Boot extends App {
   IO(Http) ? Http.Bind(service, interface = "localhost", port = 8080)
 }
 
-  class Listener extends Actor {
-  val log = Logger.getLogger("info.glennengstrand.news.Listener")
-  def actorRefFactory = context
+class Listener extends Actor {
+val log = Logger.getLogger("info.glennengstrand.news.Listener")
+def actorRefFactory = context
 
-    def receive = {
-      case DeadLetter(msg, from, to) => log.warning(msg.toString)
-    }
+  def receive = {
+    case DeadLetter(msg, from, to) => log.finest(msg.toString)
   }
+}

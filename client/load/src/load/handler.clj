@@ -63,7 +63,6 @@
                   (map
                     #(rand-int %)
                     (take (+ min-friends (rand-int (- max-friends min-friends))) (repeat participant-batch-size))))]
-    (println participants)
     (doseq
       [from (map #(nth participants %) inviters)]
       (doseq 

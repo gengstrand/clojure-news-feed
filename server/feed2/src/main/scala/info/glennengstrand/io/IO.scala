@@ -28,6 +28,12 @@ object IO {
   val messagingBrokers = "messaging_brokers"
   val zookeeperServers = "zookeeper_servers"
   val searchHost = "search_host"
+  val cacheConfig = "cache_config"
+
+  val sql: scala.collection.mutable.Map[String, PreparedStatement] = scala.collection.mutable.Map()
+
+  var cacheStatements = true
+  var unitTesting = false
 
   def cacheAwareRead(o: PersistentDataStoreBindings, criteria: Map[String, Any], reader: PersistentDataStoreReader, cache: CacheAware): Iterable[Map[String, Any]] = {
     def loadFromDbAndCache: Iterable[Map[String, Any]] = {
@@ -142,8 +148,42 @@ abstract class PersistentDataStoreBindings {
 }
 
 trait PersistentRelationalDataStoreStatementAware {
-  def reset: Unit
-  def prepare(entity: String, inputs: Iterable[String], outputs: Iterable[(String, String)], pool: PooledRelationalDataStore): PreparedStatement
+  def generatePreparedStatement(operation: String, entity: String, inputs: Iterable[String], outputs: Iterable[(String, String)]): String
+  def reset: Unit = {
+    IO.sql.synchronized {
+      IO.sql.clear()
+    }
+  }
+  def prepare(operation: String, entity: String, inputs: Iterable[String], outputs: Iterable[(String, String)], pool: PooledRelationalDataStore): PreparedStatement = {
+    if (IO.cacheStatements) {
+      val key = operation + ":" + entity
+      IO.sql.contains(key) match {
+        case false => {
+          IO.sql.synchronized {
+            IO.sql.contains(key) match {
+              case false => {
+                IO.unitTesting match {
+                  case true => new MockPreparedStatement
+                  case _ => {
+                    val stmt = pool.getDbConnection.prepareStatement(generatePreparedStatement(operation, entity, inputs, outputs))
+		    IO.sql.put(key, stmt)
+		    stmt
+                  }
+                }
+              }
+              case true => IO.sql.get(key).get
+            }
+          }
+        }
+        case true => IO.sql.get(key).get
+      }
+    } else {
+      IO.unitTesting match {
+        case true => new MockPreparedStatement
+        case _ => pool.getDbConnection.prepareStatement(generatePreparedStatement(operation, entity, inputs, outputs))
+      }
+    }
+  }
 }
 
 trait PersistentDataStoreReader {
@@ -151,8 +191,9 @@ trait PersistentDataStoreReader {
 }
 
 trait PersistentRelationalDataStoreReader extends PersistentDataStoreReader with PooledRelationalDataStore with PersistentRelationalDataStoreStatementAware {
+  val operation = "Fetch"
   def read(o: PersistentDataStoreBindings, criteria: Map[String, Any]): Iterable[Map[String, Any]] = {
-    val stmt = prepare(o.entity, o.fetchInputs, o.fetchOutputs, this)
+    val stmt = prepare(operation, o.entity, o.fetchInputs, o.fetchOutputs, this)
     try {
       stmt.synchronized {
         Sql.prepare(stmt, o.fetchInputs, criteria)
@@ -162,7 +203,7 @@ trait PersistentRelationalDataStoreReader extends PersistentDataStoreReader with
       case e: SQLException => {
         IO.log.log(Level.WARNING, "cannot fetch data\n", e)
         reset
-        val stmt = prepare(o.entity, o.fetchInputs, o.fetchOutputs, this)
+        val stmt = prepare(operation, o.entity, o.fetchInputs, o.fetchOutputs, this)
         stmt.synchronized {
           Sql.prepare(stmt, o.fetchInputs, criteria)
           Sql.query(stmt, o.fetchOutputs)
@@ -177,8 +218,9 @@ trait PersistentDataStoreWriter {
 }
 
 trait PersistentRelationalDataStoreWriter extends PersistentDataStoreWriter with PooledRelationalDataStore with PersistentRelationalDataStoreStatementAware {
+  val operation = "Upsert"
   def write(o: PersistentDataStoreBindings, state: Map[String, Any], criteria: Map[String, Any]): Map[String, Any] = {
-    val stmt = prepare(o.entity, o.upsertInputs, o.upsertOutputs, this)
+    val stmt = prepare(operation, o.entity, o.upsertInputs, o.upsertOutputs, this)
     try {
       stmt.synchronized {
         Sql.prepare(stmt, o.upsertInputs, state)
@@ -188,7 +230,7 @@ trait PersistentRelationalDataStoreWriter extends PersistentDataStoreWriter with
       case e: SQLException => {
         IO.log.log(Level.WARNING, "cannot upsert data\n", e)
         reset
-        val stmt = prepare( o.entity, o.upsertInputs, o.upsertOutputs, this)
+        val stmt = prepare(operation, o.entity, o.upsertInputs, o.upsertOutputs, this)
         stmt.synchronized {
           Sql.prepare(stmt, o.upsertInputs, state)
           Sql.execute(stmt, o.upsertOutputs).toMap[String, Any]
