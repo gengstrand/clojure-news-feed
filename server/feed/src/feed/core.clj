@@ -216,13 +216,13 @@
 (defrecord Outbound [from occurred subject story]
   ValueObject
   (to-client [this]
-    (str "{from: "
+    (str "{\"from\": "
          (:from this)
-         ", occurred: \""
+         ", \"occurred\": \""
          (format-possible-date (:occurred this))
-         "\", subject: \""
+         "\", \"subject\": \""
          (:subject this)
-         "\", story: \""
+         "\", \"story\": \""
          (:story this)
          "\" }"))
   (to-db [this]
