@@ -11,6 +11,7 @@ import akka.util.Timeout
 import scala.concurrent.duration._
 import java.io.FileInputStream
 
+/** responsible for creating main entity abstraction objects for the real service */
 class ServiceFactoryClass extends FactoryClass {
   val performanceLogger = new Kafka
   def getObject(name: String, id: Long): Option[Object] = {
@@ -44,6 +45,7 @@ class ServiceFactoryClass extends FactoryClass {
   }
 }
 
+/** main starting entry point for the real service */
 object Boot extends App {
 
   implicit val system = ActorSystem("on-spray-can")
@@ -61,6 +63,7 @@ object Boot extends App {
   IO(Http) ? Http.Bind(service, interface = "localhost", port = 8080)
 }
 
+/** logs dead letter requests to akka */
 class Listener extends Actor {
 val log = Logger.getLogger("info.glennengstrand.news.Listener")
 def actorRefFactory = context

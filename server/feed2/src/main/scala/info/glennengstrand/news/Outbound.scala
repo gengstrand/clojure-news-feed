@@ -5,6 +5,7 @@ import java.util.logging.Logger
 
 import info.glennengstrand.io._
 
+/** helper functions for outbound object creation */
 object Outbound extends SolrSearcher {
   val log = Logger.getLogger("info.glennengstrand.news.Outbound")
   val reader: PersistentDataStoreReader = new CassandraReader
@@ -50,6 +51,7 @@ object Outbound extends SolrSearcher {
 
 case class OutboundState(participantID: Int, occurred: Date, subject: String, story: String)
 
+/** represents a news feed item in the outbound feed */
 class Outbound(participantID: Int, occurred: Date, subject: String, story: String) extends OutboundState(participantID, occurred, subject, story) with MicroServiceSerializable {
   this: PersistentDataStoreWriter with CacheAware =>
 
@@ -61,6 +63,8 @@ class Outbound(participantID: Int, occurred: Date, subject: String, story: Strin
       "story" -> story
     )
   }
+
+  /** save item to db and perform social broadcast of item to inbound feed of friends */
   def save: Unit = {
     val criteria: Map[String, Any] = Map(
       "participantID" -> participantID
@@ -79,6 +83,7 @@ class Outbound(participantID: Int, occurred: Date, subject: String, story: Strin
   override def toJson(factory: FactoryClass): String = toJson
 }
 
+/** represents a user's outbound feed */
 class OutboundFeed(id: Int, state: Iterable[Map[String, Any]]) extends Iterator[Outbound] with MicroServiceSerializable {
   val i = state.iterator
   def hasNext = i.hasNext

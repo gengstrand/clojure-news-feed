@@ -5,7 +5,7 @@ import java.util.logging.Logger
 import java.util.Date
 
 /**
- * Created by glenn on 2/28/15.
+ * CQL related helper functions
  * http://www.datastax.com/documentation/developer/java-driver/1.0/java-driver/quick_start/qsSimpleClientAddSession_t.html
  */
 
@@ -13,6 +13,7 @@ object Cassandra {
   val log = Logger.getLogger("info.glennengstrand.io.Cassandra")
   val sql: scala.collection.mutable.Map[String, PreparedStatement] = scala.collection.mutable.Map()
 
+  /** maps string value from settings.properties to the real Java enumeration */
   def getConsistencyLevel(level: String): ConsistencyLevel = {
     level match {
       case "one" => ConsistencyLevel.ONE
@@ -20,23 +21,31 @@ object Cassandra {
       case _ => ConsistencyLevel.ANY
     }
   }
+
+  /** builds the connection to the cassandra cluster */
   def getCluster: Cluster = {
     // TODO: host could also be a comma delimiter list of server and port
     val b = Cluster.builder().addContactPoint(IO.settings.get(IO.nosqlHost).asInstanceOf[String])
     b.build()
   }
+
+  /** this key is used to cache the CQL statement */
   def getKey(operation: String, entity: String): String = {
     operation + ":" + entity
   }
   lazy val cluster = getCluster
   lazy val session = cluster.connect(IO.settings.get(IO.nosqlKeyspace).asInstanceOf[String])
   lazy val ttl = IO.settings.get(IO.nosqlTimeToLiveInSeconds).asInstanceOf[String]
+
+  /** generates the column name that ends up in the field list of the select statement */
   def generateSelectFieldName(fn: String, ft: String): String = {
     ft match {
       case "Date" => "dateOf(" + fn + ")"
       case _ => fn
     }
   }
+
+  /** generates and caches the CQL prepared statement for selects */
   def prepareFetch(operation: String, o: PersistentDataStoreBindings): PreparedStatement = {
     val key = getKey(operation, o.entity)
     sql.contains(key) match {
@@ -63,12 +72,16 @@ object Cassandra {
       case true => sql.get(key).get
     }
   }
+
+  /** generates the column name to include in the field list of the insert statement */
   def generateUpsertFieldValue(fieldName: String, o: PersistentDataStoreBindings): String = {
     o.getTypeOf(fieldName) match {
       case "Date" => "minTimeuuid(?)"
       case _ => "?"
     }
   }
+
+  /** generates and caches the CQL prepared statement for inserts */
   def prepareUpsert(operation: String, o: PersistentDataStoreBindings): PreparedStatement = {
     val key = getKey(operation, o.entity)
     sql.contains(key) match {
@@ -93,6 +106,8 @@ object Cassandra {
       case true => sql.get(key).get
     }
   }
+
+  /** calls data type dependent setters on the datastax driver */
   def setBinding(binding: BoundStatement, fieldName: String, state: Map[String, Any], index: Int): Unit = {
     log.finest("setting " + fieldName + " parameter " + index + " to " + state.get(fieldName).getOrElse(0))
     state.get(fieldName).get match {
@@ -103,6 +118,8 @@ object Cassandra {
       case None =>
     }
   }
+
+  /** calls data type dependent gettters on the datastax driver to populate a map */
   def mapResults(retVal: scala.collection.mutable.Map[String, Any], r: Row, field: Tuple2[String, String]): Unit = {
     val fn = field._1.asInstanceOf[String]
     field._2 match {
@@ -112,6 +129,8 @@ object Cassandra {
       case _ => retVal.put(fn, r.getString(fn))
     }
   }
+
+  /** calls data type dependent gettters on the datastax driver to populate a tuple */
   def tupleFromRow(f: Tuple2[String, String], r: Row): Tuple2[String, Any] = {
     f._2 match {
       case "Long" => (f._1, r.getLong(f._1))
@@ -120,6 +139,8 @@ object Cassandra {
       case _ => (f._1, r.getString(f._1))
     }
   }
+
+  /** binds values to a prepared statement */
   def bindInputs(stmt: PreparedStatement, binding: Iterable[String], bound: Map[String, Any]): BoundStatement = {
     val retVal = new BoundStatement(stmt)
     var index = 0
@@ -129,6 +150,8 @@ object Cassandra {
     })
     retVal
   }
+
+  /** obtains state from a single row result */
   def bindSingleRowOutputs(binding: BoundStatement, o: PersistentDataStoreBindings): Map[String, Any] = {
     val b = binding.bind()
     val rs = Cassandra.session.execute(b)
@@ -138,6 +161,8 @@ object Cassandra {
       tupleFromRow(f, r)
     }).toMap
   }
+
+  /** obtains state from a multi row result */
   def bindMultiRowOutputs(binding: BoundStatement, o: PersistentDataStoreBindings): Iterable[Map[String, Any]] = {
     val rs = Cassandra.session.execute(binding.bind())
     val r = rs.iterator()
@@ -153,6 +178,7 @@ object Cassandra {
   }
 }
 
+/** responsible for reading from cassandra */
 class CassandraReader extends PersistentDataStoreReader {
   val fetch: String = "Fetch"
 
@@ -163,6 +189,7 @@ class CassandraReader extends PersistentDataStoreReader {
   }
 }
 
+/** responsible for writing to cassandra  */
 trait CassandraWriter extends PersistentDataStoreWriter {
   val upsert: String = "Upsert"
   def write(o: PersistentDataStoreBindings, state: Map[String, Any], criteria: Map[String, Any]): Map[String, Any] = {

@@ -8,6 +8,7 @@ import java.util.{Calendar, Date, Properties}
 import scala.util.parsing.json.JSON
 import java.sql.{SQLException, PreparedStatement, Connection}
 
+/** general common Input Output related helper functions */
 object IO {
   val settings = new Properties
   val df = new SimpleDateFormat("yyyy-MM-dd")
@@ -35,6 +36,7 @@ object IO {
   var cacheStatements = true
   var unitTesting = false
 
+  /** check the cache first, if a hit, then return that else check the db and write to the cache */
   def cacheAwareRead(o: PersistentDataStoreBindings, criteria: Map[String, Any], reader: PersistentDataStoreReader, cache: CacheAware): Iterable[Map[String, Any]] = {
     def loadFromDbAndCache: Iterable[Map[String, Any]] = {
       val fromDb = reader.read(o, criteria)
@@ -50,6 +52,8 @@ object IO {
       case _ => fromCache
     }
   }
+
+  /** format a value acceptable for JSON based on type */
   def toJsonValue(v: Any): String = {
     v match {
       case l: Long => l.toString
@@ -60,16 +64,22 @@ object IO {
       case _ => "\"" + v.toString + "\""
     }
   }
+
+  /** serialize a map as JSON */
   def toJson(state: Map[String, Any]): String = {
     val s = state.map(kv => "\"" + kv._1 + "\":" + toJsonValue(kv._2)).reduce(_ + "," + _)
     "{" + s + "}"
   }
+
+  /** serialize a collection as JSON */
   def toJson(state: Iterable[Map[String, Any]]): String = {
     val s = state.map{ li => {
       "{" +li.map(kv => "\"" + kv._1 + "\":" +  toJsonValue(kv._2)).reduce(_ + "," + _) + "}"
     }}.reduce(_ + "," + _)
     "[" + s + "]"
   }
+
+  /** parse JSON into a collection of maps */
   def fromJson(json: String): Iterable[Map[String, Option[Any]]] = {
     val retVal = JSON.parseFull(json).getOrElse(List())
     retVal match {
@@ -78,12 +88,16 @@ object IO {
       case _ => List()
     }
   }
+
+  /** convert a form post into a map */
   def fromFormPost(state: String) : Map[String, Any] = {
     state.isEmpty match {
       case false => state.split("&").map(kv => kv.split("=")).map(t => (t(0), t(1))).toMap
       case _ => Map()
     }
   }
+
+  /** convert a value to long based on type */
   def convertToLong(v: Any) : Long = {
     v match {
       case l: Long => l
@@ -92,6 +106,8 @@ object IO {
       case s: String => s.toLong
     }
   }
+
+  /** convert a value to int based on type */
   def convertToInt(v: Any) : Int = {
     v match {
       case l: Long => l.toInt
@@ -100,6 +116,8 @@ object IO {
       case s: String => s.toInt
     }
   }
+
+  /** convert a value to date based on type */
   def convertToDate(v: Any): Date = {
     v match {
       case l: Long => new Date(l)
@@ -109,6 +127,7 @@ object IO {
   }
 }
 
+/** responsible for entity object creation for both unit tests and the real service */
 abstract class FactoryClass {
   def getObject(name: String, id: Long): Option[Object]
   def getObject(name: String, id: Int): Option[Object]
@@ -116,6 +135,7 @@ abstract class FactoryClass {
   def getObject(name: String): Option[Object]
 }
 
+/** default do nothing class factory */
 class EmptyFactoryClass extends FactoryClass {
   def getObject(name: String, id: Long): Option[Object] = {
     None
@@ -131,13 +151,27 @@ class EmptyFactoryClass extends FactoryClass {
   }
 }
 
+/** how each entity communicates with DB aware traits and classes */
 abstract class PersistentDataStoreBindings {
+  /** identifies which entity in the database that this is for */
   def entity: String
+
+  /** specifies key names to the criteria map whose values are to be used as inputs to the fetch statement */
   def fetchInputs: Iterable[String]
+
+  /** the names of the expected columns from output of the fetch statement and their associated types */
   def fetchOutputs: Iterable[(String, String)]
+
+  /** used to statement generation for ordering. the first string is the column name and the second streing is either asc or desc */
   def fetchOrder: Map[String, String]
+
+  /** specifies key names to the state map whose values are to be used as inputs to the upsert statement */
   def upsertInputs: Iterable[String]
+
+  /** specifies names of the expected columns from the output of the upsert statement and their associated types */
   def upsertOutputs: Iterable[(String, String)]
+
+  /** look up the field name and return the string representation of its type */
   def getTypeOf(fieldName: String): String = {
     val retVal = for ((fn, ft) <- fetchOutputs if fieldName == fn) yield ft
     retVal.isEmpty match {
@@ -147,13 +181,20 @@ abstract class PersistentDataStoreBindings {
   }
 }
 
+/** responsible for managing the cache of prepared statements */
 trait PersistentRelationalDataStoreStatementAware {
+
+  /** generate the string representation of the  SQL to be used to create the prepared statement */
   def generatePreparedStatement(operation: String, entity: String, inputs: Iterable[String], outputs: Iterable[(String, String)]): String
+
+  /** clear out the cache of prepared statements */
   def reset: Unit = {
     IO.sql.synchronized {
       IO.sql.clear()
     }
   }
+
+  /** retrieve a prepared statement from the cache or create the statement and add it to the cache if necessary */
   def prepare(operation: String, entity: String, inputs: Iterable[String], outputs: Iterable[(String, String)], pool: PooledRelationalDataStore): PreparedStatement = {
     if (IO.cacheStatements) {
       val key = operation + ":" + entity
@@ -166,8 +207,8 @@ trait PersistentRelationalDataStoreStatementAware {
                   case true => new MockPreparedStatement
                   case _ => {
                     val stmt = pool.getDbConnection.prepareStatement(generatePreparedStatement(operation, entity, inputs, outputs))
-		    IO.sql.put(key, stmt)
-		    stmt
+		                IO.sql.put(key, stmt)
+		                stmt
                   }
                 }
               }
@@ -186,12 +227,18 @@ trait PersistentRelationalDataStoreStatementAware {
   }
 }
 
+/** specifies the contract for data store readers */
 trait PersistentDataStoreReader {
+
+  /** read from the data store based on bindings and criteria */
   def read(o: PersistentDataStoreBindings, criteria: Map[String, Any]): Iterable[Map[String, Any]]
 }
 
+/** specifies the contract for JDBC readers */
 trait PersistentRelationalDataStoreReader extends PersistentDataStoreReader with PooledRelationalDataStore with PersistentRelationalDataStoreStatementAware {
   val operation = "Fetch"
+
+  /** read from the SQL database based on bindings and criteria */
   def read(o: PersistentDataStoreBindings, criteria: Map[String, Any]): Iterable[Map[String, Any]] = {
     val stmt = prepare(operation, o.entity, o.fetchInputs, o.fetchOutputs, this)
     try {
@@ -213,12 +260,18 @@ trait PersistentRelationalDataStoreReader extends PersistentDataStoreReader with
   }
 }
 
+/** specifies the contract for data store writers */
 trait PersistentDataStoreWriter {
+
+  /** writes to the data store based on bindings, state, and criteria */
   def write(o: PersistentDataStoreBindings, state: Map[String, Any], criteria: Map[String, Any]): Map[String, Any]
 }
 
+/** specifies the contract for JDBC writers */
 trait PersistentRelationalDataStoreWriter extends PersistentDataStoreWriter with PooledRelationalDataStore with PersistentRelationalDataStoreStatementAware {
   val operation = "Upsert"
+
+  /** write to the SQL database based on bindings, state, and criteria returnings the newly created primary key */
   def write(o: PersistentDataStoreBindings, state: Map[String, Any], criteria: Map[String, Any]): Map[String, Any] = {
     val stmt = prepare(operation, o.entity, o.upsertInputs, o.upsertOutputs, this)
     try {
@@ -240,54 +293,72 @@ trait PersistentRelationalDataStoreWriter extends PersistentDataStoreWriter with
   }
 }
 
+/** specifies the contract for keyword based search */
 trait PersistentDataStoreSearcher {
+
+  /** search the collection of documents for keywords */
   def search(terms: String): Iterable[java.lang.Long]
+
+  /** add a new document to the collection */
   def index(id: Long, content: String): Unit
 }
 
+/** specifies the contract for logging performance related data */
 trait PerformanceLogger {
+
+  /** format the record of performance data to be logged */
   def logRecord(entity: String, operation: String, duration: Long): String = {
     val now = Calendar.getInstance()
     val ts = now.get(Calendar.YEAR).toString + "|" + now.get(Calendar.MONTH).toString + "|" + now.get(Calendar.DAY_OF_MONTH).toString + "|" + now.get(Calendar.HOUR_OF_DAY).toString + "|" + now.get(Calendar.MINUTE).toString
     ts + "|" + entity + "|" + operation + "|" + duration.toString
   }
+
+  /** performs the log operation */
   def log(topic: String, entity: String, operation: String, duration: Long): Unit
 }
 
+/** specifies the contract for a write through cache */
 trait CacheAware {
+
+  /** fetch from the cache */
   def load(o: PersistentDataStoreBindings, criteria: Map[String, Any]): Iterable[Map[String, Any]]
+
+  /** store a single item to the cache */
   def store(o: PersistentDataStoreBindings, state: Map[String, Any], criteria: Map[String, Any]): Unit
+
+  /** store a collection of items to the cache */
   def store(o: PersistentDataStoreBindings, state: Iterable[Map[String, Any]], criteria: Map[String, Any]): Unit
+
+  /** append an item to a collection of items in the cache */
   def append(o: PersistentDataStoreBindings, state: Map[String, Any], criteria: Map[String, Any]): Unit
+
+  /** remove an item from the cache */
   def invalidate(o: PersistentDataStoreBindings, criteria: Map[String, Any]): Unit
 }
 
+/** a do nothing cache for data stores that don't need caching */
 trait MockCacheAware extends CacheAware {
   def load(o: PersistentDataStoreBindings, criteria: Map[String, Any]): Iterable[Map[String, Any]] = {
-    // TODO: implement this
     List()
   }
   def store(o: PersistentDataStoreBindings, state: Map[String, Any], criteria: Map[String, Any]): Unit = {
-    // TODO: implement this
-
   }
   def store(o: PersistentDataStoreBindings, state: Iterable[Map[String, Any]], criteria: Map[String, Any]): Unit = {
-    // TODO: implement this
-
   }
   def append(o: PersistentDataStoreBindings, state: Map[String, Any], criteria: Map[String, Any]): Unit = {
-    // TODO: implement this
-
   }
   def invalidate(o: PersistentDataStoreBindings, criteria: Map[String, Any]): Unit = {
-    // TODO: implement this
-
   }
 }
 
 class MockCache extends MockCacheAware
 
+/** specifies the contract for serializing entity object state */
 trait MicroServiceSerializable {
+
+  /** serialize state to JSON for a single object */
   def toJson: String
+
+  /** serialize state to JSON for a parent entity object that has child entity objects */
   def toJson(factory: FactoryClass): String
 }

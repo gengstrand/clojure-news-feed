@@ -120,6 +120,7 @@ class MockFactoryClass extends FactoryClass {
   }
 }
 
+/** unit tests for the news feed service */
 class FeedSpec extends Specification with Specs2RouteTest with Feed {
   def actorRefFactory = system
   Feed.factory = new MockFactoryClass

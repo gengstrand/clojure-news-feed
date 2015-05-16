@@ -7,6 +7,7 @@ import java.sql.{SQLException, ResultSet, PreparedStatement, Connection}
 
 import scala.collection.mutable
 
+/** helper functions for generating postgesql statements */
 object PostgreSql {
   val log = Logger.getLogger("info.glennengstrand.io.PostgreSql")
 
@@ -17,12 +18,15 @@ object PostgreSql {
   }
 
 }
+
+/** postgresql specific reader */
 class PostgreSqlReader extends PersistentRelationalDataStoreReader {
   def generatePreparedStatement(operation: String, entity: String, inputs: Iterable[String], outputs: Iterable[(String, String)]): String = {
     PostgreSql.generatePreparedStatement(operation, entity, inputs, outputs)
   }
 }
 
+/** postgresql specific writer */
 trait PostgreSqlWriter extends PersistentRelationalDataStoreWriter {
   def generatePreparedStatement(operation: String, entity: String, inputs: Iterable[String], outputs: Iterable[(String, String)]): String = {
     PostgreSql.generatePreparedStatement(operation, entity, inputs, outputs)

@@ -2,6 +2,7 @@ package info.glennengstrand.news
 
 import info.glennengstrand.io._
 
+/** participant object creation helper functions */
 object Participant {
   val reader: PersistentDataStoreReader = new MySqlReader
   val cache: CacheAware = new RedisCache
@@ -49,9 +50,11 @@ object Participant {
 
 case class ParticipantState(id: Long, name: String)
 
+/** represents a participant who may have friends and news feed */
 class Participant(id: Long, name: String) extends ParticipantState(id, name) with MicroServiceSerializable {
   this: PersistentRelationalDataStoreWriter with CacheAware =>
 
+  /** save participant state to db */
   def save: Participant = {
     val state: Map[String, Any] = Map(
       "name" -> name

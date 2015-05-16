@@ -6,9 +6,7 @@ import scala.concurrent.{Future, Await}
 import scala.concurrent.duration._
 import scala.util.{Try, Failure, Success}
 
-/**
- * Created by glenn on 2/17/15.
- */
+/** helper function for connecting to redis */
 object RedisService {
   def connect: Redis = {
     new Redis(IO.settings.get(IO.cacheConfig).asInstanceOf[String], "scredis")
@@ -17,6 +15,7 @@ object RedisService {
   val timeout: Long = 60000
 }
 
+/** knows how to cache data in redis */
 trait RedisCacheAware extends CacheAware {
   def key(o: PersistentDataStoreBindings, criteria: Map[String, Any]): String = {
     o.entity + ":" + criteria.map((f) => f._2).reduce(_ + ":" + _)
@@ -51,6 +50,7 @@ trait RedisCacheAware extends CacheAware {
   }
 }
 
+/** used for the read side */
 class RedisCache extends RedisCacheAware {
 
 }

@@ -2,7 +2,7 @@ package info.glennengstrand.news
 
 import info.glennengstrand.io._
 
-
+/** helper functions for friend object creation */
 object Friends {
   val reader: PersistentDataStoreReader = new MySqlReader
   val cache: CacheAware = new RedisCache
@@ -49,9 +49,11 @@ object Friends {
 
 case class FriendState(id: Long, fromParticipantID: Long, toParticipantID: Long)
 
+/** represents the friend relationship between two participants */
 class Friend(id: Long, fromParticipantID: Long, toParticipantID: Long) extends FriendState(id, fromParticipantID, toParticipantID) with MicroServiceSerializable {
   this: PersistentRelationalDataStoreWriter with CacheAware =>
 
+  /** save to the database and return a new friend object with the newly created primary key */
   def save: Friend = {
     val state: Map[String, Any] = Map(
       "fromParticipantID" -> fromParticipantID,
@@ -87,6 +89,7 @@ class Friend(id: Long, fromParticipantID: Long, toParticipantID: Long) extends F
 
 }
 
+/** collection representing all the friends of a particular participant */
 class Friends(id: Long, state: Iterable[Map[String, Any]]) extends Iterator[Friend] with MicroServiceSerializable {
   val i = state.iterator
   def hasNext = i.hasNext

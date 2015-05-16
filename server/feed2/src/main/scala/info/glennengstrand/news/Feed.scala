@@ -9,10 +9,12 @@ import spray.http.HttpEntity
 import MediaTypes._
 import java.util.logging.{Logger, Level}
 
+/** where to hold  the global class factory */
 object Feed {
   var factory: FactoryClass = new EmptyFactoryClass
 }
 
+/** spray actor for servicing requests */
 class FeedActor extends Actor with Feed {
 
   def actorRefFactory = context
@@ -20,6 +22,7 @@ class FeedActor extends Actor with Feed {
   def receive = runRoute(myRoute)
 }
 
+/** provides routings for mapping requests to the code that processes the requests */
 trait Feed extends HttpService {
   val log = Logger.getLogger("info.glennengstrand.news.Feed")
   val myRoute =

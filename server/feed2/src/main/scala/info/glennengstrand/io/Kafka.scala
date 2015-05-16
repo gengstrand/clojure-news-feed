@@ -4,6 +4,7 @@ import java.util.{Properties, Calendar}
 import org.apache.kafka.clients.producer.{ProducerRecord, Producer, KafkaProducer}
 import java.util.logging.{Level, Logger}
 
+/** responsible for logging performance data to kafka */
 class Kafka extends PerformanceLogger {
   val log = Logger.getLogger("info.glennengstrand.io.Kafka")
   def connect(): Producer[String, String] = {

@@ -7,6 +7,7 @@ import java.sql._
 import java.util
 import java.util.Calendar
 
+/** mock result set for unit testing only */
 class MockResultSet extends java.sql.ResultSet {
   override def next(): Boolean = { false }
 
@@ -391,7 +392,7 @@ class MockResultSet extends java.sql.ResultSet {
   override def getObject[T](x$1: Int,x$2: Class[T]): T = { throw new SQLException }
 }
 
-
+/** mock prepared statement creates a mock result set */
 class MockPreparedStatement extends PreparedStatement {
   override def executeQuery(): ResultSet = { new MockResultSet }
 

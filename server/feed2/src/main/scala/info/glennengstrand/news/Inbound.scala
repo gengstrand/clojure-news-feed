@@ -5,6 +5,7 @@ import java.util.logging.Logger
 
 import info.glennengstrand.io._
 
+/** helper functions for inbound object creation */
 object Inbound {
   val log = Logger.getLogger("info.glennengstrand.news.Inbound")
   val reader: PersistentDataStoreReader = new CassandraReader
@@ -42,6 +43,7 @@ object Inbound {
 
 case class InboundState(participantID: Int, occurred: Date, fromParticipantID: Int, subject: String, story: String)
 
+/** represents a news item as it appears in your inbound feed */
 class Inbound(participantID: Int, occurred: Date, fromParticipantID: Int, subject: String, story: String) extends InboundState(participantID, occurred, fromParticipantID, subject, story) with MicroServiceSerializable {
   this: PersistentDataStoreWriter with CacheAware =>
 
@@ -54,6 +56,8 @@ class Inbound(participantID: Int, occurred: Date, fromParticipantID: Int, subjec
       "story" -> story
     )
   }
+
+  /** save item to db */
   def save: Unit = {
     val criteria: Map[String, Any] = Map(
       "participantID" -> participantID
@@ -70,6 +74,7 @@ class Inbound(participantID: Int, occurred: Date, fromParticipantID: Int, subjec
 
 }
 
+/** represents a user's inbound collection of news items */
 class InboundFeed(id: Int, state: Iterable[Map[String, Any]]) extends Iterator[Inbound] with MicroServiceSerializable {
   val i = state.iterator
   def hasNext = i.hasNext

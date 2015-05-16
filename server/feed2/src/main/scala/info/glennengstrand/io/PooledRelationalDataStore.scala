@@ -4,6 +4,7 @@ import java.sql.Connection
 
 import com.mchange.v2.c3p0.ComboPooledDataSource
 
+/** helper function that wraps access to c3p0 */
 object PooledRelationalDataStore {
 
   private def getPooledDataSource: ComboPooledDataSource = {
@@ -22,6 +23,7 @@ object PooledRelationalDataStore {
 
 }
 
+/** responsible for setting up JDBC connection pools */
 trait PooledRelationalDataStore {
   def getDbConnection: Connection = {
     PooledRelationalDataStore.ds.getConnection
