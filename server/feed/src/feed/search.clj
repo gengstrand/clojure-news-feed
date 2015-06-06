@@ -4,7 +4,7 @@
 
 (def outbound-core 
   (if 
-    (nil? (:search-host prop/service-config))
+    (nil? prop/service-config)
     nil
     (if 
       (.startsWith (:search-host prop/service-config) "http")

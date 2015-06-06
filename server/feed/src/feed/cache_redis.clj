@@ -4,10 +4,12 @@
 (require '[feed.settings :as prop])
 
 (def cache-server-connection 
-  {:pool {:max-active 8}
-   :spec {:host (:cache-host prop/service-config)
-   :port 6379
-   :timeout 4000}})
+  (if (nil? prop/service-config)
+    nil
+	  {:pool {:max-active 8}
+	   :spec {:host (:cache-host prop/service-config)
+	   :port 6379
+	   :timeout 4000}}))
 
 (defmacro wcar* [& body] `(redis/wcar cache-server-connection ~@body))
 

@@ -10,7 +10,10 @@
   []
   (.equals (:sql-vendor prop/service-config) "postgresql"))
 
-(def db-spec {:classname 
+(def db-spec 
+  (if (nil? prop/service-config)
+    nil
+    {:classname 
               (if 
                 (is-postgres)
                 "org.postgresql.Driver"
@@ -25,7 +28,7 @@
                       ":3306/")
                     (:sql-db-name prop/service-config))
                :user (:sql-db-user prop/service-config)
-               :password (:sql-db-password prop/service-config)})
+               :password (:sql-db-password prop/service-config)}))
 
 (defn pool
   [spec]
@@ -41,7 +44,7 @@
                (.setMaxIdleTime (* 3 60 60)))] 
     {:datasource cpds}))
 
-(def pooled-db (delay (pool db-spec)))
+(def pooled-db (if (nil? db-spec) nil (delay (pool db-spec))))
 (defn connection [] @pooled-db)
 
 (def load-participant-from-db-command

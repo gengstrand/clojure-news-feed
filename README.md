@@ -20,6 +20,12 @@ These components are expected to be run on the server(s).
 
 A basic news feed web service written in Clojure.
 
+### feed2
+
+The same micro-service as feed only this time written in Scala. I blogged about this too.
+
+http://glennengstrand.info/software/architecture/oss/scala
+
 ### solr
 
 The supporting directory structure and configuration files needed to augment an instance of Solr to support keyword search capability for the news feed on outbound activity.
@@ -40,12 +46,20 @@ This Clojure application is what I used to load test the feed web service on AWS
 
 This Java project builds a Hadoop map reduce job that inputs the Kafka feed topic performance data and outputs a per minute summary of various metrics used to load the OLAP cube.
 
+### perf
+
+The same map reduce job as NewsFeedPerformance only this time written in Clojure for Cascalog.
+
+### perf2
+
+The same map reduce job as NewsFeedPerformance only this time written Scala for Apache Spark.
+
 ### etl
 
 This Clojure project takes the output from the Hadoop news feed performance map reduce job and loads a MySql database ready for use by Mondrian's Pentaho OLAP server.
 
 ## License
 
-Copyright © 2013 Glenn Engstrand
+Copyright © 2013 - 2015 Glenn Engstrand
 
 Distributed under the Eclipse Public License, the same as Clojure.
