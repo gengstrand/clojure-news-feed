@@ -55,7 +55,7 @@ class MockFactoryClass extends FactoryClass {
   }
   def getFriend(state: String): Friend = {
     val s = IO.fromFormPost(state)
-    new Friend(s("FriendsID").asInstanceOf[String].toLong, s("FromParticipantID").asInstanceOf[String].toLong, s("ToParticipantID").asInstanceOf[String].toLong) with MockRelationalWriter with MockCacheAware
+    new Friend(s("FriendsID").asInstanceOf[String].toLong, s("FromParticipantID").asInstanceOf[String].toInt, s("ToParticipantID").asInstanceOf[String].toInt) with MockRelationalWriter with MockCacheAware
   }
   def getInbound(id: Int): InboundFeed = {
     val state: Iterable[Map[String, Any]] = List(

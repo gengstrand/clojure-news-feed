@@ -4,7 +4,7 @@ import info.glennengstrand.io._
 
 /** participant object creation helper functions */
 object Participant {
-  val reader: PersistentDataStoreReader = new MySqlReader
+  lazy val reader = IO.getReader
   val cache: CacheAware = new RedisCache
   class ParticipantBindings extends PersistentDataStoreBindings {
     def entity: String = {

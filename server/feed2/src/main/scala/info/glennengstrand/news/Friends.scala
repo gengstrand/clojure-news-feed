@@ -4,7 +4,7 @@ import info.glennengstrand.io._
 
 /** helper functions for friend object creation */
 object Friends {
-  val reader: PersistentDataStoreReader = new MySqlReader
+  lazy val reader = IO.getReader
   val cache: CacheAware = new RedisCache
   class FriendsBindings extends PersistentDataStoreBindings {
     def entity: String = {
@@ -14,7 +14,7 @@ object Friends {
       List("ParticipantID")
     }
     def fetchOutputs: Iterable[(String, String)] = {
-      List(("FriendsID", "Long"), ("ParticipantID", "Long"))
+      List(("FriendsID", "Long"), ("ParticipantID", "Int"))
     }
     def upsertInputs: Iterable[String] = {
       List("fromParticipantID", "toParticipantID")
@@ -27,14 +27,14 @@ object Friends {
     }
   }
   val bindings = new FriendsBindings
-  def create(id: Long, from: Long, to: Long): Friend = {
+  def create(id: Long, from: Int, to: Int): Friend = {
     IO.settings.getProperty(IO.jdbcVendor) match {
       case "mysql" => new Friend(id, from, to) with MySqlWriter with RedisCacheAware
       case _ => new Friend(id, from, to) with PostgreSqlWriter with RedisCacheAware
     }
   }
   def apply(id: Long) : Friends = {
-    val criteria: Map[String, Any] = Map("ParticipantID" -> id)
+    val criteria: Map[String, Any] = Map("ParticipantID" -> id.toInt)
     new Friends(id, IO.cacheAwareRead(bindings, criteria, reader, cache))
   }
   def apply(state: String): Friend = {
@@ -43,14 +43,14 @@ object Friends {
       case true => s("FriendsID").asInstanceOf[String].toLong
       case _ => 0l
     }
-    create(id, s("from").asInstanceOf[String].toLong, s("to").asInstanceOf[String].toLong)
+    create(id, s("from").asInstanceOf[String].toInt, s("to").asInstanceOf[String].toInt)
   }
 }
 
 case class FriendState(id: Long, fromParticipantID: Long, toParticipantID: Long)
 
 /** represents the friend relationship between two participants */
-class Friend(id: Long, fromParticipantID: Long, toParticipantID: Long) extends FriendState(id, fromParticipantID, toParticipantID) with MicroServiceSerializable {
+class Friend(id: Long, fromParticipantID: Int, toParticipantID: Int) extends FriendState(id, fromParticipantID, toParticipantID) with MicroServiceSerializable {
   this: PersistentRelationalDataStoreWriter with CacheAware =>
 
   /** save to the database and return a new friend object with the newly created primary key */
@@ -69,12 +69,24 @@ class Friend(id: Long, fromParticipantID: Long, toParticipantID: Long) extends F
   }
 
   override def toJson(factory: FactoryClass): String = {
-    val state: Map[String, Any] = Map(
-      "from" -> factory.getObject("participant", fromParticipantID).get.asInstanceOf[MicroServiceSerializable],
-      "to" -> factory.getObject("participant", toParticipantID).get.asInstanceOf[MicroServiceSerializable],
-      "id" -> id
-    )
-    IO.toJson(state)
+    val fromParticipant = factory.getObject("participant", fromParticipantID)
+    val toParticipant = factory.getObject("participant", toParticipantID)
+    fromParticipant match {
+      case None => toJson
+      case _ => {
+        toParticipant match {
+          case None => toJson
+          case _ => {
+            val state: Map[String, Any] = Map(
+              "from" -> fromParticipant.get.asInstanceOf[MicroServiceSerializable],
+              "to" -> toParticipant.get.asInstanceOf[MicroServiceSerializable],
+              "id" -> id
+            )
+            IO.toJson(state)
+          }
+        }
+      }
+    }
   }
 
   override def toJson: String = {
@@ -95,7 +107,7 @@ class Friends(id: Long, state: Iterable[Map[String, Any]]) extends Iterator[Frie
   def hasNext = i.hasNext
   def next() = {
     val kv = i.next()
-    Friends.create(IO.convertToLong(kv("FriendsID")), id, IO.convertToLong(kv("ParticipantID")))
+    Friends.create(IO.convertToLong(kv("FriendsID")), id.toInt, IO.convertToInt(kv("ParticipantID")))
   }
   override def toJson(factory: FactoryClass): String = {
     isEmpty match {

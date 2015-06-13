@@ -1,6 +1,6 @@
 (defproject feed "0.1.0-SNAPSHOT"
-  :description "FIXME: write description"
-  :url "http://example.com/FIXME"
+  :description "news feed micro service in clojure"
+  :url "http://www.dynamicalsoftware.com/software/architecture/oss/clojure"
   :repositories {"local" ~(str (.toURI (java.io.File. "/home/glenn/.m2/repository")))}
   :dependencies [[org.clojure/clojure "1.5.1"]
                  [org.clojure/java.jdbc "0.3.0-alpha5"]

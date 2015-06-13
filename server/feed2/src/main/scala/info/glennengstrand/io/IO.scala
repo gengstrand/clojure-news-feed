@@ -125,6 +125,14 @@ object IO {
       case s: String => df.parse(s)
     }
   }
+
+  def getReader: PersistentDataStoreReader = {
+    IO.settings.getProperty(IO.jdbcVendor) match {
+      case "mysql" => new MySqlReader
+      case _ => new PostgreSqlReader
+    }
+  }
+
 }
 
 /** responsible for entity object creation for both unit tests and the real service */
