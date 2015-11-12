@@ -6,7 +6,7 @@
 (def cache-server-connection 
   (if (nil? prop/service-config)
     nil
-	  {:pool {:max-active 8}
+	  {:pool {}
 	   :spec {:host (:cache-host prop/service-config)
 	   :port 6379
 	   :timeout 4000}}))
@@ -19,7 +19,7 @@
   (try
     (wcar* (redis/get key))
     (catch Exception e 
-      (println "cache not available")
+      (println (str "cannot fetch from cache: " (.getLocalizedMessage e)))
       nil)))
 
 (defn save-to-cache
@@ -28,7 +28,7 @@
   (try 
     (wcar* (redis/set key value))
     (catch Exception e 
-      (println "cache not available")
+      (println (str "cannot save to cache: " (.getLocalizedMessage e)))
       nil)))
 
 (defn add-to-cache
@@ -37,5 +37,5 @@
   (try 
     (wcar* (redis/append key value))
     (catch Exception e 
-      (println "cache  not available")
+      (println (str "cannot add to cache: " (.getLocalizedMessage e)))
       nil)))

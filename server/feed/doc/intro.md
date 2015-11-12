@@ -4,21 +4,23 @@ An illustrative sample web service implementing a basic news feed capability.
 
 This was developed with the following dependencies...
 
-clojure 1.5.1
+clojure 1.7.0
 
-iced tea 1.12.6
+iced tea 2.5.6
 
-cassandra 1.2.2
+cassandra 2.1.11
 
-postgresql 9.1
+postgresql 9.4
+
+mysql 5.6.27
 
 zookeeper 3.4.5
 
-kafka 2.8.0
+kafka 2.11
 
-redis 2.8.2
+redis 3.0.5
 
-solr 4.5.1
+solr 5.3.1
 
 ## Usage
 
@@ -26,58 +28,64 @@ This is a fun learning adventure for writing non-trivial web services in clojure
 
 ### Initial, one time set up
 
-cd ~/oss/kafka/kafka_2.8.0-0.8.0
+cd ~/oss/kafka/kafka_2.11-0.8.2.2
 
 bin/kafka-create-topic.sh --zookeeper localhost:2181 --replica 1 --partition 1 --topic feed
 
-Copy everything from the solr folder from this github repository to where you have installed solr in such a way that it overwrites the solr/example/multicore folder.
+cd ~/apps/solr-5.3.1
+
+bin/solr create_core outbound
+
+Copy everything from the solr folder from this github repository to the ~/apps/solr-5.3.1/server/solr/outbound folder.
 
 create a feed database with a user/password of feed/feed
 
 psql feed <~/git/clojure-news-feed/server/feed/etc/schema.postgre.sql
 
-cd ~/oss/apache-cassandra-1.2.2/bin
+cd ~/oss/apache-cassandra-2.1.11/bin
 
 ./cqlsh <~/git/clojure-news-feed/server/feed/etc/schema.cassandra.sql
 
 cd ~/git/clojure-news-feed/server/support
 
-maven clean compile install
+mvn clean install
 
 cd ~/git/clojure-news-feed/server/feed
 
 You may need to edit ~/git/clojure-news-feed/server/feed/etc/config.cli 
 and you will also need to set the APP_CONFIG environment variable too (see below).
 
+Right now, I never see the building of uberjar complete even after 30 minutes.
+
 lein ring uberjar
 
 ### starting all the services
 
-cd ~/oss/apache-cassandra-1.2.2/bin
+cd ~/oss/apache-cassandra-2.1.11/bin
 
 ./cassandra -f
 
-cd ~/oss/zk/zookeeper-3.4.5
+cd ~/oss/kafka/kafka_2.11-0.8.2.2
 
-bin/zkServer.sh start
-
-cd ~/oss/kafka/kafka_2.8.0-0.8.0
+bin/zookeeper-server-start.sh config/zookeeper.properties
 
 bin/kafka-server-start.sh config/server.properties
 
-cd ~/oss/redis/redis-2.8.2/src 
+cd ~/oss/redis/redis-3.0.5/src 
 
 ./redis-server
 
-cd ~/oss/solr/solr-4.5.1/solr/example
+cd ~/apps/solr-5.3.1
 
-java -Dsolr.solr.home=multicore -jar start.jar
+bin/solr start
 
 cd ~/git/clojure-news-feed/server/feed
 
 the tilde notation does not get honored here
 
-export APP_CONFIG="/home/glenn/git/clojure-news-feed/server/feed/etc/config.clj"
+export APP_CONFIG=/home/glenn/git/clojure-news-feed/server/feed/etc/config.clj
+
+lein run
 
 java -jar target/feed-0.1.0-SNAPSHOT-standalone.jar
 
@@ -99,4 +107,9 @@ curl http://localhost:3000/inbound/2
 
 curl -d terms=testing http://localhost:3000/outbound/search
 
+start a kafka consumer
+
+bin/kafka-console-consumer.sh --zookeeper localhost:2181 --topic feed --from-beginning
+
+run the load test tool
 

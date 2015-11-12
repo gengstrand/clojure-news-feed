@@ -8,13 +8,15 @@ import java.util.UUID;
 
 import org.apache.log4j.Logger;
 import org.apache.solr.client.solrj.SolrQuery;
-import org.apache.solr.client.solrj.SolrServer;
+import org.apache.solr.client.solrj.SolrClient;
 import org.apache.solr.client.solrj.SolrServerException;
 import org.apache.solr.client.solrj.embedded.EmbeddedSolrServer;
-import org.apache.solr.client.solrj.impl.HttpSolrServer;
+import org.apache.solr.client.solrj.impl.HttpSolrClient;
 import org.apache.solr.client.solrj.response.QueryResponse;
 import org.apache.solr.common.SolrDocument;
 import org.apache.solr.common.SolrInputDocument;
+import org.apache.solr.common.params.ModifiableSolrParams;
+import org.apache.solr.common.params.SolrParams;
 import org.apache.solr.core.CoreContainer;
 
 public abstract class Search {
@@ -24,17 +26,17 @@ public abstract class Search {
 	private static final String SENDER_COL_NAME = "sender";
 	private static final String CONTENT_COL_NAME = "story";
 	
-	public static SolrServer server(String baseUrl) {
-		return new HttpSolrServer(baseUrl);
+	public static SolrClient server(String baseUrl) {
+		return new HttpSolrClient(baseUrl);
 	}
 	
-	public static SolrServer server(String homeFolder, String core) {
+	public static SolrClient server(String homeFolder, String core) {
 	    File home = new File(homeFolder);
 	    CoreContainer container = CoreContainer.createAndLoad(homeFolder, new File(home, "solr.xml"));
 	    return new EmbeddedSolrServer(container, core);
 	}
 	
-	public static void add(SolrServer server, long senderID, String story) {
+	public static void add(SolrClient server, long senderID, String story) {
 		SolrInputDocument doc = new SolrInputDocument();
 		doc.addField(PRIMARY_KEY_COL_NAME, UUID.randomUUID().toString());
 		doc.addField(SENDER_COL_NAME, senderID);
@@ -49,17 +51,20 @@ public abstract class Search {
 		}
 	}
 	
-	public static List<Long> results(SolrServer server, String terms, int limit) {
+	public static List<Long> results(SolrClient server, String terms, int limit) {
 		List<Long> retVal = new ArrayList<Long>();
-	    SolrQuery query = new SolrQuery();
-	    query.setQuery(terms);
-	    query.setRows(limit);
+		ModifiableSolrParams params = new ModifiableSolrParams();
+		params.set("q", terms);
+		params.set("rows", limit);
+		//SolrQuery query = new SolrQuery();
+	    //query.setQuery(terms);
+	    //query.setRows(limit);
 	    try {
-			QueryResponse resp = server.query(query);
+			QueryResponse resp = server.query(params);
 			for (SolrDocument doc : resp.getResults()) {
 				retVal.add((Long)doc.getFieldValue(SENDER_COL_NAME));
 			}
-		} catch (SolrServerException e) {
+		} catch (Exception e) {
 			log.error("cannot execute query", e);
 		}
 		return retVal;

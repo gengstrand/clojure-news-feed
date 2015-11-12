@@ -8,7 +8,8 @@
 (defn is-postgres 
   "determines whether or not we are using postgresql as the RDBMS"
   []
-  (.equals (:sql-vendor prop/service-config) "postgresql"))
+  (if (nil? prop/service-config) false 
+      (.equals (:sql-vendor prop/service-config) "postgresql")))
 
 (def db-spec 
   (if (nil? prop/service-config)

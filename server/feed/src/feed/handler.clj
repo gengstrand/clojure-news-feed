@@ -1,12 +1,14 @@
 (ns feed.handler
-  (:use compojure.core)
+  (:use [compojure.core])
   (:require [compojure.handler :as handler]
             [compojure.route :as route]
+            [ring.adapter.jetty :as jetty]
             [feed.core :as c]
             [feed.search :as search]
             [feed.metrics :as m]
-            [feed.messaging-kafka :as l]))
-
+            [feed.messaging-kafka :as l])
+  (:gen-class :main true))
+            
 (defn parse-int [s]
    (Integer. (re-find  #"\d+" s )))
 
@@ -73,3 +75,8 @@
 
 (def app
   (handler/site app-routes))
+
+(defn -main
+  "This is the main entry point for the application."
+  [& args]
+  (jetty/run-jetty app {:port 8080}))

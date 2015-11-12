@@ -77,16 +77,14 @@
 (defn load-participant-from-db 
   "fetch this participant from the db"
   [id]
-  (j/with-connection (db/connection)
-    (j/with-query-results rs [db/load-participant-from-db-command id]
-      (doall (map #(Participant. id (:moniker %)) rs)))))
+    (j/query (db/connection) [db/load-participant-from-db-command id]
+      :row-fn #(Participant. id (:moniker %))))
 
 (defn save-participant-to-db 
   "store this participant to the db"
   [participant]
-  (j/with-connection (db/connection)
-    (j/with-query-results rs [(to-db participant)]
-      (doall (map #(Participant. (:id %) (:moniker participant)) rs)))))
+    (j/query (db/connection) [(to-db participant)]
+      :row-fn #(Participant. (:id %) (:moniker participant))))
 
 (defrecord Friend [id from to]
   ValueObject
@@ -132,16 +130,14 @@
 (defn load-friends-from-db 
   "fetch the friends for this participant from the db"
   [id]
-  (j/with-connection (db/connection)
-    (j/with-query-results rs [db/load-friends-from-db-command id]
-      (doall (map #(Friend. (:friendsid %) id (:participantid %)) rs)))))
+    (j/query (db/connection) [db/load-friends-from-db-command id]
+      :row-fn #(Friend. (:friendsid %) id (:participantid %))))
 
 (defn save-friend-to-db 
   "store this friend relationship to the db"
   [friend]
-  (j/with-connection (db/connection)
-    (j/with-query-results rs [(to-db friend)]
-      (doall (map #(Friend. (:id %) (:from friend) (:to friend)) rs)))))
+    (j/query (db/connection) [(to-db friend)]
+      :row-fn #(Friend. (:id %) (:from friend) (:to friend))))
 
 (defrecord Inbound [to from occurred subject story]
   ValueObject
@@ -201,16 +197,14 @@
   "fetch the inbound activity for this participant from the db"
   [id]
   (let [results 
-      (alia/with-session cql/session
-        (alia/execute 
-          (s/replace-first cql/load-inbound-from-db-command "?" id)))]
+        (alia/execute cql/session 
+          (s/replace-first cql/load-inbound-from-db-command "?" id))]
     (map (fn [result] (Inbound. id ((keyword "dateOf(occurred)") result) (:fromparticipantid result) (:subject result) (:story result))) results)))
   
 (defn save-inbound-to-db 
   "store this inbound activity to the db"
   [inbound]
-  (alia/with-session cql/session
-    (alia/execute (to-db inbound)))
+    (alia/execute cql/session (to-db inbound))
   (list inbound))
 
 (defrecord Outbound [from occurred subject story]
@@ -263,16 +257,14 @@
   "fetch the outbound activity from this participant from the db"
   [id]
   (let [results 
-    (alia/with-session cql/session
-      (alia/execute 
-        (s/replace-first cql/load-outbound-from-db-command "?" id)))]
+      (alia/execute cql/session 
+        (s/replace-first cql/load-outbound-from-db-command "?" id))]
     (map (fn [result] (Outbound. id ((keyword "dateOf(occurred)") result) (:subject result) (:story result))) results)))
 
 (defn save-outbound-to-db 
   "store this outbound activity to the db"
   [outbound]
-  (alia/with-session cql/session
-    (alia/execute (to-db outbound)))
+    (alia/execute cql/session (to-db outbound))
   (search/index (:from outbound) (:story outbound))
   (list outbound))
 
