@@ -58,3 +58,23 @@ truncate Inbound;
 truncate Outbound;
 ```
 
+### how to set up the postgres schema
+
+```bash
+sudo su -
+service postgresql stop
+vi /etc/postgresql/9.4/main/pg_hba.conf
+# comment out the peer so that you can log in as feed via md5
+# local   all             all                                     peer
+host    all             all             127.0.0.1/32            md5
+:w
+:q
+service postgresql start
+su postgres
+psql
+create database feed;
+create user feed with password 'feed';
+grant all on database feed to feed;
+\q
+psql feed feed -W <schema.postgre.sql
+```

@@ -60,7 +60,7 @@ object Boot extends App {
   system.eventStream.subscribe(listener, classOf[DeadLetter])
   implicit val timeout = Timeout(60.seconds)
   Feed.factory = new ServiceFactoryClass
-  IO(Http) ? Http.Bind(service, interface = "localhost", port = 8080)
+  IO(Http) ? Http.Bind(service, interface = "0.0.0.0", port = 8080)
 }
 
 /** logs dead letter requests to akka */
