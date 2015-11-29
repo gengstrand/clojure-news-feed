@@ -30,11 +30,11 @@ This is a fun learning adventure for writing non-trivial web services in clojure
 
 cd ~/oss/kafka/kafka_2.11-0.8.2.2
 
-bin/kafka-create-topic.sh --zookeeper localhost:2181 --replica 1 --partition 1 --topic feed
+bin/kafka-topics.sh --create --zookeeper localhost:2181 --replication-factor 1 --partitions 1 --topic feed
 
 cd ~/apps/solr-5.3.1
 
-bin/solr create_core outbound
+bin/solr create_core -c outbound
 
 Copy everything from the solr folder from this github repository to the ~/apps/solr-5.3.1/server/solr/outbound folder.
 

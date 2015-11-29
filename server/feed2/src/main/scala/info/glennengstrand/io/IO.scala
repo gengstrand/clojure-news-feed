@@ -3,7 +3,8 @@ package info.glennengstrand.io
 import java.text.{SimpleDateFormat, DateFormat}
 import java.util.logging.{Logger, Level}
 
-import com.mchange.v2.c3p0.ComboPooledDataSource
+import scala.util.Random
+import scala.compat.Platform
 import java.util.{Calendar, Date, Properties}
 import scala.util.parsing.json.JSON
 import java.sql.{SQLException, PreparedStatement, Connection}
@@ -13,6 +14,7 @@ object IO {
   val settings = new Properties
   val df = new SimpleDateFormat("yyyy-MM-dd")
   val log = Logger.getLogger("info.glennengstrand.io.IO")
+  val r = new Random(Platform.currentTime)
   val jdbcVendor = "jdbc_vendor"
   val jdbcDriveName = "jdbc_driver"
   val jdbcUrl = "jdbc_url"
@@ -31,7 +33,7 @@ object IO {
   val searchHost = "search_host"
   val cacheConfig = "cache_config"
 
-  val sql: scala.collection.mutable.Map[String, PreparedStatement] = scala.collection.mutable.Map()
+  val sql: scala.collection.mutable.Map[String, Array[PreparedStatement]] = scala.collection.mutable.Map()
 
   var cacheStatements = true
   var unitTesting = false
@@ -204,6 +206,13 @@ trait PersistentRelationalDataStoreStatementAware {
 
   /** retrieve a prepared statement from the cache or create the statement and add it to the cache if necessary */
   def prepare(operation: String, entity: String, inputs: Iterable[String], outputs: Iterable[(String, String)], pool: PooledRelationalDataStore): PreparedStatement = {
+    val max = IO.settings.getProperty(IO.jdbcMinPoolSize, "1").toInt
+    def prepareStatementPool(sql: String): Array[PreparedStatement] = {
+      IO.unitTesting match {
+        case true => 1.to(max).map(x => new MockPreparedStatement).toArray
+        case _ => 1.to(max).map(x => pool.getDbConnection.prepareStatement(sql)).toArray
+      }
+    }
     if (IO.cacheStatements) {
       val key = operation + ":" + entity
       IO.sql.contains(key) match {
@@ -211,20 +220,15 @@ trait PersistentRelationalDataStoreStatementAware {
           IO.sql.synchronized {
             IO.sql.contains(key) match {
               case false => {
-                IO.unitTesting match {
-                  case true => new MockPreparedStatement
-                  case _ => {
-                    val stmt = pool.getDbConnection.prepareStatement(generatePreparedStatement(operation, entity, inputs, outputs))
-		                IO.sql.put(key, stmt)
-		                stmt
-                  }
-                }
+                val stmt = prepareStatementPool(generatePreparedStatement(operation, entity, inputs, outputs))
+                IO.sql.put(key, stmt)
+                stmt(IO.r.nextInt(max))
               }
-              case true => IO.sql.get(key).get
+              case true => IO.sql.get(key).get.apply(IO.r.nextInt(max))
             }
           }
         }
-        case true => IO.sql.get(key).get
+        case true => IO.sql.get(key).get.apply(IO.r.nextInt(max))
       }
     } else {
       IO.unitTesting match {
