@@ -3,8 +3,10 @@ package info.glennengstrand.news
 import java.sql.PreparedStatement
 
 import info.glennengstrand.io._
-import org.specs2.mutable.Specification
-import spray.testkit.Specs2RouteTest
+import com.google.inject.Stage
+import com.twitter.finatra.http.test.EmbeddedHttpServer
+import com.twitter.inject.server.FeatureTest
+import com.twitter.finagle.http.Status.Ok
 
 trait MockWriter extends PersistentDataStoreWriter {
   def write(o: PersistentDataStoreBindings, state: Map[String, Any], criteria: Map[String, Any]): Map[String, Any] = {
@@ -37,6 +39,7 @@ class MockPerformanceLogger extends PerformanceLogger {
 class MockFactoryClass extends FactoryClass {
 
   val performanceLogger = new MockPerformanceLogger
+  def isEmpty: Boolean = false
   def getParticipant(id: Long): Participant = {
     new Participant(id, "test") with MockRelationalWriter with MockCacheAware
   }
@@ -121,42 +124,33 @@ class MockFactoryClass extends FactoryClass {
 }
 
 /** unit tests for the news feed service */
-class FeedSpec extends Specification with Specs2RouteTest with Feed {
-  def actorRefFactory = system
+class FeedSpec extends FeatureTest {
   Feed.factory = new MockFactoryClass
   IO.cacheStatements = false
   IO.unitTesting = true
 
-  "Feed" should {
+  override val server = new EmbeddedHttpServer(new NewsFeedServer)
+
+  "Server" should {
+    "startup" in {
+      server.assertHealthy()
+    }
 
     "return the correct data when fetching a participant" in {
-      Get("/participant/2") ~> myRoute ~> check {
-        responseAs[String] must contain("test")
-      }
+      server.httpGet(path = "/participant/2", andExpect = Ok)
     }
 
     "return the correct data when fetching friends" in {
-      Get("/friends/1") ~> myRoute ~> check {
-        responseAs[String] must contain("2")
-      }
+      server.httpGet(path = "/friends/1", andExpect = Ok)
     }
 
     "return the correct data when fetching inbound" in {
-      Get("/inbound/1") ~> myRoute ~> check {
-        responseAs[String] must contain("test")
-      }
-    }
-
-    "leave GET requests to other paths unhandled" in {
-      Get("/kermit") ~> myRoute ~> check {
-        handled must beFalse
-      }
+      server.httpGet(path = "/inbound/1", andExpect = Ok)
     }
 
     "process post requests to create a new participant properly" in {
-      Post("/participant/new", "id=2&name=smith") ~> myRoute ~> check {
-        responseAs[String] must contain("smith")
-      }
+      server.httpPost(path = "/participant/new", postBody = "id=2&name=smith", andExpect = Ok)
     }
   }
+
 }

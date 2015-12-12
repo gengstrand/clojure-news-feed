@@ -143,10 +143,12 @@ abstract class FactoryClass {
   def getObject(name: String, id: Int): Option[Object]
   def getObject(name: String, state: String): Option[Object]
   def getObject(name: String): Option[Object]
+  def isEmpty: Boolean
 }
 
 /** default do nothing class factory */
 class EmptyFactoryClass extends FactoryClass {
+  def isEmpty: Boolean = true
   def getObject(name: String, id: Long): Option[Object] = {
     None
   }

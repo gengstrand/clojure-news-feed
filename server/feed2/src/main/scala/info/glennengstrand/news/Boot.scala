@@ -2,18 +2,20 @@ package info.glennengstrand.news
 
 import java.util.logging.Logger
 
-import akka.actor.{ActorSystem, Props, Actor, DeadLetter}
-import akka.io.IO
 import info.glennengstrand.io._
-import spray.can.Http
-import akka.pattern.ask
-import akka.util.Timeout
-import scala.concurrent.duration._
+import scala.util.{Try, Success, Failure}
 import java.io.FileInputStream
+import com.twitter.finagle.http.{Request, Response}
+import com.twitter.finatra.http.HttpServer
+import com.twitter.finatra.http.filters.CommonFilters
+import com.twitter.finatra.http.routing.HttpRouter
+import com.twitter.finatra.logging.filter.{LoggingMDCFilter, TraceIdMDCFilter}
+import com.twitter.finatra.logging.modules.Slf4jBridgeModule
 
 /** responsible for creating main entity abstraction objects for the real service */
 class ServiceFactoryClass extends FactoryClass {
   val performanceLogger = new Kafka
+  def isEmpty: Boolean = false
   def getObject(name: String, id: Long): Option[Object] = {
     name match {
       case "participant" => Some(Participant(id))
@@ -46,29 +48,30 @@ class ServiceFactoryClass extends FactoryClass {
 }
 
 /** main starting entry point for the real service */
-object Boot extends App {
+object NewsFeedServerMain extends NewsFeedServer
 
-  implicit val system = ActorSystem("on-spray-can")
-
+class NewsFeedServer extends HttpServer {
   val settingsFile = args.length match {
-    case 0 => "settings.properties"
+    case 0 => {
+    	 val ac = Try(sys.env("APP_CONFIG"))
+	 ac match {
+	    case Success(cfname) => cfname
+	    case Failure(e) => "settings.properties"
+	 }
+    }
     case _ => args(0)
   }
-  info.glennengstrand.io.IO.settings.load(new FileInputStream(settingsFile))
-  val service = system.actorOf(Props[FeedActor], "news-feed-service")
-  val listener = system.actorOf(Props[Listener], "dead-letter-listener")
-  system.eventStream.subscribe(listener, classOf[DeadLetter])
-  implicit val timeout = Timeout(60.seconds)
-  Feed.factory = new ServiceFactoryClass
-  IO(Http) ? Http.Bind(service, interface = "0.0.0.0", port = 8080)
-}
+  IO.settings.load(new FileInputStream(settingsFile))
+  if (Feed.factory.isEmpty) {
+     Feed.factory = new ServiceFactoryClass
+  }
+  override def modules = Seq(Slf4jBridgeModule)
 
-/** logs dead letter requests to akka */
-class Listener extends Actor {
-val log = Logger.getLogger("info.glennengstrand.news.Listener")
-def actorRefFactory = context
-
-  def receive = {
-    case DeadLetter(msg, from, to) => log.finest(msg.toString)
+  override def configureHttp(router: HttpRouter) {
+    router
+      .filter[LoggingMDCFilter[Request, Response]]
+      .filter[TraceIdMDCFilter[Request, Response]]
+      .filter[CommonFilters]
+      .add[Feed]
   }
 }
