@@ -17,7 +17,7 @@ class Feed extends Controller {
   get("/participant/:id") { request: Request => {
     val r = Try {
       val before = System.currentTimeMillis()
-      val retVal = Feed.factory.getObject("participant", request.params("id").toLong).get.asInstanceOf[MicroServiceSerializable].toJson
+      val retVal = Feed.factory.getObject("participant", request.params("id").toInt).get.asInstanceOf[MicroServiceSerializable].toJson
       val after = System.currentTimeMillis()
       Feed.factory.getObject("logger").get.asInstanceOf[PerformanceLogger].log("feed", "participant", "get", after - before)
       retVal
@@ -53,7 +53,7 @@ class Feed extends Controller {
   get("/friends/:id") { request: Request => {
     val before = System.currentTimeMillis()
     val r = Try {
-      val retVal = Feed.factory.getObject("friends", request.params("id").toLong).get.asInstanceOf[MicroServiceSerializable].toJson(Feed.factory)
+      val retVal = Feed.factory.getObject("friends", request.params("id").toInt).get.asInstanceOf[MicroServiceSerializable].toJson(Feed.factory)
       val after = System.currentTimeMillis()
       Feed.factory.getObject("logger").get.asInstanceOf[PerformanceLogger].log("feed", "friends", "get", after - before)
       retVal

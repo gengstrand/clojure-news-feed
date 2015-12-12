@@ -40,12 +40,12 @@ class MockFactoryClass extends FactoryClass {
 
   val performanceLogger = new MockPerformanceLogger
   def isEmpty: Boolean = false
-  def getParticipant(id: Long): Participant = {
+  def getParticipant(id: Int): Participant = {
     new Participant(id, "test") with MockRelationalWriter with MockCacheAware
   }
   def getParticipant(state: String): Participant = {
     val s = IO.fromFormPost(state)
-    new Participant(s("id").asInstanceOf[String].toLong, s("name").asInstanceOf[String]) with MockRelationalWriter with MockCacheAware
+    new Participant(s("id").asInstanceOf[String].toInt, s("name").asInstanceOf[String]) with MockRelationalWriter with MockCacheAware
   }
   def getFriends(id: Long): Friends = {
     val state: Iterable[Map[String, Any]] = List(
@@ -54,11 +54,11 @@ class MockFactoryClass extends FactoryClass {
       "ParticipantID" -> "2"
       )
     )
-    new Friends(1l, state)
+    new Friends(1, state)
   }
   def getFriend(state: String): Friend = {
     val s = IO.fromFormPost(state)
-    new Friend(s("FriendsID").asInstanceOf[String].toLong, s("FromParticipantID").asInstanceOf[String].toInt, s("ToParticipantID").asInstanceOf[String].toInt) with MockRelationalWriter with MockCacheAware
+    new Friend(s("FriendsID").asInstanceOf[String].toInt, s("FromParticipantID").asInstanceOf[String].toInt, s("ToParticipantID").asInstanceOf[String].toInt) with MockRelationalWriter with MockCacheAware
   }
   def getInbound(id: Int): InboundFeed = {
     val state: Iterable[Map[String, Any]] = List(
@@ -92,15 +92,10 @@ class MockFactoryClass extends FactoryClass {
     val s = IO.fromFormPost(state)
     new Outbound(s("participantID").asInstanceOf[String].toInt, IO.df.parse(s("occurred").asInstanceOf[String]), s("subject").asInstanceOf[String], s("story").asInstanceOf[String]) with MockWriter with MockCacheAware
   }
-  def getObject(name: String, id: Long): Option[Object] = {
+  def getObject(name: String, id: Int): Option[Object] = {
     name match {
       case "participant" => Some(getParticipant(id))
       case "friends" => Some(getFriends(id))
-      case _ => None
-    }
-  }
-  def getObject(name: String, id: Int): Option[Object] = {
-    name match {
       case "inbound" => Some(getInbound(id))
       case "outbound" => Some(getOutbound(id))
       case _ => None

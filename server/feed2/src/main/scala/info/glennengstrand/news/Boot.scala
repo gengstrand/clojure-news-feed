@@ -16,17 +16,12 @@ import com.twitter.finatra.logging.modules.Slf4jBridgeModule
 class ServiceFactoryClass extends FactoryClass {
   val performanceLogger = new Kafka
   def isEmpty: Boolean = false
-  def getObject(name: String, id: Long): Option[Object] = {
-    name match {
-      case "participant" => Some(Participant(id))
-      case "friends" => Some(Friends(id))
-      case _ => None
-    }
-  }
   def getObject(name: String, id: Int): Option[Object] = {
     name match {
       case "inbound" => Some(Inbound(id))
       case "outbound" => Some(Outbound(id))
+      case "participant" => Some(Participant(id))
+      case "friends" => Some(Friends(id))
       case _ => None
     }
   }
@@ -66,6 +61,8 @@ class NewsFeedServer extends HttpServer {
      Feed.factory = new ServiceFactoryClass
   }
   override def modules = Seq(Slf4jBridgeModule)
+
+  override def defaultFinatraHttpPort = ":8080"
 
   override def configureHttp(router: HttpRouter) {
     router

@@ -14,43 +14,43 @@ object Friends {
       List("ParticipantID")
     }
     def fetchOutputs: Iterable[(String, String)] = {
-      List(("FriendsID", "Long"), ("ParticipantID", "Int"))
+      List(("FriendsID", "Int"), ("ParticipantID", "Int"))
     }
     def upsertInputs: Iterable[String] = {
       List("fromParticipantID", "toParticipantID")
     }
     def upsertOutputs: Iterable[(String, String)] = {
-      List(("id", "Long"))
+      List(("id", "Int"))
     }
     def fetchOrder: Map[String, String] = {
       Map()
     }
   }
   val bindings = new FriendsBindings
-  def create(id: Long, from: Int, to: Int): Friend = {
+  def create(id: Int, from: Int, to: Int): Friend = {
     IO.settings.getProperty(IO.jdbcVendor) match {
       case "mysql" => new Friend(id, from, to) with MySqlWriter with RedisCacheAware
       case _ => new Friend(id, from, to) with PostgreSqlWriter with RedisCacheAware
     }
   }
-  def apply(id: Long) : Friends = {
+  def apply(id: Int) : Friends = {
     val criteria: Map[String, Any] = Map("ParticipantID" -> id.toInt)
     new Friends(id, IO.cacheAwareRead(bindings, criteria, reader, cache))
   }
   def apply(state: String): Friend = {
     val s = IO.fromFormPost(state)
     val id = s.contains("FriendsID") match {
-      case true => s("FriendsID").asInstanceOf[String].toLong
-      case _ => 0l
+      case true => s("FriendsID").asInstanceOf[String].toInt
+      case _ => 0
     }
     create(id, s("from").asInstanceOf[String].toInt, s("to").asInstanceOf[String].toInt)
   }
 }
 
-case class FriendState(id: Long, fromParticipantID: Long, toParticipantID: Long)
+case class FriendState(id: Int, fromParticipantID: Long, toParticipantID: Long)
 
 /** represents the friend relationship between two participants */
-class Friend(id: Long, fromParticipantID: Int, toParticipantID: Int) extends FriendState(id, fromParticipantID, toParticipantID) with MicroServiceSerializable {
+class Friend(id: Int, fromParticipantID: Int, toParticipantID: Int) extends FriendState(id, fromParticipantID, toParticipantID) with MicroServiceSerializable {
   this: PersistentRelationalDataStoreWriter with CacheAware =>
 
   /** save to the database and return a new friend object with the newly created primary key */
@@ -64,7 +64,7 @@ class Friend(id: Long, fromParticipantID: Int, toParticipantID: Int) extends Fri
     )
     val result = write(Friends.bindings, state, criteria)
     invalidate(Friends.bindings, criteria)
-    val newId = result.getOrElse("id", 0l).asInstanceOf[Long]
+    val newId = result.getOrElse("id", 0l).asInstanceOf[Int]
     Friends.create(newId, fromParticipantID, toParticipantID)
   }
 
@@ -102,12 +102,12 @@ class Friend(id: Long, fromParticipantID: Int, toParticipantID: Int) extends Fri
 }
 
 /** collection representing all the friends of a particular participant */
-class Friends(id: Long, state: Iterable[Map[String, Any]]) extends Iterator[Friend] with MicroServiceSerializable {
+class Friends(id: Int, state: Iterable[Map[String, Any]]) extends Iterator[Friend] with MicroServiceSerializable {
   val i = state.iterator
   def hasNext = i.hasNext
   def next() = {
     val kv = i.next()
-    Friends.create(IO.convertToLong(kv("FriendsID")), id.toInt, IO.convertToInt(kv("ParticipantID")))
+    Friends.create(IO.convertToInt(kv("FriendsID")), id.toInt, IO.convertToInt(kv("ParticipantID")))
   }
   override def toJson(factory: FactoryClass): String = {
     isEmpty match {

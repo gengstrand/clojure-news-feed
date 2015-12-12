@@ -139,7 +139,6 @@ object IO {
 
 /** responsible for entity object creation for both unit tests and the real service */
 abstract class FactoryClass {
-  def getObject(name: String, id: Long): Option[Object]
   def getObject(name: String, id: Int): Option[Object]
   def getObject(name: String, state: String): Option[Object]
   def getObject(name: String): Option[Object]
@@ -149,9 +148,6 @@ abstract class FactoryClass {
 /** default do nothing class factory */
 class EmptyFactoryClass extends FactoryClass {
   def isEmpty: Boolean = true
-  def getObject(name: String, id: Long): Option[Object] = {
-    None
-  }
   def getObject(name: String, id: Int): Option[Object] = {
     None
   }
