@@ -29,8 +29,8 @@ object Friends {
   val bindings = new FriendsBindings
   def create(id: Int, from: Int, to: Int): Friend = {
     IO.settings.getProperty(IO.jdbcVendor) match {
-      case "mysql" => new Friend(id, from, to) with MySqlWriter with RedisCacheAware
-      case _ => new Friend(id, from, to) with PostgreSqlWriter with RedisCacheAware
+      case "mysql" => new Friend(id, from, to) with MySqlWriter with JedisCacheAware
+      case _ => new Friend(id, from, to) with PostgreSqlWriter with JedisCacheAware
     }
   }
   def apply(id: Int) : Friends = {
@@ -64,7 +64,7 @@ class Friend(id: Int, fromParticipantID: Int, toParticipantID: Int) extends Frie
     )
     val result = write(Friends.bindings, state, criteria)
     invalidate(Friends.bindings, criteria)
-    val newId = result.getOrElse("id", 0l).asInstanceOf[Int]
+    val newId = result.getOrElse("id", 0).asInstanceOf[Int]
     Friends.create(newId, fromParticipantID, toParticipantID)
   }
 

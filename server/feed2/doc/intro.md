@@ -15,6 +15,7 @@ cd ~/oss/solr/solr-4.5.1/solr/example
 java -Dsolr.solr.home=multicore -jar start.jar
 
 cd /home/glenn/git/clojure-news-feed/server/feed2
+export APP_CONFIG=src/main/resources/settings.properties
 sbt
 compile
 assembly

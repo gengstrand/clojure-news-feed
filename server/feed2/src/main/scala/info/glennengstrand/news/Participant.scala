@@ -29,8 +29,8 @@ object Participant {
   val bindings = new ParticipantBindings
   def create(id: Int, name: String): Participant = {
     IO.settings.getProperty(IO.jdbcVendor) match {
-      case "mysql" => new Participant(id, name) with MySqlWriter with RedisCacheAware
-      case _ => new Participant(id, name) with PostgreSqlWriter with RedisCacheAware
+      case "mysql" => new Participant(id, name) with MySqlWriter with JedisCacheAware
+      case _ => new Participant(id, name) with PostgreSqlWriter with JedisCacheAware
     }
   }
   def apply(id: Int) : Participant = {
