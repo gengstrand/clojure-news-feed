@@ -62,7 +62,7 @@ object Cassandra {
               val stmt = session.prepare(select)
               val cl = getConsistencyLevel(IO.settings.get(IO.nosqlReadConsistencyLevel).asInstanceOf[String])
               stmt.setConsistencyLevel(cl)
-              sql.put(operation, stmt)
+              sql.put(key, stmt)
               stmt
             }
             case true => sql.get(key).get
@@ -96,7 +96,7 @@ object Cassandra {
               val stmt = session.prepare(upsert)
               val cl = getConsistencyLevel(IO.settings.get(IO.nosqlReadConsistencyLevel).asInstanceOf[String])
               stmt.setConsistencyLevel(cl)
-              sql.put(operation, stmt)
+              sql.put(key, stmt)
               stmt
             }
             case true => sql.get(key).get

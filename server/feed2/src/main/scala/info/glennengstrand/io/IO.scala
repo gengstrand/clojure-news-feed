@@ -31,7 +31,7 @@ object IO {
   val messagingBrokers = "messaging_brokers"
   val zookeeperServers = "zookeeper_servers"
   val searchHost = "search_host"
-  val cacheConfig = "cache_config"
+  val cacheHost = "cache_host"
 
   val sql: scala.collection.mutable.Map[String, Array[PreparedStatement]] = scala.collection.mutable.Map()
 

@@ -49,10 +49,10 @@ class NewsFeedServer extends HttpServer {
   val settingsFile = args.length match {
     case 0 => {
     	 val ac = Try(sys.env("APP_CONFIG"))
-	 ac match {
-	    case Success(cfname) => cfname
-	    case Failure(e) => "settings.properties"
-	 }
+    	 ac match {
+    	    case Success(cfname) => cfname
+    	    case Failure(e) => "src/main/resources/settings.properties"
+    	 }
     }
     case _ => args(0)
   }

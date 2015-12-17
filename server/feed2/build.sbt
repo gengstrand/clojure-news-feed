@@ -41,7 +41,6 @@ assemblyMergeStrategy in assembly := {
 }
 
 libraryDependencies ++= Seq(
-    "com.livestream"      %% "scredis"        % "2.0.6",
     "org.scala-lang.modules"  %%  "scala-parser-combinators"  % "1.0.3",
     "mysql"               %   "mysql-connector-java"  % "5.0.8",
     "postgresql"          %   "postgresql"    % "9.1-901.jdbc4",
