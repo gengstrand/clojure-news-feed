@@ -5,16 +5,17 @@ import scala.concurrent.ExecutionContext.Implicits.global
 import scala.concurrent.{Future, Await}
 import scala.concurrent.duration._
 import scala.util.{Try, Failure, Success}
-
-import redis.clients.jedis.Jedis
+import java.util.logging.Logger
+import redis.clients.jedis.{Jedis, JedisPool, JedisPoolConfig}
 
 /** helper function for connecting to redis */
 object RedisService {
+  val log = Logger.getLogger("info.glennengstrand.io.RedisService")
   def connect: Redis = {
     new Redis(IO.settings.get(IO.cacheConfig).asInstanceOf[String], "scredis")
   }
-  def connectJedis: Jedis = {
-    new Jedis("localhost")
+  def connectJedis: JedisPool = {
+    new JedisPool(new JedisPoolConfig(), "localhost")
   }
   lazy val redis = connect
   lazy val jedis = connectJedis
@@ -28,31 +29,82 @@ trait JedisCacheAware extends CacheAware {
   }
     
   def load(o: PersistentDataStoreBindings, criteria: Map[String, Any]): Iterable[Map[String, Any]] = {
-    val retVal = RedisService.jedis.get(key(o, criteria))
-    if (retVal == null) {
-      List()
-    } else {
-      IO.fromJson(retVal)
+    val cache = RedisService.jedis.getResource()
+    val rc = Try {
+      val retVal = cache.get(key(o, criteria))
+      if (retVal == null) {
+        List()
+      } else {
+        IO.fromJson(retVal)
+      }
+    }
+    cache.close()
+    rc match {
+      case Success(v) => v
+      case Failure(e) => {
+        RedisService.log.warning(e.getLocalizedMessage())
+        List()
+      }
     }
   }
 
   def store(o: PersistentDataStoreBindings, state: Map[String, Any], criteria: Map[String, Any]): Unit = {
-    RedisService.jedis.set(key(o, criteria), IO.toJson(state))
+    val cache = RedisService.jedis.getResource()
+    val rc = Try {
+      cache.set(key(o, criteria), IO.toJson(state))
+    }
+    cache.close()
+    rc match {
+      case Success(v) => 
+      case Failure(e) => {
+        RedisService.log.warning(e.getLocalizedMessage())
+      }
+    }
   }
 
   def store(o: PersistentDataStoreBindings, state: Iterable[Map[String, Any]], criteria: Map[String, Any]): Unit = {
-    RedisService.jedis.set(key(o, criteria), IO.toJson(state))
+    val cache = RedisService.jedis.getResource()
+    val rc = Try {
+      cache.set(key(o, criteria), IO.toJson(state))
+    }
+    cache.close()
+    rc match {
+      case Success(v) => 
+      case Failure(e) => {
+        RedisService.log.warning(e.getLocalizedMessage())
+      }
+    }
   }
 
   def append(o: PersistentDataStoreBindings, state: Map[String, Any], criteria: Map[String, Any]): Unit = {
-    RedisService.jedis.append(key(o, criteria), IO.toJson(state))
+    val cache = RedisService.jedis.getResource()
+    val rc = Try {
+      cache.append(key(o, criteria), IO.toJson(state))
+    }
+    cache.close()
+    rc match {
+      case Success(v) => 
+      case Failure(e) => {
+        RedisService.log.warning(e.getLocalizedMessage())
+      }
+    }
   }
 
   def invalidate(o: PersistentDataStoreBindings, criteria: Map[String, Any]): Unit = {
-    RedisService.jedis.del(key(o, criteria))
+    val cache = RedisService.jedis.getResource()
+    val rc = Try {
+      cache.del(key(o, criteria))
+    }
+    cache.close()
+    rc match {
+      case Success(v) => 
+      case Failure(e) => {
+        RedisService.log.warning(e.getLocalizedMessage())
+      }
+    }
   }
-
 }
+
 /** knows how to cache data in redis */
 trait RedisCacheAware extends CacheAware {
   def key(o: PersistentDataStoreBindings, criteria: Map[String, Any]): String = {
