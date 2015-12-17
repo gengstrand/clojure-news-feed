@@ -40,7 +40,7 @@ object Outbound extends SolrSearcher {
     val id = s("from").asInstanceOf[String].toInt
     val story = s("story").asInstanceOf[String]
     index(id, story)
-    new Outbound(id, IO.df.parse(s("occurred").asInstanceOf[String]), s("subject").asInstanceOf[String], story) with CassandraWriter with MockCacheAware
+    new Outbound(id, IO.convertToDate(s("occurred").asInstanceOf[String]), s("subject").asInstanceOf[String], story) with CassandraWriter with MockCacheAware
   }
   def lookup(state: String): Iterable[OutboundFeed] = {
     val s = IO.fromFormPost(state)

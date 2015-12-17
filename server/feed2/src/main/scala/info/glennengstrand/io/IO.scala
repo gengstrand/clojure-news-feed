@@ -4,6 +4,7 @@ import java.text.{SimpleDateFormat, DateFormat}
 import java.util.logging.{Logger, Level}
 
 import scala.util.Random
+import scala.util.{Try, Failure, Success}
 import scala.compat.Platform
 import java.util.{Calendar, Date, Properties}
 import scala.util.parsing.json.JSON
@@ -38,6 +39,18 @@ object IO {
   var cacheStatements = true
   var unitTesting = false
 
+  /** convert string to date */
+  def convertToDate(value: String): Date = {
+    val retVal = Try(df.parse(value))
+    retVal match {
+      case Success(d) => d
+      case Failure(e) => {
+        log.warning(s"error ${e.getLocalizedMessage()} when attempting to parse $value as date")
+        new Date()
+      }
+    }
+  }
+  
   /** check the cache first, if a hit, then return that else check the db and write to the cache */
   def cacheAwareRead(o: PersistentDataStoreBindings, criteria: Map[String, Any], reader: PersistentDataStoreReader, cache: CacheAware): Iterable[Map[String, Any]] = {
     def loadFromDbAndCache: Iterable[Map[String, Any]] = {
