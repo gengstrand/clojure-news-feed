@@ -1,0 +1,11 @@
+<configuration>
+  <appender name="FILE" class="ch.qos.logback.core.FileAppender">
+    <file>${LOG_DIR}/feed.log</file>
+    <encoder>
+      <pattern>%msg%n</pattern>
+    </encoder>
+  </appender>
+  <root level="${LOG_LEVEL}">
+    <appender-ref ref="FILE" />
+  </root>
+</configuration>

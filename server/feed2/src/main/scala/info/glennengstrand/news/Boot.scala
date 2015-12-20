@@ -51,7 +51,7 @@ class NewsFeedServer extends HttpServer {
     	 val ac = Try(sys.env("APP_CONFIG"))
     	 ac match {
     	    case Success(cfname) => cfname
-    	    case Failure(e) => "src/main/resources/settings.properties"
+    	    case Failure(e) => "etc/settings.properties"
     	 }
     }
     case _ => args(0)

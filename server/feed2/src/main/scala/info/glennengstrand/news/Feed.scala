@@ -5,6 +5,7 @@ import com.twitter.finagle.http.Request
 import com.twitter.finatra.http.Controller
 import java.util.logging.{Logger, Level}
 import scala.util.{Try, Success, Failure}
+import com.twitter.util.{Await, Future}
 
 /** where to hold  the global class factory */
 object Feed {
@@ -16,11 +17,14 @@ class Feed extends Controller {
   val log = Logger.getLogger("info.glennengstrand.news.Feed")
   get("/participant/:id") { request: Request => {
     val r = Try {
-      val before = System.currentTimeMillis()
-      val retVal = Feed.factory.getObject("participant", request.params("id").toInt).get.asInstanceOf[MicroServiceSerializable].toJson
-      val after = System.currentTimeMillis()
-      Feed.factory.getObject("logger").get.asInstanceOf[PerformanceLogger].log("feed", "participant", "get", after - before)
-      retVal
+      val f = Future.value {
+        val before = System.currentTimeMillis()
+        val retVal = Feed.factory.getObject("participant", request.params("id").toInt).get.asInstanceOf[MicroServiceSerializable].toJson
+        val after = System.currentTimeMillis()
+        Feed.factory.getObject("logger").get.asInstanceOf[PerformanceLogger].log("feed", "participant", "get", after - before)
+        retVal
+      }
+      Await.result(f)
     }
     r match {
       case Success(rv) => rv
@@ -34,13 +38,15 @@ class Feed extends Controller {
     val before = System.currentTimeMillis()
     val r = Try {
       val body = request.contentString
-      log.finest("create participant: " + body)
-      val p = Feed.factory.getObject("participant", body).get.asInstanceOf[Participant]
-      val retVal = "[" + p.save.toJson + "]"
-      val after = System.currentTimeMillis()
-      Feed.factory.getObject("logger").get.asInstanceOf[PerformanceLogger].log("feed", "participant", "post", after - before)
-      log.finest(retVal)
-      retVal
+      val f = Future.value {
+        val p = Feed.factory.getObject("participant", body).get.asInstanceOf[Participant]
+        val retVal = "[" + p.save.toJson + "]"
+        val after = System.currentTimeMillis()
+        Feed.factory.getObject("logger").get.asInstanceOf[PerformanceLogger].log("feed", "participant", "post", after - before)
+        log.finest(retVal)
+        retVal
+      }
+      Await.result(f)
     }
     r match {
       case Success(rv) => rv
@@ -51,12 +57,15 @@ class Feed extends Controller {
     }
   }}
   get("/friends/:id") { request: Request => {
-    val before = System.currentTimeMillis()
     val r = Try {
-      val retVal = Feed.factory.getObject("friends", request.params("id").toInt).get.asInstanceOf[MicroServiceSerializable].toJson(Feed.factory)
-      val after = System.currentTimeMillis()
-      Feed.factory.getObject("logger").get.asInstanceOf[PerformanceLogger].log("feed", "friends", "get", after - before)
-      retVal
+      val f = Future.value {
+        val before = System.currentTimeMillis()
+        val retVal = Feed.factory.getObject("friends", request.params("id").toInt).get.asInstanceOf[MicroServiceSerializable].toJson(Feed.factory)
+        val after = System.currentTimeMillis()
+        Feed.factory.getObject("logger").get.asInstanceOf[PerformanceLogger].log("feed", "friends", "get", after - before)
+        retVal
+      }
+      Await.result(f)
     }
     r match {
       case Success(rv) => rv
@@ -67,17 +76,19 @@ class Feed extends Controller {
     }
   }}
   post("/friends/new") { request: Request => {
-    val before = System.currentTimeMillis()
     val r = Try {
       val body = request.contentString
-      log.finest("create friends: " + body)
-      val friend = Feed.factory.getObject("friend", body).get.asInstanceOf[Friend]
-      val f = friend.save
-      val retVal = f.toJson(Feed.factory)
-      val after = System.currentTimeMillis()
-      Feed.factory.getObject("logger").get.asInstanceOf[PerformanceLogger].log("feed", "friends", "post", after - before)
-      log.finest(retVal)
-      retVal
+      val f = Future.value {
+        val before = System.currentTimeMillis()
+        val friend = Feed.factory.getObject("friend", body).get.asInstanceOf[Friend]
+        val f = friend.save
+        val retVal = f.toJson(Feed.factory)
+        val after = System.currentTimeMillis()
+        Feed.factory.getObject("logger").get.asInstanceOf[PerformanceLogger].log("feed", "friends", "post", after - before)
+        log.finest(retVal)
+        retVal
+      }
+      Await.result(f)
     }
     r match {
       case Success(rv) => rv
@@ -88,12 +99,15 @@ class Feed extends Controller {
     }
   }}
   get("/inbound/:id") { request: Request => {
-    val before = System.currentTimeMillis()
     val r = Try {
-      val retVal = Feed.factory.getObject("inbound", request.params("id").toInt).get.asInstanceOf[MicroServiceSerializable].toJson
-      val after = System.currentTimeMillis()
-      Feed.factory.getObject("logger").get.asInstanceOf[PerformanceLogger].log("feed", "inbound", "get", after - before)
-      retVal
+      val f = Future.value {
+        val before = System.currentTimeMillis()
+        val retVal = Feed.factory.getObject("inbound", request.params("id").toInt).get.asInstanceOf[MicroServiceSerializable].toJson
+        val after = System.currentTimeMillis()
+        Feed.factory.getObject("logger").get.asInstanceOf[PerformanceLogger].log("feed", "inbound", "get", after - before)
+        retVal
+      }
+      Await.result(f)
     }
     r match {
       case Success(rv) => rv
@@ -104,12 +118,15 @@ class Feed extends Controller {
     }
   }}
   get("/outbound/:id") { request: Request => {
-    val before = System.currentTimeMillis()
     val r = Try {
-      val retVal = Feed.factory.getObject("outbound", request.params("id").toInt).get.asInstanceOf[MicroServiceSerializable].toJson
-      val after = System.currentTimeMillis()
-      Feed.factory.getObject("logger").get.asInstanceOf[PerformanceLogger].log("feed", "outbound", "get", after - before)
-      retVal
+      val f = Future.value {
+        val before = System.currentTimeMillis()
+        val retVal = Feed.factory.getObject("outbound", request.params("id").toInt).get.asInstanceOf[MicroServiceSerializable].toJson
+        val after = System.currentTimeMillis()
+        Feed.factory.getObject("logger").get.asInstanceOf[PerformanceLogger].log("feed", "outbound", "get", after - before)
+        retVal
+      }
+      Await.result(f)
     }
     r match {
       case Success(rv) => rv
@@ -120,30 +137,31 @@ class Feed extends Controller {
     }
   }}
   post("/outbound/new") { request: Request => {
-    val before = System.currentTimeMillis()
     val r = Try {
       val body = request.contentString
-      log.finest("create outbound: " + body)
-      val retVal = Feed.factory.getObject("outbound", body).get.asInstanceOf[Outbound]
-      retVal.save
-      val after = System.currentTimeMillis()
-      Feed.factory.getObject("logger").get.asInstanceOf[PerformanceLogger].log("feed", "outbound", "post", after - before)
-      retVal.toJson
+      val f = Future.value {
+        val before = System.currentTimeMillis()
+        val retVal = Feed.factory.getObject("outbound", body).get.asInstanceOf[Outbound]
+        retVal.save
+        val after = System.currentTimeMillis()
+        Feed.factory.getObject("logger").get.asInstanceOf[PerformanceLogger].log("feed", "outbound", "post", after - before)
+        retVal.toJson
       }
-      r match {
-        case Success(rv) => rv
-        case Failure(e) => {
-          log.log(Level.WARNING, "cannot upsert outbound\n", e)
-          e.getLocalizedMessage()
-        }
+      Await.result(f)
+    }
+    r match {
+      case Success(rv) => rv
+      case Failure(e) => {
+        log.log(Level.WARNING, "cannot upsert outbound\n", e)
+        e.getLocalizedMessage()
       }
     }
-  }
+  }}
   post("/outbound/search") { request: Request => {
     val before = System.currentTimeMillis()
     val r = Try {
       val body = request.contentString
-      log.finest("create outbound: " + body)
+      val f = Future.value {
       val results = Outbound.lookup(body).map(o => o.toJson)
       val retVal = results.isEmpty match {
         case true => "[]"
@@ -152,6 +170,8 @@ class Feed extends Controller {
       val after = System.currentTimeMillis()
       Feed.factory.getObject("logger").get.asInstanceOf[PerformanceLogger].log("feed", "outbound", "search", after - before)
       retVal
+      }
+      Await.result(f)
     }
     r match {
       case Success(rv) => rv

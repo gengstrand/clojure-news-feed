@@ -87,8 +87,6 @@ export APP_CONFIG=/home/glenn/git/clojure-news-feed/server/feed/etc/config.clj
 
 lein run
 
-java -jar target/feed-0.1.0-SNAPSHOT-standalone.jar
-
 ### Testing
 
 curl -d name=Moe http://localhost:3000/participant/new
@@ -112,4 +110,52 @@ start a kafka consumer
 bin/kafka-console-consumer.sh --zookeeper localhost:2181 --topic feed --from-beginning
 
 run the load test tool
+
+### standing up the service in EC2
+
+At the time of this writing, lein no longer can create an uberjar of this service so we have to run the service using the source code.
+
+wget http://download.oracle.com/otn-pub/java/jdk/7u1-b08/jdk-7u1-linux-i586.rpm
+
+sudo rpm -i jdk-7u1-linux-i586.rpm
+
+sudo ln -s /usr/java/jdk1.7.0_79/bin/java /etc/alternatives/java
+
+sudo /usr/sbin/alternatives --install /usr/bin/java java  /usr/java/jdk1.7.0_79/bin/java 2
+
+sudo /usr/sbin/alternatives --config java
+
+sudo ln -s /usr/lib/jvm/java-1.7.0-openjdk-1.7.0.91.x86_64/jre/lib lib
+
+wget http://www.us.apache.org/dist/maven/maven-3/3.3.9/binaries/apache-maven-3.3.9-bin.tar.gz
+
+gunzip apache-maven-3.3.9-bin.tar.gz
+
+tar -xf apache-maven-3.3.9-bin.tar
+
+export PATH=$PATH:/home/ec2-user/apache-maven-3.3.9/bin
+
+wget https://raw.githubusercontent.com/technomancy/leiningen/stable/bin/lein
+
+mkdir bin
+
+mv lein bin
+
+chmod a+x bin/lein
+
+sudo yum install git
+
+git clone https://github.com/gengstrand/clojure-news-feed.git
+
+cd clojure-news-feed/server/feed/support
+
+mvn clean install
+
+cd ..
+
+vi etc/config.clj
+
+export APP_CONFIG=/home/ec2-user/clojure-news-feed/server/feed/etc/config.clj
+
+lein run
 
