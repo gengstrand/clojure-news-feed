@@ -5,10 +5,12 @@ import java.util.logging.{Logger, Level}
 
 import scala.util.Random
 import scala.util.{Try, Failure, Success}
+import java.util.concurrent.Executors
 import scala.compat.Platform
 import java.util.{Calendar, Date, Properties}
 import scala.util.parsing.json.JSON
 import java.sql.{SQLException, PreparedStatement, Connection}
+import com.twitter.util.{FuturePool, Future}
 
 /** general common Input Output related helper functions */
 object IO {
@@ -33,12 +35,26 @@ object IO {
   val zookeeperServers = "zookeeper_servers"
   val searchHost = "search_host"
   val cacheHost = "cache_host"
+  val cachePort = "cache_port"
+  val cacheTimeout = "cache_timeout"
 
   val sql: scala.collection.mutable.Map[String, Array[PreparedStatement]] = scala.collection.mutable.Map()
-
+  lazy val workerPool = FuturePool.unboundedPool
+  
   var cacheStatements = true
   var unitTesting = false
 
+  /** convert string to int */
+  def convertToInt(value: String, defaultValue: Int): Int = {
+    val retVal = Try {
+      Integer.parseInt(value)
+    }
+    retVal match {
+      case Success(rv) => rv
+      case Failure(e) => defaultValue
+    }
+  }
+  
   /** convert string to date */
   def convertToDate(value: String): Date = {
     val retVal = Try(df.parse(value))

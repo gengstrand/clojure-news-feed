@@ -1,6 +1,6 @@
 package info.glennengstrand.news
 
-import info.glennengstrand.io.{MicroServiceSerializable, EmptyFactoryClass, FactoryClass, PerformanceLogger}
+import info.glennengstrand.io.{IO, MicroServiceSerializable, EmptyFactoryClass, FactoryClass, PerformanceLogger}
 import com.twitter.finagle.http.Request
 import com.twitter.finatra.http.Controller
 import java.util.logging.{Logger, Level}
@@ -17,7 +17,7 @@ class Feed extends Controller {
   val log = Logger.getLogger("info.glennengstrand.news.Feed")
   get("/participant/:id") { request: Request => {
     val r = Try {
-      val f = Future.value {
+      val f = IO.workerPool {
         val before = System.currentTimeMillis()
         val retVal = Feed.factory.getObject("participant", request.params("id").toInt).get.asInstanceOf[MicroServiceSerializable].toJson
         val after = System.currentTimeMillis()
@@ -38,7 +38,7 @@ class Feed extends Controller {
     val before = System.currentTimeMillis()
     val r = Try {
       val body = request.contentString
-      val f = Future.value {
+      val f = IO.workerPool {
         val p = Feed.factory.getObject("participant", body).get.asInstanceOf[Participant]
         val retVal = "[" + p.save.toJson + "]"
         val after = System.currentTimeMillis()
@@ -58,7 +58,7 @@ class Feed extends Controller {
   }}
   get("/friends/:id") { request: Request => {
     val r = Try {
-      val f = Future.value {
+      val f = IO.workerPool {
         val before = System.currentTimeMillis()
         val retVal = Feed.factory.getObject("friends", request.params("id").toInt).get.asInstanceOf[MicroServiceSerializable].toJson(Feed.factory)
         val after = System.currentTimeMillis()
@@ -78,7 +78,7 @@ class Feed extends Controller {
   post("/friends/new") { request: Request => {
     val r = Try {
       val body = request.contentString
-      val f = Future.value {
+      val f = IO.workerPool {
         val before = System.currentTimeMillis()
         val friend = Feed.factory.getObject("friend", body).get.asInstanceOf[Friend]
         val f = friend.save
@@ -100,7 +100,7 @@ class Feed extends Controller {
   }}
   get("/inbound/:id") { request: Request => {
     val r = Try {
-      val f = Future.value {
+      val f = IO.workerPool {
         val before = System.currentTimeMillis()
         val retVal = Feed.factory.getObject("inbound", request.params("id").toInt).get.asInstanceOf[MicroServiceSerializable].toJson
         val after = System.currentTimeMillis()
@@ -119,7 +119,7 @@ class Feed extends Controller {
   }}
   get("/outbound/:id") { request: Request => {
     val r = Try {
-      val f = Future.value {
+      val f = IO.workerPool {
         val before = System.currentTimeMillis()
         val retVal = Feed.factory.getObject("outbound", request.params("id").toInt).get.asInstanceOf[MicroServiceSerializable].toJson
         val after = System.currentTimeMillis()
@@ -139,7 +139,7 @@ class Feed extends Controller {
   post("/outbound/new") { request: Request => {
     val r = Try {
       val body = request.contentString
-      val f = Future.value {
+      val f = IO.workerPool {
         val before = System.currentTimeMillis()
         val retVal = Feed.factory.getObject("outbound", body).get.asInstanceOf[Outbound]
         retVal.save
@@ -161,7 +161,7 @@ class Feed extends Controller {
     val before = System.currentTimeMillis()
     val r = Try {
       val body = request.contentString
-      val f = Future.value {
+      val f = IO.workerPool {
       val results = Outbound.lookup(body).map(o => o.toJson)
       val retVal = results.isEmpty match {
         case true => "[]"

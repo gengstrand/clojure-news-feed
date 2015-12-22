@@ -9,7 +9,13 @@ object RedisService {
   val log = Logger.getLogger("info.glennengstrand.io.RedisService")
 
   def connectJedis: JedisPool = {
-    new JedisPool(new JedisPoolConfig(), IO.settings.get(IO.cacheHost).asInstanceOf[String])
+    val poolConfig = new JedisPoolConfig()
+    poolConfig.setMaxTotal(IO.convertToInt(IO.settings.get(IO.jdbcMaxPoolSize).asInstanceOf[String], 10))
+    poolConfig.setBlockWhenExhausted(false)
+    val host = IO.settings.get(IO.cacheHost).asInstanceOf[String]
+    val port = IO.convertToInt(IO.settings.get(IO.cachePort).asInstanceOf[String], 6379)
+    val timeout = IO.convertToInt(IO.settings.get(IO.cacheTimeout).asInstanceOf[String], 60)
+    new JedisPool(poolConfig, host, port, timeout)
   }
   lazy val jedis = connectJedis
 }
