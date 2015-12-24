@@ -1,11 +1,12 @@
 package info.glennengstrand.io
 
 import java.sql.{ResultSet, PreparedStatement}
-import java.util.logging.Logger
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 /** JDBC helper functions */
 object Sql {
-  val log = Logger.getLogger("info.glennengstrand.io.Sql")
+  val log = LoggerFactory.getLogger("info.glennengstrand.io.Sql")
 
   /** call the right statement setter based on value type */
   def setStatementParameterFromValue(stmt: PreparedStatement, v: Any, i: Int): Unit = {
@@ -47,7 +48,7 @@ object Sql {
       setStatementParameterFromValue(stmt, v, fii)
       fii += 1
     }}
-    log.fine(stmt.toString)
+    log.debug(stmt.toString)
   }
 
   /** execute the query statement and wrap the returning result set in an iterator */

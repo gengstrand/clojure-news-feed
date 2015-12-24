@@ -1,7 +1,5 @@
 package info.glennengstrand.news
 
-import java.util.logging.Logger
-
 import info.glennengstrand.io._
 import scala.util.{Try, Success, Failure}
 import java.io.FileInputStream
@@ -60,6 +58,16 @@ class NewsFeedServer extends HttpServer {
   if (Feed.factory.isEmpty) {
      Feed.factory = new ServiceFactoryClass
   }
+  val cs = Try(sys.env("CACHE_SQL"))
+  cs match {
+    case Success(v) => {
+      if ("no".equalsIgnoreCase(v) || "off".equalsIgnoreCase(v) || "disable".equalsIgnoreCase(v)) {
+        IO.cacheStatements = false
+      }
+    }
+    case Failure(e) =>
+  }
+  
   override def modules = Seq(Slf4jBridgeModule)
 
   override def defaultFinatraHttpPort = ":8080"

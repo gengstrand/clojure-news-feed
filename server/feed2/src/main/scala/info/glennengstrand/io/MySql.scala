@@ -1,6 +1,7 @@
 package info.glennengstrand.io
 
-import java.util.logging.{Level, Logger}
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 import info.glennengstrand.io._
 import java.sql.{ResultSet, PreparedStatement, Connection, SQLException}
@@ -9,11 +10,11 @@ import scala.collection.mutable
 
 /** MySql specific helper functions */
 object MySql {
-  val log = Logger.getLogger("info.glennengstrand.io.MySql")
+  val log = LoggerFactory.getLogger("info.glennengstrand.io.MySql")
   def generatePreparedStatement(operation: String, entity: String, inputs: Iterable[String], outputs: Iterable[(String, String)]): String = {
     val i = for (x <- inputs) yield "?"
     val retVal = "{ call " + operation + entity + "(" + i.reduce(_ + "," + _) + ") }"
-    log.finest("preparing: " + retVal)
+    log.debug("preparing: " + retVal)
     retVal
   }
 }

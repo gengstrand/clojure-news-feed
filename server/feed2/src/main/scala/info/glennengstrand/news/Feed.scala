@@ -3,7 +3,8 @@ package info.glennengstrand.news
 import info.glennengstrand.io.{IO, MicroServiceSerializable, EmptyFactoryClass, FactoryClass, PerformanceLogger}
 import com.twitter.finagle.http.Request
 import com.twitter.finatra.http.Controller
-import java.util.logging.{Logger, Level}
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import scala.util.{Try, Success, Failure}
 import com.twitter.util.{Await, Future}
 
@@ -14,7 +15,7 @@ object Feed {
 
 /** provides routings for mapping requests to the code that processes the requests */
 class Feed extends Controller {
-  val log = Logger.getLogger("info.glennengstrand.news.Feed")
+  val log = LoggerFactory.getLogger("info.glennengstrand.news.Feed")
   get("/participant/:id") { request: Request => {
     val r = Try {
       val f = IO.workerPool {
@@ -29,7 +30,7 @@ class Feed extends Controller {
     r match {
       case Success(rv) => rv
       case Failure(e) => {
-        log.log(Level.WARNING, "cannot fetch participant\n", e)
+        log.warn("cannot fetch participant: ", e)
         e.getLocalizedMessage()
       }
     }
@@ -43,7 +44,7 @@ class Feed extends Controller {
         val retVal = "[" + p.save.toJson + "]"
         val after = System.currentTimeMillis()
         Feed.factory.getObject("logger").get.asInstanceOf[PerformanceLogger].log("feed", "participant", "post", after - before)
-        log.finest(retVal)
+        log.debug(retVal)
         retVal
       }
       Await.result(f)
@@ -51,7 +52,7 @@ class Feed extends Controller {
     r match {
       case Success(rv) => rv
       case Failure(e) => {
-        log.log(Level.WARNING, "cannot upsert participant\n", e)
+        log.warn("cannot upsert participant: ", e)
         e.getLocalizedMessage()
       }
     }
@@ -70,7 +71,7 @@ class Feed extends Controller {
     r match {
       case Success(rv) => rv
       case Failure(e) => {
-        log.log(Level.WARNING, "cannot fetch friends\n", e)
+        log.warn("cannot fetch friends: ", e)
         e.getLocalizedMessage()
       }
     }
@@ -85,7 +86,7 @@ class Feed extends Controller {
         val retVal = f.toJson(Feed.factory)
         val after = System.currentTimeMillis()
         Feed.factory.getObject("logger").get.asInstanceOf[PerformanceLogger].log("feed", "friends", "post", after - before)
-        log.finest(retVal)
+        log.debug(retVal)
         retVal
       }
       Await.result(f)
@@ -93,7 +94,7 @@ class Feed extends Controller {
     r match {
       case Success(rv) => rv
       case Failure(e) => {
-        log.log(Level.WARNING, "cannot upsert friends\n", e)
+        log.warn("cannot upsert friends: ", e)
         e.getLocalizedMessage()
       }
     }
@@ -112,7 +113,7 @@ class Feed extends Controller {
     r match {
       case Success(rv) => rv
       case Failure(e) => {
-        log.log(Level.WARNING, "cannot fetch inbound\n", e)
+        log.warn("cannot fetch inbound: ", e)
         e.getLocalizedMessage()
       }
     }
@@ -131,7 +132,7 @@ class Feed extends Controller {
     r match {
       case Success(rv) => rv
       case Failure(e) => {
-        log.log(Level.WARNING, "cannot fetch outbound\n", e)
+        log.warn("cannot fetch outbound: ", e)
         e.getLocalizedMessage()
       }
     }
@@ -152,7 +153,7 @@ class Feed extends Controller {
     r match {
       case Success(rv) => rv
       case Failure(e) => {
-        log.log(Level.WARNING, "cannot upsert outbound\n", e)
+        log.warn("cannot upsert outbound: ", e)
         e.getLocalizedMessage()
       }
     }
@@ -176,7 +177,7 @@ class Feed extends Controller {
     r match {
       case Success(rv) => rv
       case Failure(e) => {
-        log.log(Level.WARNING, "cannot search outbound\n", e)
+        log.warn("cannot search outbound: ", e)
         e.getLocalizedMessage()
       }
     }

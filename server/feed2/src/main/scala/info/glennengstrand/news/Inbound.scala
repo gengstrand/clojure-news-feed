@@ -1,13 +1,14 @@
 package info.glennengstrand.news
 
 import java.util.Date
-import java.util.logging.Logger
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 import info.glennengstrand.io._
 
 /** helper functions for inbound object creation */
 object Inbound {
-  val log = Logger.getLogger("info.glennengstrand.news.Inbound")
+  val log = LoggerFactory.getLogger("info.glennengstrand.news.Inbound")
   val reader: PersistentDataStoreReader = new CassandraReader
   val cache: CacheAware = new MockCache
   class InboundBindings extends PersistentDataStoreBindings {
@@ -80,7 +81,7 @@ class InboundFeed(id: Int, state: Iterable[Map[String, Any]]) extends Iterator[I
   def hasNext = i.hasNext
   def next() = {
     val kv = i.next()
-    Inbound.log.finest("kv = " + kv)
+    Inbound.log.debug("kv = " + kv)
     val occurred = kv.contains("dateOf(occurred)") match {
       case true => kv("dateOf(occurred)")
       case _ => kv("occurred")

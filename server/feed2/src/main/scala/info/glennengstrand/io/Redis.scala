@@ -1,12 +1,13 @@
 package info.glennengstrand.io
 
 import scala.util.{Try, Failure, Success}
-import java.util.logging.Logger
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import redis.clients.jedis.{Jedis, JedisPool, JedisPoolConfig}
 
 /** helper function for connecting to redis */
 object RedisService {
-  val log = Logger.getLogger("info.glennengstrand.io.RedisService")
+  val log = LoggerFactory.getLogger("info.glennengstrand.io.RedisService")
 
   def connectJedis: JedisPool = {
     val poolConfig = new JedisPoolConfig()
@@ -41,7 +42,7 @@ trait JedisCacheAware extends CacheAware {
     rc match {
       case Success(v) => v
       case Failure(e) => {
-        RedisService.log.warning(e.getLocalizedMessage())
+        RedisService.log.warn(e.getLocalizedMessage())
         List()
       }
     }
@@ -56,7 +57,7 @@ trait JedisCacheAware extends CacheAware {
     rc match {
       case Success(v) => 
       case Failure(e) => {
-        RedisService.log.warning(e.getLocalizedMessage())
+        RedisService.log.warn(e.getLocalizedMessage())
       }
     }
   }
@@ -70,7 +71,7 @@ trait JedisCacheAware extends CacheAware {
     rc match {
       case Success(v) => 
       case Failure(e) => {
-        RedisService.log.warning(e.getLocalizedMessage())
+        RedisService.log.warn(e.getLocalizedMessage())
       }
     }
   }
@@ -84,7 +85,7 @@ trait JedisCacheAware extends CacheAware {
     rc match {
       case Success(v) => 
       case Failure(e) => {
-        RedisService.log.warning(e.getLocalizedMessage())
+        RedisService.log.warn(e.getLocalizedMessage())
       }
     }
   }
@@ -98,7 +99,7 @@ trait JedisCacheAware extends CacheAware {
     rc match {
       case Success(v) => 
       case Failure(e) => {
-        RedisService.log.warning(e.getLocalizedMessage())
+        RedisService.log.warn(e.getLocalizedMessage())
       }
     }
   }

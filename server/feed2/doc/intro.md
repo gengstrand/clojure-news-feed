@@ -15,12 +15,16 @@ cd ~/oss/solr/solr-4.5.1/solr/example
 java -Dsolr.solr.home=multicore -jar start.jar
 
 cd /home/glenn/git/clojure-news-feed/server/feed2
-export APP_CONFIG=src/main/resources/settings.properties
+
 sbt
 compile
 assembly
 exit
-java -Djava.util.logging.config.file=src/main/resources/logging.properties -jar target/scala-2.11/feed2-assembly-0.1.jar src/main/resources/settings.properties
+
+export CACHE_SQL=yes
+export APP_CONFIG=etc/settings.properties
+
+java -DLOG_DIR=/tmp -DLOG_LEVEL=ALL -jar target/scala-2.11/news-feed-assembly-0.1.0-SNAPSHOT.jar
 ```
 
 ### some sample test curl calls

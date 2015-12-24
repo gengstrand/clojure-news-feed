@@ -1,7 +1,8 @@
 package info.glennengstrand.io
 
 import java.text.{SimpleDateFormat, DateFormat}
-import java.util.logging.{Logger, Level}
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 import scala.util.Random
 import scala.util.{Try, Failure, Success}
@@ -16,7 +17,7 @@ import com.twitter.util.{FuturePool, Future}
 object IO {
   val settings = new Properties
   val df = new SimpleDateFormat("yyyy-MM-dd")
-  val log = Logger.getLogger("info.glennengstrand.io.IO")
+  val log = LoggerFactory.getLogger("info.glennengstrand.io.IO")
   val r = new Random(Platform.currentTime)
   val jdbcVendor = "jdbc_vendor"
   val jdbcDriveName = "jdbc_driver"
@@ -61,7 +62,7 @@ object IO {
     retVal match {
       case Success(d) => d
       case Failure(e) => {
-        log.warning(s"error ${e.getLocalizedMessage()} when attempting to parse $value as date")
+        log.warn(s"error ${e.getLocalizedMessage()} when attempting to parse $value as date")
         new Date()
       }
     }
@@ -287,7 +288,7 @@ trait PersistentRelationalDataStoreReader extends PersistentDataStoreReader with
       }
     } catch {
       case e: SQLException => {
-        IO.log.log(Level.WARNING, "cannot fetch data\n", e)
+        IO.log.warn("cannot fetch data: ", e)
         reset
         val stmt = prepare(operation, o.entity, o.fetchInputs, o.fetchOutputs, this)
         stmt.synchronized {
@@ -320,7 +321,7 @@ trait PersistentRelationalDataStoreWriter extends PersistentDataStoreWriter with
       }
     } catch {
       case e: SQLException => {
-        IO.log.log(Level.WARNING, "cannot upsert data\n", e)
+        IO.log.warn("cannot upsert data: ", e)
         reset
         val stmt = prepare(operation, o.entity, o.upsertInputs, o.upsertOutputs, this)
         stmt.synchronized {

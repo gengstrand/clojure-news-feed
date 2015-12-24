@@ -1,7 +1,8 @@
 package info.glennengstrand.io
 
 import com.datastax.driver.core._
-import java.util.logging.Logger
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import java.util.Date
 
 /**
@@ -10,7 +11,7 @@ import java.util.Date
  */
 
 object Cassandra {
-  val log = Logger.getLogger("info.glennengstrand.io.Cassandra")
+  val log = LoggerFactory.getLogger("info.glennengstrand.io.Cassandra")
   val sql: scala.collection.mutable.Map[String, PreparedStatement] = scala.collection.mutable.Map()
 
   /** maps string value from settings.properties to the real Java enumeration */
@@ -58,7 +59,7 @@ object Cassandra {
               val fo = o.fetchOrder
               val ol = for (k <- fo.keys) yield k + " " + fo.get(k).getOrElse("desc")
               val select = "select " + sl.reduce(_ + ", " + _) + " from " + o.entity + " where " + wl.reduce(_ + " and " + _) + " order by " + ol.reduce(_ + ", " + _)
-              log.fine(select)
+              log.debug(select)
               val stmt = session.prepare(select)
               val cl = getConsistencyLevel(IO.settings.get(IO.nosqlReadConsistencyLevel).asInstanceOf[String])
               stmt.setConsistencyLevel(cl)
@@ -76,7 +77,7 @@ object Cassandra {
   /** generates the column name to include in the field list of the insert statement */
   def generateUpsertFieldValue(fieldName: String, o: PersistentDataStoreBindings): String = {
     o.getTypeOf(fieldName) match {
-      case "Date" => "minTimeuuid(?)"
+      case "Date" => "now()"
       case _ => "?"
     }
   }
@@ -92,7 +93,7 @@ object Cassandra {
               val vl = for (f <- o.upsertInputs) yield generateUpsertFieldValue(f, o)
               val fl = for (f <- o.upsertInputs) yield  f
               val upsert = "insert into " + o.entity + "("  + fl.reduce(_ + ", " + _) + ") values (" + vl.reduce(_ + ", " + _) + ")" + " using ttl " + ttl
-              log.fine(upsert)
+              log.debug(upsert)
               val stmt = session.prepare(upsert)
               val cl = getConsistencyLevel(IO.settings.get(IO.nosqlReadConsistencyLevel).asInstanceOf[String])
               stmt.setConsistencyLevel(cl)
@@ -108,14 +109,23 @@ object Cassandra {
   }
 
   /** calls data type dependent setters on the datastax driver */
-  def setBinding(binding: BoundStatement, fieldName: String, state: Map[String, Any], index: Int): Unit = {
-    log.finest("setting " + fieldName + " parameter " + index + " to " + state.get(fieldName).getOrElse(0))
+  def setBinding(binding: BoundStatement, fieldName: String, state: Map[String, Any], index: Int): Int = {
+    log.debug("setting " + fieldName + " parameter " + index + " to " + state.get(fieldName).getOrElse(0))
     state.get(fieldName).get match {
-      case l: Long => binding.setLong(index, l)
-      case i: Int => binding.setInt(index, i)
-      case s: String => binding.setString(index, s)
-      case d: Date => binding.setDate(index, d)
-      case None =>
+      case l: Long => {
+        binding.setLong(index, l)
+        index + 1
+      }
+      case i: Int => {
+        binding.setInt(index, i)
+        index + 1
+      }
+      case s: String => {
+        binding.setString(index, s)
+        index + 1
+      }
+      case d: Date => index
+      case None => index
     }
   }
 
@@ -145,8 +155,7 @@ object Cassandra {
     val retVal = new BoundStatement(stmt)
     var index = 0
     binding.foreach(f => {
-      setBinding(retVal, f, bound, index)
-      index += 1
+      index = setBinding(retVal, f, bound, index)
     })
     retVal
   }
@@ -155,7 +164,6 @@ object Cassandra {
   def bindSingleRowOutputs(binding: BoundStatement, o: PersistentDataStoreBindings): Map[String, Any] = {
     val b = binding.bind()
     val rs = Cassandra.session.execute(b)
-    var index = 1
     val r = rs.one()
     o.fetchOutputs.map(f => {
       tupleFromRow(f, r)

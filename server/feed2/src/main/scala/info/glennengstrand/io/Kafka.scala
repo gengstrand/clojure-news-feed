@@ -2,11 +2,12 @@ package info.glennengstrand.io
 
 import java.util.{Properties, Calendar}
 import org.apache.kafka.clients.producer.{ProducerRecord, Producer, KafkaProducer}
-import java.util.logging.{Level, Logger}
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 /** responsible for logging performance data to kafka */
 class Kafka extends PerformanceLogger {
-  val log = Logger.getLogger("info.glennengstrand.io.Kafka")
+  val log = LoggerFactory.getLogger("info.glennengstrand.io.Kafka")
   def connect(): Producer[String, String] = {
     val config = new Properties
     config.setProperty("bootstrap.servers", IO.settings.getProperty(IO.messagingBrokers))
@@ -23,7 +24,7 @@ class Kafka extends PerformanceLogger {
     try {
       logger.send(new ProducerRecord[String, String](topic, msg))
     } catch {
-      case e: Exception => log.log(Level.SEVERE, "messaging not available\n", e)
+      case e: Exception => log.warn("messaging not available: ", e)
     }
   }
 }
