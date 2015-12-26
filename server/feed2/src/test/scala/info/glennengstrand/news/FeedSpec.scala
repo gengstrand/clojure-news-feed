@@ -14,7 +14,7 @@ trait MockWriter extends PersistentDataStoreWriter {
   }
 }
 
-trait MockRelationalWriter extends PersistentRelationalDataStoreWriter {
+trait MockRelationalWriter extends TransientRelationalDataStoreWriter {
   def generatePreparedStatement(operation: String, entity: String, inputs: Iterable[String], outputs: Iterable[(String, String)]): String = {
     null
   }

@@ -219,6 +219,23 @@ abstract class PersistentDataStoreBindings {
   }
 }
 
+/** responsible for managing prepared statements and connections */
+trait TransientRelationalDataStoreStatementAware {
+
+  /** generate the string representation of the  SQL to be used to create the prepared statement */
+  def generatePreparedStatement(operation: String, entity: String, inputs: Iterable[String], outputs: Iterable[(String, String)]): String
+
+  /** clear out the cache of prepared statements */
+  def reset: Unit = {
+
+  }
+
+  /** retrieve a prepared statement */
+  def prepare(operation: String, entity: String, inputs: Iterable[String], outputs: Iterable[(String, String)], db: Connection): PreparedStatement = {
+    db.prepareStatement(generatePreparedStatement(operation, entity, inputs, outputs))
+  }
+}
+
 /** responsible for managing the cache of prepared statements */
 trait PersistentRelationalDataStoreStatementAware {
 
@@ -275,6 +292,42 @@ trait PersistentDataStoreReader {
 }
 
 /** specifies the contract for JDBC readers */
+trait TransientRelationalDataStoreReader extends PersistentDataStoreReader with PooledRelationalDataStore with TransientRelationalDataStoreStatementAware {
+  val operation = "Fetch"
+
+  /** read from the SQL database based on bindings and criteria */
+  def read(o: PersistentDataStoreBindings, criteria: Map[String, Any]): Iterable[Map[String, Any]] = {
+    val db = this.getDbConnection
+    val stmt = prepare(operation, o.entity, o.fetchInputs, o.fetchOutputs, db)
+    val rc = Try {
+      stmt.synchronized {
+        Sql.prepare(stmt, o.fetchInputs, criteria)
+        val results = Sql.query(stmt, o.fetchOutputs)
+        stmt.close()
+        db.close()
+        results
+      }
+    }
+    rc match {
+      case Success(rv) => {
+        rv
+      }
+      case Failure(e) => {
+        IO.log.warn("cannot fetch data: ", e)
+        val stmt = prepare(operation, o.entity, o.fetchInputs, o.fetchOutputs, db)
+        stmt.synchronized {
+          Sql.prepare(stmt, o.fetchInputs, criteria)
+          val results = Sql.query(stmt, o.fetchOutputs)
+          stmt.close()
+          db.close()
+          results
+        }
+      }
+    }
+  }
+}
+
+/** specifies the contract for JDBC readers */
 trait PersistentRelationalDataStoreReader extends PersistentDataStoreReader with PooledRelationalDataStore with PersistentRelationalDataStoreStatementAware {
   val operation = "Fetch"
 
@@ -305,6 +358,42 @@ trait PersistentDataStoreWriter {
 
   /** writes to the data store based on bindings, state, and criteria */
   def write(o: PersistentDataStoreBindings, state: Map[String, Any], criteria: Map[String, Any]): Map[String, Any]
+}
+
+/** specifies the contract for JDBC writers */
+trait TransientRelationalDataStoreWriter extends PersistentDataStoreWriter with PooledRelationalDataStore with TransientRelationalDataStoreStatementAware {
+  val operation = "Upsert"
+
+  /** write to the SQL database based on bindings, state, and criteria returnings the newly created primary key */
+  def write(o: PersistentDataStoreBindings, state: Map[String, Any], criteria: Map[String, Any]): Map[String, Any] = {
+    val db = this.getDbConnection
+    val stmt = prepare(operation, o.entity, o.upsertInputs, o.upsertOutputs, db)
+    val rc = Try {
+      stmt.synchronized {
+        Sql.prepare(stmt, o.upsertInputs, state)
+        val results = Sql.execute(stmt, o.upsertOutputs).toMap[String, Any]
+        stmt.close()
+        db.close()
+        results
+      }
+    } 
+    rc match {
+      case Success(rv) => {
+        rv
+      }
+      case Failure(e) => {
+        IO.log.warn("cannot upsert data: ", e)
+        val stmt = prepare(operation, o.entity, o.upsertInputs, o.upsertOutputs, db)
+        stmt.synchronized {
+          Sql.prepare(stmt, o.upsertInputs, state)
+          val results = Sql.execute(stmt, o.upsertOutputs).toMap[String, Any]
+          stmt.close()
+          db.close()
+          results
+        }
+      }
+    }
+  }
 }
 
 /** specifies the contract for JDBC writers */

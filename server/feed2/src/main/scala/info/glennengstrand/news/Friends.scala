@@ -51,7 +51,7 @@ case class FriendState(id: Int, fromParticipantID: Long, toParticipantID: Long)
 
 /** represents the friend relationship between two participants */
 class Friend(id: Int, fromParticipantID: Int, toParticipantID: Int) extends FriendState(id, fromParticipantID, toParticipantID) with MicroServiceSerializable {
-  this: PersistentRelationalDataStoreWriter with CacheAware =>
+  this: TransientRelationalDataStoreWriter with CacheAware =>
 
   /** save to the database and return a new friend object with the newly created primary key */
   def save: Friend = {

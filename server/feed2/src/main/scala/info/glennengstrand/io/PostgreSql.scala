@@ -21,14 +21,14 @@ object PostgreSql {
 }
 
 /** postgresql specific reader */
-class PostgreSqlReader extends PersistentRelationalDataStoreReader {
+class PostgreSqlReader extends TransientRelationalDataStoreReader {
   def generatePreparedStatement(operation: String, entity: String, inputs: Iterable[String], outputs: Iterable[(String, String)]): String = {
     PostgreSql.generatePreparedStatement(operation, entity, inputs, outputs)
   }
 }
 
 /** postgresql specific writer */
-trait PostgreSqlWriter extends PersistentRelationalDataStoreWriter {
+trait PostgreSqlWriter extends TransientRelationalDataStoreWriter {
   def generatePreparedStatement(operation: String, entity: String, inputs: Iterable[String], outputs: Iterable[(String, String)]): String = {
     PostgreSql.generatePreparedStatement(operation, entity, inputs, outputs)
   }

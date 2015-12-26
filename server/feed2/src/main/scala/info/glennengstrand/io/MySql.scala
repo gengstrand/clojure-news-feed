@@ -20,14 +20,14 @@ object MySql {
 }
 
 /** MySql specific reader */
-class MySqlReader extends PersistentRelationalDataStoreReader  {
+class MySqlReader extends TransientRelationalDataStoreReader  {
   def generatePreparedStatement(operation: String, entity: String, inputs: Iterable[String], outputs: Iterable[(String, String)]): String = {
     MySql.generatePreparedStatement(operation, entity, inputs, outputs)
   }
 }
 
 /** MySql specific writer */
-trait MySqlWriter extends PersistentRelationalDataStoreWriter {
+trait MySqlWriter extends TransientRelationalDataStoreWriter {
   def generatePreparedStatement(operation: String, entity: String, inputs: Iterable[String], outputs: Iterable[(String, String)]): String = {
     MySql.generatePreparedStatement(operation, entity, inputs, outputs)
   }
