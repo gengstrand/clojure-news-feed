@@ -3,8 +3,10 @@ package info.glennengstrand.news
 import java.sql.PreparedStatement
 
 import info.glennengstrand.io._
-import org.specs2.mutable.Specification
-import spray.testkit.Specs2RouteTest
+import com.google.inject.Stage
+import com.twitter.finatra.http.test.EmbeddedHttpServer
+import com.twitter.inject.server.FeatureTest
+import com.twitter.finagle.http.Status.Ok
 
 trait MockWriter extends PersistentDataStoreWriter {
   def write(o: PersistentDataStoreBindings, state: Map[String, Any], criteria: Map[String, Any]): Map[String, Any] = {
@@ -12,7 +14,7 @@ trait MockWriter extends PersistentDataStoreWriter {
   }
 }
 
-trait MockRelationalWriter extends PersistentRelationalDataStoreWriter {
+trait MockRelationalWriter extends TransientRelationalDataStoreWriter {
   def generatePreparedStatement(operation: String, entity: String, inputs: Iterable[String], outputs: Iterable[(String, String)]): String = {
     null
   }
@@ -37,12 +39,13 @@ class MockPerformanceLogger extends PerformanceLogger {
 class MockFactoryClass extends FactoryClass {
 
   val performanceLogger = new MockPerformanceLogger
-  def getParticipant(id: Long): Participant = {
+  def isEmpty: Boolean = false
+  def getParticipant(id: Int): Participant = {
     new Participant(id, "test") with MockRelationalWriter with MockCacheAware
   }
   def getParticipant(state: String): Participant = {
     val s = IO.fromFormPost(state)
-    new Participant(s("id").asInstanceOf[String].toLong, s("name").asInstanceOf[String]) with MockRelationalWriter with MockCacheAware
+    new Participant(s("id").asInstanceOf[String].toInt, s("name").asInstanceOf[String]) with MockRelationalWriter with MockCacheAware
   }
   def getFriends(id: Long): Friends = {
     val state: Iterable[Map[String, Any]] = List(
@@ -51,11 +54,11 @@ class MockFactoryClass extends FactoryClass {
       "ParticipantID" -> "2"
       )
     )
-    new Friends(1l, state)
+    new Friends(1, state)
   }
   def getFriend(state: String): Friend = {
     val s = IO.fromFormPost(state)
-    new Friend(s("FriendsID").asInstanceOf[String].toLong, s("FromParticipantID").asInstanceOf[String].toInt, s("ToParticipantID").asInstanceOf[String].toInt) with MockRelationalWriter with MockCacheAware
+    new Friend(s("FriendsID").asInstanceOf[String].toInt, s("FromParticipantID").asInstanceOf[String].toInt, s("ToParticipantID").asInstanceOf[String].toInt) with MockRelationalWriter with MockCacheAware
   }
   def getInbound(id: Int): InboundFeed = {
     val state: Iterable[Map[String, Any]] = List(
@@ -89,15 +92,10 @@ class MockFactoryClass extends FactoryClass {
     val s = IO.fromFormPost(state)
     new Outbound(s("participantID").asInstanceOf[String].toInt, IO.df.parse(s("occurred").asInstanceOf[String]), s("subject").asInstanceOf[String], s("story").asInstanceOf[String]) with MockWriter with MockCacheAware
   }
-  def getObject(name: String, id: Long): Option[Object] = {
+  def getObject(name: String, id: Int): Option[Object] = {
     name match {
       case "participant" => Some(getParticipant(id))
       case "friends" => Some(getFriends(id))
-      case _ => None
-    }
-  }
-  def getObject(name: String, id: Int): Option[Object] = {
-    name match {
       case "inbound" => Some(getInbound(id))
       case "outbound" => Some(getOutbound(id))
       case _ => None
@@ -121,42 +119,33 @@ class MockFactoryClass extends FactoryClass {
 }
 
 /** unit tests for the news feed service */
-class FeedSpec extends Specification with Specs2RouteTest with Feed {
-  def actorRefFactory = system
+class FeedSpec extends FeatureTest {
   Feed.factory = new MockFactoryClass
   IO.cacheStatements = false
   IO.unitTesting = true
 
-  "Feed" should {
+  override val server = new EmbeddedHttpServer(new NewsFeedServer)
+
+  "Server" should {
+    "startup" in {
+      server.assertHealthy()
+    }
 
     "return the correct data when fetching a participant" in {
-      Get("/participant/2") ~> myRoute ~> check {
-        responseAs[String] must contain("test")
-      }
+      server.httpGet(path = "/participant/2", andExpect = Ok)
     }
 
     "return the correct data when fetching friends" in {
-      Get("/friends/1") ~> myRoute ~> check {
-        responseAs[String] must contain("2")
-      }
+      server.httpGet(path = "/friends/1", andExpect = Ok)
     }
 
     "return the correct data when fetching inbound" in {
-      Get("/inbound/1") ~> myRoute ~> check {
-        responseAs[String] must contain("test")
-      }
-    }
-
-    "leave GET requests to other paths unhandled" in {
-      Get("/kermit") ~> myRoute ~> check {
-        handled must beFalse
-      }
+      server.httpGet(path = "/inbound/1", andExpect = Ok)
     }
 
     "process post requests to create a new participant properly" in {
-      Post("/participant/new", "id=2&name=smith") ~> myRoute ~> check {
-        responseAs[String] must contain("smith")
-      }
+      server.httpPost(path = "/participant/new", postBody = "id=2&name=smith", andExpect = Ok)
     }
   }
+
 }

@@ -1,19 +1,23 @@
 package info.glennengstrand.io
 
 import java.text.{SimpleDateFormat, DateFormat}
-import java.util.logging.{Logger, Level}
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 import scala.util.Random
+import scala.util.{Try, Failure, Success}
+import java.util.concurrent.Executors
 import scala.compat.Platform
 import java.util.{Calendar, Date, Properties}
 import scala.util.parsing.json.JSON
 import java.sql.{SQLException, PreparedStatement, Connection}
+import com.twitter.util.{FuturePool, Future}
 
 /** general common Input Output related helper functions */
 object IO {
   val settings = new Properties
   val df = new SimpleDateFormat("yyyy-MM-dd")
-  val log = Logger.getLogger("info.glennengstrand.io.IO")
+  val log = LoggerFactory.getLogger("info.glennengstrand.io.IO")
   val r = new Random(Platform.currentTime)
   val jdbcVendor = "jdbc_vendor"
   val jdbcDriveName = "jdbc_driver"
@@ -31,13 +35,39 @@ object IO {
   val messagingBrokers = "messaging_brokers"
   val zookeeperServers = "zookeeper_servers"
   val searchHost = "search_host"
-  val cacheConfig = "cache_config"
+  val cacheHost = "cache_host"
+  val cachePort = "cache_port"
+  val cacheTimeout = "cache_timeout"
 
   val sql: scala.collection.mutable.Map[String, Array[PreparedStatement]] = scala.collection.mutable.Map()
-
+  lazy val workerPool = FuturePool.unboundedPool
+  
   var cacheStatements = true
   var unitTesting = false
 
+  /** convert string to int */
+  def convertToInt(value: String, defaultValue: Int): Int = {
+    val retVal = Try {
+      Integer.parseInt(value)
+    }
+    retVal match {
+      case Success(rv) => rv
+      case Failure(e) => defaultValue
+    }
+  }
+  
+  /** convert string to date */
+  def convertToDate(value: String): Date = {
+    val retVal = Try(df.parse(value))
+    retVal match {
+      case Success(d) => d
+      case Failure(e) => {
+        log.warn(s"error ${e.getLocalizedMessage()} when attempting to parse $value as date")
+        new Date()
+      }
+    }
+  }
+  
   /** check the cache first, if a hit, then return that else check the db and write to the cache */
   def cacheAwareRead(o: PersistentDataStoreBindings, criteria: Map[String, Any], reader: PersistentDataStoreReader, cache: CacheAware): Iterable[Map[String, Any]] = {
     def loadFromDbAndCache: Iterable[Map[String, Any]] = {
@@ -139,17 +169,15 @@ object IO {
 
 /** responsible for entity object creation for both unit tests and the real service */
 abstract class FactoryClass {
-  def getObject(name: String, id: Long): Option[Object]
   def getObject(name: String, id: Int): Option[Object]
   def getObject(name: String, state: String): Option[Object]
   def getObject(name: String): Option[Object]
+  def isEmpty: Boolean
 }
 
 /** default do nothing class factory */
 class EmptyFactoryClass extends FactoryClass {
-  def getObject(name: String, id: Long): Option[Object] = {
-    None
-  }
+  def isEmpty: Boolean = true
   def getObject(name: String, id: Int): Option[Object] = {
     None
   }
@@ -188,6 +216,23 @@ abstract class PersistentDataStoreBindings {
       case true => "Int"
       case _ => retVal.head
     }
+  }
+}
+
+/** responsible for managing prepared statements and connections */
+trait TransientRelationalDataStoreStatementAware {
+
+  /** generate the string representation of the  SQL to be used to create the prepared statement */
+  def generatePreparedStatement(operation: String, entity: String, inputs: Iterable[String], outputs: Iterable[(String, String)]): String
+
+  /** clear out the cache of prepared statements */
+  def reset: Unit = {
+
+  }
+
+  /** retrieve a prepared statement */
+  def prepare(operation: String, entity: String, inputs: Iterable[String], outputs: Iterable[(String, String)], db: Connection): PreparedStatement = {
+    db.prepareStatement(generatePreparedStatement(operation, entity, inputs, outputs))
   }
 }
 
@@ -247,6 +292,42 @@ trait PersistentDataStoreReader {
 }
 
 /** specifies the contract for JDBC readers */
+trait TransientRelationalDataStoreReader extends PersistentDataStoreReader with PooledRelationalDataStore with TransientRelationalDataStoreStatementAware {
+  val operation = "Fetch"
+
+  /** read from the SQL database based on bindings and criteria */
+  def read(o: PersistentDataStoreBindings, criteria: Map[String, Any]): Iterable[Map[String, Any]] = {
+    val db = this.getDbConnection
+    val stmt = prepare(operation, o.entity, o.fetchInputs, o.fetchOutputs, db)
+    val rc = Try {
+      stmt.synchronized {
+        Sql.prepare(stmt, o.fetchInputs, criteria)
+        val results = Sql.query(stmt, o.fetchOutputs)
+        stmt.close()
+        db.close()
+        results
+      }
+    }
+    rc match {
+      case Success(rv) => {
+        rv
+      }
+      case Failure(e) => {
+        IO.log.warn("cannot fetch data: ", e)
+        val stmt = prepare(operation, o.entity, o.fetchInputs, o.fetchOutputs, db)
+        stmt.synchronized {
+          Sql.prepare(stmt, o.fetchInputs, criteria)
+          val results = Sql.query(stmt, o.fetchOutputs)
+          stmt.close()
+          db.close()
+          results
+        }
+      }
+    }
+  }
+}
+
+/** specifies the contract for JDBC readers */
 trait PersistentRelationalDataStoreReader extends PersistentDataStoreReader with PooledRelationalDataStore with PersistentRelationalDataStoreStatementAware {
   val operation = "Fetch"
 
@@ -260,7 +341,7 @@ trait PersistentRelationalDataStoreReader extends PersistentDataStoreReader with
       }
     } catch {
       case e: SQLException => {
-        IO.log.log(Level.WARNING, "cannot fetch data\n", e)
+        IO.log.warn("cannot fetch data: ", e)
         reset
         val stmt = prepare(operation, o.entity, o.fetchInputs, o.fetchOutputs, this)
         stmt.synchronized {
@@ -280,6 +361,42 @@ trait PersistentDataStoreWriter {
 }
 
 /** specifies the contract for JDBC writers */
+trait TransientRelationalDataStoreWriter extends PersistentDataStoreWriter with PooledRelationalDataStore with TransientRelationalDataStoreStatementAware {
+  val operation = "Upsert"
+
+  /** write to the SQL database based on bindings, state, and criteria returnings the newly created primary key */
+  def write(o: PersistentDataStoreBindings, state: Map[String, Any], criteria: Map[String, Any]): Map[String, Any] = {
+    val db = this.getDbConnection
+    val stmt = prepare(operation, o.entity, o.upsertInputs, o.upsertOutputs, db)
+    val rc = Try {
+      stmt.synchronized {
+        Sql.prepare(stmt, o.upsertInputs, state)
+        val results = Sql.execute(stmt, o.upsertOutputs).toMap[String, Any]
+        stmt.close()
+        db.close()
+        results
+      }
+    } 
+    rc match {
+      case Success(rv) => {
+        rv
+      }
+      case Failure(e) => {
+        IO.log.warn("cannot upsert data: ", e)
+        val stmt = prepare(operation, o.entity, o.upsertInputs, o.upsertOutputs, db)
+        stmt.synchronized {
+          Sql.prepare(stmt, o.upsertInputs, state)
+          val results = Sql.execute(stmt, o.upsertOutputs).toMap[String, Any]
+          stmt.close()
+          db.close()
+          results
+        }
+      }
+    }
+  }
+}
+
+/** specifies the contract for JDBC writers */
 trait PersistentRelationalDataStoreWriter extends PersistentDataStoreWriter with PooledRelationalDataStore with PersistentRelationalDataStoreStatementAware {
   val operation = "Upsert"
 
@@ -293,7 +410,7 @@ trait PersistentRelationalDataStoreWriter extends PersistentDataStoreWriter with
       }
     } catch {
       case e: SQLException => {
-        IO.log.log(Level.WARNING, "cannot upsert data\n", e)
+        IO.log.warn("cannot upsert data: ", e)
         reset
         val stmt = prepare(operation, o.entity, o.upsertInputs, o.upsertOutputs, this)
         stmt.synchronized {

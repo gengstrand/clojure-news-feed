@@ -1,13 +1,14 @@
 package info.glennengstrand.news
 
 import java.util.Date
-import java.util.logging.Logger
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 import info.glennengstrand.io._
 
 /** helper functions for outbound object creation */
 object Outbound extends SolrSearcher {
-  val log = Logger.getLogger("info.glennengstrand.news.Outbound")
+  val log = LoggerFactory.getLogger("info.glennengstrand.news.Outbound")
   val reader: PersistentDataStoreReader = new CassandraReader
   val cache: CacheAware = new MockCache
   class OutboundBindings extends PersistentDataStoreBindings {
@@ -40,7 +41,7 @@ object Outbound extends SolrSearcher {
     val id = s("from").asInstanceOf[String].toInt
     val story = s("story").asInstanceOf[String]
     index(id, story)
-    new Outbound(id, IO.df.parse(s("occurred").asInstanceOf[String]), s("subject").asInstanceOf[String], story) with CassandraWriter with MockCacheAware
+    new Outbound(id, IO.convertToDate(s("occurred").asInstanceOf[String]), s("subject").asInstanceOf[String], story) with CassandraWriter with MockCacheAware
   }
   def lookup(state: String): Iterable[OutboundFeed] = {
     val s = IO.fromFormPost(state)
@@ -89,7 +90,7 @@ class OutboundFeed(id: Int, state: Iterable[Map[String, Any]]) extends Iterator[
   def hasNext = i.hasNext
   def next() = {
     val kv = i.next()
-    Outbound.log.finest("kv = " + kv)
+    Outbound.log.debug("kv = " + kv)
     val occurred = kv.contains("dateOf(occurred)") match {
       case true => kv("dateOf(occurred)")
       case _ => kv("occurred")

@@ -1,6 +1,7 @@
 package info.glennengstrand.io
 
-import java.util.logging.Logger
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 import info.glennengstrand.io._
 import java.sql.{SQLException, ResultSet, PreparedStatement, Connection}
@@ -9,7 +10,7 @@ import scala.collection.mutable
 
 /** helper functions for generating postgesql statements */
 object PostgreSql {
-  val log = Logger.getLogger("info.glennengstrand.io.PostgreSql")
+  val log = LoggerFactory.getLogger("info.glennengstrand.io.PostgreSql")
 
   def generatePreparedStatement(operation: String, entity: String, inputs: Iterable[String], outputs: Iterable[(String, String)]): String = {
     val i = for (x <- inputs) yield "?"
@@ -20,14 +21,14 @@ object PostgreSql {
 }
 
 /** postgresql specific reader */
-class PostgreSqlReader extends PersistentRelationalDataStoreReader {
+class PostgreSqlReader extends TransientRelationalDataStoreReader {
   def generatePreparedStatement(operation: String, entity: String, inputs: Iterable[String], outputs: Iterable[(String, String)]): String = {
     PostgreSql.generatePreparedStatement(operation, entity, inputs, outputs)
   }
 }
 
 /** postgresql specific writer */
-trait PostgreSqlWriter extends PersistentRelationalDataStoreWriter {
+trait PostgreSqlWriter extends TransientRelationalDataStoreWriter {
   def generatePreparedStatement(operation: String, entity: String, inputs: Iterable[String], outputs: Iterable[(String, String)]): String = {
     PostgreSql.generatePreparedStatement(operation, entity, inputs, outputs)
   }
