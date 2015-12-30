@@ -57,7 +57,7 @@ object Sql {
     val rs = stmt.executeQuery()
     val retVal = new ArrayBuffer[Map[String, Any]]()
     while (rs.next()) {
-      retVal.++(outputs.map(f => tupleFromResultSet(f, rs)).toMap)
+      retVal.append(outputs.map(f => tupleFromResultSet(f, rs)).toMap)
     }
     rs.close()
     log.debug(s"query returned ${retVal.size} results")
