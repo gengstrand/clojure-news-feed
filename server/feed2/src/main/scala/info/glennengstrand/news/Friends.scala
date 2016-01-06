@@ -1,10 +1,12 @@
 package info.glennengstrand.news
 
 import info.glennengstrand.io._
+import java.util.logging.Logger
 
 /** helper functions for friend object creation */
 object Friends {
   lazy val reader = IO.getReader
+  val log2 = java.util.logging.Logger.getLogger("info.glennengstrand.news.Friends")
   val cache: CacheAware = new RedisCache
   class FriendsBindings extends PersistentDataStoreBindings {
     def entity: String = {
@@ -107,6 +109,7 @@ class Friends(id: Int, state: Iterable[Map[String, Any]]) extends Iterator[Frien
   def hasNext = i.hasNext
   def next() = {
     val kv = i.next()
+    Friends.log2.finest(kv.toString())
     Friends.create(IO.convertToInt(kv("FriendsID")), id.toInt, IO.convertToInt(kv("ParticipantID")))
   }
   override def toJson(factory: FactoryClass): String = {

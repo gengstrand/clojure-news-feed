@@ -1,14 +1,15 @@
 package info.glennengstrand.news
 
+import java.util.logging.Logger
+
+import akka.actor.{ActorSystem, Props, Actor, DeadLetter}
+import akka.io.IO
 import info.glennengstrand.io._
-import scala.util.{Try, Success, Failure}
+import spray.can.Http
+import akka.pattern.ask
+import akka.util.Timeout
+import scala.concurrent.duration._
 import java.io.FileInputStream
-import com.twitter.finagle.http.{Request, Response}
-import com.twitter.finatra.http.HttpServer
-import com.twitter.finatra.http.filters.CommonFilters
-import com.twitter.finatra.http.routing.HttpRouter
-import com.twitter.finatra.logging.filter.{LoggingMDCFilter, TraceIdMDCFilter}
-import com.twitter.finatra.logging.modules.Slf4jBridgeModule
 
 /** responsible for creating main entity abstraction objects for the real service */
 class ServiceFactoryClass extends FactoryClass {
@@ -41,42 +42,18 @@ class ServiceFactoryClass extends FactoryClass {
 }
 
 /** main starting entry point for the real service */
-object NewsFeedServerMain extends NewsFeedServer
+object Boot extends App {
 
-class NewsFeedServer extends HttpServer {
+  implicit val system = ActorSystem("on-spray-can")
+
   val settingsFile = args.length match {
-    case 0 => {
-    	 val ac = Try(sys.env("APP_CONFIG"))
-    	 ac match {
-    	    case Success(cfname) => cfname
-    	    case Failure(e) => "etc/settings.properties"
-    	 }
-    }
+    case 0 => "settings.properties"
     case _ => args(0)
   }
-  IO.settings.load(new FileInputStream(settingsFile))
-  if (Feed.factory.isEmpty) {
-     Feed.factory = new ServiceFactoryClass
-  }
-  val cs = Try(sys.env("CACHE_SQL"))
-  cs match {
-    case Success(v) => {
-      if ("no".equalsIgnoreCase(v) || "off".equalsIgnoreCase(v) || "disable".equalsIgnoreCase(v)) {
-        IO.cacheStatements = false
-      }
-    }
-    case Failure(e) =>
-  }
-  
-  override def modules = Seq(Slf4jBridgeModule)
-
-  override def defaultFinatraHttpPort = ":8080"
-
-  override def configureHttp(router: HttpRouter) {
-    router
-      .filter[LoggingMDCFilter[Request, Response]]
-      .filter[TraceIdMDCFilter[Request, Response]]
-      .filter[CommonFilters]
-      .add[Feed]
-  }
+  info.glennengstrand.io.IO.settings.load(new FileInputStream(settingsFile))
+  val service = system.actorOf(Props[FeedActor], "news-feed-service")
+  implicit val timeout = Timeout(120.seconds)
+  Feed.factory = new ServiceFactoryClass
+  IO(Http) ? Http.Bind(service, interface = "0.0.0.0", port = 8080)
 }
+

@@ -4,10 +4,12 @@ import java.sql.{ResultSet, PreparedStatement}
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import scala.collection.mutable.ArrayBuffer
+import java.util.logging.Logger
 
 /** JDBC helper functions */
 object Sql {
   val log = LoggerFactory.getLogger("info.glennengstrand.io.Sql")
+  val log2 = java.util.logging.Logger.getLogger("info.glennengstrand.io.Sql")
 
   /** call the right statement setter based on value type */
   def setStatementParameterFromValue(stmt: PreparedStatement, v: Any, i: Int): Unit = {
@@ -49,7 +51,7 @@ object Sql {
       setStatementParameterFromValue(stmt, v, fii)
       fii += 1
     }}
-    log.debug(stmt.toString)
+    log2.finest(stmt.toString)
   }
 
   /** execute the query statement and wrap the returning result set in an iterator */
@@ -60,7 +62,7 @@ object Sql {
       retVal.append(outputs.map(f => tupleFromResultSet(f, rs)).toMap)
     }
     rs.close()
-    log.debug(s"query returned ${retVal.size} results")
+    log2.finest(s"query returned ${retVal.size} results")
     retVal
   }
 

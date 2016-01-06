@@ -1,6 +1,7 @@
 package info.glennengstrand.news
 
 import java.util.Date
+import java.util.logging.Logger
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -9,7 +10,8 @@ import info.glennengstrand.io._
 /** helper functions for outbound object creation */
 object Outbound extends SolrSearcher {
   val log = LoggerFactory.getLogger("info.glennengstrand.news.Outbound")
-  val reader: PersistentDataStoreReader = new CassandraReader
+  val log2 = java.util.logging.Logger.getLogger("info.glennengstrand.news.Outbound")
+val reader: PersistentDataStoreReader = new CassandraReader
   val cache: CacheAware = new MockCache
   class OutboundBindings extends PersistentDataStoreBindings {
     def entity: String = {
@@ -73,7 +75,9 @@ class Outbound(participantID: Int, occurred: Date, subject: String, story: Strin
     write(Outbound.bindings, getState, criteria)
     invalidate(Outbound.bindings, criteria)
     val broadcast = Friends(participantID)
+    // fetch friends returns zero results
     broadcast.foreach( f => {
+      Outbound.log2.finest(s"creating new inbound for ${f.toParticipantID}")
       val inbound =  new Inbound(f.toParticipantID.toInt, occurred, participantID, subject, story) with CassandraWriter with MockCacheAware
       inbound.save
     })

@@ -11,13 +11,13 @@ import scala.compat.Platform
 import java.util.{Calendar, Date, Properties}
 import scala.util.parsing.json.JSON
 import java.sql.{SQLException, PreparedStatement, Connection}
-import com.twitter.util.{FuturePool, Future}
 
 /** general common Input Output related helper functions */
 object IO {
   val settings = new Properties
   val df = new SimpleDateFormat("yyyy-MM-dd")
   val log = LoggerFactory.getLogger("info.glennengstrand.io.IO")
+  val log2 = java.util.logging.Logger.getLogger("info.glennengstrand.io.IO")
   val r = new Random(Platform.currentTime)
   val jdbcVendor = "jdbc_vendor"
   val jdbcDriveName = "jdbc_driver"
@@ -40,8 +40,7 @@ object IO {
   val cacheTimeout = "cache_timeout"
 
   val sql: scala.collection.mutable.Map[String, Array[PreparedStatement]] = scala.collection.mutable.Map()
-  lazy val workerPool = FuturePool.unboundedPool
-  
+
   var cacheStatements = true
   var unitTesting = false
 
@@ -71,6 +70,7 @@ object IO {
   /** check the cache first, if a hit, then return that else check the db and write to the cache */
   def cacheAwareRead(o: PersistentDataStoreBindings, criteria: Map[String, Any], reader: PersistentDataStoreReader, cache: CacheAware): Iterable[Map[String, Any]] = {
     def loadFromDbAndCache: Iterable[Map[String, Any]] = {
+      log2.finest(criteria.map(kv => s"${kv._1} = ${kv._2}").reduce(_ + "," + _))
       val fromDb = reader.read(o, criteria)
       fromDb.size match {
         case 0 =>

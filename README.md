@@ -4,17 +4,13 @@ I wanted to find out how the latest crop of modern web service technologies scal
 
 There is a big trend in Java right now to use new programming languages, designed to run in the Java Virtual Machine, that support Functional Programming concepts. Clojure is a variant of Lisp that is one of the leaders in this trend. The question that I wanted to answer was this. Is Clojure ready for deliverying services at web scale?
 
-I blogged about the Clojure implementation.
+I blogged about it here.
 
-http://glennengstrand.info/software/architecture/oss/clojure
+http://www.dynamicalsoftware.com/software/architecture/oss/clojure
 
-I covered the Scala implementation and how it was different from the Clojure version in terms of code.
+Here is the article with more details.
 
-http://glennengstrand.info/software/architecture/oss/scala
-
-I blogged about the performance differences.
-
-http://glennengstrand.info/software/performance/scala/clojure
+http://www.docstoc.com//docs/166905017/clojureNewsFeed
 
 ## server
 
@@ -26,7 +22,9 @@ A basic news feed web service written in Clojure.
 
 ### feed2
 
-The same micro-service as feed only this time written in Scala.
+The same micro-service as feed only this time written in Scala. I blogged about this too.
+
+http://glennengstrand.info/software/architecture/oss/scala
 
 ### solr
 
@@ -62,6 +60,6 @@ This Clojure project takes the output from the Hadoop news feed performance map 
 
 ## License
 
-Copyright © 2013 - 2016 Glenn Engstrand
+Copyright © 2013 - 2015 Glenn Engstrand
 
 Distributed under the Eclipse Public License, the same as Clojure.
