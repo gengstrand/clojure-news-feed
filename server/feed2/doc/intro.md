@@ -21,11 +21,16 @@ compile
 assembly
 exit
 
-export CACHE_SQL=yes
+append server/etcHosts4localhost to your /etc/hosts file
+
 export APP_CONFIG=etc/settings.properties
 
 java -DLOG_DIR=/tmp -DLOG_LEVEL=ALL -jar target/scala-2.11/news-feed-assembly-0.1.0-SNAPSHOT.jar
 ```
+
+### standing up the service in EC2
+
+There is a Dockerfile for doing this in the etc folder. You can also use the docker image https://hub.docker.com/r/gengstrand/scala-newsfeed/ instead. Be sure to add the following hosts when running the image; mysql_host, cassandra_host, redis_host, kafka_host, solr_host. The port to export is 8080.
 
 ### some sample test curl calls
 

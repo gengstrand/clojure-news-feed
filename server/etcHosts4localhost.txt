@@ -1,0 +1,5 @@
+127.0.0.1	mysql_host
+127.0.0.1	cassandra_host
+127.0.0.1	kafka_host
+127.0.0.1	redis_host
+127.0.0.1	solr_host

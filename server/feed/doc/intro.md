@@ -81,6 +81,8 @@ bin/solr start
 
 cd ~/git/clojure-news-feed/server/feed
 
+append server/etcHosts4localhost to your /etc/hosts file
+
 the tilde notation does not get honored here
 
 export APP_CONFIG=/home/glenn/git/clojure-news-feed/server/feed/etc/config.clj
@@ -113,6 +115,7 @@ run the load test tool
 
 ### standing up the service in EC2
 
-At the time of this writing, lein no longer can create an uberjar of this service so we have to run the service using the source code. For your convenience, there is a Dockerfile for doing this in the etc folder. You can also use the docker image https://hub.docker.com/r/gengstrand/clojure-newsfeed/ instead. Be sure to add the following hosts when running the image; mysql_host, cassandra_host, redis_host, kafka_host, solr_host.
+At the time of this writing, lein no longer can create an uberjar of this service so we have to run the service using the source code. For your convenience, there is a Dockerfile for doing this in the etc folder. You can also use the docker image https://hub.docker.com/r/gengstrand/clojure-newsfeed/ instead. Be sure to add the following hosts when running the image; mysql_host, cassandra_host, redis_host, kafka_host, solr_host. The port to export is 8080.
+
 
 

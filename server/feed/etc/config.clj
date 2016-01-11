@@ -1,11 +1,11 @@
-{:sql-host "127.0.0.1"
+{:sql-host "mysql_host"
  :sql-db-name "feed"
  :sql-db-user "feed"
- :sql-db-password "feed"
+ :sql-db-password "feed1234"
  :sql-vendor "mysql"
- :nosql-host "localhost"
+ :nosql-host "cassandra_host"
  :nosql-consistency "one" 
  :nosql-ttl 7776000 
- :cache-host "localhost"
- :messaging-host "localhost"
- :search-host "http://localhost:8983/solr/outbound"}
+ :cache-host "redis_host"
+ :messaging-host "kafka_host"
+ :search-host "http://solr_host:8983/solr/outbound"}
