@@ -23,7 +23,7 @@ compile
 assembly
 exit
 
-cat server/etcHosts4localhost /etc/hosts
+cat server/etcHosts4localhost >>/etc/hosts 
 
 export APP_CONFIG=etc/settings.properties
 
