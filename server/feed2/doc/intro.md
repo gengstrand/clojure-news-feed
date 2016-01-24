@@ -107,11 +107,11 @@ I used RDS where a database and credentials was set up.
 
 ##### Setting up MySql
 
-mysql -h $PUBLIC_IP -u feed -p feed <~/clojure-news-feed/server/feed/etc/schema.mysql.sql
+mysql -h $PUBLIC_IP -u feed -p feed <~/git/clojure-news-feed/server/feed/etc/schema.mysql.sql
 
 ##### Setting up PostgreSql
 
-psql -h $PUBLIC_IP -W feed feed <~/clojure-news-feed/server/feed/etc/schema.postgre.sql
+psql -h $PUBLIC_IP -W feed feed <~/git/clojure-news-feed/server/feed/etc/schema.postgre.sql
 
 #### Cassandra
 
@@ -127,7 +127,7 @@ bin/cassandra
 
 I ran this from my local laptop where the news feed project source is located.
 
-/usr/oss/src/apache-cassandra-2.1.11/bin/cqlsh $PUBLIC_IP <~/git/clojure-news-feed/server/feed/etc/schema.cassandra.sql
+~/oss/src/apache-cassandra-2.1.11/bin/cqlsh $PUBLIC_IP <~/git/clojure-news-feed/server/feed/etc/schema.cassandra.sql
 
 #### Redis
 
