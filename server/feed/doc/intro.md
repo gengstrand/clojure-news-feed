@@ -28,29 +28,24 @@ This is a fun learning adventure for writing non-trivial web services in clojure
 
 ### Initial, one time set up
 
+Here is some sample scripting in order to get you started. This script assumes that you cloned the github project into a folder called git that is a subfolder to your home directory.
+
+```bash
 cd ~/oss/kafka/kafka_2.11-0.8.2.2
-
 bin/kafka-topics.sh --create --zookeeper localhost:2181 --replication-factor 1 --partitions 1 --topic feed
-
 cd ~/apps/solr-5.3.1
-
 bin/solr create_core -c outbound
-
 Copy everything from the solr folder from this github repository to the ~/apps/solr-5.3.1/server/solr/outbound folder.
 
-create a feed database with a user/password of feed/feed
+# create a feed database with a user/password of feed/feed
 
 psql feed <~/git/clojure-news-feed/server/feed/etc/schema.postgre.sql
-
 cd ~/oss/apache-cassandra-2.1.11/bin
-
 ./cqlsh <~/git/clojure-news-feed/server/feed/etc/schema.cassandra.sql
-
 cd ~/git/clojure-news-feed/server/support
-
 mvn clean install
-
 cd ~/git/clojure-news-feed/server/feed
+```
 
 You may need to edit ~/git/clojure-news-feed/server/feed/etc/config.cli 
 and you will also need to set the APP_CONFIG environment variable too (see below).
@@ -61,61 +56,57 @@ lein ring uberjar
 
 ### starting all the services
 
+This is what I do when testing on my personal laptop.
+
+```bash
 cd ~/oss/apache-cassandra-2.1.11/bin
-
 ./cassandra -f
-
 cd ~/oss/kafka/kafka_2.11-0.8.2.2
-
 bin/zookeeper-server-start.sh config/zookeeper.properties
-
 bin/kafka-server-start.sh config/server.properties
-
 cd ~/oss/redis/redis-3.0.5/src 
-
 ./redis-server
-
 cd ~/apps/solr-5.3.1
-
 bin/solr start
-
 cd ~/git/clojure-news-feed/server/feed
 
-append server/etcHosts4localhost to your /etc/hosts file
+# append server/etcHosts4localhost to your /etc/hosts file
 
-the tilde notation does not get honored here
+# the tilde notation does not get honored here
 
 export APP_CONFIG=/home/glenn/git/clojure-news-feed/server/feed/etc/config.clj
-
 lein run
+```
 
 ### Testing
 
-curl -d name=Moe http://localhost:3000/participant/new
-
-curl -d name=Larry http://localhost:3000/participant/new
-
-curl -d name=Curly http://localhost:3000/participant/new
-
-curl -d from=1 -d to=2 http://localhost:3000/friends/new
-
-curl -d from=1 -d to=3 http://localhost:3000/friends/new
-
-curl -d from=1 -d occurred="2014-01-03" -d subject="testing service" -d story="full end to end testing of the service" http://localhost:3000/outbound/new
-
-curl http://localhost:3000/inbound/2
-
-curl -d terms=testing http://localhost:3000/outbound/search
-
 start a kafka consumer
 
+```bash
+cd ~/oss/kafka/kafka_2.11-0.8.2.2
 bin/kafka-console-consumer.sh --zookeeper localhost:2181 --topic feed --from-beginning
+```
 
-run the load test tool
+I also run the load test application when testing the service locally. I usually use 3 threads and query Solr 10% of the time.
+
+```bash
+curl -d name=Moe http://localhost:3000/participant/new
+curl -d name=Larry http://localhost:3000/participant/new
+curl -d name=Curly http://localhost:3000/participant/new
+curl -d from=1 -d to=2 http://localhost:3000/friends/new
+curl -d from=1 -d to=3 http://localhost:3000/friends/new
+curl -d from=1 -d occurred="2014-01-03" -d subject="testing service" -d story="full end to end testing of the service" http://localhost:3000/outbound/new
+curl http://localhost:3000/inbound/2
+curl -d terms=testing http://localhost:3000/outbound/search
+```
 
 ### standing up the service in EC2
 
-At the time of this writing, lein no longer can create an uberjar of this service so we have to run the service using the source code. For your convenience, there is a Dockerfile for doing this in the etc folder. You can also use the docker image https://hub.docker.com/r/gengstrand/clojure-newsfeed/ instead. Be sure to add the following hosts when running the image; mysql_host, cassandra_host, redis_host, kafka_host, solr_host. The port to export is 8080.
+At the time of this writing, lein no longer can create an uberjar of this service so we have to run the service using the source code. For your convenience, there is a Dockerfile for doing this in the etc folder.
 
+* You need to download the following open source archives into the same directory as from where you build the Dockerfile; Oracle JDK 7, Apache Maven, and Leiningen.
+* You may need to edit the Dockerfile to accomodate the versions of the open source projects downloaded.
+* The config.clj and the run.sh files need to be available in the folder where you build the Dockerfile too. Feel free to edit these files for your particular situtation. 
 
+You can also use the docker image https://hub.docker.com/r/gengstrand/clojure-newsfeed/ instead. Be sure to add the following hosts when running the image; mysql_host, cassandra_host, redis_host, kafka_host, solr_host. The port to export is 8080.
 
