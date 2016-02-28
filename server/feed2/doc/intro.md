@@ -3,7 +3,7 @@
 At the time of this writing, I am running on Vivid Vervet. Path names will be different depending on the versions of kafka, cassandra, redis, and solr that you installed.
 
 ```bash
-cd ~/oss/kafka/kafka_2.11-0.8.2.1
+cd ~/oss/kafka/kafka_2.11-0.9.0.1
 bin/zookeeper-server-start.sh config/zookeeper.properties
 bin/kafka-server-start.sh config/server.properties
 bin/kafka-console-consumer.sh --zookeeper 127.0.0.1:2181 --topic feed --from-beginning
@@ -180,4 +180,4 @@ bin/kafka-server-start.sh -daemon config/server.properties
 
 From my local laptop.
 
-~/oss/src/kafka_2.11-0.8.2.2/bin/kafka-topics.sh --create --zookeeper $PUBLIC_IP:2181 --replication-factor 1 --partitions 1 --topic feed
+~/oss/src/kafka_2.11-0.9.0.1/bin/kafka-topics.sh --create --zookeeper $PUBLIC_IP:2181 --replication-factor 1 --partitions 1 --topic feed

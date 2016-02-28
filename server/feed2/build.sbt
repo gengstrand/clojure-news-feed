@@ -45,7 +45,7 @@ libraryDependencies ++= Seq(
     "mysql"               %   "mysql-connector-java"  % "5.0.8",
     "postgresql"          %   "postgresql"    % "9.1-901.jdbc4",
     "com.datastax.cassandra"  % "cassandra-driver-core" % "2.1.4",
-    "org.apache.kafka"    %   "kafka-clients"    % "0.8.2.0",
+    "org.apache.kafka"    %   "kafka-clients"    % "0.9.0.1",
     "com.mchange"         %   "c3p0"          % "0.9.5",
     "com.dynamicalsoftware"   %   "feed.support.services"   %   "0.0.1-SNAPSHOT", 
     "org.apache.solr"	      %	  "solr-core"		    %	"5.3.1", 
