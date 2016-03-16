@@ -2,6 +2,8 @@ drop function if exists FetchFriends(in _fromParticipantID int);
 drop function if exists UpsertFriends(in _fromParticipantID int, in _toParticipantID int);
 drop function if exists FetchParticipant(in _participantID int);
 drop function if exists UpsertParticipant(in _moniker varchar(50));
+drop index if exists friends_fromid;
+drop index if exists friends_toid;
 drop table if exists Friends;
 drop table if exists Participant;
 drop sequence if exists Friends_seq;
@@ -19,6 +21,10 @@ create table Friends (
 id int not null primary key default nextval('Friends_seq'),
 fromid int not null references Participant(id),
 toid int not null references Participant(id));
+
+create index friends_fromid on Friends (fromid);
+
+create index friends_toid on Friends (toid);
 
 create function UpsertParticipant (
 in _moniker varchar(50)) 
