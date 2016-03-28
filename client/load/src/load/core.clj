@@ -3,8 +3,13 @@
 (require '[clojure.data.json :as json])
 (require '[clj-http.client :as client])
 
-(def host "localhost")
+(declare host)
 (def port "8080")
+
+(defn set-feed-host
+  "the ip address where the service is listening"
+  [feed-host]
+  (def host feed-host))
 
 (defn service-url
   "generate the proper RESTful service url"

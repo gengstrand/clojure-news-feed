@@ -8,7 +8,7 @@ Locate the host and port global variables in load.core and provide correct value
 
 lein uberjar
 
-java -jar target/load-0.1.0-SNAPSHOT-standalone.jar concurrent-users percent-searches
+java -jar target/load-0.1.0-SNAPSHOT-standalone.jar feed-host concurrent-users percent-searches
 
 ## License
 

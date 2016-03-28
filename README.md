@@ -1,6 +1,6 @@
 # clojure-news-feed
 
-I wanted to find out how the latest crop of modern web service technologies scale. So I wrote a basic news feed service in Clojure that uses a lot of modern open source supporting technology.
+I wanted to find out how the latest crop of modern web service technologies scale. So I wrote a basic news feed micro-service in Clojure that uses a lot of modern open source supporting technology.
 
 There is a big trend in Java right now to use new programming languages, designed to run in the Java Virtual Machine, that support Functional Programming concepts. Clojure is a variant of Lisp that is one of the leaders in this trend. The question that I wanted to answer was this. Is Clojure ready for deliverying services at web scale?
 
@@ -15,6 +15,10 @@ http://glennengstrand.info/software/architecture/oss/scala
 I blogged about the performance differences.
 
 http://glennengstrand.info/software/performance/scala/clojure
+
+I blogged about how this micro-service performs when running with MySql, with PostGreSql, and with Docker.
+
+http://glennengstrand.info/software/performance/mysql/postgres/docker
 
 ## server
 
@@ -55,6 +59,10 @@ The same map reduce job as NewsFeedPerformance only this time written in Clojure
 ### perf2
 
 The same map reduce job as NewsFeedPerformance only this time written Scala for Apache Spark.
+
+### perf3
+
+Instead of a map reduce job, the news feed performance data is aggregated once a minute and sent to elastic search.
 
 ### etl
 
