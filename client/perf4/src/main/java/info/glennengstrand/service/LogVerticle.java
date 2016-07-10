@@ -3,6 +3,11 @@ package info.glennengstrand.service;
 import io.vertx.core.AbstractVerticle;
 import io.vertx.core.http.HttpClient;
 import io.vertx.core.json.JsonObject;
+import akka.actor.ActorRef;
+import akka.actor.ActorSystem;
+import akka.actor.Props;
+import akka.actor.UntypedActor;
+import akka.japi.Creator;
 
 import java.time.Instant;
 import java.util.HashMap;
@@ -13,24 +18,23 @@ import java.util.Optional;
 import java.util.Random;
 import java.util.Timer;
 import java.util.TimerTask;
-import java.util.concurrent.CompletableFuture;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 
 public class LogVerticle extends AbstractVerticle {
-	private HttpClient client = null;
-	private Optional<String> elasticSearchHost = Optional.empty();
-	private Optional<String> elasticSearchIndex = Optional.empty();
-	private Optional<String> elasticSearchType = Optional.empty();
-	private Optional<Integer> elasticSearchPort = Optional.empty();
-	private Optional<Long> elasticSearchBatchInterval = Optional.empty();
+	private static HttpClient client = null;
+	private ActorRef perfActor = null;
+	private static Optional<String> elasticSearchHost = Optional.empty();
+	private static Optional<String> elasticSearchIndex = Optional.empty();
+	private static Optional<String> elasticSearchType = Optional.empty();
+	private static Optional<Integer> elasticSearchPort = Optional.empty();
+	private static Optional<Long> elasticSearchBatchInterval = Optional.empty();
 	private final Timer updateElasticSearchBatchJob = new Timer(true);
 	private final Random r = new Random(Instant.now().getEpochSecond());
-	private final List<PerformanceLogItem> logItems = new LinkedList<PerformanceLogItem>();
 	private static final Logger log = Logger.getLogger(LogVerticle.class.getCanonicalName());
 	private static final long UPDATE_ELASTICSEARCH_DURATION = 5000l;
 	
-	private void sendToElasticSearch(String path, String msg) {
+	private static void sendToElasticSearch(String path, String msg) {
 		log.finest(String.format("sending %s to %s\n", msg, path));
 		client.put(elasticSearchPort.orElse(9200), elasticSearchHost.orElse("localhost"), path, response -> {
 			int rc = response.statusCode();
@@ -39,7 +43,7 @@ public class LogVerticle extends AbstractVerticle {
 			}
 		}).end(msg);
 	}
-	private void sendToElasticSearch(PerformanceLogItem item) {
+	private static void sendToElasticSearch(PerformanceLogItem item) {
 		String path = String.format("/%s/%s/%s", elasticSearchIndex.orElse("performance"), elasticSearchType.orElse("feed"), item.getId());
 		String msg = item.toString();
 		sendToElasticSearch(path, msg);
@@ -56,6 +60,9 @@ public class LogVerticle extends AbstractVerticle {
 		  elasticSearchBatchInterval = Optional.ofNullable(es.get().getLong("interval"));
 	  }
 	  Optional<Integer> port = Optional.ofNullable(config().getInteger("port"));
+	  ActorSystem system = ActorSystem.create("perf-log");
+	  perfActor = system.actorOf(Props.create(PerformanceLogActor.class), "perf-log-handler");
+
 	  client = vertx.createHttpClient();
 	  updateElasticSearchBatchJob.schedule(new UpdateElasticSearch(), elasticSearchBatchInterval.orElse(UPDATE_ELASTICSEARCH_DURATION), elasticSearchBatchInterval.orElse(UPDATE_ELASTICSEARCH_DURATION));
 	  vertx.createHttpServer().requestHandler(req -> {
@@ -76,9 +83,7 @@ public class LogVerticle extends AbstractVerticle {
 							if (latencies.isPresent()) {
 								Optional<Long> duration = Optional.ofNullable(latencies.get().getLong("request"));
 								if (method.isPresent() && status.isPresent() && duration.isPresent()) {
-									synchronized(logItems) {
-										logItems.add(new PerformanceLogItem(entity, method.get(), status.get(), duration.get()));
-									}
+									perfActor.tell(new PerformanceLogItem(entity, method.get(), status.get(), duration.get()), perfActor);
 								} else {
 									log.warning("method, status, and/or duration is missing in " + body);
 								}
@@ -101,6 +106,7 @@ public class LogVerticle extends AbstractVerticle {
 		req.response().end();
 	  }).listen(port.orElse(8888));
   }
+  
   private class PerformanceLogItem {
 	  private final String entity;
 	  private final String method;
@@ -148,23 +154,42 @@ public class LogVerticle extends AbstractVerticle {
 		return new JsonObject(body).toString();
 	}
   }
+  
+  private class PerformanceLogBatchRequest {}
+  
   private class UpdateElasticSearch extends TimerTask {
+	private PerformanceLogBatchRequest req = new PerformanceLogBatchRequest();
 
 	@Override
 	public void run() {
+		perfActor.tell(req, perfActor);
+	}
+	  
+  }
+  
+  private static class PerformanceLogActor extends UntypedActor {
+	private final List<PerformanceLogItem> logItems = new LinkedList<PerformanceLogItem>();
+
+	@Override
+	public void onReceive(Object msg) throws Exception {
 		try {
-			synchronized(logItems) {
+			if (msg instanceof PerformanceLogItem) {
+				logItems.add((PerformanceLogItem)msg);
+			} else if (msg instanceof PerformanceLogBatchRequest) {
 				if (!logItems.isEmpty()) {
 				    Optional<String> batchBody = logItems.stream().map(item -> item.getMeta() + "\n" + item.toString() + "\n").reduce(String::concat);
 				    if (batchBody.isPresent()) {
-					sendToElasticSearch("/_bulk", batchBody.get());
+						sendToElasticSearch("/_bulk", batchBody.get());
 				    }
 					logItems.clear();
 				}
+			} else {
+				unhandled(msg);
 			}
 		} catch (Exception e) {
 			log.log(Level.WARNING, "encountered error while processing elastic search batch index: ", e);
 		}
+		
 	}
 	  
   }
