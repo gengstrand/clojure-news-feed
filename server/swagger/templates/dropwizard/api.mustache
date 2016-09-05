@@ -1,0 +1,52 @@
+{{>licenseInfo}}
+package {{package}};
+
+import com.google.inject.Inject;  
+import javax.ws.rs.GET;  
+import javax.ws.rs.POST;  
+import javax.ws.rs.PathParam;
+import javax.ws.rs.Path;
+import javax.ws.rs.Produces;
+import javax.ws.rs.Consumes;
+import javax.ws.rs.core.MediaType;
+import java.util.List;
+
+{{#imports}}import {{import}};
+{{/imports}}
+
+{{>generatedAnnotation}}
+{{#operations}}
+public class {{classname}} {
+
+   private final {{classname}}Service {{pathPrefix}}Service;
+	
+   @Inject
+   public {{classname}}({{classname}}Service {{pathPrefix}}Service) {
+      this.{{pathPrefix}}Service = {{pathPrefix}}Service;
+   }
+   {{#operation}}
+   @{{httpMethod}}
+   @Path("{{{path}}}")
+   {{#consumes}}
+   @Consumes("{{mediaType}}")
+   {{/consumes}}
+   {{#produces}}
+   @Produces("{{mediaType}}")
+   {{/produces}}
+  /**
+   * {{summary}}
+   * {{notes}}{{#allParams}}
+   * @param {{paramName}} {{description}}{{#required}} (required){{/required}}{{^required}} (optional{{#defaultValue}}, default to {{{.}}}{{/defaultValue}}){{/required}}{{/allParams}}{{#returnType}}
+   * @return {{{returnType}}}{{/returnType}}
+   */
+   public {{#returnType}}{{{returnType}}} {{/returnType}}{{^returnType}}void {{/returnType}}{{operationId}}({{#allParams}}{{#isPathParam}}@PathParam("{{paramName}}") {{/isPathParam}}{{{dataType}}} {{paramName}}{{#hasMore}}, {{/hasMore}}{{/allParams}}) {
+      return {{pathPrefix}}Service.{{operationId}}({{#allParams}}{{paramName}}{{#hasMore}}, {{/hasMore}}{{/allParams}});
+   }
+   {{/operation}}
+   public static interface {{classname}}Service {
+   {{#operation}}
+      {{#returnType}}{{{returnType}}} {{/returnType}}{{^returnType}}void {{/returnType}}{{operationId}}({{#allParams}}{{{dataType}}} {{paramName}}{{#hasMore}}, {{/hasMore}}{{/allParams}});
+   {{/operation}}
+   }
+}
+{{/operations}}
