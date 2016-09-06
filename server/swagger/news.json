@@ -1,0 +1,8 @@
+{
+    "library": "jersey2",
+    "artifactId": "newsfeed-swagger", 
+    "apiPackage": "info.glennengstrand.resources", 
+    "modelPackage": "info.glennengstrand.api",
+    "groupId": "info.glennengstrand", 
+    "artifactVersion": "1.0.0-SNAPSHOT"
+}

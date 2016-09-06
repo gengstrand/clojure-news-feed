@@ -1,0 +1,253 @@
+swagger: '2.0'
+info:
+  description: news feed api
+  version: 1.0.0
+  title: News Feed
+  termsOfService: 'https://www.eclipse.org/legal/epl-v10.html'
+  contact:
+    email: media@glennengstrand.info
+  license:
+    name: Apache 2.0
+    url: 'http://www.apache.org/licenses/LICENSE-2.0.html'
+host: glennengstrand.info
+basePath: /
+tags:
+  - name: participant
+    description: news feed participants
+  - name: friend
+    description: how participants are socially connected
+  - name: inbound
+    description: news from a participants friends
+  - name: outbound
+    description: news from a participant
+schemes:
+  - http
+paths:
+  '/participant/{id}':
+    get:
+      tags:
+        - participant
+      summary: retrieve an individual participant
+      description: fetch a participant by id
+      operationId: getParticipant
+      produces:
+        - application/json
+      parameters:
+        - name: id
+          in: path
+          description: uniquely identifies the participant
+          required: true
+          type: integer
+          format: int64
+      responses:
+        '200':
+          description: successful operation
+          schema:
+           $ref: '#/definitions/participant'
+  /participant/new:
+    post:
+      tags:
+        - participant
+      summary: create a new participant
+      description: a participant is someone who can post news to friends
+      operationId: addParticipant
+      consumes:
+        - application/json
+      produces:
+        - application/json
+      parameters:
+        - name: body
+          in: body
+          description: participant to be created
+          required: true
+          schema:
+           $ref: '#/definitions/participant'
+      responses:
+        '200':
+          description: successful operation
+          schema:
+           $ref: '#/definitions/participant'
+  '/friends/{id}':
+    get:
+      tags:
+        - friend
+      summary: retrieve an individual friend
+      description: fetch a friend by id
+      operationId: getFriend
+      produces:
+        - application/json
+      parameters:
+        - name: id
+          in: path
+          description: uniquely identifies the friend
+          required: true
+          type: integer
+          format: int64
+      responses:
+        '200':
+          description: successful operation
+          schema:
+           $ref: '#/definitions/friend'
+  /friends/new:
+    post:
+      tags:
+        - friend
+      summary: create a new friendship
+      description: friends are those participants who receive news
+      operationId: addFriend
+      consumes:
+        - application/json
+      produces:
+        - application/json
+      parameters:
+        - name: body
+          in: body
+          description: friendship to be created
+          required: true
+          schema:
+           $ref: '#/definitions/friend'
+      responses:
+        '200':
+          description: successful operation
+          schema:
+           $ref: '#/definitions/friend'
+  '/inbound/{id}':
+    get:
+      tags:
+        - inbound
+      summary: retrieve the inbound feed for an individual participant
+      description: fetch inbound feed by id
+      operationId: getInbound
+      produces:
+        - application/json
+      parameters:
+        - name: id
+          in: path
+          description: uniquely identifies the participant
+          required: true
+          type: integer
+          format: int64
+      responses:
+        '200':
+          description: successful operation
+          schema:
+           $ref: '#/definitions/inbound'
+  '/outbound/{id}':
+    get:
+      tags:
+        - outbound
+      summary: retrieve the news posted by an individual participant
+      description: fetch a participant news
+      operationId: getOutbound
+      produces:
+        - application/json
+      parameters:
+        - name: id
+          in: path
+          description: uniquely identifies the participant
+          required: true
+          type: integer
+          format: int64
+      responses:
+        '200':
+          description: successful operation
+          schema:
+            type: array
+            items:
+              $ref: '#/definitions/outbound'
+  /outbound/new:
+    post:
+      tags:
+        - outbound
+      summary: create a participant news item
+      description: socially broadcast participant news
+      operationId: addOutbound
+      consumes:
+        - application/json
+      produces:
+        - application/json
+      parameters:
+        - name: body
+          in: body
+          description: outbound news item
+          required: true
+          schema:
+           $ref: '#/definitions/outbound'
+      responses:
+        '200':
+          description: successful operation
+          schema:
+           $ref: '#/definitions/outbound'
+  /outbound/search:
+    post:
+      tags:
+        - outbound
+      summary: create a participant news item
+      description: keyword search of participant news
+      operationId: searchOutbound
+      produces:
+        - application/json
+      parameters:
+        - name: keywords
+          in: query
+          description: keywords to search for
+          required: true
+          type: string
+      responses:
+        '200':
+          description: successful operation
+          schema:
+            type: array
+            items:
+              $ref: '#/definitions/outbound'
+definitions:
+  participant:
+    type: object
+    properties:
+      id:
+        type: integer
+        format: int64
+      name:
+        type: string
+  friend:
+    type: object
+    properties:
+      id:
+        type: integer
+        format: int64
+      from:
+        type: integer
+        format: int64
+      to:
+        type: integer
+        format: int64
+  inbound:
+    type: object
+    properties:
+      from:
+        type: integer
+        format: int64
+      to:
+        type: integer
+        format: int64
+      occurred:
+        type: String
+        format: date-time
+      subject:
+        type: String
+      story:
+        type: String
+  outbound:
+    type: object
+    properties:
+      id:
+        type: integer
+        format: int64
+      occurred:
+        type: String
+        format: date-time
+      subject:
+        type: String
+      story:
+        type: String
+
