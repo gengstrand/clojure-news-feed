@@ -10,6 +10,7 @@ import javax.ws.rs.Produces;
 import javax.ws.rs.Consumes;
 import javax.ws.rs.core.MediaType;
 import java.util.List;
+import io.dropwizard.jersey.params.LongParam;
 
 {{#imports}}import {{import}};
 {{/imports}}
@@ -39,7 +40,7 @@ public class {{classname}} {
    * @param {{paramName}} {{description}}{{#required}} (required){{/required}}{{^required}} (optional{{#defaultValue}}, default to {{{.}}}{{/defaultValue}}){{/required}}{{/allParams}}{{#returnType}}
    * @return {{{returnType}}}{{/returnType}}
    */
-   public {{#returnType}}{{{returnType}}} {{/returnType}}{{^returnType}}void {{/returnType}}{{operationId}}({{#allParams}}{{#isPathParam}}@PathParam("{{paramName}}") {{/isPathParam}}{{{dataType}}} {{paramName}}{{#hasMore}}, {{/hasMore}}{{/allParams}}) {
+   public {{#returnType}}{{{returnType}}} {{/returnType}}{{^returnType}}void {{/returnType}}{{operationId}}({{#allParams}}{{#isPathParam}}@PathParam("{{paramName}}") {{/isPathParam}}{{{dataType}}}Param {{paramName}}{{#hasMore}}, {{/hasMore}}{{/allParams}}) {
       return {{pathPrefix}}Service.{{operationId}}({{#allParams}}{{paramName}}{{#hasMore}}, {{/hasMore}}{{/allParams}});
    }
    {{/operation}}

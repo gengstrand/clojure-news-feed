@@ -1,0 +1,64 @@
+# FriendApi
+
+All URIs are relative to *http://glennengstrand.info/*
+
+Method | HTTP request | Description
+------------- | ------------- | -------------
+[**addFriend**](FriendApi.md#addFriend) | **POST** /friends/new | create a new friendship
+[**getFriend**](FriendApi.md#getFriend) | **GET** /friends/{id} | retrieve an individual friend
+
+
+<a name="addFriend"></a>
+# **addFriend**
+> Friend addFriend(body)
+
+create a new friendship
+
+friends are those participants who receive news
+
+### Parameters
+
+Name | Type | Description  | Notes
+------------- | ------------- | ------------- | -------------
+ **body** | [**Friend**](Friend.md)| friendship to be created |
+
+### Return type
+
+[**Friend**](Friend.md)
+
+### Authorization
+
+No authorization required
+
+### HTTP request headers
+
+ - **Content-Type**: application/json
+ - **Accept**: application/json
+
+<a name="getFriend"></a>
+# **getFriend**
+> Friend getFriend(id)
+
+retrieve an individual friend
+
+fetch a friend by id
+
+### Parameters
+
+Name | Type | Description  | Notes
+------------- | ------------- | ------------- | -------------
+ **id** | **Long**| uniquely identifies the friend |
+
+### Return type
+
+[**Friend**](Friend.md)
+
+### Authorization
+
+No authorization required
+
+### HTTP request headers
+
+ - **Content-Type**: Not defined
+ - **Accept**: application/json
+

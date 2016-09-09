@@ -1,0 +1,1136 @@
+DEBUG  [23:22:54.769] [main] j.m.mbeanserver -   name = io.dropwizard:type=Logging 
+DEBUG  [23:22:54.773] [main] j.m.mbeanserver -  ObjectName = io.dropwizard:type=Logging 
+DEBUG  [23:22:54.774] [main] j.m.mbeanserver -  name = io.dropwizard:type=Logging 
+DEBUG  [23:22:54.774] [main] j.m.mbeanserver -  Send create notification of object io.dropwizard:type=Logging 
+DEBUG  [23:22:54.774] [main] j.m.mbeanserver -  JMX.mbean.registered io.dropwizard:type=Logging 
+DEBUG  [23:22:54.789] [main] j.m.mbeanserver -  ObjectName = metrics:name=ch.qos.logback.core.Appender.all 
+DEBUG  [23:22:54.790] [main] j.m.mbeanserver -  name = metrics:name=ch.qos.logback.core.Appender.all 
+DEBUG  [23:22:54.791] [main] j.m.mbeanserver -  Send create notification of object metrics:name=ch.qos.logback.core.Appender.all 
+DEBUG  [23:22:54.791] [main] j.m.mbeanserver -  JMX.mbean.registered metrics:name=ch.qos.logback.core.Appender.all 
+DEBUG  [23:22:54.793] [main] j.m.mbeanserver -  ObjectName = metrics:name=ch.qos.logback.core.Appender.trace 
+DEBUG  [23:22:54.793] [main] j.m.mbeanserver -  name = metrics:name=ch.qos.logback.core.Appender.trace 
+DEBUG  [23:22:54.793] [main] j.m.mbeanserver -  Send create notification of object metrics:name=ch.qos.logback.core.Appender.trace 
+DEBUG  [23:22:54.793] [main] j.m.mbeanserver -  JMX.mbean.registered metrics:name=ch.qos.logback.core.Appender.trace 
+DEBUG  [23:22:54.793] [main] j.m.mbeanserver -  ObjectName = metrics:name=ch.qos.logback.core.Appender.debug 
+DEBUG  [23:22:54.793] [main] j.m.mbeanserver -  name = metrics:name=ch.qos.logback.core.Appender.debug 
+DEBUG  [23:22:54.794] [main] j.m.mbeanserver -  Send create notification of object metrics:name=ch.qos.logback.core.Appender.debug 
+DEBUG  [23:22:54.794] [main] j.m.mbeanserver -  JMX.mbean.registered metrics:name=ch.qos.logback.core.Appender.debug 
+DEBUG  [23:22:54.794] [main] j.m.mbeanserver -  ObjectName = metrics:name=ch.qos.logback.core.Appender.info 
+DEBUG  [23:22:54.794] [main] j.m.mbeanserver -  name = metrics:name=ch.qos.logback.core.Appender.info 
+DEBUG  [23:22:54.794] [main] j.m.mbeanserver -  Send create notification of object metrics:name=ch.qos.logback.core.Appender.info 
+DEBUG  [23:22:54.794] [main] j.m.mbeanserver -  JMX.mbean.registered metrics:name=ch.qos.logback.core.Appender.info 
+DEBUG  [23:22:54.795] [main] j.m.mbeanserver -  ObjectName = metrics:name=ch.qos.logback.core.Appender.warn 
+DEBUG  [23:22:54.795] [main] j.m.mbeanserver -  name = metrics:name=ch.qos.logback.core.Appender.warn 
+DEBUG  [23:22:54.798] [main] j.m.mbeanserver -  Send create notification of object metrics:name=ch.qos.logback.core.Appender.warn 
+DEBUG  [23:22:54.798] [main] j.m.mbeanserver -  JMX.mbean.registered metrics:name=ch.qos.logback.core.Appender.warn 
+DEBUG  [23:22:54.799] [main] j.m.mbeanserver -  ObjectName = metrics:name=ch.qos.logback.core.Appender.error 
+DEBUG  [23:22:54.800] [main] j.m.mbeanserver -  name = metrics:name=ch.qos.logback.core.Appender.error 
+DEBUG  [23:22:54.800] [main] j.m.mbeanserver -  Send create notification of object metrics:name=ch.qos.logback.core.Appender.error 
+DEBUG  [23:22:54.801] [main] j.m.mbeanserver -  JMX.mbean.registered metrics:name=ch.qos.logback.core.Appender.error 
+DEBUG  [23:22:54.828] [main] o.e.j.u.log -  Logging to Logger[org.eclipse.jetty.util.log] via org.eclipse.jetty.util.log.Slf4jLog 
+INFO   [23:22:54.832] [main] o.e.j.u.log -  Logging initialized @4280ms 
+DEBUG  [23:22:54.849] [main] o.e.j.u.DecoratedObjectFactory -  Adding Decorator: org.eclipse.jetty.util.DeprecationWarning@6974a715 
+DEBUG  [23:22:54.859] [main] o.e.j.u.c.ContainerLifeCycle -  i.d.j.MutableServletContextHandler@3af37506{/,null,null} added {org.eclipse.jetty.servlet.ServletHandler@4e6d7365,MANAGED} 
+DEBUG  [23:22:54.861] [main] o.e.j.u.DecoratedObjectFactory -  Adding Decorator: org.eclipse.jetty.util.DeprecationWarning@21ae6e73 
+DEBUG  [23:22:54.861] [main] o.e.j.u.c.ContainerLifeCycle -  i.d.j.MutableServletContextHandler@47dd778{/,null,null} added {org.eclipse.jetty.servlet.ServletHandler@15515c51,MANAGED} 
+DEBUG  [23:22:54.894] [main] o.e.j.u.c.ContainerLifeCycle -  org.eclipse.jetty.servlet.ServletHandler@15515c51 added {tasks@6907b8e==io.dropwizard.servlets.tasks.TaskServlet,1,true,AUTO} 
+DEBUG  [23:22:54.897] [main] o.e.j.u.c.ContainerLifeCycle -  org.eclipse.jetty.servlet.ServletHandler@15515c51 added {[/tasks/*]=>tasks,POJO} 
+DEBUG  [23:22:54.949] [main] o.g.j.i.u.ReflectionHelper -  Unable to load class org.osgi.framework.BundleReference using the current class loader. 
+java.lang.ClassNotFoundException: org.osgi.framework.BundleReference
+	at java.net.URLClassLoader.findClass(URLClassLoader.java:381)
+	at java.lang.ClassLoader.loadClass(ClassLoader.java:424)
+	at sun.misc.Launcher$AppClassLoader.loadClass(Launcher.java:331)
+	at java.lang.ClassLoader.loadClass(ClassLoader.java:357)
+	at java.lang.Class.forName0(Native Method)
+	at java.lang.Class.forName(Class.java:264)
+	at org.glassfish.jersey.internal.util.ReflectionHelper$2.run(ReflectionHelper.java:268)
+	at org.glassfish.jersey.internal.util.ReflectionHelper$2.run(ReflectionHelper.java:253)
+	at java.security.AccessController.doPrivileged(Native Method)
+	at org.glassfish.jersey.internal.util.ReflectionHelper.<clinit>(ReflectionHelper.java:1479)
+	at org.glassfish.jersey.server.ResourceConfig$State.<init>(ResourceConfig.java:115)
+	at org.glassfish.jersey.server.ResourceConfig.<init>(ResourceConfig.java:356)
+	at io.dropwizard.jersey.DropwizardResourceConfig.<init>(DropwizardResourceConfig.java:48)
+	at io.dropwizard.jersey.DropwizardResourceConfig.<init>(DropwizardResourceConfig.java:40)
+	at io.dropwizard.setup.Environment.<init>(Environment.java:76)
+	at io.dropwizard.cli.EnvironmentCommand.run(EnvironmentCommand.java:37)
+	at io.dropwizard.cli.ConfiguredCommand.run(ConfiguredCommand.java:85)
+	at io.dropwizard.cli.Cli.run(Cli.java:75)
+	at io.dropwizard.Application.run(Application.java:79)
+	at info.glennengstrand.NewsFeedApplication.main(NewsFeedApplication.java:22)
+INFO   [23:22:55.015] [main] i.d.s.SimpleServerFactory -  Registering jersey handler with root path prefix: /application 
+INFO   [23:22:55.015] [main] i.d.s.SimpleServerFactory -  Registering admin handler with root path prefix: /admin 
+DEBUG  [23:22:55.018] [main] o.e.j.u.c.ContainerLifeCycle -  org.eclipse.jetty.servlet.ServletHandler@4e6d7365 added {Guice Filter,AUTO} 
+DEBUG  [23:22:55.026] [main] o.e.j.u.c.ContainerLifeCycle -  org.eclipse.jetty.servlet.ServletHandler@4e6d7365 added {[/application*]/[]==0=>Guice Filter,POJO} 
+INFO   [23:22:55.036] [main] c.h.d.g.AutoConfig -  Added resource class: class info.glennengstrand.resources.ParticipantApi 
+INFO   [23:22:55.036] [main] i.d.s.SimpleServerFactory -  Registering jersey handler with root path prefix: /application 
+INFO   [23:22:55.036] [main] i.d.s.SimpleServerFactory -  Registering admin handler with root path prefix: /admin 
+INFO   [23:22:55.039] [main] i.d.s.ServerFactory -  Starting NewsFeed 
+DEBUG  [23:22:55.053] [main] o.e.j.u.c.ContainerLifeCycle -  org.eclipse.jetty.server.Server@1813f3e9 added {dw{STOPPED,8<=0<=1024,i=0,q=0},AUTO} 
+DEBUG  [23:22:55.055] [main] o.e.j.u.c.ContainerLifeCycle -  org.eclipse.jetty.server.Server@1813f3e9 added {io.dropwizard.lifecycle.ExecutorServiceManager@28cb9120(TimeBoundHealthCheck-pool-%d),AUTO} 
+DEBUG  [23:22:55.059] [main] o.e.j.u.c.ContainerLifeCycle -  org.eclipse.jetty.server.Server@1813f3e9 added {org.eclipse.jetty.server.handler.ErrorHandler@a10c1b5,AUTO} 
+DEBUG  [23:22:55.060] [main] o.e.j.u.c.ContainerLifeCycle -  org.eclipse.jetty.servlet.ServletHandler@4e6d7365 added {io.dropwizard.jersey.filter.AllowedMethodsFilter-1a411233,AUTO} 
+DEBUG  [23:22:55.061] [main] o.e.j.u.c.ContainerLifeCycle -  org.eclipse.jetty.servlet.ServletHandler@4e6d7365 added {[/*]/[]==1=>io.dropwizard.jersey.filter.AllowedMethodsFilter-1a411233,POJO} 
+DEBUG  [23:22:55.063] [main] o.e.j.u.c.ContainerLifeCycle -  org.eclipse.jetty.servlet.ServletHandler@4e6d7365 added {io.dropwizard.servlets.ThreadNameFilter-4d847d32,AUTO} 
+DEBUG  [23:22:55.063] [main] o.e.j.u.c.ContainerLifeCycle -  org.eclipse.jetty.servlet.ServletHandler@4e6d7365 added {[/*]/[]==1=>io.dropwizard.servlets.ThreadNameFilter-4d847d32,POJO} 
+DEBUG  [23:22:55.087] [main] o.e.j.u.c.ContainerLifeCycle -  org.eclipse.jetty.servlet.ServletHandler@4e6d7365 added {io.dropwizard.jersey.setup.JerseyServletContainer-7b44b63d@409ad44e==io.dropwizard.jersey.setup.JerseyServletContainer,1,true,AUTO} 
+DEBUG  [23:22:55.088] [main] o.e.j.u.c.ContainerLifeCycle -  org.eclipse.jetty.servlet.ServletHandler@4e6d7365 added {[/*]=>io.dropwizard.jersey.setup.JerseyServletContainer-7b44b63d,POJO} 
+DEBUG  [23:22:55.091] [main] o.e.j.u.c.ContainerLifeCycle -  com.codahale.metrics.jetty9.InstrumentedHandler@1136b469 added {i.d.j.MutableServletContextHandler@3af37506{/application,null,null},MANAGED} 
+DEBUG  [23:22:55.101] [main] o.e.j.u.c.ContainerLifeCycle -  org.eclipse.jetty.servlet.ServletHandler@15515c51 added {com.codahale.metrics.servlets.AdminServlet-29182679@f60e5c5c==com.codahale.metrics.servlets.AdminServlet,1,true,AUTO} 
+DEBUG  [23:22:55.102] [main] o.e.j.u.c.ContainerLifeCycle -  org.eclipse.jetty.servlet.ServletHandler@15515c51 added {[/*]=>com.codahale.metrics.servlets.AdminServlet-29182679,POJO} 
+DEBUG  [23:22:55.103] [main] o.e.j.u.c.ContainerLifeCycle -  org.eclipse.jetty.servlet.ServletHandler@15515c51 added {io.dropwizard.jersey.filter.AllowedMethodsFilter-57bd802b,AUTO} 
+DEBUG  [23:22:55.104] [main] o.e.j.u.c.ContainerLifeCycle -  org.eclipse.jetty.servlet.ServletHandler@15515c51 added {[/*]/[]==1=>io.dropwizard.jersey.filter.AllowedMethodsFilter-57bd802b,POJO} 
+DEBUG  [23:22:55.135] [main] o.e.j.u.c.ContainerLifeCycle -  HttpConnectionFactory@cda0432[HTTP/1.1] added {HttpConfiguration@7c211fd0{32768/8192,8192/8192,https://:0,[ForwardedRequestCustomizer@7004e3d]},POJO} 
+DEBUG  [23:22:55.153] [main] j.m.mbeanserver -  ObjectName = metrics:name=org.eclipse.jetty.server.HttpConnectionFactory.8080.connections 
+DEBUG  [23:22:55.153] [main] j.m.mbeanserver -  name = metrics:name=org.eclipse.jetty.server.HttpConnectionFactory.8080.connections 
+DEBUG  [23:22:55.153] [main] j.m.mbeanserver -  Send create notification of object metrics:name=org.eclipse.jetty.server.HttpConnectionFactory.8080.connections 
+DEBUG  [23:22:55.153] [main] j.m.mbeanserver -  JMX.mbean.registered metrics:name=org.eclipse.jetty.server.HttpConnectionFactory.8080.connections 
+DEBUG  [23:22:55.154] [main] o.e.j.u.c.ContainerLifeCycle -  io.dropwizard.jetty.Jetty93InstrumentedConnectionFactory@71c905a3 added {HttpConnectionFactory@cda0432[HTTP/1.1],AUTO} 
+DEBUG  [23:22:55.159] [main] o.e.j.u.c.ContainerLifeCycle -  ServerConnector@6f099cef{null,[]}{0.0.0.0:0} added {org.eclipse.jetty.server.Server@1813f3e9,UNMANAGED} 
+DEBUG  [23:22:55.160] [main] o.e.j.u.c.ContainerLifeCycle -  ServerConnector@6f099cef{null,[]}{0.0.0.0:0} added {dw{STOPPED,8<=0<=1024,i=0,q=0},AUTO} 
+DEBUG  [23:22:55.160] [main] o.e.j.u.c.ContainerLifeCycle -  ServerConnector@6f099cef{null,[]}{0.0.0.0:0} added {org.eclipse.jetty.util.thread.ScheduledExecutorScheduler@baf1bb3,AUTO} 
+DEBUG  [23:22:55.161] [main] o.e.j.u.c.ContainerLifeCycle -  ServerConnector@6f099cef{null,[]}{0.0.0.0:0} added {org.eclipse.jetty.io.ArrayByteBufferPool@afb5821,POJO} 
+DEBUG  [23:22:55.162] [main] o.e.j.u.c.ContainerLifeCycle -  ServerConnector@6f099cef{null,[http/1.1]}{0.0.0.0:0} added {io.dropwizard.jetty.Jetty93InstrumentedConnectionFactory@71c905a3,AUTO} 
+DEBUG  [23:22:55.162] [main] o.e.j.s.AbstractConnector -  ServerConnector@6f099cef{HTTP/1.1,[http/1.1]}{0.0.0.0:0} added io.dropwizard.jetty.Jetty93InstrumentedConnectionFactory@71c905a3 
+DEBUG  [23:22:55.168] [main] o.e.j.u.c.ContainerLifeCycle -  ServerConnector@6f099cef{HTTP/1.1,[http/1.1]}{0.0.0.0:0} added {org.eclipse.jetty.server.ServerConnector$ServerConnectorManager@1d207fad,MANAGED} 
+DEBUG  [23:22:55.191] [main] o.e.j.u.c.ContainerLifeCycle -  org.eclipse.jetty.server.Server@1813f3e9 added {NewsFeed@6f099cef{HTTP/1.1,[http/1.1]}{0.0.0.0:8080},AUTO} 
+DEBUG  [23:22:55.196] [main] o.e.j.u.c.ContainerLifeCycle -  io.dropwizard.jetty.ContextRoutingHandler@9a7a808 added {com.codahale.metrics.jetty9.InstrumentedHandler@1136b469,AUTO} 
+DEBUG  [23:22:55.196] [main] o.e.j.u.c.ContainerLifeCycle -  io.dropwizard.jetty.ContextRoutingHandler@9a7a808 added {i.d.j.MutableServletContextHandler@47dd778{/admin,null,null},AUTO} 
+DEBUG  [23:22:55.211] [main] o.e.j.h.PreEncodedHttpField -  HttpField encoders loaded: [org.eclipse.jetty.http.Http1FieldPreEncoder@5e840abf] 
+DEBUG  [23:22:55.225] [main] o.e.j.s.h.g.GzipHandler -  io.dropwizard.jetty.BiDiGzipHandler@749f539e mime types IncludeExclude@5ca1f591{i=[],ip=org.eclipse.jetty.util.IncludeExclude$SetContainsPredicate@551de37d,e=[image/ief, image/vnd.wap.wbmp, image/jpeg, application/bzip2, image/x-portable-graymap, image/bmp, image/gif, image/x-icon, audio/midi, video/x-msvideo, image/x-xbitmap, application/x-rar-compressed, image/x-portable-bitmap, image/x-rgb, image/x-cmu-raster, application/gzip, audio/x-wav, audio/basic, audio/x-pn-realaudio, application/compress, audio/x-aiff, video/x.ms.asx, video/x.ms.asf, image/png, video/vnd.rn-realvideo, image/x-xwindowdump, image/jpeg2000, video/x-sgi-movie, audio/mpeg, image/xcf, video/mpeg, image/x-portable-pixmap, image/tiff, image/x-portable-anymap, image/x-xpixmap, application/zip, video/quicktime],ep=org.eclipse.jetty.util.IncludeExclude$SetContainsPredicate@6ef81f31} 
+DEBUG  [23:22:55.225] [main] o.e.j.u.c.ContainerLifeCycle -  io.dropwizard.jetty.BiDiGzipHandler@749f539e added {io.dropwizard.jetty.ContextRoutingHandler@9a7a808,MANAGED} 
+DEBUG  [23:22:55.250] [main] o.e.j.u.c.ContainerLifeCycle -  org.eclipse.jetty.server.handler.RequestLogHandler@a7f0ab6 added {null,POJO} 
+DEBUG  [23:22:55.250] [main] o.e.j.u.c.ContainerLifeCycle -  org.eclipse.jetty.server.Server@1813f3e9 added {null,POJO} 
+DEBUG  [23:22:55.250] [main] o.e.j.u.c.ContainerLifeCycle -  org.eclipse.jetty.server.handler.RequestLogHandler@a7f0ab6 added {io.dropwizard.jetty.BiDiGzipHandler@749f539e,MANAGED} 
+DEBUG  [23:22:55.261] [main] o.e.j.u.c.ContainerLifeCycle -  org.eclipse.jetty.server.handler.StatisticsHandler@24a298a6 added {org.eclipse.jetty.server.handler.RequestLogHandler@a7f0ab6,MANAGED} 
+DEBUG  [23:22:55.261] [main] o.e.j.u.c.ContainerLifeCycle -  org.eclipse.jetty.server.Server@1813f3e9 added {org.eclipse.jetty.server.handler.StatisticsHandler@24a298a6,MANAGED} 
+DEBUG  [23:22:55.262] [main] o.e.j.u.c.AbstractLifeCycle -  starting org.eclipse.jetty.server.Server@1813f3e9 
+DEBUG  [23:22:55.266] [main] o.e.j.u.c.AbstractLifeCycle -  starting dw{STOPPED,8<=0<=1024,i=0,q=0} 
+DEBUG  [23:22:55.271] [main] j.m.mbeanserver -  ObjectName = metrics:name=org.eclipse.jetty.util.thread.QueuedThreadPool.dw.utilization 
+DEBUG  [23:22:55.271] [main] j.m.mbeanserver -  name = metrics:name=org.eclipse.jetty.util.thread.QueuedThreadPool.dw.utilization 
+DEBUG  [23:22:55.271] [main] j.m.mbeanserver -  Send create notification of object metrics:name=org.eclipse.jetty.util.thread.QueuedThreadPool.dw.utilization 
+DEBUG  [23:22:55.271] [main] j.m.mbeanserver -  JMX.mbean.registered metrics:name=org.eclipse.jetty.util.thread.QueuedThreadPool.dw.utilization 
+DEBUG  [23:22:55.272] [main] j.m.mbeanserver -  ObjectName = metrics:name=org.eclipse.jetty.util.thread.QueuedThreadPool.dw.utilization-max 
+DEBUG  [23:22:55.273] [main] j.m.mbeanserver -  name = metrics:name=org.eclipse.jetty.util.thread.QueuedThreadPool.dw.utilization-max 
+DEBUG  [23:22:55.273] [main] j.m.mbeanserver -  Send create notification of object metrics:name=org.eclipse.jetty.util.thread.QueuedThreadPool.dw.utilization-max 
+DEBUG  [23:22:55.273] [main] j.m.mbeanserver -  JMX.mbean.registered metrics:name=org.eclipse.jetty.util.thread.QueuedThreadPool.dw.utilization-max 
+DEBUG  [23:22:55.274] [main] j.m.mbeanserver -  ObjectName = metrics:name=org.eclipse.jetty.util.thread.QueuedThreadPool.dw.size 
+DEBUG  [23:22:55.274] [main] j.m.mbeanserver -  name = metrics:name=org.eclipse.jetty.util.thread.QueuedThreadPool.dw.size 
+DEBUG  [23:22:55.274] [main] j.m.mbeanserver -  Send create notification of object metrics:name=org.eclipse.jetty.util.thread.QueuedThreadPool.dw.size 
+DEBUG  [23:22:55.274] [main] j.m.mbeanserver -  JMX.mbean.registered metrics:name=org.eclipse.jetty.util.thread.QueuedThreadPool.dw.size 
+DEBUG  [23:22:55.275] [main] j.m.mbeanserver -  ObjectName = metrics:name=org.eclipse.jetty.util.thread.QueuedThreadPool.dw.jobs 
+DEBUG  [23:22:55.276] [main] j.m.mbeanserver -  name = metrics:name=org.eclipse.jetty.util.thread.QueuedThreadPool.dw.jobs 
+DEBUG  [23:22:55.276] [main] j.m.mbeanserver -  Send create notification of object metrics:name=org.eclipse.jetty.util.thread.QueuedThreadPool.dw.jobs 
+DEBUG  [23:22:55.276] [main] j.m.mbeanserver -  JMX.mbean.registered metrics:name=org.eclipse.jetty.util.thread.QueuedThreadPool.dw.jobs 
+DEBUG  [23:22:55.276] [main] o.e.j.u.c.AbstractLifeCycle -  STARTED @4724ms dw{STARTED,8<=8<=1024,i=6,q=0} 
+DEBUG  [23:22:55.301] [main] o.e.j.u.c.ContainerLifeCycle -  NewsFeed@6f099cef{HTTP/1.1,[http/1.1]}{0.0.0.0:8080} added {sun.nio.ch.ServerSocketChannelImpl[/0:0:0:0:0:0:0:0:8080],POJO} 
+INFO   [23:22:55.302] [main] o.e.j.s.SetUIDListener -  Opened NewsFeed@6f099cef{HTTP/1.1,[http/1.1]}{0.0.0.0:8080} 
+DEBUG  [23:22:55.302] [main] i.d.l.s.LifecycleEnvironment -  managed objects = [io.dropwizard.lifecycle.ExecutorServiceManager@28cb9120(TimeBoundHealthCheck-pool-%d)] 
+INFO   [23:22:55.307] [main] o.e.j.s.Server -  jetty-9.3.z-SNAPSHOT 
+DEBUG  [23:22:55.341] [main] o.e.j.s.h.AbstractHandler -  starting org.eclipse.jetty.server.Server@1813f3e9 
+DEBUG  [23:22:55.346] [main] o.e.j.u.c.AbstractLifeCycle -  starting io.dropwizard.lifecycle.ExecutorServiceManager@28cb9120(TimeBoundHealthCheck-pool-%d) 
+DEBUG  [23:22:55.346] [main] o.e.j.u.c.AbstractLifeCycle -  STARTED @4794ms io.dropwizard.lifecycle.ExecutorServiceManager@28cb9120(TimeBoundHealthCheck-pool-%d) 
+DEBUG  [23:22:55.346] [main] o.e.j.u.c.AbstractLifeCycle -  starting org.eclipse.jetty.server.handler.ErrorHandler@a10c1b5 
+DEBUG  [23:22:55.346] [main] o.e.j.s.h.AbstractHandler -  starting org.eclipse.jetty.server.handler.ErrorHandler@a10c1b5 
+DEBUG  [23:22:55.346] [main] o.e.j.u.c.AbstractLifeCycle -  STARTED @4794ms org.eclipse.jetty.server.handler.ErrorHandler@a10c1b5 
+DEBUG  [23:22:55.347] [main] o.e.j.u.c.AbstractLifeCycle -  starting org.eclipse.jetty.server.handler.StatisticsHandler@24a298a6 
+DEBUG  [23:22:55.347] [main] o.e.j.s.h.AbstractHandler -  starting org.eclipse.jetty.server.handler.StatisticsHandler@24a298a6 
+DEBUG  [23:22:55.348] [main] o.e.j.u.c.AbstractLifeCycle -  starting org.eclipse.jetty.server.handler.RequestLogHandler@a7f0ab6 
+DEBUG  [23:22:55.348] [main] o.e.j.s.h.AbstractHandler -  starting org.eclipse.jetty.server.handler.RequestLogHandler@a7f0ab6 
+DEBUG  [23:22:55.348] [main] o.e.j.u.c.AbstractLifeCycle -  starting io.dropwizard.jetty.BiDiGzipHandler@749f539e 
+DEBUG  [23:22:55.350] [main] o.e.j.s.h.AbstractHandler -  starting io.dropwizard.jetty.BiDiGzipHandler@749f539e 
+DEBUG  [23:22:55.351] [main] o.e.j.u.c.AbstractLifeCycle -  starting io.dropwizard.jetty.ContextRoutingHandler@9a7a808 
+DEBUG  [23:22:55.351] [main] o.e.j.s.h.AbstractHandler -  starting io.dropwizard.jetty.ContextRoutingHandler@9a7a808 
+DEBUG  [23:22:55.351] [main] o.e.j.u.c.AbstractLifeCycle -  starting com.codahale.metrics.jetty9.InstrumentedHandler@1136b469 
+DEBUG  [23:22:55.351] [main] o.e.j.s.h.AbstractHandler -  starting com.codahale.metrics.jetty9.InstrumentedHandler@1136b469 
+DEBUG  [23:22:55.351] [main] o.e.j.u.c.AbstractLifeCycle -  starting i.d.j.MutableServletContextHandler@3af37506{/application,null,null} 
+DEBUG  [23:22:55.353] [main] o.e.j.s.h.AbstractHandler -  starting i.d.j.MutableServletContextHandler@3af37506{/application,null,STARTING} 
+DEBUG  [23:22:55.353] [main] o.e.j.u.c.AbstractLifeCycle -  starting org.eclipse.jetty.servlet.ServletHandler@4e6d7365 
+DEBUG  [23:22:55.360] [main] o.e.j.s.ServletHandler -  Chose path=/* mapped to servlet=io.dropwizard.jersey.setup.JerseyServletContainer-7b44b63d from default=false 
+DEBUG  [23:22:55.362] [main] o.e.j.s.ServletHandler -  filterNameMap={io.dropwizard.servlets.ThreadNameFilter-4d847d32=io.dropwizard.servlets.ThreadNameFilter-4d847d32, io.dropwizard.jersey.filter.AllowedMethodsFilter-1a411233=io.dropwizard.jersey.filter.AllowedMethodsFilter-1a411233, Guice Filter=Guice Filter} 
+DEBUG  [23:22:55.363] [main] o.e.j.s.ServletHandler -  pathFilters=[[/application*]/[]==0=>Guice Filter, [/*]/[]==1=>io.dropwizard.jersey.filter.AllowedMethodsFilter-1a411233, [/*]/[]==1=>io.dropwizard.servlets.ThreadNameFilter-4d847d32] 
+DEBUG  [23:22:55.363] [main] o.e.j.s.ServletHandler -  servletFilterMap={} 
+DEBUG  [23:22:55.364] [main] o.e.j.s.ServletHandler -  servletPathMap={/*=io.dropwizard.jersey.setup.JerseyServletContainer-7b44b63d@409ad44e==io.dropwizard.jersey.setup.JerseyServletContainer,1,true} 
+DEBUG  [23:22:55.364] [main] o.e.j.s.ServletHandler -  servletNameMap={io.dropwizard.jersey.setup.JerseyServletContainer-7b44b63d=io.dropwizard.jersey.setup.JerseyServletContainer-7b44b63d@409ad44e==io.dropwizard.jersey.setup.JerseyServletContainer,1,true} 
+DEBUG  [23:22:55.365] [main] o.e.j.s.ServletHandler -  Adding Default404Servlet to org.eclipse.jetty.servlet.ServletHandler@4e6d7365 
+DEBUG  [23:22:55.374] [main] o.e.j.u.c.ContainerLifeCycle -  org.eclipse.jetty.servlet.ServletHandler@4e6d7365 added {org.eclipse.jetty.servlet.ServletHandler$Default404Servlet-15923407@97096f79==org.eclipse.jetty.servlet.ServletHandler$Default404Servlet,-1,false,AUTO} 
+DEBUG  [23:22:55.374] [main] o.e.j.u.c.ContainerLifeCycle -  org.eclipse.jetty.servlet.ServletHandler@4e6d7365 added {[/]=>org.eclipse.jetty.servlet.ServletHandler$Default404Servlet-15923407,POJO} 
+DEBUG  [23:22:55.374] [main] o.e.j.s.ServletHandler -  Chose path=/* mapped to servlet=io.dropwizard.jersey.setup.JerseyServletContainer-7b44b63d from default=false 
+DEBUG  [23:22:55.374] [main] o.e.j.s.ServletHandler -  Chose path=/ mapped to servlet=org.eclipse.jetty.servlet.ServletHandler$Default404Servlet-15923407 from default=false 
+DEBUG  [23:22:55.375] [main] o.e.j.s.ServletHandler -  filterNameMap={io.dropwizard.servlets.ThreadNameFilter-4d847d32=io.dropwizard.servlets.ThreadNameFilter-4d847d32, io.dropwizard.jersey.filter.AllowedMethodsFilter-1a411233=io.dropwizard.jersey.filter.AllowedMethodsFilter-1a411233, Guice Filter=Guice Filter} 
+DEBUG  [23:22:55.375] [main] o.e.j.s.ServletHandler -  pathFilters=[[/application*]/[]==0=>Guice Filter, [/*]/[]==1=>io.dropwizard.jersey.filter.AllowedMethodsFilter-1a411233, [/*]/[]==1=>io.dropwizard.servlets.ThreadNameFilter-4d847d32] 
+DEBUG  [23:22:55.375] [main] o.e.j.s.ServletHandler -  servletFilterMap={} 
+DEBUG  [23:22:55.378] [main] o.e.j.s.ServletHandler -  servletPathMap={/*=io.dropwizard.jersey.setup.JerseyServletContainer-7b44b63d@409ad44e==io.dropwizard.jersey.setup.JerseyServletContainer,1,true, /=org.eclipse.jetty.servlet.ServletHandler$Default404Servlet-15923407@97096f79==org.eclipse.jetty.servlet.ServletHandler$Default404Servlet,-1,false} 
+DEBUG  [23:22:55.379] [main] o.e.j.s.ServletHandler -  servletNameMap={org.eclipse.jetty.servlet.ServletHandler$Default404Servlet-15923407=org.eclipse.jetty.servlet.ServletHandler$Default404Servlet-15923407@97096f79==org.eclipse.jetty.servlet.ServletHandler$Default404Servlet,-1,false, io.dropwizard.jersey.setup.JerseyServletContainer-7b44b63d=io.dropwizard.jersey.setup.JerseyServletContainer-7b44b63d@409ad44e==io.dropwizard.jersey.setup.JerseyServletContainer,1,true} 
+DEBUG  [23:22:55.380] [main] o.e.j.s.h.AbstractHandler -  starting org.eclipse.jetty.servlet.ServletHandler@4e6d7365 
+DEBUG  [23:22:55.380] [main] o.e.j.u.c.AbstractLifeCycle -  STARTED @4828ms org.eclipse.jetty.servlet.ServletHandler@4e6d7365 
+DEBUG  [23:22:55.380] [main] o.e.j.u.c.AbstractLifeCycle -  starting Guice Filter 
+DEBUG  [23:22:55.380] [main] o.e.j.u.c.AbstractLifeCycle -  STARTED @4828ms Guice Filter 
+DEBUG  [23:22:55.382] [main] o.e.j.s.FilterHolder -  Filter.init com.google.inject.servlet.GuiceFilter@1542af63 
+DEBUG  [23:22:55.383] [main] o.e.j.u.c.AbstractLifeCycle -  starting io.dropwizard.jersey.filter.AllowedMethodsFilter-1a411233 
+DEBUG  [23:22:55.383] [main] o.e.j.u.c.AbstractLifeCycle -  STARTED @4831ms io.dropwizard.jersey.filter.AllowedMethodsFilter-1a411233 
+DEBUG  [23:22:55.383] [main] o.e.j.s.FilterHolder -  Filter.init io.dropwizard.jersey.filter.AllowedMethodsFilter@ecfbe91 
+DEBUG  [23:22:55.383] [main] o.e.j.u.c.AbstractLifeCycle -  starting io.dropwizard.servlets.ThreadNameFilter-4d847d32 
+DEBUG  [23:22:55.384] [main] o.e.j.u.c.AbstractLifeCycle -  STARTED @4832ms io.dropwizard.servlets.ThreadNameFilter-4d847d32 
+DEBUG  [23:22:55.384] [main] o.e.j.s.FilterHolder -  Filter.init io.dropwizard.servlets.ThreadNameFilter@20ed3303 
+DEBUG  [23:22:55.384] [main] o.e.j.u.c.AbstractLifeCycle -  starting org.eclipse.jetty.servlet.ServletHandler$Default404Servlet-15923407@97096f79==org.eclipse.jetty.servlet.ServletHandler$Default404Servlet,-1,false 
+DEBUG  [23:22:55.386] [main] o.e.j.u.c.AbstractLifeCycle -  STARTED @4834ms org.eclipse.jetty.servlet.ServletHandler$Default404Servlet-15923407@97096f79==org.eclipse.jetty.servlet.ServletHandler$Default404Servlet,-1,false 
+DEBUG  [23:22:55.387] [main] o.e.j.u.c.AbstractLifeCycle -  starting io.dropwizard.jersey.setup.JerseyServletContainer-7b44b63d@409ad44e==io.dropwizard.jersey.setup.JerseyServletContainer,1,true 
+DEBUG  [23:22:55.387] [main] o.e.j.u.c.AbstractLifeCycle -  STARTED @4835ms io.dropwizard.jersey.setup.JerseyServletContainer-7b44b63d@409ad44e==io.dropwizard.jersey.setup.JerseyServletContainer,1,true 
+DEBUG  [23:22:55.388] [main] o.e.j.s.ServletHolder -  Servlet.init io.dropwizard.jersey.setup.JerseyServletContainer@65004ff6 for io.dropwizard.jersey.setup.JerseyServletContainer-7b44b63d 
+INFO   [23:22:55.407] [main] o.g.j.i.ServiceFinder -  Running in a non-OSGi environment 
+DEBUG  [23:22:55.433] [main] o.j.h.logger -  Created ServiceLocator ServiceLocatorImpl(__HK2_Generated_0,1,1929284175) 
+DEBUG  [23:22:55.446] [main] c.g.i.i.u.Stopwatch -  Module execution: 9ms 
+DEBUG  [23:22:55.447] [main] c.g.i.i.u.Stopwatch -  Interceptors creation: 1ms 
+DEBUG  [23:22:55.448] [main] c.g.i.i.u.Stopwatch -  TypeListeners & ProvisionListener creation: 0ms 
+DEBUG  [23:22:55.448] [main] c.g.i.i.u.Stopwatch -  Scopes creation: 1ms 
+DEBUG  [23:22:55.449] [main] c.g.i.i.u.Stopwatch -  Converters creation: 0ms 
+DEBUG  [23:22:55.452] [main] c.g.i.i.u.Stopwatch -  Binding creation: 4ms 
+DEBUG  [23:22:55.453] [main] c.g.i.i.u.Stopwatch -  Module annotated method scanners creation: 1ms 
+DEBUG  [23:22:55.453] [main] c.g.i.i.u.Stopwatch -  Private environment creation: 0ms 
+DEBUG  [23:22:55.454] [main] c.g.i.i.u.Stopwatch -  Injector construction: 1ms 
+DEBUG  [23:22:55.454] [main] c.g.i.i.u.Stopwatch -  Binding initialization: 0ms 
+DEBUG  [23:22:55.455] [main] c.g.i.i.u.Stopwatch -  Binding indexing: 1ms 
+DEBUG  [23:22:55.455] [main] c.g.i.i.u.Stopwatch -  Collecting injection requests: 0ms 
+DEBUG  [23:22:55.456] [main] c.g.i.i.u.Stopwatch -  Binding validation: 1ms 
+DEBUG  [23:22:55.457] [main] c.g.i.i.u.Stopwatch -  Static validation: 1ms 
+DEBUG  [23:22:55.457] [main] c.g.i.i.u.Stopwatch -  Instance member validation: 0ms 
+DEBUG  [23:22:55.458] [main] c.g.i.i.u.Stopwatch -  Provider verification: 1ms 
+DEBUG  [23:22:55.458] [main] c.g.i.i.u.Stopwatch -  Static member injection: 0ms 
+DEBUG  [23:22:55.459] [main] c.g.i.i.u.Stopwatch -  Instance injection: 0ms 
+TRACE  [23:22:55.460] [main] c.s.j.g.JerseyGuiceUtils -  Adding binding: key=Key[type=com.google.inject.Stage, annotation=[none]], source=[unknown source] 
+TRACE  [23:22:55.460] [main] c.s.j.g.JerseyGuiceUtils -  Ignoring binding Key[type=javax.ws.rs.ext.Providers, annotation=[none]] in class com.squarespace.jersey2.guice.JerseyGuiceModule 
+TRACE  [23:22:55.461] [main] c.s.j.g.JerseyGuiceUtils -  Ignoring binding Key[type=javax.ws.rs.core.UriInfo, annotation=[none]] in class com.squarespace.jersey2.guice.JerseyGuiceModule 
+TRACE  [23:22:55.462] [main] c.s.j.g.JerseyGuiceUtils -  Ignoring binding Key[type=javax.ws.rs.core.SecurityContext, annotation=[none]] in class com.squarespace.jersey2.guice.JerseyGuiceModule 
+TRACE  [23:22:55.463] [main] c.s.j.g.JerseyGuiceUtils -  Adding binding: key=Key[type=com.google.inject.Injector, annotation=[none]], source=[unknown source] 
+TRACE  [23:22:55.463] [main] c.s.j.g.JerseyGuiceUtils -  Adding binding: key=Key[type=java.util.logging.Logger, annotation=[none]], source=[unknown source] 
+TRACE  [23:22:55.464] [main] c.s.j.g.JerseyGuiceUtils -  Ignoring binding Key[type=javax.ws.rs.core.Application, annotation=[none]] in class com.squarespace.jersey2.guice.JerseyGuiceModule 
+TRACE  [23:22:55.464] [main] c.s.j.g.JerseyGuiceUtils -  Ignoring binding Key[type=javax.ws.rs.core.Request, annotation=[none]] in class com.squarespace.jersey2.guice.JerseyGuiceModule 
+TRACE  [23:22:55.465] [main] c.s.j.g.JerseyGuiceUtils -  Ignoring binding Key[type=org.glassfish.hk2.api.ServiceLocator, annotation=[none]] in class com.squarespace.jersey2.guice.JerseyGuiceModule 
+TRACE  [23:22:55.465] [main] c.s.j.g.JerseyGuiceUtils -  Ignoring binding Key[type=javax.ws.rs.core.HttpHeaders, annotation=[none]] in class com.squarespace.jersey2.guice.JerseyGuiceModule 
+DEBUG  [23:22:55.486] [main] c.g.i.i.u.Stopwatch -  Preloading singletons: 28ms 
+TRACE  [23:22:55.650] [main] o.g.j.i.ServiceFinder -  Loading next class: org.glassfish.jersey.server.filter.internal.ServerFiltersAutoDiscoverable 
+TRACE  [23:22:55.652] [main] o.g.j.i.ServiceFinder -  Loading next class: org.glassfish.jersey.logging.LoggingFeatureAutoDiscoverable 
+TRACE  [23:22:55.747] [main] o.g.j.i.ServiceFinder -  Loading next class: org.glassfish.jersey.servlet.async.AsyncContextDelegateProviderImpl 
+TRACE  [23:22:55.751] [main] o.g.j.i.ServiceFinder -  Loading next class: org.glassfish.jersey.servlet.init.FilterUrlMappingsProviderImpl 
+INFO   [23:22:55.806] [main] o.g.j.s.ApplicationHandler -  Initiating Jersey application, version Jersey: 2.23.1 2016-06-09 18:05:47... 
+TRACE  [23:22:55.813] [main] o.g.j.i.ServiceFinder -  Loading next class: org.glassfish.jersey.spidiscovery.internal.MetaInfServicesAutoDiscoverable 
+TRACE  [23:22:55.814] [main] o.g.j.i.ServiceFinder -  Loading next class: org.glassfish.jersey.server.validation.internal.ValidationAutoDiscoverable 
+TRACE  [23:22:55.815] [main] o.g.j.i.ServiceFinder -  Loading next class: org.glassfish.jersey.server.wadl.internal.WadlAutoDiscoverable 
+TRACE  [23:22:55.817] [main] o.g.j.i.ServiceFinder -  Loading next class: org.glassfish.jersey.server.internal.monitoring.MonitoringAutodiscoverable 
+TRACE  [23:22:55.818] [main] o.g.j.i.ServiceFinder -  Loading next class: org.glassfish.jersey.jaxb.internal.JaxbAutoDiscoverable 
+TRACE  [23:22:55.870] [main] o.g.j.i.ServiceFinder -  Loading next class: org.glassfish.jersey.servlet.async.AsyncContextDelegateProviderImpl 
+TRACE  [23:22:55.872] [main] o.g.j.i.ServiceFinder -  Loading next class: org.glassfish.jersey.servlet.init.FilterUrlMappingsProviderImpl 
+TRACE  [23:22:55.874] [main] o.g.j.i.ServiceFinder -  Loading next class: com.fasterxml.jackson.jaxrs.json.JacksonJsonProvider 
+TRACE  [23:22:55.876] [main] o.g.j.i.ServiceFinder -  Loading next class: com.fasterxml.jackson.jaxrs.json.JacksonJsonProvider 
+TRACE  [23:22:55.931] [main] o.g.j.s.m.IntrospectionModeller -  A new abstract resource created by IntrospectionModeler: Builder{names=[io.dropwizard.jersey.caching.CacheControlledResponseFeature], path='null', methodBuilders=[], childResourceBuilders=[], childResources=[], resourceMethods=[], subResourceLocator=null, handlerClasses=[], handlerInstances=[], parentResource=<no parent>, extended=false} 
+DEBUG  [23:22:55.949] [main] o.j.h.logger -  Created ServiceLocator ServiceLocatorImpl(jersey-server-rd-locator,2,1668376627) 
+DEBUG  [23:22:55.990] [main] o.j.h.logger -  Shutdown ServiceLocator ServiceLocatorImpl(jersey-server-rd-locator,2,1668376627) 
+DEBUG  [23:22:55.990] [main] o.j.h.logger -  ServiceLocator ServiceLocatorImpl(jersey-server-rd-locator,2,1668376627) has been shutdown 
+DEBUG  [23:22:56.017] [main] o.g.j.s.m.Parameter -  Unable to get the com.sun.proxy.$Proxy20 annotation value property 
+java.lang.NoSuchMethodException: javax.inject.Inject.value()
+	at java.lang.Class.getMethod(Class.java:1786)
+	at org.glassfish.jersey.server.model.Parameter.getValue(Parameter.java:476)
+	at org.glassfish.jersey.server.model.Parameter.create(Parameter.java:327)
+	at org.glassfish.jersey.server.model.IntrospectionModeller.checkResourceClassFields(IntrospectionModeller.java:225)
+	at org.glassfish.jersey.server.model.IntrospectionModeller.doCreateResourceBuilder(IntrospectionModeller.java:139)
+	at org.glassfish.jersey.server.model.IntrospectionModeller.access$000(IntrospectionModeller.java:80)
+	at org.glassfish.jersey.server.model.IntrospectionModeller$1.call(IntrospectionModeller.java:112)
+	at org.glassfish.jersey.server.model.IntrospectionModeller$1.call(IntrospectionModeller.java:109)
+	at org.glassfish.jersey.internal.Errors.process(Errors.java:315)
+	at org.glassfish.jersey.internal.Errors.process(Errors.java:297)
+	at org.glassfish.jersey.internal.Errors.processWithException(Errors.java:255)
+	at org.glassfish.jersey.server.model.IntrospectionModeller.createResourceBuilder(IntrospectionModeller.java:109)
+	at org.glassfish.jersey.server.model.Resource.from(Resource.java:797)
+	at org.glassfish.jersey.server.ApplicationHandler.initialize(ApplicationHandler.java:465)
+	at org.glassfish.jersey.server.ApplicationHandler.access$500(ApplicationHandler.java:184)
+	at org.glassfish.jersey.server.ApplicationHandler$3.call(ApplicationHandler.java:350)
+	at org.glassfish.jersey.server.ApplicationHandler$3.call(ApplicationHandler.java:347)
+	at org.glassfish.jersey.internal.Errors.process(Errors.java:315)
+	at org.glassfish.jersey.internal.Errors.process(Errors.java:297)
+	at org.glassfish.jersey.internal.Errors.processWithException(Errors.java:255)
+	at org.glassfish.jersey.server.ApplicationHandler.<init>(ApplicationHandler.java:347)
+	at org.glassfish.jersey.servlet.WebComponent.<init>(WebComponent.java:392)
+	at org.glassfish.jersey.servlet.ServletContainer.init(ServletContainer.java:177)
+	at org.glassfish.jersey.servlet.ServletContainer.init(ServletContainer.java:369)
+	at javax.servlet.GenericServlet.init(GenericServlet.java:244)
+	at org.eclipse.jetty.servlet.ServletHolder.initServlet(ServletHolder.java:640)
+	at org.eclipse.jetty.servlet.ServletHolder.initialize(ServletHolder.java:419)
+	at org.eclipse.jetty.servlet.ServletHandler.initialize(ServletHandler.java:875)
+	at org.eclipse.jetty.servlet.ServletContextHandler.startContext(ServletContextHandler.java:349)
+	at org.eclipse.jetty.server.handler.ContextHandler.doStart(ContextHandler.java:772)
+	at org.eclipse.jetty.servlet.ServletContextHandler.doStart(ServletContextHandler.java:262)
+	at org.eclipse.jetty.util.component.AbstractLifeCycle.start(AbstractLifeCycle.java:68)
+	at org.eclipse.jetty.util.component.ContainerLifeCycle.start(ContainerLifeCycle.java:132)
+	at org.eclipse.jetty.util.component.ContainerLifeCycle.doStart(ContainerLifeCycle.java:106)
+	at org.eclipse.jetty.server.handler.AbstractHandler.doStart(AbstractHandler.java:61)
+	at com.codahale.metrics.jetty9.InstrumentedHandler.doStart(InstrumentedHandler.java:103)
+	at org.eclipse.jetty.util.component.AbstractLifeCycle.start(AbstractLifeCycle.java:68)
+	at org.eclipse.jetty.util.component.ContainerLifeCycle.start(ContainerLifeCycle.java:132)
+	at org.eclipse.jetty.util.component.ContainerLifeCycle.doStart(ContainerLifeCycle.java:114)
+	at org.eclipse.jetty.server.handler.AbstractHandler.doStart(AbstractHandler.java:61)
+	at org.eclipse.jetty.util.component.AbstractLifeCycle.start(AbstractLifeCycle.java:68)
+	at org.eclipse.jetty.util.component.ContainerLifeCycle.start(ContainerLifeCycle.java:132)
+	at org.eclipse.jetty.util.component.ContainerLifeCycle.doStart(ContainerLifeCycle.java:106)
+	at org.eclipse.jetty.server.handler.AbstractHandler.doStart(AbstractHandler.java:61)
+	at org.eclipse.jetty.server.handler.gzip.GzipHandler.doStart(GzipHandler.java:231)
+	at org.eclipse.jetty.util.component.AbstractLifeCycle.start(AbstractLifeCycle.java:68)
+	at org.eclipse.jetty.util.component.ContainerLifeCycle.start(ContainerLifeCycle.java:132)
+	at org.eclipse.jetty.util.component.ContainerLifeCycle.doStart(ContainerLifeCycle.java:106)
+	at org.eclipse.jetty.server.handler.AbstractHandler.doStart(AbstractHandler.java:61)
+	at org.eclipse.jetty.util.component.AbstractLifeCycle.start(AbstractLifeCycle.java:68)
+	at org.eclipse.jetty.util.component.ContainerLifeCycle.start(ContainerLifeCycle.java:132)
+	at org.eclipse.jetty.util.component.ContainerLifeCycle.doStart(ContainerLifeCycle.java:106)
+	at org.eclipse.jetty.server.handler.AbstractHandler.doStart(AbstractHandler.java:61)
+	at org.eclipse.jetty.server.handler.StatisticsHandler.doStart(StatisticsHandler.java:252)
+	at org.eclipse.jetty.util.component.AbstractLifeCycle.start(AbstractLifeCycle.java:68)
+	at org.eclipse.jetty.util.component.ContainerLifeCycle.start(ContainerLifeCycle.java:132)
+	at org.eclipse.jetty.server.Server.start(Server.java:411)
+	at org.eclipse.jetty.util.component.ContainerLifeCycle.doStart(ContainerLifeCycle.java:106)
+	at org.eclipse.jetty.server.handler.AbstractHandler.doStart(AbstractHandler.java:61)
+	at org.eclipse.jetty.server.Server.doStart(Server.java:378)
+	at org.eclipse.jetty.util.component.AbstractLifeCycle.start(AbstractLifeCycle.java:68)
+	at io.dropwizard.cli.ServerCommand.run(ServerCommand.java:53)
+	at io.dropwizard.cli.EnvironmentCommand.run(EnvironmentCommand.java:44)
+	at io.dropwizard.cli.ConfiguredCommand.run(ConfiguredCommand.java:85)
+	at io.dropwizard.cli.Cli.run(Cli.java:75)
+	at io.dropwizard.Application.run(Application.java:79)
+	at info.glennengstrand.NewsFeedApplication.main(NewsFeedApplication.java:22)
+TRACE  [23:22:56.021] [main] o.g.j.s.m.IntrospectionModeller -  A new abstract resource created by IntrospectionModeler: Builder{names=[io.dropwizard.jersey.guava.OptionalMessageBodyWriter], path='null', methodBuilders=[], childResourceBuilders=[], childResources=[], resourceMethods=[], subResourceLocator=null, handlerClasses=[], handlerInstances=[], parentResource=<no parent>, extended=false} 
+TRACE  [23:22:56.022] [main] o.g.j.s.m.IntrospectionModeller -  A new abstract resource created by IntrospectionModeler: Builder{names=[io.dropwizard.jersey.guava.OptionalParamFeature], path='null', methodBuilders=[], childResourceBuilders=[], childResources=[], resourceMethods=[], subResourceLocator=null, handlerClasses=[], handlerInstances=[], parentResource=<no parent>, extended=false} 
+DEBUG  [23:22:56.026] [main] o.g.j.s.m.Parameter -  Unable to get the com.sun.proxy.$Proxy20 annotation value property 
+java.lang.NoSuchMethodException: javax.inject.Inject.value()
+	at java.lang.Class.getMethod(Class.java:1786)
+	at org.glassfish.jersey.server.model.Parameter.getValue(Parameter.java:476)
+	at org.glassfish.jersey.server.model.Parameter.create(Parameter.java:327)
+	at org.glassfish.jersey.server.model.IntrospectionModeller.checkResourceClassFields(IntrospectionModeller.java:225)
+	at org.glassfish.jersey.server.model.IntrospectionModeller.doCreateResourceBuilder(IntrospectionModeller.java:139)
+	at org.glassfish.jersey.server.model.IntrospectionModeller.access$000(IntrospectionModeller.java:80)
+	at org.glassfish.jersey.server.model.IntrospectionModeller$1.call(IntrospectionModeller.java:112)
+	at org.glassfish.jersey.server.model.IntrospectionModeller$1.call(IntrospectionModeller.java:109)
+	at org.glassfish.jersey.internal.Errors.process(Errors.java:315)
+	at org.glassfish.jersey.internal.Errors.process(Errors.java:297)
+	at org.glassfish.jersey.internal.Errors.processWithException(Errors.java:255)
+	at org.glassfish.jersey.server.model.IntrospectionModeller.createResourceBuilder(IntrospectionModeller.java:109)
+	at org.glassfish.jersey.server.model.Resource.from(Resource.java:797)
+	at org.glassfish.jersey.server.ApplicationHandler.initialize(ApplicationHandler.java:465)
+	at org.glassfish.jersey.server.ApplicationHandler.access$500(ApplicationHandler.java:184)
+	at org.glassfish.jersey.server.ApplicationHandler$3.call(ApplicationHandler.java:350)
+	at org.glassfish.jersey.server.ApplicationHandler$3.call(ApplicationHandler.java:347)
+	at org.glassfish.jersey.internal.Errors.process(Errors.java:315)
+	at org.glassfish.jersey.internal.Errors.process(Errors.java:297)
+	at org.glassfish.jersey.internal.Errors.processWithException(Errors.java:255)
+	at org.glassfish.jersey.server.ApplicationHandler.<init>(ApplicationHandler.java:347)
+	at org.glassfish.jersey.servlet.WebComponent.<init>(WebComponent.java:392)
+	at org.glassfish.jersey.servlet.ServletContainer.init(ServletContainer.java:177)
+	at org.glassfish.jersey.servlet.ServletContainer.init(ServletContainer.java:369)
+	at javax.servlet.GenericServlet.init(GenericServlet.java:244)
+	at org.eclipse.jetty.servlet.ServletHolder.initServlet(ServletHolder.java:640)
+	at org.eclipse.jetty.servlet.ServletHolder.initialize(ServletHolder.java:419)
+	at org.eclipse.jetty.servlet.ServletHandler.initialize(ServletHandler.java:875)
+	at org.eclipse.jetty.servlet.ServletContextHandler.startContext(ServletContextHandler.java:349)
+	at org.eclipse.jetty.server.handler.ContextHandler.doStart(ContextHandler.java:772)
+	at org.eclipse.jetty.servlet.ServletContextHandler.doStart(ServletContextHandler.java:262)
+	at org.eclipse.jetty.util.component.AbstractLifeCycle.start(AbstractLifeCycle.java:68)
+	at org.eclipse.jetty.util.component.ContainerLifeCycle.start(ContainerLifeCycle.java:132)
+	at org.eclipse.jetty.util.component.ContainerLifeCycle.doStart(ContainerLifeCycle.java:106)
+	at org.eclipse.jetty.server.handler.AbstractHandler.doStart(AbstractHandler.java:61)
+	at com.codahale.metrics.jetty9.InstrumentedHandler.doStart(InstrumentedHandler.java:103)
+	at org.eclipse.jetty.util.component.AbstractLifeCycle.start(AbstractLifeCycle.java:68)
+	at org.eclipse.jetty.util.component.ContainerLifeCycle.start(ContainerLifeCycle.java:132)
+	at org.eclipse.jetty.util.component.ContainerLifeCycle.doStart(ContainerLifeCycle.java:114)
+	at org.eclipse.jetty.server.handler.AbstractHandler.doStart(AbstractHandler.java:61)
+	at org.eclipse.jetty.util.component.AbstractLifeCycle.start(AbstractLifeCycle.java:68)
+	at org.eclipse.jetty.util.component.ContainerLifeCycle.start(ContainerLifeCycle.java:132)
+	at org.eclipse.jetty.util.component.ContainerLifeCycle.doStart(ContainerLifeCycle.java:106)
+	at org.eclipse.jetty.server.handler.AbstractHandler.doStart(AbstractHandler.java:61)
+	at org.eclipse.jetty.server.handler.gzip.GzipHandler.doStart(GzipHandler.java:231)
+	at org.eclipse.jetty.util.component.AbstractLifeCycle.start(AbstractLifeCycle.java:68)
+	at org.eclipse.jetty.util.component.ContainerLifeCycle.start(ContainerLifeCycle.java:132)
+	at org.eclipse.jetty.util.component.ContainerLifeCycle.doStart(ContainerLifeCycle.java:106)
+	at org.eclipse.jetty.server.handler.AbstractHandler.doStart(AbstractHandler.java:61)
+	at org.eclipse.jetty.util.component.AbstractLifeCycle.start(AbstractLifeCycle.java:68)
+	at org.eclipse.jetty.util.component.ContainerLifeCycle.start(ContainerLifeCycle.java:132)
+	at org.eclipse.jetty.util.component.ContainerLifeCycle.doStart(ContainerLifeCycle.java:106)
+	at org.eclipse.jetty.server.handler.AbstractHandler.doStart(AbstractHandler.java:61)
+	at org.eclipse.jetty.server.handler.StatisticsHandler.doStart(StatisticsHandler.java:252)
+	at org.eclipse.jetty.util.component.AbstractLifeCycle.start(AbstractLifeCycle.java:68)
+	at org.eclipse.jetty.util.component.ContainerLifeCycle.start(ContainerLifeCycle.java:132)
+	at org.eclipse.jetty.server.Server.start(Server.java:411)
+	at org.eclipse.jetty.util.component.ContainerLifeCycle.doStart(ContainerLifeCycle.java:106)
+	at org.eclipse.jetty.server.handler.AbstractHandler.doStart(AbstractHandler.java:61)
+	at org.eclipse.jetty.server.Server.doStart(Server.java:378)
+	at org.eclipse.jetty.util.component.AbstractLifeCycle.start(AbstractLifeCycle.java:68)
+	at io.dropwizard.cli.ServerCommand.run(ServerCommand.java:53)
+	at io.dropwizard.cli.EnvironmentCommand.run(EnvironmentCommand.java:44)
+	at io.dropwizard.cli.ConfiguredCommand.run(ConfiguredCommand.java:85)
+	at io.dropwizard.cli.Cli.run(Cli.java:75)
+	at io.dropwizard.Application.run(Application.java:79)
+	at info.glennengstrand.NewsFeedApplication.main(NewsFeedApplication.java:22)
+TRACE  [23:22:56.026] [main] o.g.j.s.m.IntrospectionModeller -  A new abstract resource created by IntrospectionModeler: Builder{names=[io.dropwizard.jersey.optional.OptionalMessageBodyWriter], path='null', methodBuilders=[], childResourceBuilders=[], childResources=[], resourceMethods=[], subResourceLocator=null, handlerClasses=[], handlerInstances=[], parentResource=<no parent>, extended=false} 
+TRACE  [23:22:56.029] [main] o.g.j.s.m.IntrospectionModeller -  A new abstract resource created by IntrospectionModeler: Builder{names=[io.dropwizard.jersey.optional.OptionalDoubleMessageBodyWriter], path='null', methodBuilders=[], childResourceBuilders=[], childResources=[], resourceMethods=[], subResourceLocator=null, handlerClasses=[], handlerInstances=[], parentResource=<no parent>, extended=false} 
+TRACE  [23:22:56.032] [main] o.g.j.s.m.IntrospectionModeller -  A new abstract resource created by IntrospectionModeler: Builder{names=[io.dropwizard.jersey.optional.OptionalIntMessageBodyWriter], path='null', methodBuilders=[], childResourceBuilders=[], childResources=[], resourceMethods=[], subResourceLocator=null, handlerClasses=[], handlerInstances=[], parentResource=<no parent>, extended=false} 
+TRACE  [23:22:56.036] [main] o.g.j.s.m.IntrospectionModeller -  A new abstract resource created by IntrospectionModeler: Builder{names=[io.dropwizard.jersey.optional.OptionalLongMessageBodyWriter], path='null', methodBuilders=[], childResourceBuilders=[], childResources=[], resourceMethods=[], subResourceLocator=null, handlerClasses=[], handlerInstances=[], parentResource=<no parent>, extended=false} 
+TRACE  [23:22:56.037] [main] o.g.j.s.m.IntrospectionModeller -  A new abstract resource created by IntrospectionModeler: Builder{names=[io.dropwizard.jersey.optional.OptionalParamFeature], path='null', methodBuilders=[], childResourceBuilders=[], childResources=[], resourceMethods=[], subResourceLocator=null, handlerClasses=[], handlerInstances=[], parentResource=<no parent>, extended=false} 
+TRACE  [23:22:56.037] [main] o.g.j.s.m.IntrospectionModeller -  A new abstract resource created by IntrospectionModeler: Builder{names=[io.dropwizard.jersey.params.NonEmptyStringParamFeature], path='null', methodBuilders=[], childResourceBuilders=[], childResources=[], resourceMethods=[], subResourceLocator=null, handlerClasses=[], handlerInstances=[], parentResource=<no parent>, extended=false} 
+TRACE  [23:22:56.057] [main] o.g.j.s.m.IntrospectionModeller -  A new abstract resource created by IntrospectionModeler: Builder{names=[info.glennengstrand.resources.ParticipantApi], path='/participant', methodBuilders=[], childResourceBuilders=[Builder{names=[[unnamed]], path='/new', methodBuilders=[org.glassfish.jersey.server.model.ResourceMethod$Builder@64fc097e], childResourceBuilders=[], childResources=[], resourceMethods=[], subResourceLocator=null, handlerClasses=[], handlerInstances=[], parentResource=Builder{names=[info.glennengstrand.resources.ParticipantApi], path='/participant'}, extended=false}, Builder{names=[[unnamed]], path='/{id}', methodBuilders=[org.glassfish.jersey.server.model.ResourceMethod$Builder@11ebb1b6], childResourceBuilders=[], childResources=[], resourceMethods=[], subResourceLocator=null, handlerClasses=[], handlerInstances=[], parentResource=Builder{names=[info.glennengstrand.resources.ParticipantApi], path='/participant'}, extended=false}], childResources=[], resourceMethods=[], subResourceLocator=null, handlerClasses=[], handlerInstances=[], parentResource=<no parent>, extended=false} 
+TRACE  [23:22:56.098] [main] o.g.j.s.m.IntrospectionModeller -  A new abstract resource created by IntrospectionModeler: Builder{names=[org.glassfish.jersey.server.wadl.WadlFeature], path='null', methodBuilders=[], childResourceBuilders=[], childResources=[], resourceMethods=[], subResourceLocator=null, handlerClasses=[], handlerInstances=[], parentResource=<no parent>, extended=false} 
+TRACE  [23:22:56.099] [main] o.g.j.s.m.IntrospectionModeller -  A new abstract resource created by IntrospectionModeler: Builder{names=[org.glassfish.jersey.server.validation.ValidationFeature], path='null', methodBuilders=[], childResourceBuilders=[], childResources=[], resourceMethods=[], subResourceLocator=null, handlerClasses=[], handlerInstances=[], parentResource=<no parent>, extended=false} 
+TRACE  [23:22:56.101] [main] o.g.j.s.m.IntrospectionModeller -  A new abstract resource created by IntrospectionModeler: Builder{names=[io.dropwizard.jersey.DropwizardResourceConfig$ComponentLoggingListener], path='null', methodBuilders=[], childResourceBuilders=[], childResources=[], resourceMethods=[], subResourceLocator=null, handlerClasses=[], handlerInstances=[], parentResource=<no parent>, extended=false} 
+TRACE  [23:22:56.103] [main] o.g.j.s.m.IntrospectionModeller -  A new abstract resource created by IntrospectionModeler: Builder{names=[com.codahale.metrics.jersey2.InstrumentedResourceMethodApplicationListener], path='null', methodBuilders=[], childResourceBuilders=[], childResources=[], resourceMethods=[], subResourceLocator=null, handlerClasses=[], handlerInstances=[], parentResource=<no parent>, extended=false} 
+TRACE  [23:22:56.111] [main] o.g.j.s.m.IntrospectionModeller -  A new abstract resource created by IntrospectionModeler: Builder{names=[io.dropwizard.jersey.sessions.SessionFactoryProvider$Binder], path='null', methodBuilders=[], childResourceBuilders=[], childResources=[], resourceMethods=[], subResourceLocator=null, handlerClasses=[], handlerInstances=[], parentResource=<no parent>, extended=false} 
+TRACE  [23:22:56.136] [main] o.g.j.s.m.IntrospectionModeller -  A new abstract resource created by IntrospectionModeler: Builder{names=[io.dropwizard.jersey.jackson.JacksonMessageBodyProvider], path='null', methodBuilders=[], childResourceBuilders=[], childResources=[], resourceMethods=[], subResourceLocator=null, handlerClasses=[], handlerInstances=[], parentResource=<no parent>, extended=false} 
+TRACE  [23:22:56.137] [main] o.g.j.s.m.IntrospectionModeller -  A new abstract resource created by IntrospectionModeler: Builder{names=[io.dropwizard.jersey.validation.HibernateValidationFeature], path='null', methodBuilders=[], childResourceBuilders=[], childResources=[], resourceMethods=[], subResourceLocator=null, handlerClasses=[], handlerInstances=[], parentResource=<no parent>, extended=false} 
+TRACE  [23:22:56.138] [main] o.g.j.s.m.IntrospectionModeller -  A new abstract resource created by IntrospectionModeler: Builder{names=[io.dropwizard.server.AbstractServerFactory$1], path='null', methodBuilders=[], childResourceBuilders=[], childResources=[], resourceMethods=[], subResourceLocator=null, handlerClasses=[], handlerInstances=[], parentResource=<no parent>, extended=false} 
+TRACE  [23:22:56.141] [main] o.g.j.s.m.IntrospectionModeller -  A new abstract resource created by IntrospectionModeler: Builder{names=[io.dropwizard.jersey.validation.JerseyViolationExceptionMapper], path='null', methodBuilders=[], childResourceBuilders=[], childResources=[], resourceMethods=[], subResourceLocator=null, handlerClasses=[], handlerInstances=[], parentResource=<no parent>, extended=false} 
+TRACE  [23:22:56.142] [main] o.g.j.s.m.IntrospectionModeller -  A new abstract resource created by IntrospectionModeler: Builder{names=[io.dropwizard.jersey.jackson.JsonProcessingExceptionMapper], path='null', methodBuilders=[], childResourceBuilders=[], childResources=[], resourceMethods=[], subResourceLocator=null, handlerClasses=[], handlerInstances=[], parentResource=<no parent>, extended=false} 
+TRACE  [23:22:56.144] [main] o.g.j.s.m.IntrospectionModeller -  A new abstract resource created by IntrospectionModeler: Builder{names=[io.dropwizard.jersey.errors.EarlyEofExceptionMapper], path='null', methodBuilders=[], childResourceBuilders=[], childResources=[], resourceMethods=[], subResourceLocator=null, handlerClasses=[], handlerInstances=[], parentResource=<no parent>, extended=false} 
+TRACE  [23:22:56.151] [main] o.g.j.s.m.IntrospectionModeller -  A new abstract resource created by IntrospectionModeler: Builder{names=[org.glassfish.jersey.servlet.WebComponent$WebComponentBinder], path='null', methodBuilders=[], childResourceBuilders=[], childResources=[], resourceMethods=[], subResourceLocator=null, handlerClasses=[], handlerInstances=[], parentResource=<no parent>, extended=false} 
+TRACE  [23:22:56.158] [main] o.g.j.s.m.IntrospectionModeller -  A new abstract resource created by IntrospectionModeler: Builder{names=[org.glassfish.jersey.spidiscovery.internal.MetaInfServicesAutoDiscoverable$1], path='null', methodBuilders=[], childResourceBuilders=[], childResources=[], resourceMethods=[], subResourceLocator=null, handlerClasses=[], handlerInstances=[], parentResource=<no parent>, extended=false} 
+TRACE  [23:22:56.163] [main] o.g.j.s.m.IntrospectionModeller -  A new abstract resource created by IntrospectionModeler: Builder{names=[io.dropwizard.jersey.guava.OptionalParamBinder], path='null', methodBuilders=[], childResourceBuilders=[], childResources=[], resourceMethods=[], subResourceLocator=null, handlerClasses=[], handlerInstances=[], parentResource=<no parent>, extended=false} 
+TRACE  [23:22:56.171] [main] o.g.j.s.m.IntrospectionModeller -  A new abstract resource created by IntrospectionModeler: Builder{names=[io.dropwizard.jersey.optional.OptionalParamBinder], path='null', methodBuilders=[], childResourceBuilders=[], childResources=[], resourceMethods=[], subResourceLocator=null, handlerClasses=[], handlerInstances=[], parentResource=<no parent>, extended=false} 
+TRACE  [23:22:56.172] [main] o.g.j.s.m.IntrospectionModeller -  A new abstract resource created by IntrospectionModeler: Builder{names=[io.dropwizard.jersey.params.NonEmptyStringParamFeature$1], path='null', methodBuilders=[], childResourceBuilders=[], childResources=[], resourceMethods=[], subResourceLocator=null, handlerClasses=[], handlerInstances=[], parentResource=<no parent>, extended=false} 
+TRACE  [23:22:56.178] [main] o.g.j.s.m.IntrospectionModeller -  A new abstract resource created by IntrospectionModeler: Builder{names=[io.dropwizard.jersey.validation.HibernateValidationFeature$1], path='null', methodBuilders=[], childResourceBuilders=[], childResources=[], resourceMethods=[], subResourceLocator=null, handlerClasses=[], handlerInstances=[], parentResource=<no parent>, extended=false} 
+TRACE  [23:22:56.183] [main] o.g.j.s.m.IntrospectionModeller -  A new abstract resource created by IntrospectionModeler: Builder{names=[org.glassfish.jersey.server.validation.internal.ValidationBinder], path='null', methodBuilders=[], childResourceBuilders=[], childResources=[], resourceMethods=[], subResourceLocator=null, handlerClasses=[], handlerInstances=[], parentResource=<no parent>, extended=false} 
+DEBUG  [23:22:56.297] [main] o.g.j.i.u.c.DataStructures -  USING LTQ class:class java.util.concurrent.LinkedTransferQueue 
+INFO   [23:22:56.552] [main] o.g.j.p.i.ExecutorProviders -  Selected ExecutorServiceProvider implementation [org.glassfish.jersey.server.internal.process.ServerProcessingBinder$DefaultManagedAsyncExecutorProvider] to be used for injection of executor qualified by [org.glassfish.jersey.server.ManagedAsyncExecutor] annotation. 
+INFO   [23:22:56.558] [main] o.g.j.p.i.ExecutorProviders -  Selected ScheduledExecutorServiceProvider implementation [org.glassfish.jersey.server.internal.process.ServerProcessingBinder$DefaultBackgroundSchedulerProvider] to be used for injection of scheduler qualified by [org.glassfish.jersey.server.BackgroundScheduler] annotation. 
+DEBUG  [23:22:56.660] [main] o.g.j.s.ApplicationHandler -  Clearing Jersey HK2 caches. Service cache size: 25, reflection cache size: 458. 
+INFO   [23:22:56.673] [main] o.g.j.s.ApplicationHandler -  Jersey application initialized.
+Root Resource Classes:
+  info.glennengstrand.resources.ParticipantApi
+Global Reader Interceptors:
+   org.glassfish.jersey.server.internal.MappableExceptionWrapperInterceptor
+Global Writer Interceptors:
+   org.glassfish.jersey.server.internal.MappableExceptionWrapperInterceptor
+   org.glassfish.jersey.server.internal.JsonWithPaddingInterceptor
+Dynamic Features:
+   io.dropwizard.jersey.caching.CacheControlledResponseFeature@5a82ebf8
+Message Body Readers:
+   org.glassfish.jersey.message.internal.SourceProvider$SaxSourceReader
+   com.fasterxml.jackson.jaxrs.json.JacksonJsonProvider
+   org.glassfish.jersey.jaxb.internal.XmlJaxbElementProvider$App
+   io.dropwizard.jersey.jackson.JacksonMessageBodyProvider
+   org.glassfish.jersey.message.internal.RenderedImageProvider
+   org.glassfish.jersey.jaxb.internal.XmlCollectionJaxbProvider$App
+   org.glassfish.jersey.message.internal.ReaderProvider
+   org.glassfish.jersey.jaxb.internal.XmlRootObjectJaxbProvider$General
+   org.glassfish.jersey.jaxb.internal.XmlRootObjectJaxbProvider$Text
+   org.glassfish.jersey.jaxb.internal.XmlJaxbElementProvider$Text
+   org.glassfish.jersey.message.internal.BasicTypesMessageProvider
+   org.glassfish.jersey.jaxb.internal.XmlRootElementJaxbProvider$Text
+   org.glassfish.jersey.jaxb.internal.XmlRootElementJaxbProvider$General
+   org.glassfish.jersey.jaxb.internal.XmlRootObjectJaxbProvider$App
+   org.glassfish.jersey.message.internal.DataSourceProvider
+   org.glassfish.jersey.jaxb.internal.XmlJaxbElementProvider$General
+   org.glassfish.jersey.message.internal.FormProvider
+   org.glassfish.jersey.message.internal.SourceProvider$StreamSourceReader
+   org.glassfish.jersey.jaxb.internal.DocumentProvider
+   org.glassfish.jersey.message.internal.StringMessageProvider
+   org.glassfish.jersey.message.internal.InputStreamProvider
+   org.glassfish.jersey.jaxb.internal.XmlCollectionJaxbProvider$Text
+   org.glassfish.jersey.message.internal.FileProvider
+   org.glassfish.jersey.message.internal.SourceProvider$DomSourceReader
+   org.glassfish.jersey.message.internal.FormMultivaluedMapProvider
+   org.glassfish.jersey.jaxb.internal.XmlCollectionJaxbProvider$General
+   org.glassfish.jersey.jaxb.internal.XmlRootElementJaxbProvider$App
+   org.glassfish.jersey.message.internal.ByteArrayProvider
+Message Body Writers:
+   org.glassfish.jersey.server.validation.internal.ValidationErrorMessageBodyWriter
+   org.glassfish.jersey.message.internal.SourceProvider$SourceWriter
+   io.dropwizard.jersey.optional.OptionalLongMessageBodyWriter
+   org.glassfish.jersey.jaxb.internal.XmlJaxbElementProvider$App
+   io.dropwizard.jersey.jackson.JacksonMessageBodyProvider
+   org.glassfish.jersey.message.internal.RenderedImageProvider
+   org.glassfish.jersey.jaxb.internal.XmlCollectionJaxbProvider$App
+   org.glassfish.jersey.message.internal.ReaderProvider
+   io.dropwizard.jersey.optional.OptionalMessageBodyWriter
+   org.glassfish.jersey.jaxb.internal.XmlJaxbElementProvider$Text
+   org.glassfish.jersey.message.internal.BasicTypesMessageProvider
+   org.glassfish.jersey.jaxb.internal.XmlRootElementJaxbProvider$Text
+   org.glassfish.jersey.jaxb.internal.XmlRootElementJaxbProvider$General
+   io.dropwizard.jersey.guava.OptionalMessageBodyWriter
+   io.dropwizard.jersey.optional.OptionalDoubleMessageBodyWriter
+   org.glassfish.jersey.message.internal.DataSourceProvider
+   org.glassfish.jersey.jaxb.internal.XmlJaxbElementProvider$General
+   org.glassfish.jersey.message.internal.StreamingOutputProvider
+   org.glassfish.jersey.message.internal.FormProvider
+   org.glassfish.jersey.jaxb.internal.DocumentProvider
+   org.glassfish.jersey.message.internal.StringMessageProvider
+   org.glassfish.jersey.message.internal.InputStreamProvider
+   org.glassfish.jersey.jaxb.internal.XmlCollectionJaxbProvider$Text
+   org.glassfish.jersey.message.internal.FileProvider
+   io.dropwizard.jersey.optional.OptionalIntMessageBodyWriter
+   org.glassfish.jersey.server.ChunkedResponseWriter
+   org.glassfish.jersey.message.internal.FormMultivaluedMapProvider
+   org.glassfish.jersey.jaxb.internal.XmlCollectionJaxbProvider$General
+   org.glassfish.jersey.jaxb.internal.XmlRootElementJaxbProvider$App
+   com.fasterxml.jackson.jaxrs.json.JacksonJsonProvider
+   org.glassfish.jersey.message.internal.ByteArrayProvider
+ 
+DEBUG  [23:22:56.674] [main] i.d.j.DropwizardResourceConfig -  resources = [info.glennengstrand.resources.ParticipantApi] 
+DEBUG  [23:22:56.674] [main] i.d.j.DropwizardResourceConfig -  providers = [io.dropwizard.jersey.optional.OptionalMessageBodyWriter, io.dropwizard.jersey.optional.OptionalLongMessageBodyWriter, io.dropwizard.jersey.caching.CacheControlledResponseFeature, io.dropwizard.jersey.optional.OptionalDoubleMessageBodyWriter, io.dropwizard.jersey.optional.OptionalIntMessageBodyWriter, io.dropwizard.jersey.guava.OptionalMessageBodyWriter] 
+TRACE  [23:22:56.681] [main] o.g.j.s.m.IntrospectionModeller -  A new abstract resource created by IntrospectionModeler: Builder{names=[io.dropwizard.jersey.sessions.SessionFactoryProvider$Binder], path='null', methodBuilders=[], childResourceBuilders=[], childResources=[], resourceMethods=[], subResourceLocator=null, handlerClasses=[], handlerInstances=[], parentResource=<no parent>, extended=false} 
+TRACE  [23:22:56.694] [main] o.g.j.s.m.IntrospectionModeller -  A new abstract resource created by IntrospectionModeler: Builder{names=[io.dropwizard.jersey.jackson.JacksonMessageBodyProvider], path='null', methodBuilders=[], childResourceBuilders=[], childResources=[], resourceMethods=[], subResourceLocator=null, handlerClasses=[], handlerInstances=[], parentResource=<no parent>, extended=false} 
+TRACE  [23:22:56.697] [main] o.g.j.s.m.IntrospectionModeller -  A new abstract resource created by IntrospectionModeler: Builder{names=[io.dropwizard.jersey.validation.JerseyViolationExceptionMapper], path='null', methodBuilders=[], childResourceBuilders=[], childResources=[], resourceMethods=[], subResourceLocator=null, handlerClasses=[], handlerInstances=[], parentResource=<no parent>, extended=false} 
+DEBUG  [23:22:56.700] [main] o.g.j.s.m.Parameter -  Unable to get the com.sun.proxy.$Proxy20 annotation value property 
+java.lang.NoSuchMethodException: javax.inject.Inject.value()
+	at java.lang.Class.getMethod(Class.java:1786)
+	at org.glassfish.jersey.server.model.Parameter.getValue(Parameter.java:476)
+	at org.glassfish.jersey.server.model.Parameter.create(Parameter.java:327)
+	at org.glassfish.jersey.server.model.IntrospectionModeller.checkResourceClassFields(IntrospectionModeller.java:225)
+	at org.glassfish.jersey.server.model.IntrospectionModeller.doCreateResourceBuilder(IntrospectionModeller.java:139)
+	at org.glassfish.jersey.server.model.IntrospectionModeller.access$000(IntrospectionModeller.java:80)
+	at org.glassfish.jersey.server.model.IntrospectionModeller$1.call(IntrospectionModeller.java:112)
+	at org.glassfish.jersey.server.model.IntrospectionModeller$1.call(IntrospectionModeller.java:109)
+	at org.glassfish.jersey.internal.Errors.process(Errors.java:315)
+	at org.glassfish.jersey.internal.Errors.process(Errors.java:297)
+	at org.glassfish.jersey.internal.Errors.processWithException(Errors.java:255)
+	at org.glassfish.jersey.server.model.IntrospectionModeller.createResourceBuilder(IntrospectionModeller.java:109)
+	at org.glassfish.jersey.server.model.Resource.from(Resource.java:797)
+	at org.glassfish.jersey.server.model.Resource.from(Resource.java:784)
+	at io.dropwizard.jersey.DropwizardResourceConfig.getEndpointsInfo(DropwizardResourceConfig.java:124)
+	at io.dropwizard.jersey.DropwizardResourceConfig.logComponents(DropwizardResourceConfig.java:80)
+	at io.dropwizard.jersey.DropwizardResourceConfig$ComponentLoggingListener.onEvent(DropwizardResourceConfig.java:245)
+	at org.glassfish.jersey.server.internal.monitoring.CompositeApplicationEventListener.onEvent(CompositeApplicationEventListener.java:74)
+	at org.glassfish.jersey.server.ApplicationHandler.initialize(ApplicationHandler.java:629)
+	at org.glassfish.jersey.server.ApplicationHandler.access$500(ApplicationHandler.java:184)
+	at org.glassfish.jersey.server.ApplicationHandler$3.call(ApplicationHandler.java:350)
+	at org.glassfish.jersey.server.ApplicationHandler$3.call(ApplicationHandler.java:347)
+	at org.glassfish.jersey.internal.Errors.process(Errors.java:315)
+	at org.glassfish.jersey.internal.Errors.process(Errors.java:297)
+	at org.glassfish.jersey.internal.Errors.processWithException(Errors.java:255)
+	at org.glassfish.jersey.server.ApplicationHandler.<init>(ApplicationHandler.java:347)
+	at org.glassfish.jersey.servlet.WebComponent.<init>(WebComponent.java:392)
+	at org.glassfish.jersey.servlet.ServletContainer.init(ServletContainer.java:177)
+	at org.glassfish.jersey.servlet.ServletContainer.init(ServletContainer.java:369)
+	at javax.servlet.GenericServlet.init(GenericServlet.java:244)
+	at org.eclipse.jetty.servlet.ServletHolder.initServlet(ServletHolder.java:640)
+	at org.eclipse.jetty.servlet.ServletHolder.initialize(ServletHolder.java:419)
+	at org.eclipse.jetty.servlet.ServletHandler.initialize(ServletHandler.java:875)
+	at org.eclipse.jetty.servlet.ServletContextHandler.startContext(ServletContextHandler.java:349)
+	at org.eclipse.jetty.server.handler.ContextHandler.doStart(ContextHandler.java:772)
+	at org.eclipse.jetty.servlet.ServletContextHandler.doStart(ServletContextHandler.java:262)
+	at org.eclipse.jetty.util.component.AbstractLifeCycle.start(AbstractLifeCycle.java:68)
+	at org.eclipse.jetty.util.component.ContainerLifeCycle.start(ContainerLifeCycle.java:132)
+	at org.eclipse.jetty.util.component.ContainerLifeCycle.doStart(ContainerLifeCycle.java:106)
+	at org.eclipse.jetty.server.handler.AbstractHandler.doStart(AbstractHandler.java:61)
+	at com.codahale.metrics.jetty9.InstrumentedHandler.doStart(InstrumentedHandler.java:103)
+	at org.eclipse.jetty.util.component.AbstractLifeCycle.start(AbstractLifeCycle.java:68)
+	at org.eclipse.jetty.util.component.ContainerLifeCycle.start(ContainerLifeCycle.java:132)
+	at org.eclipse.jetty.util.component.ContainerLifeCycle.doStart(ContainerLifeCycle.java:114)
+	at org.eclipse.jetty.server.handler.AbstractHandler.doStart(AbstractHandler.java:61)
+	at org.eclipse.jetty.util.component.AbstractLifeCycle.start(AbstractLifeCycle.java:68)
+	at org.eclipse.jetty.util.component.ContainerLifeCycle.start(ContainerLifeCycle.java:132)
+	at org.eclipse.jetty.util.component.ContainerLifeCycle.doStart(ContainerLifeCycle.java:106)
+	at org.eclipse.jetty.server.handler.AbstractHandler.doStart(AbstractHandler.java:61)
+	at org.eclipse.jetty.server.handler.gzip.GzipHandler.doStart(GzipHandler.java:231)
+	at org.eclipse.jetty.util.component.AbstractLifeCycle.start(AbstractLifeCycle.java:68)
+	at org.eclipse.jetty.util.component.ContainerLifeCycle.start(ContainerLifeCycle.java:132)
+	at org.eclipse.jetty.util.component.ContainerLifeCycle.doStart(ContainerLifeCycle.java:106)
+	at org.eclipse.jetty.server.handler.AbstractHandler.doStart(AbstractHandler.java:61)
+	at org.eclipse.jetty.util.component.AbstractLifeCycle.start(AbstractLifeCycle.java:68)
+	at org.eclipse.jetty.util.component.ContainerLifeCycle.start(ContainerLifeCycle.java:132)
+	at org.eclipse.jetty.util.component.ContainerLifeCycle.doStart(ContainerLifeCycle.java:106)
+	at org.eclipse.jetty.server.handler.AbstractHandler.doStart(AbstractHandler.java:61)
+	at org.eclipse.jetty.server.handler.StatisticsHandler.doStart(StatisticsHandler.java:252)
+	at org.eclipse.jetty.util.component.AbstractLifeCycle.start(AbstractLifeCycle.java:68)
+	at org.eclipse.jetty.util.component.ContainerLifeCycle.start(ContainerLifeCycle.java:132)
+	at org.eclipse.jetty.server.Server.start(Server.java:411)
+	at org.eclipse.jetty.util.component.ContainerLifeCycle.doStart(ContainerLifeCycle.java:106)
+	at org.eclipse.jetty.server.handler.AbstractHandler.doStart(AbstractHandler.java:61)
+	at org.eclipse.jetty.server.Server.doStart(Server.java:378)
+	at org.eclipse.jetty.util.component.AbstractLifeCycle.start(AbstractLifeCycle.java:68)
+	at io.dropwizard.cli.ServerCommand.run(ServerCommand.java:53)
+	at io.dropwizard.cli.EnvironmentCommand.run(EnvironmentCommand.java:44)
+	at io.dropwizard.cli.ConfiguredCommand.run(ConfiguredCommand.java:85)
+	at io.dropwizard.cli.Cli.run(Cli.java:75)
+	at io.dropwizard.Application.run(Application.java:79)
+	at info.glennengstrand.NewsFeedApplication.main(NewsFeedApplication.java:22)
+TRACE  [23:22:56.702] [main] o.g.j.s.m.IntrospectionModeller -  A new abstract resource created by IntrospectionModeler: Builder{names=[io.dropwizard.jersey.guava.OptionalMessageBodyWriter], path='null', methodBuilders=[], childResourceBuilders=[], childResources=[], resourceMethods=[], subResourceLocator=null, handlerClasses=[], handlerInstances=[], parentResource=<no parent>, extended=false} 
+TRACE  [23:22:56.704] [main] o.g.j.s.m.IntrospectionModeller -  A new abstract resource created by IntrospectionModeler: Builder{names=[info.glennengstrand.resources.ParticipantApi], path='/participant', methodBuilders=[], childResourceBuilders=[Builder{names=[[unnamed]], path='/new', methodBuilders=[org.glassfish.jersey.server.model.ResourceMethod$Builder@1f77b5cc], childResourceBuilders=[], childResources=[], resourceMethods=[], subResourceLocator=null, handlerClasses=[], handlerInstances=[], parentResource=Builder{names=[info.glennengstrand.resources.ParticipantApi], path='/participant'}, extended=false}, Builder{names=[[unnamed]], path='/{id}', methodBuilders=[org.glassfish.jersey.server.model.ResourceMethod$Builder@75961f16], childResourceBuilders=[], childResources=[], resourceMethods=[], subResourceLocator=null, handlerClasses=[], handlerInstances=[], parentResource=Builder{names=[info.glennengstrand.resources.ParticipantApi], path='/participant'}, extended=false}], childResources=[], resourceMethods=[], subResourceLocator=null, handlerClasses=[], handlerInstances=[], parentResource=<no parent>, extended=false} 
+TRACE  [23:22:56.706] [main] o.g.j.s.m.IntrospectionModeller -  A new abstract resource created by IntrospectionModeler: Builder{names=[io.dropwizard.jersey.DropwizardResourceConfig$ComponentLoggingListener], path='null', methodBuilders=[], childResourceBuilders=[], childResources=[], resourceMethods=[], subResourceLocator=null, handlerClasses=[], handlerInstances=[], parentResource=<no parent>, extended=false} 
+TRACE  [23:22:56.708] [main] o.g.j.s.m.IntrospectionModeller -  A new abstract resource created by IntrospectionModeler: Builder{names=[io.dropwizard.jersey.jackson.JsonProcessingExceptionMapper], path='null', methodBuilders=[], childResourceBuilders=[], childResources=[], resourceMethods=[], subResourceLocator=null, handlerClasses=[], handlerInstances=[], parentResource=<no parent>, extended=false} 
+TRACE  [23:22:56.751] [main] o.g.j.s.m.IntrospectionModeller -  A new abstract resource created by IntrospectionModeler: Builder{names=[io.dropwizard.jersey.guava.OptionalParamFeature], path='null', methodBuilders=[], childResourceBuilders=[], childResources=[], resourceMethods=[], subResourceLocator=null, handlerClasses=[], handlerInstances=[], parentResource=<no parent>, extended=false} 
+TRACE  [23:22:56.753] [main] o.g.j.s.m.IntrospectionModeller -  A new abstract resource created by IntrospectionModeler: Builder{names=[io.dropwizard.jersey.optional.OptionalLongMessageBodyWriter], path='null', methodBuilders=[], childResourceBuilders=[], childResources=[], resourceMethods=[], subResourceLocator=null, handlerClasses=[], handlerInstances=[], parentResource=<no parent>, extended=false} 
+TRACE  [23:22:56.755] [main] o.g.j.s.m.IntrospectionModeller -  A new abstract resource created by IntrospectionModeler: Builder{names=[io.dropwizard.jersey.optional.OptionalDoubleMessageBodyWriter], path='null', methodBuilders=[], childResourceBuilders=[], childResources=[], resourceMethods=[], subResourceLocator=null, handlerClasses=[], handlerInstances=[], parentResource=<no parent>, extended=false} 
+TRACE  [23:22:56.756] [main] o.g.j.s.m.IntrospectionModeller -  A new abstract resource created by IntrospectionModeler: Builder{names=[io.dropwizard.jersey.caching.CacheControlledResponseFeature], path='null', methodBuilders=[], childResourceBuilders=[], childResources=[], resourceMethods=[], subResourceLocator=null, handlerClasses=[], handlerInstances=[], parentResource=<no parent>, extended=false} 
+TRACE  [23:22:56.759] [main] o.g.j.s.m.IntrospectionModeller -  A new abstract resource created by IntrospectionModeler: Builder{names=[io.dropwizard.jersey.errors.EarlyEofExceptionMapper], path='null', methodBuilders=[], childResourceBuilders=[], childResources=[], resourceMethods=[], subResourceLocator=null, handlerClasses=[], handlerInstances=[], parentResource=<no parent>, extended=false} 
+TRACE  [23:22:56.762] [main] o.g.j.s.m.IntrospectionModeller -  A new abstract resource created by IntrospectionModeler: Builder{names=[io.dropwizard.jersey.optional.OptionalIntMessageBodyWriter], path='null', methodBuilders=[], childResourceBuilders=[], childResources=[], resourceMethods=[], subResourceLocator=null, handlerClasses=[], handlerInstances=[], parentResource=<no parent>, extended=false} 
+DEBUG  [23:22:56.765] [main] o.g.j.s.m.Parameter -  Unable to get the com.sun.proxy.$Proxy20 annotation value property 
+java.lang.NoSuchMethodException: javax.inject.Inject.value()
+	at java.lang.Class.getMethod(Class.java:1786)
+	at org.glassfish.jersey.server.model.Parameter.getValue(Parameter.java:476)
+	at org.glassfish.jersey.server.model.Parameter.create(Parameter.java:327)
+	at org.glassfish.jersey.server.model.IntrospectionModeller.checkResourceClassFields(IntrospectionModeller.java:225)
+	at org.glassfish.jersey.server.model.IntrospectionModeller.doCreateResourceBuilder(IntrospectionModeller.java:139)
+	at org.glassfish.jersey.server.model.IntrospectionModeller.access$000(IntrospectionModeller.java:80)
+	at org.glassfish.jersey.server.model.IntrospectionModeller$1.call(IntrospectionModeller.java:112)
+	at org.glassfish.jersey.server.model.IntrospectionModeller$1.call(IntrospectionModeller.java:109)
+	at org.glassfish.jersey.internal.Errors.process(Errors.java:315)
+	at org.glassfish.jersey.internal.Errors.process(Errors.java:297)
+	at org.glassfish.jersey.internal.Errors.processWithException(Errors.java:255)
+	at org.glassfish.jersey.server.model.IntrospectionModeller.createResourceBuilder(IntrospectionModeller.java:109)
+	at org.glassfish.jersey.server.model.Resource.from(Resource.java:797)
+	at org.glassfish.jersey.server.model.Resource.from(Resource.java:784)
+	at io.dropwizard.jersey.DropwizardResourceConfig.getEndpointsInfo(DropwizardResourceConfig.java:124)
+	at io.dropwizard.jersey.DropwizardResourceConfig.logComponents(DropwizardResourceConfig.java:80)
+	at io.dropwizard.jersey.DropwizardResourceConfig$ComponentLoggingListener.onEvent(DropwizardResourceConfig.java:245)
+	at org.glassfish.jersey.server.internal.monitoring.CompositeApplicationEventListener.onEvent(CompositeApplicationEventListener.java:74)
+	at org.glassfish.jersey.server.ApplicationHandler.initialize(ApplicationHandler.java:629)
+	at org.glassfish.jersey.server.ApplicationHandler.access$500(ApplicationHandler.java:184)
+	at org.glassfish.jersey.server.ApplicationHandler$3.call(ApplicationHandler.java:350)
+	at org.glassfish.jersey.server.ApplicationHandler$3.call(ApplicationHandler.java:347)
+	at org.glassfish.jersey.internal.Errors.process(Errors.java:315)
+	at org.glassfish.jersey.internal.Errors.process(Errors.java:297)
+	at org.glassfish.jersey.internal.Errors.processWithException(Errors.java:255)
+	at org.glassfish.jersey.server.ApplicationHandler.<init>(ApplicationHandler.java:347)
+	at org.glassfish.jersey.servlet.WebComponent.<init>(WebComponent.java:392)
+	at org.glassfish.jersey.servlet.ServletContainer.init(ServletContainer.java:177)
+	at org.glassfish.jersey.servlet.ServletContainer.init(ServletContainer.java:369)
+	at javax.servlet.GenericServlet.init(GenericServlet.java:244)
+	at org.eclipse.jetty.servlet.ServletHolder.initServlet(ServletHolder.java:640)
+	at org.eclipse.jetty.servlet.ServletHolder.initialize(ServletHolder.java:419)
+	at org.eclipse.jetty.servlet.ServletHandler.initialize(ServletHandler.java:875)
+	at org.eclipse.jetty.servlet.ServletContextHandler.startContext(ServletContextHandler.java:349)
+	at org.eclipse.jetty.server.handler.ContextHandler.doStart(ContextHandler.java:772)
+	at org.eclipse.jetty.servlet.ServletContextHandler.doStart(ServletContextHandler.java:262)
+	at org.eclipse.jetty.util.component.AbstractLifeCycle.start(AbstractLifeCycle.java:68)
+	at org.eclipse.jetty.util.component.ContainerLifeCycle.start(ContainerLifeCycle.java:132)
+	at org.eclipse.jetty.util.component.ContainerLifeCycle.doStart(ContainerLifeCycle.java:106)
+	at org.eclipse.jetty.server.handler.AbstractHandler.doStart(AbstractHandler.java:61)
+	at com.codahale.metrics.jetty9.InstrumentedHandler.doStart(InstrumentedHandler.java:103)
+	at org.eclipse.jetty.util.component.AbstractLifeCycle.start(AbstractLifeCycle.java:68)
+	at org.eclipse.jetty.util.component.ContainerLifeCycle.start(ContainerLifeCycle.java:132)
+	at org.eclipse.jetty.util.component.ContainerLifeCycle.doStart(ContainerLifeCycle.java:114)
+	at org.eclipse.jetty.server.handler.AbstractHandler.doStart(AbstractHandler.java:61)
+	at org.eclipse.jetty.util.component.AbstractLifeCycle.start(AbstractLifeCycle.java:68)
+	at org.eclipse.jetty.util.component.ContainerLifeCycle.start(ContainerLifeCycle.java:132)
+	at org.eclipse.jetty.util.component.ContainerLifeCycle.doStart(ContainerLifeCycle.java:106)
+	at org.eclipse.jetty.server.handler.AbstractHandler.doStart(AbstractHandler.java:61)
+	at org.eclipse.jetty.server.handler.gzip.GzipHandler.doStart(GzipHandler.java:231)
+	at org.eclipse.jetty.util.component.AbstractLifeCycle.start(AbstractLifeCycle.java:68)
+	at org.eclipse.jetty.util.component.ContainerLifeCycle.start(ContainerLifeCycle.java:132)
+	at org.eclipse.jetty.util.component.ContainerLifeCycle.doStart(ContainerLifeCycle.java:106)
+	at org.eclipse.jetty.server.handler.AbstractHandler.doStart(AbstractHandler.java:61)
+	at org.eclipse.jetty.util.component.AbstractLifeCycle.start(AbstractLifeCycle.java:68)
+	at org.eclipse.jetty.util.component.ContainerLifeCycle.start(ContainerLifeCycle.java:132)
+	at org.eclipse.jetty.util.component.ContainerLifeCycle.doStart(ContainerLifeCycle.java:106)
+	at org.eclipse.jetty.server.handler.AbstractHandler.doStart(AbstractHandler.java:61)
+	at org.eclipse.jetty.server.handler.StatisticsHandler.doStart(StatisticsHandler.java:252)
+	at org.eclipse.jetty.util.component.AbstractLifeCycle.start(AbstractLifeCycle.java:68)
+	at org.eclipse.jetty.util.component.ContainerLifeCycle.start(ContainerLifeCycle.java:132)
+	at org.eclipse.jetty.server.Server.start(Server.java:411)
+	at org.eclipse.jetty.util.component.ContainerLifeCycle.doStart(ContainerLifeCycle.java:106)
+	at org.eclipse.jetty.server.handler.AbstractHandler.doStart(AbstractHandler.java:61)
+	at org.eclipse.jetty.server.Server.doStart(Server.java:378)
+	at org.eclipse.jetty.util.component.AbstractLifeCycle.start(AbstractLifeCycle.java:68)
+	at io.dropwizard.cli.ServerCommand.run(ServerCommand.java:53)
+	at io.dropwizard.cli.EnvironmentCommand.run(EnvironmentCommand.java:44)
+	at io.dropwizard.cli.ConfiguredCommand.run(ConfiguredCommand.java:85)
+	at io.dropwizard.cli.Cli.run(Cli.java:75)
+	at io.dropwizard.Application.run(Application.java:79)
+	at info.glennengstrand.NewsFeedApplication.main(NewsFeedApplication.java:22)
+TRACE  [23:22:56.766] [main] o.g.j.s.m.IntrospectionModeller -  A new abstract resource created by IntrospectionModeler: Builder{names=[io.dropwizard.jersey.optional.OptionalMessageBodyWriter], path='null', methodBuilders=[], childResourceBuilders=[], childResources=[], resourceMethods=[], subResourceLocator=null, handlerClasses=[], handlerInstances=[], parentResource=<no parent>, extended=false} 
+TRACE  [23:22:56.766] [main] o.g.j.s.m.IntrospectionModeller -  A new abstract resource created by IntrospectionModeler: Builder{names=[io.dropwizard.server.AbstractServerFactory$1], path='null', methodBuilders=[], childResourceBuilders=[], childResources=[], resourceMethods=[], subResourceLocator=null, handlerClasses=[], handlerInstances=[], parentResource=<no parent>, extended=false} 
+TRACE  [23:22:56.767] [main] o.g.j.s.m.IntrospectionModeller -  A new abstract resource created by IntrospectionModeler: Builder{names=[com.codahale.metrics.jersey2.InstrumentedResourceMethodApplicationListener], path='null', methodBuilders=[], childResourceBuilders=[], childResources=[], resourceMethods=[], subResourceLocator=null, handlerClasses=[], handlerInstances=[], parentResource=<no parent>, extended=false} 
+TRACE  [23:22:56.772] [main] o.g.j.s.m.IntrospectionModeller -  A new abstract resource created by IntrospectionModeler: Builder{names=[org.glassfish.jersey.servlet.WebComponent$WebComponentBinder], path='null', methodBuilders=[], childResourceBuilders=[], childResources=[], resourceMethods=[], subResourceLocator=null, handlerClasses=[], handlerInstances=[], parentResource=<no parent>, extended=false} 
+TRACE  [23:22:56.772] [main] o.g.j.s.m.IntrospectionModeller -  A new abstract resource created by IntrospectionModeler: Builder{names=[io.dropwizard.jersey.optional.OptionalParamFeature], path='null', methodBuilders=[], childResourceBuilders=[], childResources=[], resourceMethods=[], subResourceLocator=null, handlerClasses=[], handlerInstances=[], parentResource=<no parent>, extended=false} 
+TRACE  [23:22:56.773] [main] o.g.j.s.m.IntrospectionModeller -  A new abstract resource created by IntrospectionModeler: Builder{names=[io.dropwizard.jersey.params.NonEmptyStringParamFeature], path='null', methodBuilders=[], childResourceBuilders=[], childResources=[], resourceMethods=[], subResourceLocator=null, handlerClasses=[], handlerInstances=[], parentResource=<no parent>, extended=false} 
+TRACE  [23:22:56.774] [main] o.g.j.s.m.IntrospectionModeller -  A new abstract resource created by IntrospectionModeler: Builder{names=[io.dropwizard.jersey.validation.HibernateValidationFeature], path='null', methodBuilders=[], childResourceBuilders=[], childResources=[], resourceMethods=[], subResourceLocator=null, handlerClasses=[], handlerInstances=[], parentResource=<no parent>, extended=false} 
+TRACE  [23:22:56.781] [main] o.g.j.s.m.IntrospectionModeller -  A new abstract resource created by IntrospectionModeler: Builder{names=[info.glennengstrand.resources.ParticipantApi], path='/participant', methodBuilders=[], childResourceBuilders=[Builder{names=[[unnamed]], path='/new', methodBuilders=[org.glassfish.jersey.server.model.ResourceMethod$Builder@534c6767], childResourceBuilders=[], childResources=[], resourceMethods=[], subResourceLocator=null, handlerClasses=[], handlerInstances=[], parentResource=Builder{names=[info.glennengstrand.resources.ParticipantApi], path='/participant'}, extended=false}, Builder{names=[[unnamed]], path='/{id}', methodBuilders=[org.glassfish.jersey.server.model.ResourceMethod$Builder@29a1505c], childResourceBuilders=[], childResources=[], resourceMethods=[], subResourceLocator=null, handlerClasses=[], handlerInstances=[], parentResource=Builder{names=[info.glennengstrand.resources.ParticipantApi], path='/participant'}, extended=false}], childResources=[], resourceMethods=[], subResourceLocator=null, handlerClasses=[], handlerInstances=[], parentResource=<no parent>, extended=false} 
+INFO   [23:22:56.788] [main] i.d.j.DropwizardResourceConfig -  The following paths were found for the configured resources:
+
+    POST    /participant/new (info.glennengstrand.resources.ParticipantApi)
+    GET     /participant/{id} (info.glennengstrand.resources.ParticipantApi)
+ 
+INFO   [23:22:56.799] [main] o.e.j.s.h.ContextHandler -  Started i.d.j.MutableServletContextHandler@3af37506{/application,null,AVAILABLE} 
+DEBUG  [23:22:56.799] [main] o.e.j.u.c.AbstractLifeCycle -  STARTED @6247ms i.d.j.MutableServletContextHandler@3af37506{/application,null,AVAILABLE} 
+DEBUG  [23:22:56.799] [main] j.m.mbeanserver -  ObjectName = metrics:name=io.dropwizard.jetty.MutableServletContextHandler.requests 
+DEBUG  [23:22:56.800] [main] j.m.mbeanserver -  name = metrics:name=io.dropwizard.jetty.MutableServletContextHandler.requests 
+DEBUG  [23:22:56.800] [main] j.m.mbeanserver -  Send create notification of object metrics:name=io.dropwizard.jetty.MutableServletContextHandler.requests 
+DEBUG  [23:22:56.800] [main] j.m.mbeanserver -  JMX.mbean.registered metrics:name=io.dropwizard.jetty.MutableServletContextHandler.requests 
+DEBUG  [23:22:56.800] [main] j.m.mbeanserver -  ObjectName = metrics:name=io.dropwizard.jetty.MutableServletContextHandler.dispatches 
+DEBUG  [23:22:56.800] [main] j.m.mbeanserver -  name = metrics:name=io.dropwizard.jetty.MutableServletContextHandler.dispatches 
+DEBUG  [23:22:56.800] [main] j.m.mbeanserver -  Send create notification of object metrics:name=io.dropwizard.jetty.MutableServletContextHandler.dispatches 
+DEBUG  [23:22:56.800] [main] j.m.mbeanserver -  JMX.mbean.registered metrics:name=io.dropwizard.jetty.MutableServletContextHandler.dispatches 
+DEBUG  [23:22:56.803] [main] j.m.mbeanserver -  ObjectName = metrics:name=io.dropwizard.jetty.MutableServletContextHandler.active-requests 
+DEBUG  [23:22:56.803] [main] j.m.mbeanserver -  name = metrics:name=io.dropwizard.jetty.MutableServletContextHandler.active-requests 
+DEBUG  [23:22:56.803] [main] j.m.mbeanserver -  Send create notification of object metrics:name=io.dropwizard.jetty.MutableServletContextHandler.active-requests 
+DEBUG  [23:22:56.803] [main] j.m.mbeanserver -  JMX.mbean.registered metrics:name=io.dropwizard.jetty.MutableServletContextHandler.active-requests 
+DEBUG  [23:22:56.803] [main] j.m.mbeanserver -  ObjectName = metrics:name=io.dropwizard.jetty.MutableServletContextHandler.active-dispatches 
+DEBUG  [23:22:56.804] [main] j.m.mbeanserver -  name = metrics:name=io.dropwizard.jetty.MutableServletContextHandler.active-dispatches 
+DEBUG  [23:22:56.804] [main] j.m.mbeanserver -  Send create notification of object metrics:name=io.dropwizard.jetty.MutableServletContextHandler.active-dispatches 
+DEBUG  [23:22:56.804] [main] j.m.mbeanserver -  JMX.mbean.registered metrics:name=io.dropwizard.jetty.MutableServletContextHandler.active-dispatches 
+DEBUG  [23:22:56.804] [main] j.m.mbeanserver -  ObjectName = metrics:name=io.dropwizard.jetty.MutableServletContextHandler.active-suspended 
+DEBUG  [23:22:56.804] [main] j.m.mbeanserver -  name = metrics:name=io.dropwizard.jetty.MutableServletContextHandler.active-suspended 
+DEBUG  [23:22:56.804] [main] j.m.mbeanserver -  Send create notification of object metrics:name=io.dropwizard.jetty.MutableServletContextHandler.active-suspended 
+DEBUG  [23:22:56.804] [main] j.m.mbeanserver -  JMX.mbean.registered metrics:name=io.dropwizard.jetty.MutableServletContextHandler.active-suspended 
+DEBUG  [23:22:56.804] [main] j.m.mbeanserver -  ObjectName = metrics:name=io.dropwizard.jetty.MutableServletContextHandler.async-dispatches 
+DEBUG  [23:22:56.805] [main] j.m.mbeanserver -  name = metrics:name=io.dropwizard.jetty.MutableServletContextHandler.async-dispatches 
+DEBUG  [23:22:56.805] [main] j.m.mbeanserver -  Send create notification of object metrics:name=io.dropwizard.jetty.MutableServletContextHandler.async-dispatches 
+DEBUG  [23:22:56.805] [main] j.m.mbeanserver -  JMX.mbean.registered metrics:name=io.dropwizard.jetty.MutableServletContextHandler.async-dispatches 
+DEBUG  [23:22:56.805] [main] j.m.mbeanserver -  ObjectName = metrics:name=io.dropwizard.jetty.MutableServletContextHandler.async-timeouts 
+DEBUG  [23:22:56.805] [main] j.m.mbeanserver -  name = metrics:name=io.dropwizard.jetty.MutableServletContextHandler.async-timeouts 
+DEBUG  [23:22:56.805] [main] j.m.mbeanserver -  Send create notification of object metrics:name=io.dropwizard.jetty.MutableServletContextHandler.async-timeouts 
+DEBUG  [23:22:56.805] [main] j.m.mbeanserver -  JMX.mbean.registered metrics:name=io.dropwizard.jetty.MutableServletContextHandler.async-timeouts 
+DEBUG  [23:22:56.805] [main] j.m.mbeanserver -  ObjectName = metrics:name=io.dropwizard.jetty.MutableServletContextHandler.1xx-responses 
+DEBUG  [23:22:56.806] [main] j.m.mbeanserver -  name = metrics:name=io.dropwizard.jetty.MutableServletContextHandler.1xx-responses 
+DEBUG  [23:22:56.806] [main] j.m.mbeanserver -  Send create notification of object metrics:name=io.dropwizard.jetty.MutableServletContextHandler.1xx-responses 
+DEBUG  [23:22:56.806] [main] j.m.mbeanserver -  JMX.mbean.registered metrics:name=io.dropwizard.jetty.MutableServletContextHandler.1xx-responses 
+DEBUG  [23:22:56.806] [main] j.m.mbeanserver -  ObjectName = metrics:name=io.dropwizard.jetty.MutableServletContextHandler.2xx-responses 
+DEBUG  [23:22:56.806] [main] j.m.mbeanserver -  name = metrics:name=io.dropwizard.jetty.MutableServletContextHandler.2xx-responses 
+DEBUG  [23:22:56.806] [main] j.m.mbeanserver -  Send create notification of object metrics:name=io.dropwizard.jetty.MutableServletContextHandler.2xx-responses 
+DEBUG  [23:22:56.806] [main] j.m.mbeanserver -  JMX.mbean.registered metrics:name=io.dropwizard.jetty.MutableServletContextHandler.2xx-responses 
+DEBUG  [23:22:56.806] [main] j.m.mbeanserver -  ObjectName = metrics:name=io.dropwizard.jetty.MutableServletContextHandler.3xx-responses 
+DEBUG  [23:22:56.806] [main] j.m.mbeanserver -  name = metrics:name=io.dropwizard.jetty.MutableServletContextHandler.3xx-responses 
+DEBUG  [23:22:56.806] [main] j.m.mbeanserver -  Send create notification of object metrics:name=io.dropwizard.jetty.MutableServletContextHandler.3xx-responses 
+DEBUG  [23:22:56.806] [main] j.m.mbeanserver -  JMX.mbean.registered metrics:name=io.dropwizard.jetty.MutableServletContextHandler.3xx-responses 
+DEBUG  [23:22:56.807] [main] j.m.mbeanserver -  ObjectName = metrics:name=io.dropwizard.jetty.MutableServletContextHandler.4xx-responses 
+DEBUG  [23:22:56.807] [main] j.m.mbeanserver -  name = metrics:name=io.dropwizard.jetty.MutableServletContextHandler.4xx-responses 
+DEBUG  [23:22:56.807] [main] j.m.mbeanserver -  Send create notification of object metrics:name=io.dropwizard.jetty.MutableServletContextHandler.4xx-responses 
+DEBUG  [23:22:56.807] [main] j.m.mbeanserver -  JMX.mbean.registered metrics:name=io.dropwizard.jetty.MutableServletContextHandler.4xx-responses 
+DEBUG  [23:22:56.807] [main] j.m.mbeanserver -  ObjectName = metrics:name=io.dropwizard.jetty.MutableServletContextHandler.5xx-responses 
+DEBUG  [23:22:56.807] [main] j.m.mbeanserver -  name = metrics:name=io.dropwizard.jetty.MutableServletContextHandler.5xx-responses 
+DEBUG  [23:22:56.807] [main] j.m.mbeanserver -  Send create notification of object metrics:name=io.dropwizard.jetty.MutableServletContextHandler.5xx-responses 
+DEBUG  [23:22:56.807] [main] j.m.mbeanserver -  JMX.mbean.registered metrics:name=io.dropwizard.jetty.MutableServletContextHandler.5xx-responses 
+DEBUG  [23:22:56.808] [main] j.m.mbeanserver -  ObjectName = metrics:name=io.dropwizard.jetty.MutableServletContextHandler.get-requests 
+DEBUG  [23:22:56.808] [main] j.m.mbeanserver -  name = metrics:name=io.dropwizard.jetty.MutableServletContextHandler.get-requests 
+DEBUG  [23:22:56.808] [main] j.m.mbeanserver -  Send create notification of object metrics:name=io.dropwizard.jetty.MutableServletContextHandler.get-requests 
+DEBUG  [23:22:56.808] [main] j.m.mbeanserver -  JMX.mbean.registered metrics:name=io.dropwizard.jetty.MutableServletContextHandler.get-requests 
+DEBUG  [23:22:56.808] [main] j.m.mbeanserver -  ObjectName = metrics:name=io.dropwizard.jetty.MutableServletContextHandler.post-requests 
+DEBUG  [23:22:56.812] [main] j.m.mbeanserver -  name = metrics:name=io.dropwizard.jetty.MutableServletContextHandler.post-requests 
+DEBUG  [23:22:56.812] [main] j.m.mbeanserver -  Send create notification of object metrics:name=io.dropwizard.jetty.MutableServletContextHandler.post-requests 
+DEBUG  [23:22:56.812] [main] j.m.mbeanserver -  JMX.mbean.registered metrics:name=io.dropwizard.jetty.MutableServletContextHandler.post-requests 
+DEBUG  [23:22:56.812] [main] j.m.mbeanserver -  ObjectName = metrics:name=io.dropwizard.jetty.MutableServletContextHandler.head-requests 
+DEBUG  [23:22:56.813] [main] j.m.mbeanserver -  name = metrics:name=io.dropwizard.jetty.MutableServletContextHandler.head-requests 
+DEBUG  [23:22:56.813] [main] j.m.mbeanserver -  Send create notification of object metrics:name=io.dropwizard.jetty.MutableServletContextHandler.head-requests 
+DEBUG  [23:22:56.813] [main] j.m.mbeanserver -  JMX.mbean.registered metrics:name=io.dropwizard.jetty.MutableServletContextHandler.head-requests 
+DEBUG  [23:22:56.814] [main] j.m.mbeanserver -  ObjectName = metrics:name=io.dropwizard.jetty.MutableServletContextHandler.put-requests 
+DEBUG  [23:22:56.814] [main] j.m.mbeanserver -  name = metrics:name=io.dropwizard.jetty.MutableServletContextHandler.put-requests 
+DEBUG  [23:22:56.814] [main] j.m.mbeanserver -  Send create notification of object metrics:name=io.dropwizard.jetty.MutableServletContextHandler.put-requests 
+DEBUG  [23:22:56.814] [main] j.m.mbeanserver -  JMX.mbean.registered metrics:name=io.dropwizard.jetty.MutableServletContextHandler.put-requests 
+DEBUG  [23:22:56.814] [main] j.m.mbeanserver -  ObjectName = metrics:name=io.dropwizard.jetty.MutableServletContextHandler.delete-requests 
+DEBUG  [23:22:56.814] [main] j.m.mbeanserver -  name = metrics:name=io.dropwizard.jetty.MutableServletContextHandler.delete-requests 
+DEBUG  [23:22:56.814] [main] j.m.mbeanserver -  Send create notification of object metrics:name=io.dropwizard.jetty.MutableServletContextHandler.delete-requests 
+DEBUG  [23:22:56.814] [main] j.m.mbeanserver -  JMX.mbean.registered metrics:name=io.dropwizard.jetty.MutableServletContextHandler.delete-requests 
+DEBUG  [23:22:56.815] [main] j.m.mbeanserver -  ObjectName = metrics:name=io.dropwizard.jetty.MutableServletContextHandler.options-requests 
+DEBUG  [23:22:56.815] [main] j.m.mbeanserver -  name = metrics:name=io.dropwizard.jetty.MutableServletContextHandler.options-requests 
+DEBUG  [23:22:56.815] [main] j.m.mbeanserver -  Send create notification of object metrics:name=io.dropwizard.jetty.MutableServletContextHandler.options-requests 
+DEBUG  [23:22:56.815] [main] j.m.mbeanserver -  JMX.mbean.registered metrics:name=io.dropwizard.jetty.MutableServletContextHandler.options-requests 
+DEBUG  [23:22:56.815] [main] j.m.mbeanserver -  ObjectName = metrics:name=io.dropwizard.jetty.MutableServletContextHandler.trace-requests 
+DEBUG  [23:22:56.815] [main] j.m.mbeanserver -  name = metrics:name=io.dropwizard.jetty.MutableServletContextHandler.trace-requests 
+DEBUG  [23:22:56.815] [main] j.m.mbeanserver -  Send create notification of object metrics:name=io.dropwizard.jetty.MutableServletContextHandler.trace-requests 
+DEBUG  [23:22:56.815] [main] j.m.mbeanserver -  JMX.mbean.registered metrics:name=io.dropwizard.jetty.MutableServletContextHandler.trace-requests 
+DEBUG  [23:22:56.816] [main] j.m.mbeanserver -  ObjectName = metrics:name=io.dropwizard.jetty.MutableServletContextHandler.connect-requests 
+DEBUG  [23:22:56.816] [main] j.m.mbeanserver -  name = metrics:name=io.dropwizard.jetty.MutableServletContextHandler.connect-requests 
+DEBUG  [23:22:56.816] [main] j.m.mbeanserver -  Send create notification of object metrics:name=io.dropwizard.jetty.MutableServletContextHandler.connect-requests 
+DEBUG  [23:22:56.816] [main] j.m.mbeanserver -  JMX.mbean.registered metrics:name=io.dropwizard.jetty.MutableServletContextHandler.connect-requests 
+DEBUG  [23:22:56.816] [main] j.m.mbeanserver -  ObjectName = metrics:name=io.dropwizard.jetty.MutableServletContextHandler.move-requests 
+DEBUG  [23:22:56.816] [main] j.m.mbeanserver -  name = metrics:name=io.dropwizard.jetty.MutableServletContextHandler.move-requests 
+DEBUG  [23:22:56.816] [main] j.m.mbeanserver -  Send create notification of object metrics:name=io.dropwizard.jetty.MutableServletContextHandler.move-requests 
+DEBUG  [23:22:56.816] [main] j.m.mbeanserver -  JMX.mbean.registered metrics:name=io.dropwizard.jetty.MutableServletContextHandler.move-requests 
+DEBUG  [23:22:56.817] [main] j.m.mbeanserver -  ObjectName = metrics:name=io.dropwizard.jetty.MutableServletContextHandler.other-requests 
+DEBUG  [23:22:56.817] [main] j.m.mbeanserver -  name = metrics:name=io.dropwizard.jetty.MutableServletContextHandler.other-requests 
+DEBUG  [23:22:56.817] [main] j.m.mbeanserver -  Send create notification of object metrics:name=io.dropwizard.jetty.MutableServletContextHandler.other-requests 
+DEBUG  [23:22:56.817] [main] j.m.mbeanserver -  JMX.mbean.registered metrics:name=io.dropwizard.jetty.MutableServletContextHandler.other-requests 
+DEBUG  [23:22:56.818] [main] j.m.mbeanserver -  ObjectName = metrics:name=io.dropwizard.jetty.MutableServletContextHandler.percent-4xx-1m 
+DEBUG  [23:22:56.818] [main] j.m.mbeanserver -  name = metrics:name=io.dropwizard.jetty.MutableServletContextHandler.percent-4xx-1m 
+DEBUG  [23:22:56.818] [main] j.m.mbeanserver -  Send create notification of object metrics:name=io.dropwizard.jetty.MutableServletContextHandler.percent-4xx-1m 
+DEBUG  [23:22:56.818] [main] j.m.mbeanserver -  JMX.mbean.registered metrics:name=io.dropwizard.jetty.MutableServletContextHandler.percent-4xx-1m 
+DEBUG  [23:22:56.819] [main] j.m.mbeanserver -  ObjectName = metrics:name=io.dropwizard.jetty.MutableServletContextHandler.percent-4xx-5m 
+DEBUG  [23:22:56.819] [main] j.m.mbeanserver -  name = metrics:name=io.dropwizard.jetty.MutableServletContextHandler.percent-4xx-5m 
+DEBUG  [23:22:56.819] [main] j.m.mbeanserver -  Send create notification of object metrics:name=io.dropwizard.jetty.MutableServletContextHandler.percent-4xx-5m 
+DEBUG  [23:22:56.819] [main] j.m.mbeanserver -  JMX.mbean.registered metrics:name=io.dropwizard.jetty.MutableServletContextHandler.percent-4xx-5m 
+DEBUG  [23:22:56.820] [main] j.m.mbeanserver -  ObjectName = metrics:name=io.dropwizard.jetty.MutableServletContextHandler.percent-4xx-15m 
+DEBUG  [23:22:56.821] [main] j.m.mbeanserver -  name = metrics:name=io.dropwizard.jetty.MutableServletContextHandler.percent-4xx-15m 
+DEBUG  [23:22:56.821] [main] j.m.mbeanserver -  Send create notification of object metrics:name=io.dropwizard.jetty.MutableServletContextHandler.percent-4xx-15m 
+DEBUG  [23:22:56.821] [main] j.m.mbeanserver -  JMX.mbean.registered metrics:name=io.dropwizard.jetty.MutableServletContextHandler.percent-4xx-15m 
+DEBUG  [23:22:56.822] [main] j.m.mbeanserver -  ObjectName = metrics:name=io.dropwizard.jetty.MutableServletContextHandler.percent-5xx-1m 
+DEBUG  [23:22:56.822] [main] j.m.mbeanserver -  name = metrics:name=io.dropwizard.jetty.MutableServletContextHandler.percent-5xx-1m 
+DEBUG  [23:22:56.822] [main] j.m.mbeanserver -  Send create notification of object metrics:name=io.dropwizard.jetty.MutableServletContextHandler.percent-5xx-1m 
+DEBUG  [23:22:56.822] [main] j.m.mbeanserver -  JMX.mbean.registered metrics:name=io.dropwizard.jetty.MutableServletContextHandler.percent-5xx-1m 
+DEBUG  [23:22:56.824] [main] j.m.mbeanserver -  ObjectName = metrics:name=io.dropwizard.jetty.MutableServletContextHandler.percent-5xx-5m 
+DEBUG  [23:22:56.824] [main] j.m.mbeanserver -  name = metrics:name=io.dropwizard.jetty.MutableServletContextHandler.percent-5xx-5m 
+DEBUG  [23:22:56.824] [main] j.m.mbeanserver -  Send create notification of object metrics:name=io.dropwizard.jetty.MutableServletContextHandler.percent-5xx-5m 
+DEBUG  [23:22:56.824] [main] j.m.mbeanserver -  JMX.mbean.registered metrics:name=io.dropwizard.jetty.MutableServletContextHandler.percent-5xx-5m 
+DEBUG  [23:22:56.825] [main] j.m.mbeanserver -  ObjectName = metrics:name=io.dropwizard.jetty.MutableServletContextHandler.percent-5xx-15m 
+DEBUG  [23:22:56.825] [main] j.m.mbeanserver -  name = metrics:name=io.dropwizard.jetty.MutableServletContextHandler.percent-5xx-15m 
+DEBUG  [23:22:56.826] [main] j.m.mbeanserver -  Send create notification of object metrics:name=io.dropwizard.jetty.MutableServletContextHandler.percent-5xx-15m 
+DEBUG  [23:22:56.826] [main] j.m.mbeanserver -  JMX.mbean.registered metrics:name=io.dropwizard.jetty.MutableServletContextHandler.percent-5xx-15m 
+DEBUG  [23:22:56.827] [main] o.e.j.u.c.AbstractLifeCycle -  STARTED @6275ms com.codahale.metrics.jetty9.InstrumentedHandler@1136b469 
+DEBUG  [23:22:56.827] [main] o.e.j.u.c.AbstractLifeCycle -  starting i.d.j.MutableServletContextHandler@47dd778{/admin,null,null} 
+INFO   [23:22:56.828] [main] i.d.s.AdminEnvironment -  tasks = 
+
+    POST    /tasks/log-level (io.dropwizard.servlets.tasks.LogConfigurationTask)
+    POST    /tasks/gc (io.dropwizard.servlets.tasks.GarbageCollectionTask)
+ 
+WARN   [23:22:56.828] [main] i.d.s.AdminEnvironment -  
+!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
+!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
+!    THIS APPLICATION HAS NO HEALTHCHECKS. THIS MEANS YOU WILL NEVER KNOW      !
+!     IF IT DIES IN PRODUCTION, WHICH MEANS YOU WILL NEVER KNOW IF YOU'RE      !
+!    LETTING YOUR USERS DOWN. YOU SHOULD ADD A HEALTHCHECK FOR EACH OF YOUR    !
+!         APPLICATION'S DEPENDENCIES WHICH FULLY (BUT LIGHTLY) TESTS IT.       !
+!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
+!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!! 
+DEBUG  [23:22:56.828] [main] i.d.s.AdminEnvironment -  health checks = [deadlocks] 
+DEBUG  [23:22:56.829] [main] o.e.j.s.h.AbstractHandler -  starting i.d.j.MutableServletContextHandler@47dd778{/admin,null,STARTING} 
+DEBUG  [23:22:56.829] [main] o.e.j.u.c.AbstractLifeCycle -  starting org.eclipse.jetty.servlet.ServletHandler@15515c51 
+DEBUG  [23:22:56.829] [main] o.e.j.s.ServletHandler -  Chose path=/* mapped to servlet=com.codahale.metrics.servlets.AdminServlet-29182679 from default=false 
+DEBUG  [23:22:56.829] [main] o.e.j.s.ServletHandler -  Chose path=/tasks/* mapped to servlet=tasks from default=false 
+DEBUG  [23:22:56.829] [main] o.e.j.s.ServletHandler -  filterNameMap={io.dropwizard.jersey.filter.AllowedMethodsFilter-57bd802b=io.dropwizard.jersey.filter.AllowedMethodsFilter-57bd802b} 
+DEBUG  [23:22:56.829] [main] o.e.j.s.ServletHandler -  pathFilters=[[/*]/[]==1=>io.dropwizard.jersey.filter.AllowedMethodsFilter-57bd802b] 
+DEBUG  [23:22:56.829] [main] o.e.j.s.ServletHandler -  servletFilterMap={} 
+DEBUG  [23:22:56.829] [main] o.e.j.s.ServletHandler -  servletPathMap={/*=com.codahale.metrics.servlets.AdminServlet-29182679@f60e5c5c==com.codahale.metrics.servlets.AdminServlet,1,true, /tasks/*=tasks@6907b8e==io.dropwizard.servlets.tasks.TaskServlet,1,true} 
+DEBUG  [23:22:56.830] [main] o.e.j.s.ServletHandler -  servletNameMap={com.codahale.metrics.servlets.AdminServlet-29182679=com.codahale.metrics.servlets.AdminServlet-29182679@f60e5c5c==com.codahale.metrics.servlets.AdminServlet,1,true, tasks=tasks@6907b8e==io.dropwizard.servlets.tasks.TaskServlet,1,true} 
+DEBUG  [23:22:56.830] [main] o.e.j.s.ServletHandler -  Adding Default404Servlet to org.eclipse.jetty.servlet.ServletHandler@15515c51 
+DEBUG  [23:22:56.831] [main] o.e.j.u.c.ContainerLifeCycle -  org.eclipse.jetty.servlet.ServletHandler@15515c51 added {org.eclipse.jetty.servlet.ServletHandler$Default404Servlet-761956ac@2df38dde==org.eclipse.jetty.servlet.ServletHandler$Default404Servlet,-1,false,AUTO} 
+DEBUG  [23:22:56.831] [main] o.e.j.u.c.ContainerLifeCycle -  org.eclipse.jetty.servlet.ServletHandler@15515c51 added {[/]=>org.eclipse.jetty.servlet.ServletHandler$Default404Servlet-761956ac,POJO} 
+DEBUG  [23:22:56.831] [main] o.e.j.s.ServletHandler -  Chose path=/* mapped to servlet=com.codahale.metrics.servlets.AdminServlet-29182679 from default=false 
+DEBUG  [23:22:56.831] [main] o.e.j.s.ServletHandler -  Chose path=/tasks/* mapped to servlet=tasks from default=false 
+DEBUG  [23:22:56.831] [main] o.e.j.s.ServletHandler -  Chose path=/ mapped to servlet=org.eclipse.jetty.servlet.ServletHandler$Default404Servlet-761956ac from default=false 
+DEBUG  [23:22:56.831] [main] o.e.j.s.ServletHandler -  filterNameMap={io.dropwizard.jersey.filter.AllowedMethodsFilter-57bd802b=io.dropwizard.jersey.filter.AllowedMethodsFilter-57bd802b} 
+DEBUG  [23:22:56.831] [main] o.e.j.s.ServletHandler -  pathFilters=[[/*]/[]==1=>io.dropwizard.jersey.filter.AllowedMethodsFilter-57bd802b] 
+DEBUG  [23:22:56.831] [main] o.e.j.s.ServletHandler -  servletFilterMap={} 
+DEBUG  [23:22:56.832] [main] o.e.j.s.ServletHandler -  servletPathMap={/*=com.codahale.metrics.servlets.AdminServlet-29182679@f60e5c5c==com.codahale.metrics.servlets.AdminServlet,1,true, /tasks/*=tasks@6907b8e==io.dropwizard.servlets.tasks.TaskServlet,1,true, /=org.eclipse.jetty.servlet.ServletHandler$Default404Servlet-761956ac@2df38dde==org.eclipse.jetty.servlet.ServletHandler$Default404Servlet,-1,false} 
+DEBUG  [23:22:56.832] [main] o.e.j.s.ServletHandler -  servletNameMap={com.codahale.metrics.servlets.AdminServlet-29182679=com.codahale.metrics.servlets.AdminServlet-29182679@f60e5c5c==com.codahale.metrics.servlets.AdminServlet,1,true, org.eclipse.jetty.servlet.ServletHandler$Default404Servlet-761956ac=org.eclipse.jetty.servlet.ServletHandler$Default404Servlet-761956ac@2df38dde==org.eclipse.jetty.servlet.ServletHandler$Default404Servlet,-1,false, tasks=tasks@6907b8e==io.dropwizard.servlets.tasks.TaskServlet,1,true} 
+DEBUG  [23:22:56.832] [main] o.e.j.s.h.AbstractHandler -  starting org.eclipse.jetty.servlet.ServletHandler@15515c51 
+DEBUG  [23:22:56.833] [main] o.e.j.u.c.AbstractLifeCycle -  STARTED @6280ms org.eclipse.jetty.servlet.ServletHandler@15515c51 
+DEBUG  [23:22:56.833] [main] o.e.j.u.c.AbstractLifeCycle -  starting io.dropwizard.jersey.filter.AllowedMethodsFilter-57bd802b 
+DEBUG  [23:22:56.833] [main] o.e.j.u.c.AbstractLifeCycle -  STARTED @6281ms io.dropwizard.jersey.filter.AllowedMethodsFilter-57bd802b 
+DEBUG  [23:22:56.833] [main] o.e.j.s.FilterHolder -  Filter.init io.dropwizard.jersey.filter.AllowedMethodsFilter@304d0259 
+DEBUG  [23:22:56.833] [main] o.e.j.u.c.AbstractLifeCycle -  starting org.eclipse.jetty.servlet.ServletHandler$Default404Servlet-761956ac@2df38dde==org.eclipse.jetty.servlet.ServletHandler$Default404Servlet,-1,false 
+DEBUG  [23:22:56.833] [main] o.e.j.u.c.AbstractLifeCycle -  STARTED @6281ms org.eclipse.jetty.servlet.ServletHandler$Default404Servlet-761956ac@2df38dde==org.eclipse.jetty.servlet.ServletHandler$Default404Servlet,-1,false 
+DEBUG  [23:22:56.834] [main] o.e.j.u.c.AbstractLifeCycle -  starting com.codahale.metrics.servlets.AdminServlet-29182679@f60e5c5c==com.codahale.metrics.servlets.AdminServlet,1,true 
+DEBUG  [23:22:56.835] [main] o.e.j.u.c.AbstractLifeCycle -  STARTED @6282ms com.codahale.metrics.servlets.AdminServlet-29182679@f60e5c5c==com.codahale.metrics.servlets.AdminServlet,1,true 
+DEBUG  [23:22:56.835] [main] o.e.j.s.ServletHolder -  Servlet.init com.codahale.metrics.servlets.AdminServlet@2133661d for com.codahale.metrics.servlets.AdminServlet-29182679 
+DEBUG  [23:22:56.852] [main] o.e.j.u.c.AbstractLifeCycle -  starting tasks@6907b8e==io.dropwizard.servlets.tasks.TaskServlet,1,true 
+DEBUG  [23:22:56.852] [main] o.e.j.u.c.AbstractLifeCycle -  STARTED @6300ms tasks@6907b8e==io.dropwizard.servlets.tasks.TaskServlet,1,true 
+DEBUG  [23:22:56.852] [main] o.e.j.s.ServletHolder -  Servlet.init io.dropwizard.servlets.tasks.TaskServlet@7a04fea7 for tasks 
+INFO   [23:22:56.853] [main] o.e.j.s.h.ContextHandler -  Started i.d.j.MutableServletContextHandler@47dd778{/admin,null,AVAILABLE} 
+DEBUG  [23:22:56.853] [main] o.e.j.u.c.AbstractLifeCycle -  STARTED @6301ms i.d.j.MutableServletContextHandler@47dd778{/admin,null,AVAILABLE} 
+DEBUG  [23:22:56.853] [main] o.e.j.u.c.AbstractLifeCycle -  STARTED @6301ms io.dropwizard.jetty.ContextRoutingHandler@9a7a808 
+DEBUG  [23:22:56.853] [main] o.e.j.u.c.AbstractLifeCycle -  STARTED @6301ms io.dropwizard.jetty.BiDiGzipHandler@749f539e 
+DEBUG  [23:22:56.853] [main] o.e.j.u.c.AbstractLifeCycle -  STARTED @6301ms org.eclipse.jetty.server.handler.RequestLogHandler@a7f0ab6 
+DEBUG  [23:22:56.853] [main] o.e.j.u.c.AbstractLifeCycle -  STARTED @6301ms org.eclipse.jetty.server.handler.StatisticsHandler@24a298a6 
+DEBUG  [23:22:56.854] [main] o.e.j.u.c.AbstractLifeCycle -  starting NewsFeed@6f099cef{HTTP/1.1,[http/1.1]}{0.0.0.0:8080} 
+DEBUG  [23:22:56.854] [main] o.e.j.u.c.AbstractLifeCycle -  starting org.eclipse.jetty.util.thread.ScheduledExecutorScheduler@baf1bb3 
+DEBUG  [23:22:56.855] [main] o.e.j.u.c.AbstractLifeCycle -  STARTED @6303ms org.eclipse.jetty.util.thread.ScheduledExecutorScheduler@baf1bb3 
+DEBUG  [23:22:56.855] [main] o.e.j.u.c.AbstractLifeCycle -  starting io.dropwizard.jetty.Jetty93InstrumentedConnectionFactory@71c905a3 
+DEBUG  [23:22:56.855] [main] o.e.j.u.c.AbstractLifeCycle -  starting HttpConnectionFactory@cda0432[HTTP/1.1] 
+DEBUG  [23:22:56.856] [main] o.e.j.u.c.AbstractLifeCycle -  STARTED @6303ms HttpConnectionFactory@cda0432[HTTP/1.1] 
+DEBUG  [23:22:56.856] [main] o.e.j.u.c.AbstractLifeCycle -  STARTED @6304ms io.dropwizard.jetty.Jetty93InstrumentedConnectionFactory@71c905a3 
+DEBUG  [23:22:56.856] [main] o.e.j.u.c.AbstractLifeCycle -  starting org.eclipse.jetty.server.ServerConnector$ServerConnectorManager@1d207fad 
+DEBUG  [23:22:56.865] [main] o.e.j.u.c.ContainerLifeCycle -  org.eclipse.jetty.server.ServerConnector$ServerConnectorManager@1d207fad added {org.eclipse.jetty.io.ManagedSelector@35267fd4 id=0 keys=-1 selected=-1,AUTO} 
+DEBUG  [23:22:56.865] [main] o.e.j.u.c.ContainerLifeCycle -  org.eclipse.jetty.server.ServerConnector$ServerConnectorManager@1d207fad added {org.eclipse.jetty.io.ManagedSelector@397ef2 id=1 keys=-1 selected=-1,AUTO} 
+DEBUG  [23:22:56.866] [main] o.e.j.u.c.ContainerLifeCycle -  org.eclipse.jetty.server.ServerConnector$ServerConnectorManager@1d207fad added {org.eclipse.jetty.io.ManagedSelector@36a6bea6 id=2 keys=-1 selected=-1,AUTO} 
+DEBUG  [23:22:56.866] [main] o.e.j.u.c.ContainerLifeCycle -  org.eclipse.jetty.server.ServerConnector$ServerConnectorManager@1d207fad added {org.eclipse.jetty.io.ManagedSelector@44e93c1f id=3 keys=-1 selected=-1,AUTO} 
+DEBUG  [23:22:56.866] [main] o.e.j.u.c.AbstractLifeCycle -  starting org.eclipse.jetty.io.ManagedSelector@35267fd4 id=0 keys=-1 selected=-1 
+DEBUG  [23:22:56.873] [main] o.e.j.u.t.QueuedThreadPool -  queue org.eclipse.jetty.io.ManagedSelector@35267fd4 id=0 keys=0 selected=0 
+DEBUG  [23:22:56.874] [dw-13] o.e.j.u.t.QueuedThreadPool -  run org.eclipse.jetty.io.ManagedSelector@35267fd4 id=0 keys=0 selected=0 
+DEBUG  [23:22:56.874] [dw-13] o.e.j.u.t.s.ExecuteProduceConsume -  EPC Idle/org.eclipse.jetty.io.ManagedSelector$SelectorProducer@6067189 execute 
+DEBUG  [23:22:56.874] [dw-13] o.e.j.u.t.s.ExecuteProduceConsume -  EPC Prod/org.eclipse.jetty.io.ManagedSelector$SelectorProducer@6067189 produce enter 
+DEBUG  [23:22:56.874] [dw-13] o.e.j.u.t.s.ExecuteProduceConsume -  EPC Prod/org.eclipse.jetty.io.ManagedSelector$SelectorProducer@6067189 producing 
+DEBUG  [23:22:56.875] [dw-13] o.e.j.i.ManagedSelector -  Selector loop waiting on select 
+DEBUG  [23:22:56.878] [main] o.e.j.u.c.AbstractLifeCycle -  STARTED @6326ms org.eclipse.jetty.io.ManagedSelector@35267fd4 id=0 keys=0 selected=0 
+DEBUG  [23:22:56.879] [main] o.e.j.u.c.AbstractLifeCycle -  starting org.eclipse.jetty.io.ManagedSelector@397ef2 id=1 keys=-1 selected=-1 
+DEBUG  [23:22:56.879] [main] o.e.j.u.t.QueuedThreadPool -  queue org.eclipse.jetty.io.ManagedSelector@397ef2 id=1 keys=0 selected=0 
+DEBUG  [23:22:56.879] [main] o.e.j.u.c.AbstractLifeCycle -  STARTED @6327ms org.eclipse.jetty.io.ManagedSelector@397ef2 id=1 keys=0 selected=0 
+DEBUG  [23:22:56.880] [main] o.e.j.u.c.AbstractLifeCycle -  starting org.eclipse.jetty.io.ManagedSelector@36a6bea6 id=2 keys=-1 selected=-1 
+DEBUG  [23:22:56.881] [dw-14] o.e.j.u.t.QueuedThreadPool -  run org.eclipse.jetty.io.ManagedSelector@397ef2 id=1 keys=0 selected=0 
+DEBUG  [23:22:56.881] [dw-14] o.e.j.u.t.s.ExecuteProduceConsume -  EPC Idle/org.eclipse.jetty.io.ManagedSelector$SelectorProducer@7786cefa execute 
+DEBUG  [23:22:56.881] [dw-14] o.e.j.u.t.s.ExecuteProduceConsume -  EPC Prod/org.eclipse.jetty.io.ManagedSelector$SelectorProducer@7786cefa produce enter 
+DEBUG  [23:22:56.881] [dw-14] o.e.j.u.t.s.ExecuteProduceConsume -  EPC Prod/org.eclipse.jetty.io.ManagedSelector$SelectorProducer@7786cefa producing 
+DEBUG  [23:22:56.881] [dw-14] o.e.j.i.ManagedSelector -  Selector loop waiting on select 
+DEBUG  [23:22:56.882] [main] o.e.j.u.t.QueuedThreadPool -  queue org.eclipse.jetty.io.ManagedSelector@36a6bea6 id=2 keys=0 selected=0 
+DEBUG  [23:22:56.882] [dw-16] o.e.j.u.t.QueuedThreadPool -  run org.eclipse.jetty.io.ManagedSelector@36a6bea6 id=2 keys=0 selected=0 
+DEBUG  [23:22:56.882] [dw-16] o.e.j.u.t.s.ExecuteProduceConsume -  EPC Idle/org.eclipse.jetty.io.ManagedSelector$SelectorProducer@19366481 execute 
+DEBUG  [23:22:56.882] [dw-16] o.e.j.u.t.s.ExecuteProduceConsume -  EPC Prod/org.eclipse.jetty.io.ManagedSelector$SelectorProducer@19366481 produce enter 
+DEBUG  [23:22:56.882] [dw-16] o.e.j.u.t.s.ExecuteProduceConsume -  EPC Prod/org.eclipse.jetty.io.ManagedSelector$SelectorProducer@19366481 producing 
+DEBUG  [23:22:56.882] [dw-16] o.e.j.i.ManagedSelector -  Selector loop waiting on select 
+DEBUG  [23:22:56.883] [main] o.e.j.u.c.AbstractLifeCycle -  STARTED @6331ms org.eclipse.jetty.io.ManagedSelector@36a6bea6 id=2 keys=0 selected=0 
+DEBUG  [23:22:56.883] [main] o.e.j.u.c.AbstractLifeCycle -  starting org.eclipse.jetty.io.ManagedSelector@44e93c1f id=3 keys=-1 selected=-1 
+DEBUG  [23:22:56.883] [main] o.e.j.u.t.QueuedThreadPool -  queue org.eclipse.jetty.io.ManagedSelector@44e93c1f id=3 keys=0 selected=0 
+DEBUG  [23:22:56.884] [dw-17] o.e.j.u.t.QueuedThreadPool -  run org.eclipse.jetty.io.ManagedSelector@44e93c1f id=3 keys=0 selected=0 
+DEBUG  [23:22:56.884] [dw-17] o.e.j.u.t.s.ExecuteProduceConsume -  EPC Idle/org.eclipse.jetty.io.ManagedSelector$SelectorProducer@42a67559 execute 
+DEBUG  [23:22:56.884] [dw-17] o.e.j.u.t.s.ExecuteProduceConsume -  EPC Prod/org.eclipse.jetty.io.ManagedSelector$SelectorProducer@42a67559 produce enter 
+DEBUG  [23:22:56.884] [dw-17] o.e.j.u.t.s.ExecuteProduceConsume -  EPC Prod/org.eclipse.jetty.io.ManagedSelector$SelectorProducer@42a67559 producing 
+DEBUG  [23:22:56.884] [dw-17] o.e.j.i.ManagedSelector -  Selector loop waiting on select 
+DEBUG  [23:22:56.884] [main] o.e.j.u.c.AbstractLifeCycle -  STARTED @6332ms org.eclipse.jetty.io.ManagedSelector@44e93c1f id=3 keys=0 selected=0 
+DEBUG  [23:22:56.884] [main] o.e.j.u.c.AbstractLifeCycle -  STARTED @6332ms org.eclipse.jetty.server.ServerConnector$ServerConnectorManager@1d207fad 
+DEBUG  [23:22:56.888] [main] o.e.j.u.c.ContainerLifeCycle -  NewsFeed@6f099cef{HTTP/1.1,[http/1.1]}{0.0.0.0:8080} added {acceptor-0@a62c7cd,POJO} 
+DEBUG  [23:22:56.888] [main] o.e.j.u.t.QueuedThreadPool -  queue acceptor-0@a62c7cd 
+DEBUG  [23:22:56.889] [dw-18] o.e.j.u.t.QueuedThreadPool -  run acceptor-0@a62c7cd 
+DEBUG  [23:22:56.891] [main] o.e.j.u.c.ContainerLifeCycle -  NewsFeed@6f099cef{HTTP/1.1,[http/1.1]}{0.0.0.0:8080} added {acceptor-1@7661b5a,POJO} 
+DEBUG  [23:22:56.898] [main] o.e.j.u.t.QueuedThreadPool -  queue acceptor-1@7661b5a 
+DEBUG  [23:22:56.906] [dw-19] o.e.j.u.t.QueuedThreadPool -  run acceptor-1@7661b5a 
+INFO   [23:22:56.908] [main] o.e.j.s.AbstractConnector -  Started NewsFeed@6f099cef{HTTP/1.1,[http/1.1]}{0.0.0.0:8080} 
+DEBUG  [23:22:56.908] [main] o.e.j.u.c.AbstractLifeCycle -  STARTED @6356ms NewsFeed@6f099cef{HTTP/1.1,[http/1.1]}{0.0.0.0:8080} 
+INFO   [23:22:56.909] [main] o.e.j.s.Server -  Started @6357ms 
+DEBUG  [23:22:56.910] [main] o.e.j.u.c.AbstractLifeCycle -  STARTED @6357ms org.eclipse.jetty.server.Server@1813f3e9 
+DEBUG  [23:23:08.913] [dw-18-acceptor-0@a62c7cd-NewsFeed@6f099cef{HTTP/1.1,[http/1.1]}{0.0.0.0:8080}] o.e.j.i.ManagedSelector -  Queued change org.eclipse.jetty.io.ManagedSelector$Accept@315d958e on org.eclipse.jetty.io.ManagedSelector@35267fd4 id=0 keys=0 selected=0 
+DEBUG  [23:23:08.917] [dw-13] o.e.j.i.ManagedSelector -  Selector loop woken up from select, 0/0 selected 
+DEBUG  [23:23:08.919] [dw-13] o.e.j.i.ManagedSelector -  Running change org.eclipse.jetty.io.ManagedSelector$Accept@315d958e 
+DEBUG  [23:23:08.926] [dw-13] o.e.j.i.ManagedSelector -  Queued change org.eclipse.jetty.io.ManagedSelector$CreateEndPoint@29d36a4d on org.eclipse.jetty.io.ManagedSelector@35267fd4 id=0 keys=1 selected=0 
+DEBUG  [23:23:08.926] [dw-13] o.e.j.u.t.s.ExecuteProduceConsume -  EPC Prod/org.eclipse.jetty.io.ManagedSelector$SelectorProducer@6067189 produced org.eclipse.jetty.io.ManagedSelector$CreateEndPoint@29d36a4d 
+DEBUG  [23:23:08.927] [dw-13] o.e.j.u.t.s.ExecuteProduceConsume -  EPC Pend/org.eclipse.jetty.io.ManagedSelector$SelectorProducer@6067189 dispatch 
+DEBUG  [23:23:08.927] [dw-13] o.e.j.u.t.QueuedThreadPool -  queue EPC Pend/org.eclipse.jetty.io.ManagedSelector$SelectorProducer@6067189 
+DEBUG  [23:23:08.928] [dw-20] o.e.j.u.t.QueuedThreadPool -  run EPC Pend/org.eclipse.jetty.io.ManagedSelector$SelectorProducer@6067189 
+DEBUG  [23:23:08.928] [dw-20] o.e.j.u.t.s.ExecuteProduceConsume -  EPC Pend/org.eclipse.jetty.io.ManagedSelector$SelectorProducer@6067189 run 
+DEBUG  [23:23:08.928] [dw-20] o.e.j.u.t.s.ExecuteProduceConsume -  EPC Prod/org.eclipse.jetty.io.ManagedSelector$SelectorProducer@6067189 produce enter 
+DEBUG  [23:23:08.929] [dw-20] o.e.j.u.t.s.ExecuteProduceConsume -  EPC Prod/org.eclipse.jetty.io.ManagedSelector$SelectorProducer@6067189 producing 
+DEBUG  [23:23:08.929] [dw-20] o.e.j.i.ManagedSelector -  Selector loop waiting on select 
+DEBUG  [23:23:08.930] [dw-13] o.e.j.u.t.s.ExecuteProduceConsume -  EPC Prod/org.eclipse.jetty.io.ManagedSelector$SelectorProducer@6067189 run org.eclipse.jetty.io.ManagedSelector$CreateEndPoint@29d36a4d 
+DEBUG  [23:23:08.984] [dw-13] o.e.j.i.AbstractEndPoint -  onOpen SelectChannelEndPoint@c4d54e2{/0:0:0:0:0:0:0:1:40098<->8080,Open,in,out,-,-,21/30000,null@0}{io=0/0,kio=0,kro=0} 
+DEBUG  [23:23:08.986] [dw-13] o.e.j.i.IdleTimeout -  SelectChannelEndPoint@c4d54e2{/0:0:0:0:0:0:0:1:40098<->8080,Open,in,out,-,-,23/30000,null@0}{io=0/0,kio=0,kro=0} idle timeout check, elapsed: 22 ms, remaining: 29978 ms 
+DEBUG  [23:23:09.090] [dw-13] o.e.j.s.HttpChannel -  new HttpChannelOverHttp@c413f2{r=0,c=false,a=IDLE,uri=null} -> SelectChannelEndPoint@c4d54e2{/0:0:0:0:0:0:0:1:40098<->8080,Open,in,out,-,-,127/30000,null@0}{io=0/0,kio=0,kro=0},null,HttpChannelState@d3d2e95{s=IDLE a=NOT_ASYNC i=true r=!P!U w=false} 
+DEBUG  [23:23:09.114] [dw-13] o.e.j.s.HttpConnection -  New HTTP Connection HttpConnection@60600566[SelectChannelEndPoint@c4d54e2{/0:0:0:0:0:0:0:1:40098<->8080,Open,in,out,-,-,151/30000,null@0}{io=0/0,kio=0,kro=0}][p=HttpParser{s=START,0 of 0},g=HttpGenerator@7a8cb856{s=START},c=HttpChannelOverHttp@c413f2{r=0,c=false,a=IDLE,uri=null}] 
+DEBUG  [23:23:09.117] [dw-13] o.e.j.i.AbstractConnection -  onOpen HttpConnection@60600566[SelectChannelEndPoint@c4d54e2{/0:0:0:0:0:0:0:1:40098<->8080,Open,in,out,-,-,154/30000,HttpConnection@60600566}{io=0/0,kio=0,kro=0}][p=HttpParser{s=START,0 of 0},g=HttpGenerator@7a8cb856{s=START},c=HttpChannelOverHttp@c413f2{r=0,c=false,a=IDLE,uri=null}] 
+DEBUG  [23:23:09.119] [dw-13] o.e.j.i.AbstractConnection -  fillInterested HttpConnection@60600566[SelectChannelEndPoint@c4d54e2{/0:0:0:0:0:0:0:1:40098<->8080,Open,in,out,-,-,156/30000,HttpConnection@60600566}{io=0/0,kio=0,kro=0}][p=HttpParser{s=START,0 of 0},g=HttpGenerator@7a8cb856{s=START},c=HttpChannelOverHttp@c413f2{r=0,c=false,a=IDLE,uri=null}] 
+DEBUG  [23:23:09.122] [dw-13] o.e.j.i.FillInterest -  FillInterest@28db49d8{true,AC.ReadCB@60600566{HttpConnection@60600566[SelectChannelEndPoint@c4d54e2{/0:0:0:0:0:0:0:1:40098<->8080,Open,in,out,FI,-,1/30000,HttpConnection@60600566}{io=0/0,kio=0,kro=0}][p=HttpParser{s=START,0 of 0},g=HttpGenerator@7a8cb856{s=START},c=HttpChannelOverHttp@c413f2{r=0,c=false,a=IDLE,uri=null}]}} register AC.ReadCB@60600566{HttpConnection@60600566[SelectChannelEndPoint@c4d54e2{/0:0:0:0:0:0:0:1:40098<->8080,Open,in,out,FI,-,1/30000,HttpConnection@60600566}{io=0/0,kio=0,kro=0}][p=HttpParser{s=START,0 of 0},g=HttpGenerator@7a8cb856{s=START},c=HttpChannelOverHttp@c413f2{r=0,c=false,a=IDLE,uri=null}]} 
+DEBUG  [23:23:09.125] [dw-13] o.e.j.i.FillInterest -  FillInterest@28db49d8{true,AC.ReadCB@60600566{HttpConnection@60600566[SelectChannelEndPoint@c4d54e2{/0:0:0:0:0:0:0:1:40098<->8080,Open,in,out,FI,-,3/30000,HttpConnection@60600566}{io=0/0,kio=0,kro=0}][p=HttpParser{s=START,0 of 0},g=HttpGenerator@7a8cb856{s=START},c=HttpChannelOverHttp@c413f2{r=0,c=false,a=IDLE,uri=null}]}} register AC.ReadCB@60600566{HttpConnection@60600566[SelectChannelEndPoint@c4d54e2{/0:0:0:0:0:0:0:1:40098<->8080,Open,in,out,FI,-,4/30000,HttpConnection@60600566}{io=0/0,kio=0,kro=0}][p=HttpParser{s=START,0 of 0},g=HttpGenerator@7a8cb856{s=START},c=HttpChannelOverHttp@c413f2{r=0,c=false,a=IDLE,uri=null}]} 
+DEBUG  [23:23:09.126] [dw-13] o.e.j.i.SelectChannelEndPoint -  changeInterests p=false 0->1 for SelectChannelEndPoint@c4d54e2{/0:0:0:0:0:0:0:1:40098<->8080,Open,in,out,FI,-,6/30000,HttpConnection@60600566}{io=0/1,kio=0,kro=0} 
+DEBUG  [23:23:09.127] [dw-13] o.e.j.i.ManagedSelector -  Queued change SelectChannelEndPoint@c4d54e2{/0:0:0:0:0:0:0:1:40098<->8080,Open,in,out,FI,-,7/30000,HttpConnection@60600566}{io=0/1,kio=0,kro=0}:runUpdateKey on org.eclipse.jetty.io.ManagedSelector@35267fd4 id=0 keys=1 selected=0 
+DEBUG  [23:23:09.128] [dw-20] o.e.j.i.ManagedSelector -  Selector loop woken up from select, 0/1 selected 
+DEBUG  [23:23:09.128] [dw-20] o.e.j.i.ManagedSelector -  Running change SelectChannelEndPoint@c4d54e2{/0:0:0:0:0:0:0:1:40098<->8080,Open,in,out,FI,-,8/30000,HttpConnection@60600566}{io=0/1,kio=0,kro=0}:runUpdateKey 
+DEBUG  [23:23:09.128] [dw-13] o.e.j.i.ManagedSelector -  Created SelectChannelEndPoint@c4d54e2{/0:0:0:0:0:0:0:1:40098<->8080,Open,in,out,FI,-,8/30000,HttpConnection@60600566}{io=0/1,kio=0,kro=0} 
+DEBUG  [23:23:09.128] [dw-13] o.e.j.u.t.s.ExecuteProduceConsume -  EPC Prod/org.eclipse.jetty.io.ManagedSelector$SelectorProducer@6067189 ran org.eclipse.jetty.io.ManagedSelector$CreateEndPoint@29d36a4d 
+DEBUG  [23:23:09.129] [dw-20] o.e.j.i.SelectChannelEndPoint -  Key interests updated 0 -> 1 on SelectChannelEndPoint@c4d54e2{/0:0:0:0:0:0:0:1:40098<->8080,Open,in,out,FI,-,8/30000,HttpConnection@60600566}{io=1/1,kio=1,kro=0} 
+DEBUG  [23:23:09.129] [dw-20] o.e.j.i.ManagedSelector -  Selector loop waiting on select 
+DEBUG  [23:23:09.129] [dw-13] o.e.j.u.t.s.ExecuteProduceConsume -  EPC Prod/org.eclipse.jetty.io.ManagedSelector$SelectorProducer@6067189 produce exit 
+DEBUG  [23:23:09.129] [dw-20] o.e.j.i.ManagedSelector -  Selector loop woken up from select, 1/1 selected 
+DEBUG  [23:23:09.130] [dw-13] o.e.j.u.t.QueuedThreadPool -  ran org.eclipse.jetty.io.ManagedSelector@35267fd4 id=0 keys=1 selected=1 
+DEBUG  [23:23:09.130] [dw-20] o.e.j.i.SelectChannelEndPoint -  onSelected 1->0 r=true w=false for SelectChannelEndPoint@c4d54e2{/0:0:0:0:0:0:0:1:40098<->8080,Open,in,out,FI,-,9/30000,HttpConnection@60600566}{io=1/0,kio=1,kro=1} 
+DEBUG  [23:23:09.131] [dw-20] o.e.j.i.SelectChannelEndPoint -  task SelectChannelEndPoint@c4d54e2{/0:0:0:0:0:0:0:1:40098<->8080,Open,in,out,FI,-,10/30000,HttpConnection@60600566}{io=1/0,kio=1,kro=1}:runFillable 
+DEBUG  [23:23:09.131] [dw-20] o.e.j.u.t.s.ExecuteProduceConsume -  EPC Prod/org.eclipse.jetty.io.ManagedSelector$SelectorProducer@6067189 produced SelectChannelEndPoint@c4d54e2{/0:0:0:0:0:0:0:1:40098<->8080,Open,in,out,FI,-,11/30000,HttpConnection@60600566}{io=1/0,kio=1,kro=1}:runFillable 
+DEBUG  [23:23:09.131] [dw-20] o.e.j.u.t.s.ExecuteProduceConsume -  EPC Pend/org.eclipse.jetty.io.ManagedSelector$SelectorProducer@6067189 dispatch 
+DEBUG  [23:23:09.131] [dw-20] o.e.j.u.t.QueuedThreadPool -  queue EPC Pend/org.eclipse.jetty.io.ManagedSelector$SelectorProducer@6067189 
+DEBUG  [23:23:09.131] [dw-15] o.e.j.u.t.QueuedThreadPool -  run EPC Pend/org.eclipse.jetty.io.ManagedSelector$SelectorProducer@6067189 
+DEBUG  [23:23:09.131] [dw-15] o.e.j.u.t.s.ExecuteProduceConsume -  EPC Pend/org.eclipse.jetty.io.ManagedSelector$SelectorProducer@6067189 run 
+DEBUG  [23:23:09.132] [dw-15] o.e.j.u.t.s.ExecuteProduceConsume -  EPC Prod/org.eclipse.jetty.io.ManagedSelector$SelectorProducer@6067189 produce enter 
+DEBUG  [23:23:09.132] [dw-15] o.e.j.u.t.s.ExecuteProduceConsume -  EPC Prod/org.eclipse.jetty.io.ManagedSelector$SelectorProducer@6067189 producing 
+DEBUG  [23:23:09.132] [dw-15] o.e.j.i.SelectChannelEndPoint -  Key interests updated 1 -> 0 on SelectChannelEndPoint@c4d54e2{/0:0:0:0:0:0:0:1:40098<->8080,Open,in,out,FI,-,12/30000,HttpConnection@60600566}{io=0/0,kio=0,kro=1} 
+DEBUG  [23:23:09.132] [dw-15] o.e.j.i.ManagedSelector -  Selector loop waiting on select 
+DEBUG  [23:23:09.133] [dw-20] o.e.j.u.t.s.ExecuteProduceConsume -  EPC Prod/org.eclipse.jetty.io.ManagedSelector$SelectorProducer@6067189 run SelectChannelEndPoint@c4d54e2{/0:0:0:0:0:0:0:1:40098<->8080,Open,in,out,FI,-,13/30000,HttpConnection@60600566}{io=0/0,kio=0,kro=1}:runFillable 
+DEBUG  [23:23:09.135] [dw-20] o.e.j.i.FillInterest -  FillInterest@28db49d8{true,AC.ReadCB@60600566{HttpConnection@60600566[SelectChannelEndPoint@c4d54e2{/0:0:0:0:0:0:0:1:40098<->8080,Open,in,out,FI,-,13/30000,HttpConnection@60600566}{io=0/0,kio=0,kro=1}][p=HttpParser{s=START,0 of 0},g=HttpGenerator@7a8cb856{s=START},c=HttpChannelOverHttp@c413f2{r=0,c=false,a=IDLE,uri=null}]}} fillable AC.ReadCB@60600566{HttpConnection@60600566[SelectChannelEndPoint@c4d54e2{/0:0:0:0:0:0:0:1:40098<->8080,Open,in,out,FI,-,14/30000,HttpConnection@60600566}{io=0/0,kio=0,kro=1}][p=HttpParser{s=START,0 of 0},g=HttpGenerator@7a8cb856{s=START},c=HttpChannelOverHttp@c413f2{r=0,c=false,a=IDLE,uri=null}]} 
+DEBUG  [23:23:09.136] [dw-20] o.e.j.s.HttpConnection -  HttpConnection@60600566[SelectChannelEndPoint@c4d54e2{/0:0:0:0:0:0:0:1:40098<->8080,Open,in,out,-,-,15/30000,HttpConnection@60600566}{io=0/0,kio=0,kro=1}][p=HttpParser{s=START,0 of 0},g=HttpGenerator@7a8cb856{s=START},c=HttpChannelOverHttp@c413f2{r=0,c=false,a=IDLE,uri=null}] onFillable enter HttpChannelState@d3d2e95{s=IDLE a=NOT_ASYNC i=true r=!P!U w=false} null 
+DEBUG  [23:23:09.139] [dw-20] o.e.j.i.ChannelEndPoint -  filled 90 SelectChannelEndPoint@c4d54e2{/0:0:0:0:0:0:0:1:40098<->8080,Open,in,out,-,-,19/30000,HttpConnection@60600566}{io=0/0,kio=0,kro=1} 
+DEBUG  [23:23:09.141] [dw-20] o.e.j.s.HttpConnection -  HttpConnection@60600566[SelectChannelEndPoint@c4d54e2{/0:0:0:0:0:0:0:1:40098<->8080,Open,in,out,-,-,1/30000,HttpConnection@60600566}{io=0/0,kio=0,kro=1}][p=HttpParser{s=START,0 of 0},g=HttpGenerator@7a8cb856{s=START},c=HttpChannelOverHttp@c413f2{r=0,c=false,a=IDLE,uri=null}] filled 90 HeapByteBuffer@6c97d090[p=0,l=90,c=8192,r=90]={<<<GET /particpant/3...Accept: */*\r\n\r\n>>>\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00...\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00} 
+DEBUG  [23:23:09.142] [dw-20] o.e.j.s.HttpConnection -  HttpConnection@60600566[SelectChannelEndPoint@c4d54e2{/0:0:0:0:0:0:0:1:40098<->8080,Open,in,out,-,-,2/30000,HttpConnection@60600566}{io=0/0,kio=0,kro=1}][p=HttpParser{s=START,0 of 0},g=HttpGenerator@7a8cb856{s=START},c=HttpChannelOverHttp@c413f2{r=0,c=false,a=IDLE,uri=null}] parse HeapByteBuffer@6c97d090[p=0,l=90,c=8192,r=90]={<<<GET /particpant/3...Accept: */*\r\n\r\n>>>\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00...\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00} {} 
+DEBUG  [23:23:09.142] [dw-20] o.e.j.h.HttpParser -  parseNext s=START HeapByteBuffer@6c97d090[p=0,l=90,c=8192,r=90]={<<<GET /particpant/3...Accept: */*\r\n\r\n>>>\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00...\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00} 
+DEBUG  [23:23:09.142] [dw-20] o.e.j.h.HttpParser -  START --> SPACE1 
+DEBUG  [23:23:09.144] [dw-20] o.e.j.h.HttpParser -  SPACE1 --> URI 
+DEBUG  [23:23:09.144] [dw-20] o.e.j.h.HttpParser -  URI --> SPACE2 
+DEBUG  [23:23:09.145] [dw-20] o.e.j.h.HttpParser -  SPACE2 --> REQUEST_VERSION 
+DEBUG  [23:23:09.145] [dw-20] o.e.j.h.HttpParser -  REQUEST_VERSION --> HEADER 
+DEBUG  [23:23:09.147] [dw-20] o.e.j.h.HttpParser -  HEADER --> HEADER_VALUE 
+DEBUG  [23:23:09.148] [dw-20] o.e.j.h.HttpParser -  HEADER_VALUE --> HEADER_IN_VALUE 
+DEBUG  [23:23:09.148] [dw-20] o.e.j.h.HttpParser -  HEADER_IN_VALUE --> HEADER 
+DEBUG  [23:23:09.149] [dw-20] o.e.j.h.HttpParser -  HEADER --> HEADER_VALUE 
+DEBUG  [23:23:09.149] [dw-20] o.e.j.h.HttpParser -  HEADER_VALUE --> HEADER_IN_VALUE 
+DEBUG  [23:23:09.149] [dw-20] o.e.j.h.HttpParser -  HEADER_IN_VALUE --> HEADER 
+DEBUG  [23:23:09.150] [dw-20] o.e.j.h.HttpParser -  HEADER --> HEADER_IN_VALUE 
+DEBUG  [23:23:09.150] [dw-20] o.e.j.h.HttpParser -  HEADER_IN_VALUE --> HEADER 
+DEBUG  [23:23:09.150] [dw-20] o.e.j.h.HttpParser -  HEADER --> END 
+DEBUG  [23:23:09.153] [dw-20] o.e.j.s.HttpChannel -  HttpChannelOverHttp@c413f2{r=1,c=false,a=IDLE,uri=//localhost:8080/particpant/3} onRequestComplete 
+DEBUG  [23:23:09.154] [dw-20] o.e.j.s.HttpInput -  HttpInputOverHTTP@474fa5a9[c=0,s=STREAM] addContent EOF 
+DEBUG  [23:23:09.155] [dw-20] o.e.j.s.HttpConnection -  HttpConnection@60600566[SelectChannelEndPoint@c4d54e2{/0:0:0:0:0:0:0:1:40098<->8080,Open,in,out,-,-,15/30000,HttpConnection@60600566}{io=0/0,kio=0,kro=1}][p=HttpParser{s=END,0 of 0},g=HttpGenerator@7a8cb856{s=START},c=HttpChannelOverHttp@c413f2{r=1,c=false,a=IDLE,uri=//localhost:8080/particpant/3}] parsed true HttpParser{s=END,0 of 0} 
+DEBUG  [23:23:09.156] [dw-20] o.e.j.s.HttpConnection -  releaseRequestBuffer HttpConnection@60600566[SelectChannelEndPoint@c4d54e2{/0:0:0:0:0:0:0:1:40098<->8080,Open,in,out,-,-,16/30000,HttpConnection@60600566}{io=0/0,kio=0,kro=1}][p=HttpParser{s=END,0 of 0},g=HttpGenerator@7a8cb856{s=START},c=HttpChannelOverHttp@c413f2{r=1,c=false,a=IDLE,uri=//localhost:8080/particpant/3}] 
+DEBUG  [23:23:09.157] [dw-20] o.e.j.s.HttpChannel -  HttpChannelOverHttp@c413f2{r=1,c=false,a=IDLE,uri=//localhost:8080/particpant/3} handle //localhost:8080/particpant/3  
+DEBUG  [23:23:09.157] [dw-20] o.e.j.s.HttpChannelState -  HttpChannelState@d3d2e95{s=IDLE a=NOT_ASYNC i=true r=!P!U w=false} handling IDLE 
+DEBUG  [23:23:09.159] [dw-20] o.e.j.s.HttpChannel -  HttpChannelOverHttp@c413f2{r=1,c=false,a=DISPATCHED,uri=//localhost:8080/particpant/3} action DISPATCH 
+DEBUG  [23:23:09.162] [dw-20] o.e.j.s.Server -  REQUEST on HttpChannelOverHttp@c413f2{r=1,c=false,a=DISPATCHED,uri=//localhost:8080/particpant/3}
+GET /particpant/3 HTTP/1.1
+User-Agent: curl/7.29.0
+Host: localhost:8080
+Accept: */*
+
+ 
+DEBUG  [23:23:09.162] [dw-20] o.e.j.s.h.g.GzipHandler -  io.dropwizard.jetty.BiDiGzipHandler@749f539e handle Request(GET //localhost:8080/particpant/3)@48c17a0a in null 
+DEBUG  [23:23:09.165] [dw-20] o.e.j.s.Server -  RESPONSE for /particpant/3 h=false
+200 null
+Date: Thu, 08 Sep 2016 06:23:09 GMT
+
+ 
+DEBUG  [23:23:09.166] [dw-20] o.e.j.s.HttpChannelState -  HttpChannelState@d3d2e95{s=DISPATCHED a=NOT_ASYNC i=true r=!P!U w=false} unhandle DISPATCHED 
+DEBUG  [23:23:09.166] [dw-20] o.e.j.s.HttpChannel -  HttpChannelOverHttp@c413f2{r=1,c=false,a=COMPLETING,uri=//localhost:8080/particpant/3} action COMPLETE 
+DEBUG  [23:23:09.171] [dw-20] o.e.j.s.h.g.GzipHttpOutputInterceptor -  org.eclipse.jetty.server.handler.gzip.GzipHttpOutputInterceptor@7eb251c7 exclude by status 404 
+DEBUG  [23:23:09.172] [dw-20] o.e.j.s.HttpChannel -  Commit HTTP/1.1{s=404,h=4} to HttpChannelOverHttp@c413f2{r=1,c=true,a=COMPLETING,uri=//localhost:8080/particpant/3} 
+DEBUG  [23:23:09.178] [dw-20] o.e.j.s.HttpConnection -  org.eclipse.jetty.server.HttpConnection$SendCallback@154a6efc[PROCESSING][i=HTTP/1.1{s=404,h=4},cb=org.eclipse.jetty.server.HttpChannel$CommitCallback@43245a99] generate: NEED_HEADER (null,[p=0,l=244,c=4096,r=244],true)@START 
+DEBUG  [23:23:09.180] [dw-20] o.e.j.s.HttpConnection -  org.eclipse.jetty.server.HttpConnection$SendCallback@154a6efc[PROCESSING][i=HTTP/1.1{s=404,h=4},cb=org.eclipse.jetty.server.HttpChannel$CommitCallback@43245a99] generate: FLUSH ([p=0,l=178,c=8192,r=178],[p=0,l=244,c=4096,r=244],true)@COMPLETING 
+DEBUG  [23:23:09.181] [dw-20] o.e.j.i.WriteFlusher -  write: WriteFlusher@69119dd0{IDLE} [HeapByteBuffer@6c97d090[p=0,l=178,c=8192,r=178]={<<<HTTP/1.1 404 Not ...Length: 244\r\n\r\n>>>\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00...\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00},HeapByteBuffer@72986db1[p=0,l=244,c=4096,r=244]={<<<<html>\n<head>\n<me.../body>\n</html>\n>>>\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00...\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00}] 
+DEBUG  [23:23:09.181] [dw-20] o.e.j.i.WriteFlusher -  update WriteFlusher@69119dd0{WRITING}:IDLE-->WRITING 
+DEBUG  [23:23:09.183] [dw-20] o.e.j.i.ChannelEndPoint -  flushed 422 SelectChannelEndPoint@c4d54e2{/0:0:0:0:0:0:0:1:40098<->8080,Open,in,out,-,W,44/30000,HttpConnection@60600566}{io=0/0,kio=0,kro=1} 
+DEBUG  [23:23:09.183] [dw-20] o.e.j.i.WriteFlusher -  Flushed=true 178/178+1 WriteFlusher@69119dd0{WRITING} 
+DEBUG  [23:23:09.184] [dw-20] o.e.j.i.WriteFlusher -  update WriteFlusher@69119dd0{IDLE}:WRITING-->IDLE 
+DEBUG  [23:23:09.184] [dw-20] o.e.j.s.HttpConnection -  org.eclipse.jetty.server.HttpConnection$SendCallback@154a6efc[PROCESSING][i=HTTP/1.1{s=404,h=4},cb=org.eclipse.jetty.server.HttpChannel$CommitCallback@43245a99] generate: DONE ([p=178,l=178,c=8192,r=0],[p=244,l=244,c=4096,r=0],true)@END 
+DEBUG  [23:23:09.197] [dw-20] o.e.j.h.HttpParser -  reset HttpParser{s=END,0 of 0} 
+DEBUG  [23:23:09.197] [dw-20] o.e.j.h.HttpParser -  END --> START 
+DEBUG  [23:23:09.198] [dw-20] o.e.j.s.HttpChannel -  HttpChannelOverHttp@c413f2{r=1,c=false,a=IDLE,uri=null} handle exit, result COMPLETE 
+DEBUG  [23:23:09.198] [dw-20] o.e.j.i.ChannelEndPoint -  filled -1 SelectChannelEndPoint@c4d54e2{/0:0:0:0:0:0:0:1:40098<->8080,Open,in,out,-,-,15/30000,HttpConnection@60600566}{io=0/0,kio=0,kro=1} 
+DEBUG  [23:23:09.199] [dw-20] o.e.j.i.ChannelEndPoint -  ishut SelectChannelEndPoint@c4d54e2{/0:0:0:0:0:0:0:1:40098<->8080,Open,in,out,-,-,15/30000,HttpConnection@60600566}{io=0/0,kio=0,kro=1} 
+DEBUG  [23:23:09.199] [dw-20] o.e.j.h.HttpParser -  atEOF HttpParser{s=START,0 of -1} 
+DEBUG  [23:23:09.200] [dw-20] o.e.j.s.HttpConnection -  HttpConnection@60600566[SelectChannelEndPoint@c4d54e2{/0:0:0:0:0:0:0:1:40098<->8080,Open,ISHUT,out,-,-,16/30000,HttpConnection@60600566}{io=0/0,kio=0,kro=1}][p=HttpParser{s=START,0 of -1},g=HttpGenerator@7a8cb856{s=START},c=HttpChannelOverHttp@c413f2{r=1,c=false,a=IDLE,uri=null}] filled -1 HeapByteBuffer@6c97d090[p=0,l=0,c=8192,r=0]={<<<>>>HTTP/1.1 404 Not ...\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00} 
+DEBUG  [23:23:09.200] [dw-20] o.e.j.s.HttpConnection -  HttpConnection@60600566[SelectChannelEndPoint@c4d54e2{/0:0:0:0:0:0:0:1:40098<->8080,Open,ISHUT,out,-,-,17/30000,HttpConnection@60600566}{io=0/0,kio=0,kro=1}][p=HttpParser{s=START,0 of -1},g=HttpGenerator@7a8cb856{s=START},c=HttpChannelOverHttp@c413f2{r=1,c=false,a=IDLE,uri=null}] parse HeapByteBuffer@6c97d090[p=0,l=0,c=8192,r=0]={<<<>>>HTTP/1.1 404 Not ...\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00} {} 
+DEBUG  [23:23:09.200] [dw-20] o.e.j.h.HttpParser -  parseNext s=START HeapByteBuffer@6c97d090[p=0,l=0,c=8192,r=0]={<<<>>>HTTP/1.1 404 Not ...\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00} 
+DEBUG  [23:23:09.200] [dw-20] o.e.j.h.HttpParser -  START --> CLOSED 
+DEBUG  [23:23:09.201] [dw-20] o.e.j.i.AbstractEndPoint -  onClose SelectChannelEndPoint@c4d54e2{/0:0:0:0:0:0:0:1:40098<->8080,CLOSED,ISHUT,out,-,-,18/30000,HttpConnection@60600566}{io=0/0,kio=0,kro=1} 
+DEBUG  [23:23:09.201] [dw-20] o.e.j.i.ChannelEndPoint -  close SelectChannelEndPoint@c4d54e2{/0:0:0:0:0:0:0:1:40098<->8080,CLOSED,ISHUT,out,-,-,18/30000,HttpConnection@60600566}{io=0/0,kio=0,kro=1} 
+DEBUG  [23:23:09.203] [dw-20] o.e.j.i.ManagedSelector -  Queued change org.eclipse.jetty.io.ManagedSelector$2@1b31b872 on org.eclipse.jetty.io.ManagedSelector@35267fd4 id=0 keys=1 selected=0 
+DEBUG  [23:23:09.204] [dw-15] o.e.j.i.ManagedSelector -  Selector loop woken up from select, 0/0 selected 
+DEBUG  [23:23:09.204] [dw-15] o.e.j.u.t.s.ExecuteProduceConsume -  EPC Prod/org.eclipse.jetty.io.ManagedSelector$SelectorProducer@6067189 produced org.eclipse.jetty.io.ManagedSelector$2@1b31b872 
+DEBUG  [23:23:09.204] [dw-15] o.e.j.u.t.s.ExecuteProduceConsume -  EPC Pend/org.eclipse.jetty.io.ManagedSelector$SelectorProducer@6067189 dispatch 
+DEBUG  [23:23:09.204] [dw-15] o.e.j.u.t.QueuedThreadPool -  queue EPC Pend/org.eclipse.jetty.io.ManagedSelector$SelectorProducer@6067189 
+DEBUG  [23:23:09.204] [dw-15] o.e.j.u.t.s.ExecuteProduceConsume -  EPC Pend/org.eclipse.jetty.io.ManagedSelector$SelectorProducer@6067189 run org.eclipse.jetty.io.ManagedSelector$2@1b31b872 
+DEBUG  [23:23:09.204] [dw-20] o.e.j.s.HttpConnection -  HttpConnection@60600566[SelectChannelEndPoint@c4d54e2{/0:0:0:0:0:0:0:1:40098<->8080,CLOSED,ISHUT,OSHUT,-,-,21/30000,HttpConnection@60600566}{io=0/0,kio=-1,kro=-1}][p=HttpParser{s=CLOSED,0 of -1},g=HttpGenerator@7a8cb856{s=START},c=HttpChannelOverHttp@c413f2{r=1,c=false,a=IDLE,uri=null}] parsed false HttpParser{s=CLOSED,0 of -1} 
+DEBUG  [23:23:09.204] [dw-15] o.e.j.i.ManagedSelector -  Destroyed SelectChannelEndPoint@c4d54e2{/0:0:0:0:0:0:0:1:40098<->8080,CLOSED,ISHUT,OSHUT,-,-,21/30000,HttpConnection@60600566}{io=0/0,kio=-1,kro=-1} 
+DEBUG  [23:23:09.205] [dw-20] o.e.j.s.HttpConnection -  releaseRequestBuffer HttpConnection@60600566[SelectChannelEndPoint@c4d54e2{/0:0:0:0:0:0:0:1:40098<->8080,CLOSED,ISHUT,OSHUT,-,-,21/30000,HttpConnection@60600566}{io=0/0,kio=-1,kro=-1}][p=HttpParser{s=CLOSED,0 of -1},g=HttpGenerator@7a8cb856{s=START},c=HttpChannelOverHttp@c413f2{r=1,c=false,a=IDLE,uri=null}] 
+DEBUG  [23:23:09.205] [dw-15] o.e.j.i.AbstractConnection -  onClose HttpConnection@60600566[SelectChannelEndPoint@c4d54e2{/0:0:0:0:0:0:0:1:40098<->8080,CLOSED,ISHUT,OSHUT,-,-,22/30000,HttpConnection@60600566}{io=0/0,kio=-1,kro=-1}][p=HttpParser{s=CLOSED,0 of -1},g=HttpGenerator@7a8cb856{s=START},c=HttpChannelOverHttp@c413f2{r=1,c=false,a=IDLE,uri=null}] 
+DEBUG  [23:23:09.206] [dw-20] o.e.j.s.HttpConnection -  HttpConnection@60600566[SelectChannelEndPoint@c4d54e2{/0:0:0:0:0:0:0:1:40098<->8080,CLOSED,ISHUT,OSHUT,-,-,22/30000,HttpConnection@60600566}{io=0/0,kio=-1,kro=-1}][p=HttpParser{s=CLOSED,0 of -1},g=HttpGenerator@7a8cb856{s=START},c=HttpChannelOverHttp@c413f2{r=1,c=false,a=IDLE,uri=null}] onFillable exit HttpChannelState@d3d2e95{s=IDLE a=NOT_ASYNC i=true r=!P!U w=false} null 
+DEBUG  [23:23:09.206] [dw-20] o.e.j.u.t.s.ExecuteProduceConsume -  EPC Pend/org.eclipse.jetty.io.ManagedSelector$SelectorProducer@6067189 ran SelectChannelEndPoint@c4d54e2{/0:0:0:0:0:0:0:1:40098<->8080,CLOSED,ISHUT,OSHUT,-,-,23/30000,HttpConnection@60600566}{io=0/0,kio=-1,kro=-1}:runFillable 
+DEBUG  [23:23:09.206] [dw-20] o.e.j.u.t.s.ExecuteProduceConsume -  EPC Prod/Pend/org.eclipse.jetty.io.ManagedSelector$SelectorProducer@6067189 producing 
+DEBUG  [23:23:09.206] [dw-20] o.e.j.i.ManagedSelector -  Selector loop waiting on select 
+DEBUG  [23:23:09.207] [dw-13] o.e.j.u.t.QueuedThreadPool -  run EPC Prod/Pend/org.eclipse.jetty.io.ManagedSelector$SelectorProducer@6067189 
+DEBUG  [23:23:09.207] [dw-13] o.e.j.u.t.s.ExecuteProduceConsume -  EPC Prod/Pend/org.eclipse.jetty.io.ManagedSelector$SelectorProducer@6067189 run 
+DEBUG  [23:23:09.208] [dw-13] o.e.j.u.t.QueuedThreadPool -  ran EPC Prod/org.eclipse.jetty.io.ManagedSelector$SelectorProducer@6067189 
+DEBUG  [23:23:09.212] [dw-15] o.e.j.i.AbstractEndPoint -  onClose SelectChannelEndPoint@c4d54e2{/0:0:0:0:0:0:0:1:40098<->8080,CLOSED,ISHUT,OSHUT,-,-,28/30000,HttpConnection@60600566}{io=0/0,kio=-1,kro=-1} 
+DEBUG  [23:23:09.212] [dw-15] o.e.j.u.t.s.ExecuteProduceConsume -  EPC Prod/org.eclipse.jetty.io.ManagedSelector$SelectorProducer@6067189 ran org.eclipse.jetty.io.ManagedSelector$2@1b31b872 
+DEBUG  [23:23:09.213] [dw-15] o.e.j.u.t.s.ExecuteProduceConsume -  EPC Prod/org.eclipse.jetty.io.ManagedSelector$SelectorProducer@6067189 produce exit 
+DEBUG  [23:23:09.213] [dw-15] o.e.j.u.t.QueuedThreadPool -  ran EPC Prod/org.eclipse.jetty.io.ManagedSelector$SelectorProducer@6067189 
+DEBUG  [23:23:11.801] [Thread-12] o.e.j.u.c.AbstractLifeCycle -  stopping org.eclipse.jetty.server.Server@1813f3e9 
+DEBUG  [23:23:11.802] [Thread-12] o.e.j.s.Server -  doStop org.eclipse.jetty.server.Server@1813f3e9 
+DEBUG  [23:23:11.808] [Thread-12] o.e.j.s.Server -  Graceful shutdown org.eclipse.jetty.server.Server@1813f3e9 by  
+DEBUG  [23:23:11.811] [Thread-12] o.e.j.u.c.AbstractLifeCycle -  stopping NewsFeed@6f099cef{HTTP/1.1,[http/1.1]}{0.0.0.0:8080} 
+DEBUG  [23:23:11.814] [dw-18] o.e.j.u.t.QueuedThreadPool -  ran dw-18-acceptor-0@a62c7cd-NewsFeed@6f099cef{HTTP/1.1,[http/1.1]}{0.0.0.0:8080} 
+DEBUG  [23:23:11.814] [dw-19] o.e.j.u.t.QueuedThreadPool -  ran dw-19-acceptor-1@7661b5a-NewsFeed@6f099cef{HTTP/1.1,[http/1.1]}{0.0.0.0:8080} 
+DEBUG  [23:23:11.816] [Thread-12] o.e.j.u.c.AbstractLifeCycle -  stopping org.eclipse.jetty.server.ServerConnector$ServerConnectorManager@1d207fad 
+DEBUG  [23:23:11.818] [Thread-12] o.e.j.u.c.AbstractLifeCycle -  stopping org.eclipse.jetty.io.ManagedSelector@44e93c1f id=3 keys=0 selected=0 
+DEBUG  [23:23:11.821] [Thread-12] o.e.j.i.ManagedSelector -  Stopping org.eclipse.jetty.io.ManagedSelector@44e93c1f id=3 keys=0 selected=0 
+DEBUG  [23:23:11.825] [Thread-12] o.e.j.i.ManagedSelector -  Queued change org.eclipse.jetty.io.ManagedSelector$CloseEndPoints@6a517f82 on org.eclipse.jetty.io.ManagedSelector@44e93c1f id=3 keys=0 selected=0 
+DEBUG  [23:23:11.828] [dw-17] o.e.j.i.ManagedSelector -  Selector loop woken up from select, 0/0 selected 
+DEBUG  [23:23:11.828] [dw-17] o.e.j.i.ManagedSelector -  Running change org.eclipse.jetty.io.ManagedSelector$CloseEndPoints@6a517f82 
+DEBUG  [23:23:11.829] [dw-17] o.e.j.i.ManagedSelector -  Closing 0 endPoints on org.eclipse.jetty.io.ManagedSelector@44e93c1f id=3 keys=0 selected=0 
+DEBUG  [23:23:11.830] [dw-17] o.e.j.i.ManagedSelector -  Closed 0 endPoints on org.eclipse.jetty.io.ManagedSelector@44e93c1f id=3 keys=0 selected=0 
+DEBUG  [23:23:11.830] [dw-17] o.e.j.i.ManagedSelector -  Selector loop waiting on select 
+DEBUG  [23:23:11.836] [Thread-12] o.e.j.i.ManagedSelector -  Queued change org.eclipse.jetty.io.ManagedSelector$CloseSelector@17e1aad0 on org.eclipse.jetty.io.ManagedSelector@44e93c1f id=3 keys=0 selected=0 
+DEBUG  [23:23:11.838] [dw-17] o.e.j.i.ManagedSelector -  Selector loop woken up from select, 0/0 selected 
+DEBUG  [23:23:11.838] [dw-17] o.e.j.i.ManagedSelector -  Running change org.eclipse.jetty.io.ManagedSelector$CloseSelector@17e1aad0 
+DEBUG  [23:23:11.840] [dw-17] o.e.j.u.t.s.ExecuteProduceConsume -  EPC Prod/org.eclipse.jetty.io.ManagedSelector$SelectorProducer@42a67559 produced null 
+DEBUG  [23:23:11.840] [dw-17] o.e.j.u.t.s.ExecuteProduceConsume -  EPC Idle/org.eclipse.jetty.io.ManagedSelector$SelectorProducer@42a67559 produce exit 
+DEBUG  [23:23:11.840] [dw-17] o.e.j.u.t.QueuedThreadPool -  ran org.eclipse.jetty.io.ManagedSelector@44e93c1f id=3 keys=-1 selected=-1 
+DEBUG  [23:23:11.843] [Thread-12] o.e.j.i.ManagedSelector -  Stopped org.eclipse.jetty.io.ManagedSelector@44e93c1f id=3 keys=-1 selected=-1 
+DEBUG  [23:23:11.845] [Thread-12] o.e.j.u.c.AbstractLifeCycle -  STOPPED org.eclipse.jetty.io.ManagedSelector@44e93c1f id=3 keys=-1 selected=-1 
+DEBUG  [23:23:11.848] [Thread-12] o.e.j.u.c.AbstractLifeCycle -  stopping org.eclipse.jetty.io.ManagedSelector@36a6bea6 id=2 keys=0 selected=0 
+DEBUG  [23:23:11.849] [Thread-12] o.e.j.i.ManagedSelector -  Stopping org.eclipse.jetty.io.ManagedSelector@36a6bea6 id=2 keys=0 selected=0 
+DEBUG  [23:23:11.850] [Thread-12] o.e.j.i.ManagedSelector -  Queued change org.eclipse.jetty.io.ManagedSelector$CloseEndPoints@76ad6ac1 on org.eclipse.jetty.io.ManagedSelector@36a6bea6 id=2 keys=0 selected=0 
+DEBUG  [23:23:11.852] [dw-16] o.e.j.i.ManagedSelector -  Selector loop woken up from select, 0/0 selected 
+DEBUG  [23:23:11.853] [dw-16] o.e.j.i.ManagedSelector -  Running change org.eclipse.jetty.io.ManagedSelector$CloseEndPoints@76ad6ac1 
+DEBUG  [23:23:11.853] [dw-16] o.e.j.i.ManagedSelector -  Closing 0 endPoints on org.eclipse.jetty.io.ManagedSelector@36a6bea6 id=2 keys=0 selected=0 
+DEBUG  [23:23:11.854] [dw-16] o.e.j.i.ManagedSelector -  Closed 0 endPoints on org.eclipse.jetty.io.ManagedSelector@36a6bea6 id=2 keys=0 selected=0 
+DEBUG  [23:23:11.854] [dw-16] o.e.j.i.ManagedSelector -  Selector loop waiting on select 
+DEBUG  [23:23:11.855] [Thread-12] o.e.j.i.ManagedSelector -  Queued change org.eclipse.jetty.io.ManagedSelector$CloseSelector@2818849c on org.eclipse.jetty.io.ManagedSelector@36a6bea6 id=2 keys=0 selected=0 
+DEBUG  [23:23:11.856] [dw-16] o.e.j.i.ManagedSelector -  Selector loop woken up from select, 0/0 selected 
+DEBUG  [23:23:11.856] [dw-16] o.e.j.i.ManagedSelector -  Running change org.eclipse.jetty.io.ManagedSelector$CloseSelector@2818849c 
+DEBUG  [23:23:11.857] [dw-16] o.e.j.u.t.s.ExecuteProduceConsume -  EPC Prod/org.eclipse.jetty.io.ManagedSelector$SelectorProducer@19366481 produced null 
+DEBUG  [23:23:11.857] [dw-16] o.e.j.u.t.s.ExecuteProduceConsume -  EPC Idle/org.eclipse.jetty.io.ManagedSelector$SelectorProducer@19366481 produce exit 
+DEBUG  [23:23:11.857] [dw-16] o.e.j.u.t.QueuedThreadPool -  ran org.eclipse.jetty.io.ManagedSelector@36a6bea6 id=2 keys=-1 selected=-1 
+DEBUG  [23:23:11.858] [Thread-12] o.e.j.i.ManagedSelector -  Stopped org.eclipse.jetty.io.ManagedSelector@36a6bea6 id=2 keys=-1 selected=-1 
+DEBUG  [23:23:11.858] [Thread-12] o.e.j.u.c.AbstractLifeCycle -  STOPPED org.eclipse.jetty.io.ManagedSelector@36a6bea6 id=2 keys=-1 selected=-1 
+DEBUG  [23:23:11.860] [Thread-12] o.e.j.u.c.AbstractLifeCycle -  stopping org.eclipse.jetty.io.ManagedSelector@397ef2 id=1 keys=0 selected=0 
+DEBUG  [23:23:11.860] [Thread-12] o.e.j.i.ManagedSelector -  Stopping org.eclipse.jetty.io.ManagedSelector@397ef2 id=1 keys=0 selected=0 
+DEBUG  [23:23:11.861] [Thread-12] o.e.j.i.ManagedSelector -  Queued change org.eclipse.jetty.io.ManagedSelector$CloseEndPoints@9025d5a on org.eclipse.jetty.io.ManagedSelector@397ef2 id=1 keys=0 selected=0 
+DEBUG  [23:23:11.862] [dw-14] o.e.j.i.ManagedSelector -  Selector loop woken up from select, 0/0 selected 
+DEBUG  [23:23:11.863] [dw-14] o.e.j.i.ManagedSelector -  Running change org.eclipse.jetty.io.ManagedSelector$CloseEndPoints@9025d5a 
+DEBUG  [23:23:11.863] [dw-14] o.e.j.i.ManagedSelector -  Closing 0 endPoints on org.eclipse.jetty.io.ManagedSelector@397ef2 id=1 keys=0 selected=0 
+DEBUG  [23:23:11.864] [dw-14] o.e.j.i.ManagedSelector -  Closed 0 endPoints on org.eclipse.jetty.io.ManagedSelector@397ef2 id=1 keys=0 selected=0 
+DEBUG  [23:23:11.864] [dw-14] o.e.j.i.ManagedSelector -  Selector loop waiting on select 
+DEBUG  [23:23:11.864] [Thread-12] o.e.j.i.ManagedSelector -  Queued change org.eclipse.jetty.io.ManagedSelector$CloseSelector@13afd180 on org.eclipse.jetty.io.ManagedSelector@397ef2 id=1 keys=0 selected=0 
+DEBUG  [23:23:11.865] [dw-14] o.e.j.i.ManagedSelector -  Selector loop woken up from select, 0/0 selected 
+DEBUG  [23:23:11.865] [dw-14] o.e.j.i.ManagedSelector -  Running change org.eclipse.jetty.io.ManagedSelector$CloseSelector@13afd180 
+DEBUG  [23:23:11.865] [dw-14] o.e.j.u.t.s.ExecuteProduceConsume -  EPC Prod/org.eclipse.jetty.io.ManagedSelector$SelectorProducer@7786cefa produced null 
+DEBUG  [23:23:11.866] [dw-14] o.e.j.u.t.s.ExecuteProduceConsume -  EPC Idle/org.eclipse.jetty.io.ManagedSelector$SelectorProducer@7786cefa produce exit 
+DEBUG  [23:23:11.866] [dw-14] o.e.j.u.t.QueuedThreadPool -  ran org.eclipse.jetty.io.ManagedSelector@397ef2 id=1 keys=-1 selected=-1 
+DEBUG  [23:23:11.867] [Thread-12] o.e.j.i.ManagedSelector -  Stopped org.eclipse.jetty.io.ManagedSelector@397ef2 id=1 keys=-1 selected=-1 
+DEBUG  [23:23:11.867] [Thread-12] o.e.j.u.c.AbstractLifeCycle -  STOPPED org.eclipse.jetty.io.ManagedSelector@397ef2 id=1 keys=-1 selected=-1 
+DEBUG  [23:23:11.870] [Thread-12] o.e.j.u.c.AbstractLifeCycle -  stopping org.eclipse.jetty.io.ManagedSelector@35267fd4 id=0 keys=0 selected=0 
+DEBUG  [23:23:11.870] [Thread-12] o.e.j.i.ManagedSelector -  Stopping org.eclipse.jetty.io.ManagedSelector@35267fd4 id=0 keys=0 selected=0 
+DEBUG  [23:23:11.870] [Thread-12] o.e.j.i.ManagedSelector -  Queued change org.eclipse.jetty.io.ManagedSelector$CloseEndPoints@ec95a56 on org.eclipse.jetty.io.ManagedSelector@35267fd4 id=0 keys=0 selected=0 
+DEBUG  [23:23:11.871] [dw-20] o.e.j.i.ManagedSelector -  Selector loop woken up from select, 0/0 selected 
+DEBUG  [23:23:11.872] [dw-20] o.e.j.i.ManagedSelector -  Running change org.eclipse.jetty.io.ManagedSelector$CloseEndPoints@ec95a56 
+DEBUG  [23:23:11.872] [dw-20] o.e.j.i.ManagedSelector -  Closing 0 endPoints on org.eclipse.jetty.io.ManagedSelector@35267fd4 id=0 keys=0 selected=0 
+DEBUG  [23:23:11.873] [dw-20] o.e.j.i.ManagedSelector -  Closed 0 endPoints on org.eclipse.jetty.io.ManagedSelector@35267fd4 id=0 keys=0 selected=0 
+DEBUG  [23:23:11.873] [dw-20] o.e.j.i.ManagedSelector -  Selector loop waiting on select 
+DEBUG  [23:23:11.874] [Thread-12] o.e.j.i.ManagedSelector -  Queued change org.eclipse.jetty.io.ManagedSelector$CloseSelector@62190377 on org.eclipse.jetty.io.ManagedSelector@35267fd4 id=0 keys=0 selected=0 
+DEBUG  [23:23:11.874] [dw-20] o.e.j.i.ManagedSelector -  Selector loop woken up from select, 0/0 selected 
+DEBUG  [23:23:11.874] [dw-20] o.e.j.i.ManagedSelector -  Running change org.eclipse.jetty.io.ManagedSelector$CloseSelector@62190377 
+DEBUG  [23:23:11.875] [dw-20] o.e.j.u.t.s.ExecuteProduceConsume -  EPC Prod/org.eclipse.jetty.io.ManagedSelector$SelectorProducer@6067189 produced null 
+DEBUG  [23:23:11.875] [dw-20] o.e.j.u.t.s.ExecuteProduceConsume -  EPC Idle/org.eclipse.jetty.io.ManagedSelector$SelectorProducer@6067189 produce exit 
+DEBUG  [23:23:11.875] [dw-20] o.e.j.u.t.QueuedThreadPool -  ran EPC Idle/org.eclipse.jetty.io.ManagedSelector$SelectorProducer@6067189 
+DEBUG  [23:23:11.876] [Thread-12] o.e.j.i.ManagedSelector -  Stopped org.eclipse.jetty.io.ManagedSelector@35267fd4 id=0 keys=-1 selected=-1 
+DEBUG  [23:23:11.876] [Thread-12] o.e.j.u.c.AbstractLifeCycle -  STOPPED org.eclipse.jetty.io.ManagedSelector@35267fd4 id=0 keys=-1 selected=-1 
+DEBUG  [23:23:11.876] [Thread-12] o.e.j.u.c.AbstractLifeCycle -  STOPPED org.eclipse.jetty.server.ServerConnector$ServerConnectorManager@1d207fad 
+DEBUG  [23:23:11.878] [Thread-12] o.e.j.u.c.AbstractLifeCycle -  stopping io.dropwizard.jetty.Jetty93InstrumentedConnectionFactory@71c905a3 
+DEBUG  [23:23:11.879] [Thread-12] o.e.j.u.c.AbstractLifeCycle -  stopping HttpConnectionFactory@cda0432[HTTP/1.1] 
+DEBUG  [23:23:11.879] [Thread-12] o.e.j.u.c.AbstractLifeCycle -  STOPPED HttpConnectionFactory@cda0432[HTTP/1.1] 
+DEBUG  [23:23:11.879] [Thread-12] o.e.j.u.c.AbstractLifeCycle -  STOPPED io.dropwizard.jetty.Jetty93InstrumentedConnectionFactory@71c905a3 
+DEBUG  [23:23:11.880] [Thread-12] o.e.j.u.c.AbstractLifeCycle -  stopping org.eclipse.jetty.util.thread.ScheduledExecutorScheduler@baf1bb3 
+DEBUG  [23:23:11.883] [Thread-12] o.e.j.u.c.AbstractLifeCycle -  STOPPED org.eclipse.jetty.util.thread.ScheduledExecutorScheduler@baf1bb3 
+INFO   [23:23:11.883] [Thread-12] o.e.j.s.AbstractConnector -  Stopped NewsFeed@6f099cef{HTTP/1.1,[http/1.1]}{0.0.0.0:8080} 
+DEBUG  [23:23:11.884] [Thread-12] o.e.j.u.c.AbstractLifeCycle -  STOPPED NewsFeed@6f099cef{HTTP/1.1,[http/1.1]}{0.0.0.0:8080} 
+DEBUG  [23:23:11.884] [Thread-12] o.e.j.s.h.AbstractHandler -  stopping org.eclipse.jetty.server.Server@1813f3e9 
+DEBUG  [23:23:11.885] [Thread-12] o.e.j.u.c.AbstractLifeCycle -  stopping org.eclipse.jetty.server.handler.StatisticsHandler@24a298a6 
+DEBUG  [23:23:11.885] [Thread-12] o.e.j.s.h.AbstractHandler -  stopping org.eclipse.jetty.server.handler.StatisticsHandler@24a298a6 
+DEBUG  [23:23:11.885] [Thread-12] o.e.j.u.c.AbstractLifeCycle -  stopping org.eclipse.jetty.server.handler.RequestLogHandler@a7f0ab6 
+DEBUG  [23:23:11.885] [Thread-12] o.e.j.s.h.AbstractHandler -  stopping org.eclipse.jetty.server.handler.RequestLogHandler@a7f0ab6 
+DEBUG  [23:23:11.885] [Thread-12] o.e.j.u.c.AbstractLifeCycle -  stopping io.dropwizard.jetty.BiDiGzipHandler@749f539e 
+DEBUG  [23:23:11.885] [Thread-12] o.e.j.s.h.AbstractHandler -  stopping io.dropwizard.jetty.BiDiGzipHandler@749f539e 
+DEBUG  [23:23:11.886] [Thread-12] o.e.j.u.c.AbstractLifeCycle -  stopping io.dropwizard.jetty.ContextRoutingHandler@9a7a808 
+DEBUG  [23:23:11.886] [Thread-12] o.e.j.s.h.AbstractHandler -  stopping io.dropwizard.jetty.ContextRoutingHandler@9a7a808 
+DEBUG  [23:23:11.886] [Thread-12] o.e.j.u.c.AbstractLifeCycle -  stopping i.d.j.MutableServletContextHandler@47dd778{/admin,null,AVAILABLE} 
+DEBUG  [23:23:11.887] [Thread-12] o.e.j.s.h.AbstractHandler -  stopping i.d.j.MutableServletContextHandler@47dd778{/admin,null,UNAVAILABLE} 
+DEBUG  [23:23:11.887] [Thread-12] o.e.j.u.c.AbstractLifeCycle -  stopping org.eclipse.jetty.servlet.ServletHandler@15515c51 
+DEBUG  [23:23:11.887] [Thread-12] o.e.j.s.h.AbstractHandler -  stopping org.eclipse.jetty.servlet.ServletHandler@15515c51 
+DEBUG  [23:23:11.888] [Thread-12] o.e.j.u.c.AbstractLifeCycle -  stopping org.eclipse.jetty.servlet.ServletHandler$Default404Servlet-761956ac@2df38dde==org.eclipse.jetty.servlet.ServletHandler$Default404Servlet,-1,false 
+DEBUG  [23:23:11.888] [Thread-12] o.e.j.u.c.AbstractLifeCycle -  STOPPED org.eclipse.jetty.servlet.ServletHandler$Default404Servlet-761956ac@2df38dde==org.eclipse.jetty.servlet.ServletHandler$Default404Servlet,-1,false 
+DEBUG  [23:23:11.888] [Thread-12] o.e.j.u.c.AbstractLifeCycle -  stopping io.dropwizard.jersey.filter.AllowedMethodsFilter-57bd802b 
+DEBUG  [23:23:11.889] [Thread-12] o.e.j.u.c.AbstractLifeCycle -  STOPPED io.dropwizard.jersey.filter.AllowedMethodsFilter-57bd802b 
+DEBUG  [23:23:11.889] [Thread-12] o.e.j.u.c.AbstractLifeCycle -  stopping com.codahale.metrics.servlets.AdminServlet-29182679@f60e5c5c==com.codahale.metrics.servlets.AdminServlet,1,true 
+DEBUG  [23:23:11.890] [Thread-12] o.e.j.u.c.AbstractLifeCycle -  STOPPED com.codahale.metrics.servlets.AdminServlet-29182679@f60e5c5c==com.codahale.metrics.servlets.AdminServlet,1,true 
+DEBUG  [23:23:11.890] [Thread-12] o.e.j.u.c.AbstractLifeCycle -  stopping tasks@6907b8e==io.dropwizard.servlets.tasks.TaskServlet,1,true 
+DEBUG  [23:23:11.891] [Thread-12] o.e.j.u.c.AbstractLifeCycle -  STOPPED tasks@6907b8e==io.dropwizard.servlets.tasks.TaskServlet,1,true 
+DEBUG  [23:23:11.896] [Thread-12] o.e.j.u.c.AbstractLifeCycle -  STOPPED org.eclipse.jetty.servlet.ServletHandler@15515c51 
+INFO   [23:23:11.897] [Thread-12] o.e.j.s.h.ContextHandler -  Stopped i.d.j.MutableServletContextHandler@47dd778{/admin,null,UNAVAILABLE} 
+DEBUG  [23:23:11.897] [Thread-12] o.e.j.u.c.AbstractLifeCycle -  STOPPED i.d.j.MutableServletContextHandler@47dd778{/admin,null,UNAVAILABLE} 
+DEBUG  [23:23:11.898] [Thread-12] o.e.j.u.c.AbstractLifeCycle -  stopping com.codahale.metrics.jetty9.InstrumentedHandler@1136b469 
+DEBUG  [23:23:11.898] [Thread-12] o.e.j.s.h.AbstractHandler -  stopping com.codahale.metrics.jetty9.InstrumentedHandler@1136b469 
+DEBUG  [23:23:11.898] [Thread-12] o.e.j.u.c.AbstractLifeCycle -  stopping i.d.j.MutableServletContextHandler@3af37506{/application,null,AVAILABLE} 
+DEBUG  [23:23:11.898] [Thread-12] o.e.j.s.h.AbstractHandler -  stopping i.d.j.MutableServletContextHandler@3af37506{/application,null,UNAVAILABLE} 
+DEBUG  [23:23:11.898] [Thread-12] o.e.j.u.c.AbstractLifeCycle -  stopping org.eclipse.jetty.servlet.ServletHandler@4e6d7365 
+DEBUG  [23:23:11.899] [Thread-12] o.e.j.s.h.AbstractHandler -  stopping org.eclipse.jetty.servlet.ServletHandler@4e6d7365 
+DEBUG  [23:23:11.899] [Thread-12] o.e.j.u.c.AbstractLifeCycle -  stopping org.eclipse.jetty.servlet.ServletHandler$Default404Servlet-15923407@97096f79==org.eclipse.jetty.servlet.ServletHandler$Default404Servlet,-1,false 
+DEBUG  [23:23:11.899] [Thread-12] o.e.j.u.c.AbstractLifeCycle -  STOPPED org.eclipse.jetty.servlet.ServletHandler$Default404Servlet-15923407@97096f79==org.eclipse.jetty.servlet.ServletHandler$Default404Servlet,-1,false 
+DEBUG  [23:23:11.900] [Thread-12] o.e.j.u.c.AbstractLifeCycle -  stopping io.dropwizard.jersey.setup.JerseyServletContainer-7b44b63d@409ad44e==io.dropwizard.jersey.setup.JerseyServletContainer,1,true 
+DEBUG  [23:23:11.958] [Thread-12] o.e.j.u.c.AbstractLifeCycle -  STOPPED io.dropwizard.jersey.setup.JerseyServletContainer-7b44b63d@409ad44e==io.dropwizard.jersey.setup.JerseyServletContainer,1,true 
+DEBUG  [23:23:11.958] [Thread-12] o.e.j.u.c.AbstractLifeCycle -  stopping io.dropwizard.servlets.ThreadNameFilter-4d847d32 
+DEBUG  [23:23:11.958] [Thread-12] o.e.j.u.c.AbstractLifeCycle -  STOPPED io.dropwizard.servlets.ThreadNameFilter-4d847d32 
+DEBUG  [23:23:11.958] [Thread-12] o.e.j.u.c.AbstractLifeCycle -  stopping io.dropwizard.jersey.filter.AllowedMethodsFilter-1a411233 
+DEBUG  [23:23:11.958] [Thread-12] o.e.j.u.c.AbstractLifeCycle -  STOPPED io.dropwizard.jersey.filter.AllowedMethodsFilter-1a411233 
+DEBUG  [23:23:11.958] [Thread-12] o.e.j.u.c.AbstractLifeCycle -  stopping Guice Filter 
+DEBUG  [23:23:11.959] [Thread-12] o.e.j.u.c.AbstractLifeCycle -  STOPPED Guice Filter 
+DEBUG  [23:23:11.959] [Thread-12] o.e.j.u.c.AbstractLifeCycle -  STOPPED org.eclipse.jetty.servlet.ServletHandler@4e6d7365 
+INFO   [23:23:11.959] [Thread-12] o.e.j.s.h.ContextHandler -  Stopped i.d.j.MutableServletContextHandler@3af37506{/application,null,UNAVAILABLE} 
+DEBUG  [23:23:11.959] [Thread-12] o.e.j.u.c.AbstractLifeCycle -  STOPPED i.d.j.MutableServletContextHandler@3af37506{/application,null,UNAVAILABLE} 
+DEBUG  [23:23:11.959] [Thread-12] o.e.j.u.c.AbstractLifeCycle -  STOPPED com.codahale.metrics.jetty9.InstrumentedHandler@1136b469 
+DEBUG  [23:23:11.959] [Thread-12] o.e.j.u.c.AbstractLifeCycle -  STOPPED io.dropwizard.jetty.ContextRoutingHandler@9a7a808 
+DEBUG  [23:23:11.959] [Thread-12] o.e.j.u.c.AbstractLifeCycle -  STOPPED io.dropwizard.jetty.BiDiGzipHandler@749f539e 
+DEBUG  [23:23:11.959] [Thread-12] o.e.j.u.c.AbstractLifeCycle -  STOPPED org.eclipse.jetty.server.handler.RequestLogHandler@a7f0ab6 
+DEBUG  [23:23:11.959] [Thread-12] o.e.j.u.c.AbstractLifeCycle -  STOPPED org.eclipse.jetty.server.handler.StatisticsHandler@24a298a6 
+DEBUG  [23:23:11.959] [Thread-12] o.e.j.u.c.AbstractLifeCycle -  stopping org.eclipse.jetty.server.handler.ErrorHandler@a10c1b5 
+DEBUG  [23:23:11.959] [Thread-12] o.e.j.s.h.AbstractHandler -  stopping org.eclipse.jetty.server.handler.ErrorHandler@a10c1b5 
+DEBUG  [23:23:11.960] [Thread-12] o.e.j.u.c.AbstractLifeCycle -  STOPPED org.eclipse.jetty.server.handler.ErrorHandler@a10c1b5 
+DEBUG  [23:23:11.960] [Thread-12] o.e.j.u.c.AbstractLifeCycle -  stopping io.dropwizard.lifecycle.ExecutorServiceManager@28cb9120(TimeBoundHealthCheck-pool-%d) 
+DEBUG  [23:23:11.960] [Thread-12] o.e.j.u.c.AbstractLifeCycle -  STOPPED io.dropwizard.lifecycle.ExecutorServiceManager@28cb9120(TimeBoundHealthCheck-pool-%d) 
+DEBUG  [23:23:11.960] [Thread-12] o.e.j.u.c.AbstractLifeCycle -  stopping dw{STARTED,8<=9<=1024,i=9,q=0} 
+DEBUG  [23:23:11.968] [Thread-12] o.e.j.u.c.AbstractLifeCycle -  STOPPED dw{STOPPED,8<=9<=1024,i=0,q=0} 
+DEBUG  [23:23:11.969] [Thread-12] o.e.j.u.t.ShutdownThread -  shutdown already commenced 
+DEBUG  [23:23:11.970] [Thread-12] o.e.j.u.c.AbstractLifeCycle -  STOPPED org.eclipse.jetty.server.Server@1813f3e9 

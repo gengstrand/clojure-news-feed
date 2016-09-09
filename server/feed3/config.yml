@@ -1,0 +1,57 @@
+# Database settings.
+database:
+
+  driverClass: com.mysql.jdbc.Driver
+
+  user: feed
+
+  password: feed
+
+  url: jdbc:mysql://mysql_host/feed
+
+server:
+#  softNofileLimit: 1000
+#  hardNofileLimit: 1000
+  applicationConnectors:
+    - type: http
+      port: 8080
+    - type: https
+      port: 8443
+      keyStorePath: example.keystore
+      keyStorePassword: example
+      validateCerts: false
+      validatePeers: false
+    #this requires the alpn-boot library on the JVM's boot classpath
+    #- type: h2
+    #  port: 8445
+    #  keyStorePath: example.keystore
+    #  keyStorePassword: example
+    #  validateCerts: false
+    #  validatePeers: false
+  adminConnectors:
+    - type: http
+      port: 8081
+    - type: https
+      port: 8444
+      keyStorePath: example.keystore
+      keyStorePassword: example
+      validateCerts: false
+      validatePeers: false
+
+logging:
+
+  # The default level of all loggers. Can be OFF, ERROR, WARN, INFO, DEBUG, TRACE, or ALL.
+  level: ALL
+  loggers:
+    info.glennengstrand: DEBUG
+  appenders:
+    - type: console
+    - type: file
+      threshold: ALL
+      logFormat: "%-6level [%d{HH:mm:ss.SSS}] [%t] %logger{5} - %X{code} %msg %n"
+      currentLogFilename: /tmp/application.log
+      archivedLogFilenamePattern: /tmp/application-%d{yyyy-MM-dd}-%i.log.gz
+      archivedFileCount: 7
+      timeZone: UTC
+      maxFileSize: 10MB
+
