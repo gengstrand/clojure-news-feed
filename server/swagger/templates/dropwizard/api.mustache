@@ -40,8 +40,8 @@ public class {{classname}} {
    * @param {{paramName}} {{description}}{{#required}} (required){{/required}}{{^required}} (optional{{#defaultValue}}, default to {{{.}}}{{/defaultValue}}){{/required}}{{/allParams}}{{#returnType}}
    * @return {{{returnType}}}{{/returnType}}
    */
-   public {{#returnType}}{{{returnType}}} {{/returnType}}{{^returnType}}void {{/returnType}}{{operationId}}({{#allParams}}{{#isPathParam}}@PathParam("{{paramName}}") {{/isPathParam}}{{{dataType}}}Param {{paramName}}{{#hasMore}}, {{/hasMore}}{{/allParams}}) {
-      return {{pathPrefix}}Service.{{operationId}}({{#allParams}}{{paramName}}{{#hasMore}}, {{/hasMore}}{{/allParams}});
+   public {{#returnType}}{{{returnType}}} {{/returnType}}{{^returnType}}void {{/returnType}}{{operationId}}({{#allParams}}{{#isPathParam}}@PathParam("{{paramName}}") {{/isPathParam}}{{{dataType}}}{{#isLong}}Param{{/isLong}} {{paramName}}{{#hasMore}}, {{/hasMore}}{{/allParams}}) {
+      return {{pathPrefix}}Service.{{operationId}}({{#allParams}}{{paramName}}{{#isLong}}.get(){{/isLong}}{{#hasMore}}, {{/hasMore}}{{/allParams}});
    }
    {{/operation}}
    public static interface {{classname}}Service {

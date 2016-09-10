@@ -5,7 +5,7 @@ All URIs are relative to *http://glennengstrand.info/*
 Method | HTTP request | Description
 ------------- | ------------- | -------------
 [**addFriend**](FriendApi.md#addFriend) | **POST** /friends/new | create a new friendship
-[**getFriend**](FriendApi.md#getFriend) | **GET** /friends/{id} | retrieve an individual friend
+[**getFriend**](FriendApi.md#getFriend) | **GET** /friends/{id} | retrieve the list of friends for an individual participant
 
 
 <a name="addFriend"></a>
@@ -37,21 +37,21 @@ No authorization required
 
 <a name="getFriend"></a>
 # **getFriend**
-> Friend getFriend(id)
+> List&lt;Friend&gt; getFriend(id)
 
-retrieve an individual friend
+retrieve the list of friends for an individual participant
 
-fetch a friend by id
+fetch participant friends
 
 ### Parameters
 
 Name | Type | Description  | Notes
 ------------- | ------------- | ------------- | -------------
- **id** | **Long**| uniquely identifies the friend |
+ **id** | **Long**| uniquely identifies the participant |
 
 ### Return type
 
-[**Friend**](Friend.md)
+[**List&lt;Friend&gt;**](Friend.md)
 
 ### Authorization
 

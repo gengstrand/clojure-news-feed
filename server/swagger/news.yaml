@@ -43,7 +43,7 @@ paths:
         '200':
           description: successful operation
           schema:
-           $ref: '#/definitions/participant'
+            $ref: '#/definitions/participant'
   /participant/new:
     post:
       tags:
@@ -61,25 +61,25 @@ paths:
           description: participant to be created
           required: true
           schema:
-           $ref: '#/definitions/participant'
+            $ref: '#/definitions/participant'
       responses:
         '200':
           description: successful operation
           schema:
-           $ref: '#/definitions/participant'
+            $ref: '#/definitions/participant'
   '/friends/{id}':
     get:
       tags:
         - friend
-      summary: retrieve an individual friend
-      description: fetch a friend by id
+      summary: retrieve the list of friends for an individual participant
+      description: fetch participant friends
       operationId: getFriend
       produces:
         - application/json
       parameters:
         - name: id
           in: path
-          description: uniquely identifies the friend
+          description: uniquely identifies the participant
           required: true
           type: integer
           format: int64
@@ -87,7 +87,9 @@ paths:
         '200':
           description: successful operation
           schema:
-           $ref: '#/definitions/friend'
+            type: array
+            items:
+              $ref: '#/definitions/friend'
   /friends/new:
     post:
       tags:
@@ -105,12 +107,12 @@ paths:
           description: friendship to be created
           required: true
           schema:
-           $ref: '#/definitions/friend'
+            $ref: '#/definitions/friend'
       responses:
         '200':
           description: successful operation
           schema:
-           $ref: '#/definitions/friend'
+            $ref: '#/definitions/friend'
   '/inbound/{id}':
     get:
       tags:
@@ -131,7 +133,9 @@ paths:
         '200':
           description: successful operation
           schema:
-           $ref: '#/definitions/inbound'
+            type: array
+            items:
+              $ref: '#/definitions/inbound'
   '/outbound/{id}':
     get:
       tags:
@@ -172,12 +176,12 @@ paths:
           description: outbound news item
           required: true
           schema:
-           $ref: '#/definitions/outbound'
+            $ref: '#/definitions/outbound'
       responses:
         '200':
           description: successful operation
           schema:
-           $ref: '#/definitions/outbound'
+            $ref: '#/definitions/outbound'
   /outbound/search:
     post:
       tags:

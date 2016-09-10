@@ -23,6 +23,11 @@ public class NewsFeedConfiguration extends Configuration {
 	private final DBIFactory factory = new DBIFactory();
 
     private DataSourceFactory database = new DataSourceFactory();
+    
+    private int cachePoolSize = 1;
+    private String cacheHost = "localhost";
+    private int cachePort = 6379;
+    private int cacheTimeout = 60;
 	
 	public DBI getDbi(Environment environment) {
 		if (dbi == null) {
@@ -44,5 +49,47 @@ public class NewsFeedConfiguration extends Configuration {
     public void setDataSourceFactory(DataSourceFactory factory) {
     	database = factory;
     }
+
+    @JsonProperty("cache_pool")
+	public int getCachePoolSize() {
+		return cachePoolSize;
+	}
+
+    @JsonProperty("cache_pool")
+	public void setCachePoolSize(int cachePoolSize) {
+		this.cachePoolSize = cachePoolSize;
+	}
+
+	@JsonProperty("cache_host")
+	public String getCacheHost() {
+		return cacheHost;
+	}
+
+	@JsonProperty("cache_host")
+	public void setCacheHost(String cacheHost) {
+		this.cacheHost = cacheHost;
+	}
+
+	@JsonProperty("cache_port")
+	public int getCachePort() {
+		return cachePort;
+	}
+
+	@JsonProperty("cache_port")
+	public void setCachePort(int cachePort) {
+		this.cachePort = cachePort;
+	}
+
+	@JsonProperty("cache_timeout")
+	public int getCacheTimeout() {
+		return cacheTimeout;
+	}
+
+	@JsonProperty("cache_timeout")
+	public void setCacheTimeout(int cacheTimeout) {
+		this.cacheTimeout = cacheTimeout;
+	}
+    
+    
 
 }

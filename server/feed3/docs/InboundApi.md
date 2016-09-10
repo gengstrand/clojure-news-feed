@@ -9,7 +9,7 @@ Method | HTTP request | Description
 
 <a name="getInbound"></a>
 # **getInbound**
-> Inbound getInbound(id)
+> List&lt;Inbound&gt; getInbound(id)
 
 retrieve the inbound feed for an individual participant
 
@@ -23,7 +23,7 @@ Name | Type | Description  | Notes
 
 ### Return type
 
-[**Inbound**](Inbound.md)
+[**List&lt;Inbound&gt;**](Inbound.md)
 
 ### Authorization
 

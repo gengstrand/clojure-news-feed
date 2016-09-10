@@ -47,46 +47,46 @@
             <groupId>io.dropwizard</groupId>
             <artifactId>dropwizard-jdbi</artifactId>
         </dependency>
-	    <dependency>
-	      <groupId>io.swagger</groupId>
-	      <artifactId>swagger-annotations</artifactId>
-	      <version>1.5.10</version>
-	    </dependency>
-	    <dependency>
-	      <groupId>com.brsanthu</groupId>
-	      <artifactId>migbase64</artifactId>
-	      <version>2.2</version>
-	    </dependency>
+	<dependency>
+	    <groupId>io.swagger</groupId>
+	    <artifactId>swagger-annotations</artifactId>
+	    <version>1.5.10</version>
+	</dependency>
+	<dependency>
+	    <groupId>com.brsanthu</groupId>
+	    <artifactId>migbase64</artifactId>
+	    <version>2.2</version>
+	</dependency>
         <dependency>
             <groupId>com.hubspot.dropwizard</groupId>
             <artifactId>dropwizard-guice</artifactId>
             <version>1.0.0</version>
         </dependency>
-		<dependency>
-		  <groupId>org.jdbi</groupId>
-		  <artifactId>jdbi</artifactId>
-		  <version>2.75</version>
-		</dependency>
-		<dependency>
-		  <groupId>com.datastax.cassandra</groupId>
-		  <artifactId>cassandra-driver-core</artifactId>
-		  <version>2.1.4</version>
-		</dependency>
-		<dependency>
-		  <groupId>mysql</groupId>
-		  <artifactId>mysql-connector-java</artifactId>
-		  <version>5.0.8</version>
-		</dependency>
-		<dependency>
-		  <groupId>org.apache.kafka</groupId>
-		  <artifactId>kafka-clients</artifactId>
-		  <version>0.9.0.1</version>
-		</dependency>
-		<dependency>
-		  <groupId>redis.clients</groupId>
-		  <artifactId>jedis</artifactId>
-		  <version>2.7.2</version>
-		</dependency>
+        <dependency>
+	    <groupId>org.jdbi</groupId>
+	    <artifactId>jdbi</artifactId>
+	    <version>2.75</version>
+	</dependency>
+	<dependency>
+	    <groupId>com.datastax.cassandra</groupId>
+            <artifactId>cassandra-driver-core</artifactId>
+	    <version>2.1.4</version>
+	</dependency>
+	<dependency>
+            <groupId>mysql</groupId>
+	    <artifactId>mysql-connector-java</artifactId>
+	    <version>5.0.8</version>
+	</dependency>
+	<dependency>
+	    <groupId>org.apache.kafka</groupId>
+	    <artifactId>kafka-clients</artifactId>
+	    <version>0.9.0.1</version>
+	</dependency>
+	<dependency>
+	    <groupId>redis.clients</groupId>
+	    <artifactId>jedis</artifactId>
+	    <version>2.7.2</version>
+	</dependency>
         <dependency>
             <groupId>junit</groupId>
             <artifactId>junit</artifactId>

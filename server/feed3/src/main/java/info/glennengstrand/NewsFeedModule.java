@@ -7,6 +7,8 @@ import com.google.inject.Provides;
 
 import info.glennengstrand.resources.ParticipantApi.ParticipantApiService;
 import io.dropwizard.setup.Environment;
+import redis.clients.jedis.JedisPool;
+import redis.clients.jedis.JedisPoolConfig;
 import info.glennengstrand.core.ParticipantApiServiceImpl;
 import info.glennengstrand.db.FriendDAO;
 import info.glennengstrand.db.ParticipantDAO;
@@ -37,6 +39,14 @@ public class NewsFeedModule implements Module {
     @Provides
     public FriendDAO getFriendDAO(NewsFeedConfiguration config, Environment environment) {
     	return config.getDbi(environment).onDemand(FriendDAO.class);
+    }
+    
+    @Provides
+    public JedisPool getCache(NewsFeedConfiguration config) {
+    	JedisPoolConfig cacheConfig = new JedisPoolConfig();
+    	cacheConfig.setMaxTotal(config.getCachePoolSize());
+    	cacheConfig.setBlockWhenExhausted(false);
+    	return new JedisPool(cacheConfig, config.getCacheHost(), config.getCachePort(), config.getCacheTimeout());
     }
     
     public NewsFeedModule() {

@@ -60,7 +60,7 @@ All URIs are relative to *http://glennengstrand.info/*
 Class | Method | HTTP request | Description
 ------------ | ------------- | ------------- | -------------
 *FriendApi* | [**addFriend**](docs/FriendApi.md#addFriend) | **POST** /friends/new | create a new friendship
-*FriendApi* | [**getFriend**](docs/FriendApi.md#getFriend) | **GET** /friends/{id} | retrieve an individual friend
+*FriendApi* | [**getFriend**](docs/FriendApi.md#getFriend) | **GET** /friends/{id} | retrieve the list of friends for an individual participant
 *InboundApi* | [**getInbound**](docs/InboundApi.md#getInbound) | **GET** /inbound/{id} | retrieve the inbound feed for an individual participant
 *OutboundApi* | [**addOutbound**](docs/OutboundApi.md#addOutbound) | **POST** /outbound/new | create a participant news item
 *OutboundApi* | [**getOutbound**](docs/OutboundApi.md#getOutbound) | **GET** /outbound/{id} | retrieve the news posted by an individual participant
@@ -81,8 +81,4 @@ Class | Method | HTTP request | Description
 
 All endpoints do not require authorization.
 Authentication schemes defined for the API:
-
-## Author
-
-media@glennengstrand.info
 

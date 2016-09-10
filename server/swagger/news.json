@@ -1,6 +1,6 @@
 {
     "library": "jersey2",
-    "artifactId": "newsfeed-swagger", 
+    "artifactId": "newsfeed-dropwizard", 
     "apiPackage": "info.glennengstrand.resources", 
     "modelPackage": "info.glennengstrand.api",
     "groupId": "info.glennengstrand", 
