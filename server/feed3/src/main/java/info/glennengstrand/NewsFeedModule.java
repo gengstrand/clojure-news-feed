@@ -6,6 +6,7 @@ import com.google.inject.Module;
 import com.google.inject.Provides;
 
 import info.glennengstrand.resources.ParticipantApi.ParticipantApiService;
+import io.dropwizard.jdbi.DBIFactory;
 import io.dropwizard.setup.Environment;
 import redis.clients.jedis.JedisPool;
 import redis.clients.jedis.JedisPoolConfig;
@@ -21,7 +22,11 @@ import info.glennengstrand.core.OutboundApiServiceImpl;
 
 import javax.inject.Named;
 
+import org.skife.jdbi.v2.DBI;
+
 public class NewsFeedModule implements Module {
+
+	private final DBIFactory factory = new DBIFactory();
 
 	@Override
 	public void configure(Binder binder) {
@@ -32,14 +37,9 @@ public class NewsFeedModule implements Module {
 	}
 	
     @Provides
-    public ParticipantDAO getParticipantDAO(NewsFeedConfiguration config, Environment environment) {
-    	return config.getDbi(environment).onDemand(ParticipantDAO.class);
-    }
-	
-    @Provides
-    public FriendDAO getFriendDAO(NewsFeedConfiguration config, Environment environment) {
-    	return config.getDbi(environment).onDemand(FriendDAO.class);
-    }
+	public DBI getDbi(NewsFeedConfiguration config, Environment environment) {
+		return factory.build(environment, config.getDataSourceFactory(), "mysql");
+	}
     
     @Provides
     public JedisPool getCache(NewsFeedConfiguration config) {

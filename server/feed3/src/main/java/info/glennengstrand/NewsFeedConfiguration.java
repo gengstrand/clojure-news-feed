@@ -19,26 +19,12 @@ import javax.validation.constraints.*;
 
 public class NewsFeedConfiguration extends Configuration {
 		
-	private DBI dbi = null;
-	private final DBIFactory factory = new DBIFactory();
-
     private DataSourceFactory database = new DataSourceFactory();
     
     private int cachePoolSize = 1;
     private String cacheHost = "localhost";
     private int cachePort = 6379;
     private int cacheTimeout = 60;
-	
-	public DBI getDbi(Environment environment) {
-		if (dbi == null) {
-			synchronized(factory) {
-				if (dbi == null) {
-					dbi = factory.build(environment, getDataSourceFactory(), "mysql");
-				}
-			}
-		}
-		return dbi;
-	}
 	
     @JsonProperty("database")
     public DataSourceFactory getDataSourceFactory() {

@@ -10,12 +10,19 @@ import info.glennengstrand.api.Friend;
 
 public class FriendMapper implements ResultSetMapper<Friend> {
 
+	private final long id;
+	
 	@Override
 	public Friend map(int index, ResultSet r, StatementContext ctx) throws SQLException {
 		return new Friend.FriendBuilder()
 				.withId(r.getLong("FriendsID"))
-				.withFrom((Long)ctx.getAttribute("from"))
+				.withFrom(id)
 				.withTo(r.getLong("ParticipantID"))
 				.build();
 	}
+	
+	public FriendMapper(long id) {
+		this.id = id;
+	}
+	
 }

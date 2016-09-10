@@ -1,20 +1,28 @@
 package info.glennengstrand.db;
 
 import java.util.List;
+import org.skife.jdbi.v2.DBI;
 
-import org.skife.jdbi.v2.sqlobject.Bind;
-import org.skife.jdbi.v2.sqlobject.SqlQuery;
-import org.skife.jdbi.v2.sqlobject.customizers.RegisterMapper;
+import com.google.inject.Inject;
 
 import info.glennengstrand.api.Friend;
 
-@RegisterMapper(FriendMapper.class)
-public interface FriendDAO {
+public class FriendDAO extends RelationalDAO<Friend> {
 
-	@SqlQuery("call FetchFriends(:id)")
-	List<Friend> fetchFriend(@Bind("id") Long id);
+	public List<Friend> fetchFriend(Long id) {
+		info.glennengstrand.db.FriendMapper mapper = new info.glennengstrand.db.FriendMapper(id);
+		return fetchMulti("call FetchFriends(:id)", mapper, q -> q.bind("id", id));
+	}
 	
-	@SqlQuery("call UpsertFriends(:from, :to)")
-	long upsertFriend(@Bind("from") Long from, @Bind("to") Long to);
+	public long upsertFriend(Long from, Long to) {
+		return upsert("call UpsertFriends(:from, :to)", q -> {
+			q.bind("from", from);
+			q.bind("to", to);
+		});
+	}
 
+	@Inject
+	public FriendDAO(DBI dbi) {
+		super(dbi);
+	}
 }
