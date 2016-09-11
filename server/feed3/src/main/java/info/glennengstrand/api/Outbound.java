@@ -27,6 +27,7 @@ import com.fasterxml.jackson.annotation.JsonProperty;
 import com.fasterxml.jackson.annotation.JsonCreator;
 import io.swagger.annotations.ApiModel;
 import io.swagger.annotations.ApiModelProperty;
+import org.joda.time.DateTime;
 
 
 /**
@@ -36,12 +37,27 @@ import io.swagger.annotations.ApiModelProperty;
 public class Outbound   {
   private Long id = null;
 
+  private DateTime occurred = null;
+
+  private String subject = null;
+
+  private String story = null;
+
   private Outbound() {}
   public Outbound ( 
     @JsonProperty("id")
-    Long id
+    Long id,
+    @JsonProperty("occurred")
+    DateTime occurred,
+    @JsonProperty("subject")
+    String subject,
+    @JsonProperty("story")
+    String story
     ) {
       this.id = id;
+      this.occurred = occurred;
+      this.subject = subject;
+      this.story = story;
     }
     /**
     * Get id
@@ -51,6 +67,33 @@ public class Outbound   {
     @ApiModelProperty(example = "null", value = "")
     public Long getId() {
       return id;
+    }
+    /**
+    * Get occurred
+    * @return occurred
+    **/
+    @JsonProperty("occurred")
+    @ApiModelProperty(example = "null", value = "")
+    public DateTime getOccurred() {
+      return occurred;
+    }
+    /**
+    * Get subject
+    * @return subject
+    **/
+    @JsonProperty("subject")
+    @ApiModelProperty(example = "null", value = "")
+    public String getSubject() {
+      return subject;
+    }
+    /**
+    * Get story
+    * @return story
+    **/
+    @JsonProperty("story")
+    @ApiModelProperty(example = "null", value = "")
+    public String getStory() {
+      return story;
     }
 
     @Override
@@ -62,12 +105,15 @@ public class Outbound   {
         return false;
       }
       Outbound outbound = (Outbound) o;
-      return Objects.equals(this.id, outbound.id);
+      return Objects.equals(this.id, outbound.id) &&
+        Objects.equals(this.occurred, outbound.occurred) &&
+        Objects.equals(this.subject, outbound.subject) &&
+        Objects.equals(this.story, outbound.story);
     }
 
     @Override
     public int hashCode() {
-      return Objects.hash(id);
+      return Objects.hash(id, occurred, subject, story);
     }
 
     @Override
@@ -76,6 +122,9 @@ public class Outbound   {
       sb.append("class Outbound {\n");
       
       sb.append("    id: ").append(toIndentedString(id)).append("\n");
+      sb.append("    occurred: ").append(toIndentedString(occurred)).append("\n");
+      sb.append("    subject: ").append(toIndentedString(subject)).append("\n");
+      sb.append("    story: ").append(toIndentedString(story)).append("\n");
       sb.append("}");
       return sb.toString();
     }
@@ -93,13 +142,31 @@ public class Outbound   {
 
   public static class OutboundBuilder {
     private Long id = null;
+    private DateTime occurred = null;
+    private String subject = null;
+    private String story = null;
     public OutboundBuilder withId(Long id) {
       this.id = id;
       return this;
     }
+    public OutboundBuilder withOccurred(DateTime occurred) {
+      this.occurred = occurred;
+      return this;
+    }
+    public OutboundBuilder withSubject(String subject) {
+      this.subject = subject;
+      return this;
+    }
+    public OutboundBuilder withStory(String story) {
+      this.story = story;
+      return this;
+    }
     public Outbound build() {
       return new Outbound (
-        id 
+        id, 
+        occurred, 
+        subject, 
+        story 
       );
     }
   }

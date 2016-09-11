@@ -5,20 +5,23 @@ import com.google.inject.Inject;
 import com.google.inject.Module;  
 import com.google.inject.Provides;
 
-import info.glennengstrand.resources.ParticipantApi.ParticipantApiService;
 import io.dropwizard.jdbi.DBIFactory;
 import io.dropwizard.setup.Environment;
 import redis.clients.jedis.JedisPool;
 import redis.clients.jedis.JedisPoolConfig;
-import info.glennengstrand.core.ParticipantApiServiceImpl;
+import com.datastax.driver.core.Session;
+import com.datastax.driver.core.Cluster;
+import com.datastax.driver.core.ConsistencyLevel;
 import info.glennengstrand.db.FriendDAO;
 import info.glennengstrand.db.ParticipantDAO;
+import info.glennengstrand.core.ParticipantApiServiceImpl;
 import info.glennengstrand.core.FriendApiServiceImpl;
 import info.glennengstrand.core.InboundApiServiceImpl;
+import info.glennengstrand.core.OutboundApiServiceImpl;
+import info.glennengstrand.resources.ParticipantApi.ParticipantApiService;
 import info.glennengstrand.resources.InboundApi.InboundApiService;
 import info.glennengstrand.resources.FriendApi.FriendApiService;
 import info.glennengstrand.resources.OutboundApi.OutboundApiService;
-import info.glennengstrand.core.OutboundApiServiceImpl;
 
 import javax.inject.Named;
 
@@ -47,6 +50,12 @@ public class NewsFeedModule implements Module {
     	cacheConfig.setMaxTotal(config.getCachePoolSize());
     	cacheConfig.setBlockWhenExhausted(false);
     	return new JedisPool(cacheConfig, config.getCacheHost(), config.getCachePort(), config.getCacheTimeout());
+    }
+    
+    @Provides
+    public Session getNoSqlSession(NewsFeedConfiguration config) {
+    	Cluster cluster = Cluster.builder().addContactPoint(config.getNosqlHost()).build();
+    	return cluster.connect(config.getNosqlKeyspace());
     }
     
     public NewsFeedModule() {

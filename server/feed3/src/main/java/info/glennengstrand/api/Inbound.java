@@ -27,6 +27,7 @@ import com.fasterxml.jackson.annotation.JsonProperty;
 import com.fasterxml.jackson.annotation.JsonCreator;
 import io.swagger.annotations.ApiModel;
 import io.swagger.annotations.ApiModelProperty;
+import org.joda.time.DateTime;
 
 
 /**
@@ -38,15 +39,30 @@ public class Inbound   {
 
   private Long to = null;
 
+  private DateTime occurred = null;
+
+  private String subject = null;
+
+  private String story = null;
+
   private Inbound() {}
   public Inbound ( 
     @JsonProperty("from")
     Long from,
     @JsonProperty("to")
-    Long to
+    Long to,
+    @JsonProperty("occurred")
+    DateTime occurred,
+    @JsonProperty("subject")
+    String subject,
+    @JsonProperty("story")
+    String story
     ) {
       this.from = from;
       this.to = to;
+      this.occurred = occurred;
+      this.subject = subject;
+      this.story = story;
     }
     /**
     * Get from
@@ -66,6 +82,33 @@ public class Inbound   {
     public Long getTo() {
       return to;
     }
+    /**
+    * Get occurred
+    * @return occurred
+    **/
+    @JsonProperty("occurred")
+    @ApiModelProperty(example = "null", value = "")
+    public DateTime getOccurred() {
+      return occurred;
+    }
+    /**
+    * Get subject
+    * @return subject
+    **/
+    @JsonProperty("subject")
+    @ApiModelProperty(example = "null", value = "")
+    public String getSubject() {
+      return subject;
+    }
+    /**
+    * Get story
+    * @return story
+    **/
+    @JsonProperty("story")
+    @ApiModelProperty(example = "null", value = "")
+    public String getStory() {
+      return story;
+    }
 
     @Override
     public boolean equals(java.lang.Object o) {
@@ -77,12 +120,15 @@ public class Inbound   {
       }
       Inbound inbound = (Inbound) o;
       return Objects.equals(this.from, inbound.from) &&
-        Objects.equals(this.to, inbound.to);
+        Objects.equals(this.to, inbound.to) &&
+        Objects.equals(this.occurred, inbound.occurred) &&
+        Objects.equals(this.subject, inbound.subject) &&
+        Objects.equals(this.story, inbound.story);
     }
 
     @Override
     public int hashCode() {
-      return Objects.hash(from, to);
+      return Objects.hash(from, to, occurred, subject, story);
     }
 
     @Override
@@ -92,6 +138,9 @@ public class Inbound   {
       
       sb.append("    from: ").append(toIndentedString(from)).append("\n");
       sb.append("    to: ").append(toIndentedString(to)).append("\n");
+      sb.append("    occurred: ").append(toIndentedString(occurred)).append("\n");
+      sb.append("    subject: ").append(toIndentedString(subject)).append("\n");
+      sb.append("    story: ").append(toIndentedString(story)).append("\n");
       sb.append("}");
       return sb.toString();
     }
@@ -110,6 +159,9 @@ public class Inbound   {
   public static class InboundBuilder {
     private Long from = null;
     private Long to = null;
+    private DateTime occurred = null;
+    private String subject = null;
+    private String story = null;
     public InboundBuilder withFrom(Long from) {
       this.from = from;
       return this;
@@ -118,10 +170,25 @@ public class Inbound   {
       this.to = to;
       return this;
     }
+    public InboundBuilder withOccurred(DateTime occurred) {
+      this.occurred = occurred;
+      return this;
+    }
+    public InboundBuilder withSubject(String subject) {
+      this.subject = subject;
+      return this;
+    }
+    public InboundBuilder withStory(String story) {
+      this.story = story;
+      return this;
+    }
     public Inbound build() {
       return new Inbound (
         from, 
-        to 
+        to, 
+        occurred, 
+        subject, 
+        story 
       );
     }
   }

@@ -235,12 +235,12 @@ definitions:
         type: integer
         format: int64
       occurred:
-        type: String
+        type: string
         format: date-time
       subject:
-        type: String
+        type: string
       story:
-        type: String
+        type: string
   outbound:
     type: object
     properties:
@@ -248,10 +248,10 @@ definitions:
         type: integer
         format: int64
       occurred:
-        type: String
+        type: string
         format: date-time
       subject:
-        type: String
+        type: string
       story:
-        type: String
+        type: string
 

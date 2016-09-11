@@ -12,7 +12,7 @@ import java.util.Map;
 import java.util.List;
 import java.util.function.Consumer;
 
-public class RelationalDAO<E> {
+public abstract class RelationalDAO<E> {
 
 	private static final Logger LOGGER = LoggerFactory.getLogger(RelationalDAO.class);
 	private final DBI dbi;

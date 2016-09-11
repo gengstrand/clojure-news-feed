@@ -8,7 +8,16 @@ cache_port: 6379
 
 cache_timeout: 60
 
+# NoSql settings
+
+nosql_host: cassandra_host
+
+nosql_keyspace: activity
+
+nosql_consistency_level: one
+
 # Database settings.
+
 database:
 
   driverClass: com.mysql.jdbc.Driver
