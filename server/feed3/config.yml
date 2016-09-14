@@ -16,6 +16,16 @@ nosql_keyspace: activity
 
 nosql_consistency_level: one
 
+# elastic search settings
+
+search_host: solr_host
+
+search_port: 9200
+
+search_index: feed
+
+search_mapping: stories
+
 # Database settings.
 
 database:

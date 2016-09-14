@@ -1,7 +1,6 @@
 package info.glennengstrand;
 
 import com.google.inject.Binder;
-import com.google.inject.Inject;
 import com.google.inject.Module;  
 import com.google.inject.Provides;
 
@@ -11,9 +10,10 @@ import redis.clients.jedis.JedisPool;
 import redis.clients.jedis.JedisPoolConfig;
 import com.datastax.driver.core.Session;
 import com.datastax.driver.core.Cluster;
-import com.datastax.driver.core.ConsistencyLevel;
-import info.glennengstrand.db.FriendDAO;
-import info.glennengstrand.db.ParticipantDAO;
+
+import info.glennengstrand.db.ElasticSearchDAO;
+import info.glennengstrand.db.SearchDAO.DoNothingSearchDAO;
+import info.glennengstrand.db.SearchDAO;
 import info.glennengstrand.core.ParticipantApiServiceImpl;
 import info.glennengstrand.core.FriendApiServiceImpl;
 import info.glennengstrand.core.InboundApiServiceImpl;
@@ -23,11 +23,13 @@ import info.glennengstrand.resources.InboundApi.InboundApiService;
 import info.glennengstrand.resources.FriendApi.FriendApiService;
 import info.glennengstrand.resources.OutboundApi.OutboundApiService;
 
-import javax.inject.Named;
-
 import org.skife.jdbi.v2.DBI;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 public class NewsFeedModule implements Module {
+
+	private static final Logger LOGGER = LoggerFactory.getLogger(NewsFeedModule.class);
 
 	private final DBIFactory factory = new DBIFactory();
 
@@ -56,6 +58,18 @@ public class NewsFeedModule implements Module {
     public Session getNoSqlSession(NewsFeedConfiguration config) {
     	Cluster cluster = Cluster.builder().addContactPoint(config.getNosqlHost()).build();
     	return cluster.connect(config.getNosqlKeyspace());
+    }
+    
+    @Provides
+    public SearchDAO getElasticSearch(NewsFeedConfiguration config) {
+    	SearchDAO retVal = null;
+    	try {
+			retVal = new ElasticSearchDAO(config.getSearchHost(), config.getSearchPort(), config.getSearchIndex(), config.getSearchMapping());
+		} catch (Exception e) {
+			LOGGER.error("Cannot connect to elastic search: ", e);
+			retVal = new DoNothingSearchDAO();
+		}
+    	return retVal;
     }
     
     public NewsFeedModule() {

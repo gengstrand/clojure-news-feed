@@ -65,7 +65,7 @@ No authorization required
 
 <a name="searchOutbound"></a>
 # **searchOutbound**
-> List&lt;Outbound&gt; searchOutbound(keywords)
+> List&lt;Long&gt; searchOutbound(keywords)
 
 create a participant news item
 
@@ -79,7 +79,7 @@ Name | Type | Description  | Notes
 
 ### Return type
 
-[**List&lt;Outbound&gt;**](Outbound.md)
+**List&lt;Long&gt;**
 
 ### Authorization
 

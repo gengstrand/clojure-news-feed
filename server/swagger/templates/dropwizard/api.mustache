@@ -5,6 +5,7 @@ import com.google.inject.Inject;
 import javax.ws.rs.GET;  
 import javax.ws.rs.POST;  
 import javax.ws.rs.PathParam;
+import javax.ws.rs.QueryParam;
 import javax.ws.rs.Path;
 import javax.ws.rs.Produces;
 import javax.ws.rs.Consumes;
@@ -40,7 +41,7 @@ public class {{classname}} {
    * @param {{paramName}} {{description}}{{#required}} (required){{/required}}{{^required}} (optional{{#defaultValue}}, default to {{{.}}}{{/defaultValue}}){{/required}}{{/allParams}}{{#returnType}}
    * @return {{{returnType}}}{{/returnType}}
    */
-   public {{#returnType}}{{{returnType}}} {{/returnType}}{{^returnType}}void {{/returnType}}{{operationId}}({{#allParams}}{{#isPathParam}}@PathParam("{{paramName}}") {{/isPathParam}}{{{dataType}}}{{#isLong}}Param{{/isLong}} {{paramName}}{{#hasMore}}, {{/hasMore}}{{/allParams}}) {
+   public {{#returnType}}{{{returnType}}} {{/returnType}}{{^returnType}}void {{/returnType}}{{operationId}}({{#allParams}}{{#isPathParam}}@PathParam("{{paramName}}"){{/isPathParam}}{{#isQueryParam}}@QueryParam("{{paramName}}"){{/isQueryParam}} {{{dataType}}}{{#isLong}}Param{{/isLong}} {{paramName}}{{#hasMore}}, {{/hasMore}}{{/allParams}}) {
       return {{pathPrefix}}Service.{{operationId}}({{#allParams}}{{paramName}}{{#isLong}}.get(){{/isLong}}{{#hasMore}}, {{/hasMore}}{{/allParams}});
    }
    {{/operation}}

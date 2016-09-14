@@ -25,6 +25,7 @@ import com.google.inject.Inject;
 import javax.ws.rs.GET;  
 import javax.ws.rs.POST;  
 import javax.ws.rs.PathParam;
+import javax.ws.rs.QueryParam;
 import javax.ws.rs.Path;
 import javax.ws.rs.Produces;
 import javax.ws.rs.Consumes;
@@ -34,11 +35,10 @@ import io.dropwizard.jersey.params.LongParam;
 
 import info.glennengstrand.api.Outbound;
 
-
 @Path("/outbound")
 public class OutboundApi {
 
-	private final OutboundApiService outboundService;
+   private final OutboundApiService outboundService;
 	
    @Inject
    public OutboundApi(OutboundApiService outboundService) {
@@ -70,20 +70,20 @@ public class OutboundApi {
       return outboundService.getOutbound(id.get());
    }
    @POST
-   @Path("/outbound/search")
+   @Path("/search")
    @Produces("application/json")
   /**
    * create a participant news item
    * keyword search of participant news
    * @param keywords keywords to search for (required)
-   * @return List<Outbound>
+   * @return List<Long>
    */
-   public List<Outbound> searchOutbound(String keywords) {
+   public List<Long> searchOutbound(@QueryParam("keywords") String keywords) {
       return outboundService.searchOutbound(keywords);
    }
    public static interface OutboundApiService {
       Outbound addOutbound(Outbound body);
       List<Outbound> getOutbound(Long id);
-      List<Outbound> searchOutbound(String keywords);
+      List<Long> searchOutbound(String keywords);
    }
 }

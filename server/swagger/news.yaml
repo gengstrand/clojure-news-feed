@@ -203,7 +203,8 @@ paths:
           schema:
             type: array
             items:
-              $ref: '#/definitions/outbound'
+              type: integer
+              format: int64
 definitions:
   participant:
     type: object

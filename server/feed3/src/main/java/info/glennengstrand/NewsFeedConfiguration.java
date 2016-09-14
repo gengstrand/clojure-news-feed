@@ -28,7 +28,11 @@ public class NewsFeedConfiguration extends Configuration {
 	private static final String NOSQL_HOST_PROPERTY_NAME = "nosql_host";
 	private static final String NOSQL_KEYSPACE_PROPERTY_NAME = "nosql_keyspace";
 	private static final String NOSQL_CONSISTENCY_LEVEL_PROPERTY_NAME = "nosql_consistency_level";
-		
+	private static final String SEARCH_HOST_PROPERTY_NAME = "search_host";
+	private static final String SEARCH_PORT_PROPERTY_NAME = "search_port";
+	private static final String SEARCH_INDEX_PROPERTY_NAME = "search_index";
+	private static final String SEARCH_MAPPING_PROPERTY_NAME = "search_mapping";
+	
     private DataSourceFactory database = new DataSourceFactory();
     
     private int cachePoolSize = 1;
@@ -38,6 +42,10 @@ public class NewsFeedConfiguration extends Configuration {
     private String nosqlHost = "localhost";
     private String nosqlKeyspace = "activity";
     private String nosqlConsistencyLevel = "one";
+    private String searchHost = "localhost";
+    private int searchPort = 9200;
+    private String searchIndex = "feed";
+    private String searchMapping = "stories";
 	
     @JsonProperty(DATABASE_PROPERTY_NAME)
     public DataSourceFactory getDataSourceFactory() {
@@ -117,6 +125,46 @@ public class NewsFeedConfiguration extends Configuration {
 	@JsonProperty(NOSQL_CONSISTENCY_LEVEL_PROPERTY_NAME)
 	public void setNosqlConsistencyLevel(String nosqlConsistencyLevel) {
 		this.nosqlConsistencyLevel = nosqlConsistencyLevel;
+	}
+
+	@JsonProperty(SEARCH_HOST_PROPERTY_NAME)
+	public String getSearchHost() {
+		return searchHost;
+	}
+
+	@JsonProperty(SEARCH_HOST_PROPERTY_NAME)
+	public void setSearchHost(String searchHost) {
+		this.searchHost = searchHost;
+	}
+
+	@JsonProperty(SEARCH_PORT_PROPERTY_NAME)
+	public int getSearchPort() {
+		return searchPort;
+	}
+
+	@JsonProperty(SEARCH_PORT_PROPERTY_NAME)
+	public void setSearchPort(int searchPort) {
+		this.searchPort = searchPort;
+	}
+
+	@JsonProperty(SEARCH_INDEX_PROPERTY_NAME)
+	public String getSearchIndex() {
+		return searchIndex;
+	}
+
+	@JsonProperty(SEARCH_INDEX_PROPERTY_NAME)
+	public void setSearchIndex(String searchIndex) {
+		this.searchIndex = searchIndex;
+	}
+
+	@JsonProperty(SEARCH_MAPPING_PROPERTY_NAME)
+	public String getSearchMapping() {
+		return searchMapping;
+	}
+
+	@JsonProperty(SEARCH_MAPPING_PROPERTY_NAME)
+	public void setSearchMapping(String searchMapping) {
+		this.searchMapping = searchMapping;
 	}
 
 }
