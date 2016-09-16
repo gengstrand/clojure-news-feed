@@ -26,6 +26,12 @@ search_index: feed
 
 search_mapping: stories
 
+# kafka settings
+
+message_broker: kafka_server
+
+message_topic: feed
+
 # Database settings.
 
 database:

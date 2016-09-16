@@ -15,14 +15,17 @@ import info.glennengstrand.db.ElasticSearchDAO;
 import info.glennengstrand.db.SearchDAO.DoNothingSearchDAO;
 import info.glennengstrand.db.SearchDAO;
 import info.glennengstrand.core.ParticipantApiServiceImpl;
+import info.glennengstrand.core.MessageLogger;
 import info.glennengstrand.core.FriendApiServiceImpl;
 import info.glennengstrand.core.InboundApiServiceImpl;
+import info.glennengstrand.core.KafkaPerformanceLogger;
 import info.glennengstrand.core.OutboundApiServiceImpl;
 import info.glennengstrand.resources.ParticipantApi.ParticipantApiService;
 import info.glennengstrand.resources.InboundApi.InboundApiService;
 import info.glennengstrand.resources.FriendApi.FriendApiService;
 import info.glennengstrand.resources.OutboundApi.OutboundApiService;
 
+import org.apache.kafka.clients.producer.Producer;
 import org.skife.jdbi.v2.DBI;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -69,6 +72,18 @@ public class NewsFeedModule implements Module {
 			LOGGER.error("Cannot connect to elastic search: ", e);
 			retVal = new DoNothingSearchDAO();
 		}
+    	return retVal;
+    }
+    
+    @Provides
+    public MessageLogger<Long> getPerformanceLogger(NewsFeedConfiguration config) {
+    	MessageLogger<Long> retVal = null;
+    	try {
+    		retVal = new KafkaPerformanceLogger(config.getMessageBroker(), config.getMessageTopic());
+    	} catch (Exception e) {
+    		LOGGER.error("Cannot connect to Kafka: ", e);
+    		retVal = new MessageLogger.DoNothingMessageLogger();
+    	}
     	return retVal;
     }
     

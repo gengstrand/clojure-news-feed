@@ -18,15 +18,18 @@ import info.glennengstrand.resources.OutboundApi.OutboundApiService;
 
 public class OutboundApiServiceImpl implements OutboundApiService {
 
+	private static final String ENTITY = "Outbound";
 	private static final Logger LOGGER = LoggerFactory.getLogger(OutboundApiServiceImpl.class);
 
 	private final OutboundDAO outdao;
 	private final InboundDAO indao;
 	private final FriendApiService friendService;
 	private final SearchDAO esdao;
+	private final MessageLogger<Long> logger;
 	
 	@Override
 	public Outbound addOutbound(Outbound body) {
+		long before = System.currentTimeMillis();
 		for (Friend friend : friendService.getFriend(body.getId())) {
 			Inbound in = new Inbound.InboundBuilder()
 					.withFrom(body.getId())
@@ -43,25 +46,33 @@ public class OutboundApiServiceImpl implements OutboundApiService {
 				.withStory(body.getStory())
 				.build();
 		esdao.upsert(doc);
+		logger.log(ENTITY, MessageLogger.LogOperation.ADD, System.currentTimeMillis()- before);
 		return body;
 	}
 
 	@Override
 	public List<Outbound> getOutbound(Long id) {
-		return outdao.fetch(id);
+		long before = System.currentTimeMillis();
+		List<Outbound> retVal = outdao.fetch(id);
+		logger.log(ENTITY, MessageLogger.LogOperation.GET, System.currentTimeMillis()- before);
+		return retVal;
 	}
 
 	@Override
 	public List<Long> searchOutbound(String keywords) {
-		return esdao.find(keywords);
+		long before = System.currentTimeMillis();
+		List<Long> retVal = esdao.find(keywords);
+		logger.log(ENTITY, MessageLogger.LogOperation.SEARCH, System.currentTimeMillis()- before);
+		return retVal;
 	}
 	
 	@Inject
-	public OutboundApiServiceImpl(OutboundDAO outdao, InboundDAO indao, FriendApiService friendService, SearchDAO esdao) {
+	public OutboundApiServiceImpl(OutboundDAO outdao, InboundDAO indao, FriendApiService friendService, SearchDAO esdao, MessageLogger<Long> logger) {
 		this.outdao = outdao;
 		this.indao = indao;
 		this.friendService = friendService;
 		this.esdao = esdao;
+		this.logger = logger;
 	}
 
 }

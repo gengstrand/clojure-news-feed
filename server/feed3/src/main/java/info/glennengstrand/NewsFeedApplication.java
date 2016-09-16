@@ -14,6 +14,9 @@ import io.dropwizard.setup.Bootstrap;
 import io.dropwizard.setup.Environment;
 
 public class NewsFeedApplication extends Application<NewsFeedConfiguration> {
+
+	public static final String SEARCH_OPERATION = "search";
+	
 	private static final Logger LOGGER = LoggerFactory.getLogger(NewsFeedApplication.class);
 	
 	private Module guiceModule = null;
@@ -42,14 +45,7 @@ public class NewsFeedApplication extends Application<NewsFeedConfiguration> {
 
     @Override
     public void run(final NewsFeedConfiguration configuration, final Environment environment) {
-    	/*
-    	guiceModule = new NewsFeedModule(environment, configuration);
-    	Injector injector = Guice.createInjector(guiceModule);
-    	ParticipantApi pa = injector.getInstance(ParticipantApi.class);
-    	info.glennengstrand.api.Participant p = pa.getParticipant(new LongParam("3"));
-    	LOGGER.debug(p.toString());
-        environment.jersey().register(pa);
-        */
+
     }
 
 }

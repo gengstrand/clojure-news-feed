@@ -13,27 +13,36 @@ import redis.clients.jedis.JedisPool;
 
 public class FriendApiServiceImpl implements FriendApiService {
 
+	private static final String ENTITY = "Friend";
 	private final FriendDAO dao;
 	private final RedisCache<Friend> cache;
+	private final MessageLogger<Long> logger;
 	
 	@Inject 
-	public FriendApiServiceImpl(FriendDAO dao, JedisPool pool) {
+	public FriendApiServiceImpl(FriendDAO dao, JedisPool pool, MessageLogger<Long> logger) {
 		this.dao = dao;
 		cache = new RedisCache<Friend>(Friend.class, pool);
+		this.logger = logger;
 	}
 	
 	@Override
 	public Friend addFriend(Friend body) {
-		return new Friend.FriendBuilder()
+		long before = System.currentTimeMillis();
+		Friend retVal = new Friend.FriendBuilder()
 				.withId(dao.upsertFriend(body.getFrom(),  body.getTo()))
 				.withFrom(body.getFrom())
 				.withTo(body.getTo())
 				.build();
+		logger.log(ENTITY, MessageLogger.LogOperation.ADD, System.currentTimeMillis()- before);
+		return retVal;
 	}
 
 	@Override
 	public List<Friend> getFriend(Long id) {
-		return cache.getMulti(id, () -> dao.fetchFriend(id));
+		long before = System.currentTimeMillis();
+		List<Friend> retVal = cache.getMulti(id, () -> dao.fetchFriend(id));
+		logger.log(ENTITY, MessageLogger.LogOperation.GET, System.currentTimeMillis()- before);
+		return retVal;
 	}
 
 }

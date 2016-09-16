@@ -32,6 +32,8 @@ public class NewsFeedConfiguration extends Configuration {
 	private static final String SEARCH_PORT_PROPERTY_NAME = "search_port";
 	private static final String SEARCH_INDEX_PROPERTY_NAME = "search_index";
 	private static final String SEARCH_MAPPING_PROPERTY_NAME = "search_mapping";
+	private static final String MESSAGE_BROKER_PROPERTY_NAME = "message_broker";
+	private static final String MESSAGE_TOPIC_PROPERTY_NAME = "message_topic";
 	
     private DataSourceFactory database = new DataSourceFactory();
     
@@ -46,6 +48,8 @@ public class NewsFeedConfiguration extends Configuration {
     private int searchPort = 9200;
     private String searchIndex = "feed";
     private String searchMapping = "stories";
+    private String messageBroker = "localhost";
+    private String messageTopic = "feed";
 	
     @JsonProperty(DATABASE_PROPERTY_NAME)
     public DataSourceFactory getDataSourceFactory() {
@@ -165,6 +169,26 @@ public class NewsFeedConfiguration extends Configuration {
 	@JsonProperty(SEARCH_MAPPING_PROPERTY_NAME)
 	public void setSearchMapping(String searchMapping) {
 		this.searchMapping = searchMapping;
+	}
+
+	@JsonProperty(MESSAGE_BROKER_PROPERTY_NAME)
+	public String getMessageBroker() {
+		return messageBroker;
+	}
+
+	@JsonProperty(MESSAGE_BROKER_PROPERTY_NAME)
+	public void setMessageBroker(String messageBroker) {
+		this.messageBroker = messageBroker;
+	}
+
+	@JsonProperty(MESSAGE_TOPIC_PROPERTY_NAME)
+	public String getMessageTopic() {
+		return messageTopic;
+	}
+
+	@JsonProperty(MESSAGE_TOPIC_PROPERTY_NAME)
+	public void setMessageTopic(String messageTopic) {
+		this.messageTopic = messageTopic;
 	}
 
 }
