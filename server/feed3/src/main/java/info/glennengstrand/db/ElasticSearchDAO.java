@@ -5,10 +5,9 @@ import java.net.URI;
 import java.net.URISyntaxException;
 import java.util.ArrayList;
 import java.util.Collections;
+import java.util.Iterator;
 import java.util.List;
-import java.util.UUID;
 import java.util.concurrent.CompletableFuture;
-import java.util.stream.Collectors;
 
 import javax.ws.rs.client.Client;
 import javax.ws.rs.client.Entity;
@@ -32,6 +31,27 @@ public class ElasticSearchDAO extends SearchDAO {
 	private final String mapping;
 	private final Client client = ClientBuilder.newClient();
 	private final ObjectMapper mapper = new ObjectMapper();
+	
+	private List<JsonNode> toList(Iterator<JsonNode> elements) {
+		List<JsonNode> retVal = new ArrayList<JsonNode>();
+		while(elements.hasNext()) {
+			retVal.add(elements.next());
+		}
+		return retVal;
+	}
+	
+	private void extract(String attributeName, JsonNode node, List<Long> results) {
+		JsonNode n = node.get(attributeName);
+		if (n != null) {
+			Long l = n.asLong();
+			if (!results.contains(l)) {
+				results.add(l);
+			}
+		}
+		if (node.isContainerNode()) {
+			toList(node.elements()).stream().forEach(cn -> extract(attributeName, cn, results));
+		}
+	}
 	
 	private void sendSingleDocumentToElasticSearch(UpsertRequest doc) {
 		Response response = client.target(elasticSearchHost) 
@@ -64,8 +84,7 @@ public class ElasticSearchDAO extends SearchDAO {
 				.request(MediaType.APPLICATION_JSON)
 				.get();
 		int status = response.getStatus();
-		Object e = response.getEntity();
-		String responseJson = e == null ? null : e.toString();
+		String responseJson = response.readEntity(String.class);
 		if (status >= 300) {
 			if (responseJson != null) {
 				LOGGER.warn(responseJson);
@@ -74,19 +93,21 @@ public class ElasticSearchDAO extends SearchDAO {
 			}
 		} else {
 			if (responseJson != null) {
+				LOGGER.debug(responseJson);
 				try {
 					JsonNode root = mapper.readTree(responseJson);
 					if (root != null) {
-						List<JsonNode> sender = root.findValues("sender");
-						if (sender != null) {
-							return sender.stream().map(mapper -> mapper.asLong()).collect(Collectors.toList());
-						}
+						List<Long> retVal = new ArrayList<Long>();
+						extract("sender", root, retVal);
+						return retVal;
 					}
 				} catch (JsonProcessingException e1) {
 					LOGGER.error("unrecognised response from elasticsearch: ", e1);
 				} catch (IOException e1) {
 					LOGGER.error("Could not access elasticsearch: ", e1);
 				}
+			} else {
+				LOGGER.warn("null response from search request");
 			}
 		}
 		return Collections.emptyList();

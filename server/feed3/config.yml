@@ -28,7 +28,7 @@ search_mapping: stories
 
 # kafka settings
 
-message_broker: kafka_server
+message_broker: 127.0.0.1
 
 message_topic: feed
 

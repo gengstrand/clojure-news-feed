@@ -5,22 +5,23 @@ import java.util.List;
 import org.joda.time.DateTime;
 
 import com.datastax.driver.core.Session;
+import com.google.inject.Inject;
 
 import info.glennengstrand.NewsFeedConfiguration;
 import info.glennengstrand.api.Outbound;
 
 public class OutboundDAO extends CassandraDAO<Outbound> {
 	
-	private static final String OCCURRED_COLUMN = "occured";
-	private static final String SUBJECT_COLUMN = "subject";
-	private static final String STORY_COLUMN = "story";
+	private static final String OCCURRED_COLUMN = "Occurred";
+	private static final String SUBJECT_COLUMN = "Subject";
+	private static final String STORY_COLUMN = "Story";
 
 	@Override
 	protected String cql(DataOperation op) {
 		String retVal = null;
 		switch(op) {
 		case LOAD:
-			retVal = "select dateOf(occurred) as " + OCCURRED_COLUMN + ", " + SUBJECT_COLUMN + ", " + STORY_COLUMN + " from Outbound where participantid = ? order by occurred desc";
+			retVal = "select toTimestamp(occurred) as " + OCCURRED_COLUMN + ", " + SUBJECT_COLUMN + ", " + STORY_COLUMN + " from Outbound where participantid = ? order by occurred desc";
 			break;
 		case SAVE:
 			retVal = "insert into Outbound (ParticipantID, " + OCCURRED_COLUMN + ", " + SUBJECT_COLUMN + ", " + STORY_COLUMN + ") values (?, now(), ?, ?) using ttl 7776000";
@@ -31,7 +32,7 @@ public class OutboundDAO extends CassandraDAO<Outbound> {
 	
 	public void create(Outbound value) {
 		upsert(b -> {
-			b.setLong(0, value.getId());
+			b.setInt(0, value.getId().intValue());
 			b.setString(1, value.getSubject());
 			b.setString(2,  value.getStory());
 		});
@@ -39,7 +40,7 @@ public class OutboundDAO extends CassandraDAO<Outbound> {
 	
 	public List<Outbound> fetch(long id) {
 		return fetchMulti(b -> {
-			b.setLong(0, id);
+			b.setInt(0, new Long(id).intValue());
 		}, r -> {
 			return new Outbound.OutboundBuilder()
 					.withId(id)
@@ -50,6 +51,7 @@ public class OutboundDAO extends CassandraDAO<Outbound> {
 		});
 	}
 
+	@Inject
 	public OutboundDAO(Session session, NewsFeedConfiguration config) {
 		super(session, config);
 	}
