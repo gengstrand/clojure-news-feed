@@ -4,7 +4,13 @@
 (require '[clj-http.client :as client])
 
 (declare host)
+(declare json-post)
 (def port "8080")
+
+(defn set-json-post 
+  "switch to determine whether or not content type is json"
+  [switch-value]
+  (def json-post switch-value))
 
 (defn set-feed-host
   "the ip address where the service is listening"
@@ -28,8 +34,12 @@
   "call the service to create an entity and return results and timing"
   [entity-name entity-params]
   (let [before (System/currentTimeMillis)
-        response (client/post 
-                   (service-url entity-name "new") {:form-params entity-params})]
+        response 
+        (if json-post
+          (client/post 
+            (service-url entity-name "new") {:form-params entity-params} :content-type :json)
+          (client/post 
+            (service-url entity-name "new") {:form-params entity-params}))]
     (if 
       (=
         (:status response)

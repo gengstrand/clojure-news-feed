@@ -23,15 +23,29 @@
 package info.glennengstrand.resources;
 
 import info.glennengstrand.api.Friend;
+import info.glennengstrand.core.MessageLogger;
+import info.glennengstrand.core.FriendApiServiceImpl;
+import info.glennengstrand.db.FriendDAO;
+import info.glennengstrand.resources.FriendApi.FriendApiService;
+import redis.clients.jedis.JedisPool;
+
 import org.junit.Test;
+import org.junit.Before;
+import static org.junit.Assert.*;
+import static org.mockito.Mockito.*;
+
+import java.util.ArrayList;
+import java.util.List;
 
 /**
  * API tests for FriendApi
  */
-public class FriendApiTest {
-
-    private final FriendApi api = null;
-
+public class FriendApiTest extends NewsFeedTestBase {
+    
+    @Before
+    public void setup() {
+    	setupFriendSupport();
+    }
     
     /**
      * create a new friendship
@@ -41,10 +55,7 @@ public class FriendApiTest {
      */
     @Test
     public void addFriendTest() {
-        Friend body = null;
-        // Friend response = api.addFriend(body);
-
-        // TODO: test validations
+        assertTrue(String.format("expected id to be %d but it was %d instead", TEST_ID, friendApi.addFriend(friend).getId()), friendApi.addFriend(friend).getId() == TEST_ID);
     }
     
     /**
@@ -55,10 +66,7 @@ public class FriendApiTest {
      */
     @Test
     public void getFriendTest() {
-        Long id = null;
-        // List<Friend> response = api.getFriend(id);
-
-        // TODO: test validations
+        assertTrue(String.format("expected from to be %d but it was %d instead", TEST_TO, friendApi.getFriend(TEST_ID).get(0).getTo()), friendApi.getFriend(TEST_ID).get(0).getTo() == TEST_TO);
     }
     
 }

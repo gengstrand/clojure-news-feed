@@ -89,8 +89,9 @@
 
 (defn initiate-concurrent-test-load 
   "spin up the threads for the concurrent load tests"
-  [feed-host concurrent-users percent-searches]
+  [feed-host concurrent-users percent-searches use-json]
   (service/set-feed-host feed-host)
+  (service/set-json-post use-json)
   (doseq [user (range concurrent-users)]
     (if 
       (<= (rand-int 100) percent-searches)
@@ -101,6 +102,6 @@
   "perform the load test"
   [& args]
   (if 
-    (= (count args) 3)
-    (initiate-concurrent-test-load (nth args 0) (parse-int (nth args 1)) (parse-int (nth args 2)))
-    (println "usage: java -jar load.jar feed-host concurrent-users percent-searches")))
+    (>= (count args) 3)
+    (initiate-concurrent-test-load (nth args 0) (parse-int (nth args 1)) (parse-int (nth args 2)) (> (count args) 3))
+    (println "usage: java -jar load.jar feed-host concurrent-users percent-searches [json]")))

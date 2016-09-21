@@ -43,6 +43,7 @@ public class RedisCache<T> extends Cache<T> {
 			}
 		} else {
 			LOGGER.error("Cannot access Jedis.");
+			retVal = loader.get();
 		}
 		return retVal;
 	}

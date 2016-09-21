@@ -1,5 +1,6 @@
 package info.glennengstrand.core;
 
+import java.util.Collections;
 import java.util.List;
 
 import com.google.inject.Inject;
@@ -41,6 +42,13 @@ public class FriendApiServiceImpl implements FriendApiService {
 	public List<Friend> getFriend(Long id) {
 		long before = System.currentTimeMillis();
 		List<Friend> retVal = cache.getMulti(id, () -> dao.fetchFriend(id));
+		if (retVal == null) {
+			// mockito doesn't work well inside of lambdas
+			retVal = dao.fetchFriend(id);
+			if (retVal == null) {
+				retVal = Collections.emptyList();
+			}
+		}
 		logger.log(ENTITY, MessageLogger.LogOperation.GET, System.currentTimeMillis()- before);
 		return retVal;
 	}

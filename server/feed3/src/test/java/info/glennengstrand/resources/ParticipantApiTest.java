@@ -23,15 +23,43 @@
 package info.glennengstrand.resources;
 
 import info.glennengstrand.api.Participant;
+import info.glennengstrand.core.MessageLogger;
+import info.glennengstrand.core.ParticipantApiServiceImpl;
+import info.glennengstrand.db.ParticipantDAO;
+import info.glennengstrand.resources.ParticipantApi.ParticipantApiService;
+import redis.clients.jedis.JedisPool;
+
 import org.junit.Test;
+import org.junit.Before;
+import static org.junit.Assert.*;
+import static org.mockito.Mockito.*;
 
 /**
  * API tests for ParticipantApi
  */
 public class ParticipantApiTest {
 
-    private final ParticipantApi api = null;
+	private static final String TEST_MONIKER = "test";
+	private static final long TEST_ID = 1l;
+	
+    private ParticipantApiService api = null;
+    private Participant participant = null;
+    private JedisPool cache = null;
+    private ParticipantDAO dao = null;
 
+    @Before
+    public void setup() {
+    	participant = new Participant.ParticipantBuilder()
+    			.withId(TEST_ID)
+    			.withName(TEST_MONIKER)
+    			.build();
+    	cache = mock(JedisPool.class);
+    	when(cache.getResource()).thenReturn(null);
+    	dao = mock(ParticipantDAO.class);
+    	when(dao.upsertParticipant(any(String.class))).thenReturn(TEST_ID);
+    	when(dao.fetchParticipant(TEST_ID)).thenReturn(participant);
+    	api = new  ParticipantApiServiceImpl(dao, cache, new MessageLogger.DoNothingMessageLogger());
+    }
     
     /**
      * create a new participant
@@ -41,10 +69,8 @@ public class ParticipantApiTest {
      */
     @Test
     public void addParticipantTest() {
-        Participant body = null;
-        // Participant response = api.addParticipant(body);
-
-        // TODO: test validations
+        Participant response = api.addParticipant(participant);
+        assertTrue(String.format("Expected ID to be %d but instead it was %d", TEST_ID, response.getId()), TEST_ID == response.getId()); 
     }
     
     /**
@@ -55,10 +81,8 @@ public class ParticipantApiTest {
      */
     @Test
     public void getParticipantTest() {
-        Long id = null;
-        // Participant response = api.getParticipant(id);
-
-        // TODO: test validations
+        Participant response = api.getParticipant(TEST_ID);
+        assertTrue(String.format("expected participant name to be %s but instead it was %s", TEST_MONIKER, response.getName()), response.getName().equals(TEST_MONIKER));
     }
     
 }

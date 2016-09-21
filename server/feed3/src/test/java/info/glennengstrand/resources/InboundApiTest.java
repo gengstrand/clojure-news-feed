@@ -22,16 +22,27 @@
 
 package info.glennengstrand.resources;
 
-import info.glennengstrand.api.Inbound;
+import info.glennengstrand.core.InboundApiServiceImpl;
+import info.glennengstrand.core.MessageLogger;
+import info.glennengstrand.resources.InboundApi.InboundApiService;
+
+import static org.junit.Assert.*;
+
+import org.junit.Before;
 import org.junit.Test;
 
 /**
  * API tests for InboundApi
  */
-public class InboundApiTest {
+public class InboundApiTest extends NewsFeedTestBase {
 
-    private final InboundApi api = null;
+    private InboundApiService api = null;
 
+    @Before
+    public void setup() {
+    	setupInboundSupport();
+    	api = new  InboundApiServiceImpl(inDao, new MessageLogger.DoNothingMessageLogger());
+    }
     
     /**
      * retrieve the inbound feed for an individual participant
@@ -41,10 +52,7 @@ public class InboundApiTest {
      */
     @Test
     public void getInboundTest() {
-        Long id = null;
-        // List<Inbound> response = api.getInbound(id);
-
-        // TODO: test validations
+        assertTrue("fetch did not retrieve the proper content", api.getInbound(TEST_FROM).equals(inFeed));
     }
     
 }

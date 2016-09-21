@@ -19,60 +19,99 @@
  * limitations under the License.
  */
 
-
 package info.glennengstrand.resources;
 
 import info.glennengstrand.api.Outbound;
+import info.glennengstrand.core.OutboundApiServiceImpl;
+import info.glennengstrand.resources.OutboundApi.OutboundApiService;
+import info.glennengstrand.core.MessageLogger;
+import info.glennengstrand.db.OutboundDAO;
+import info.glennengstrand.db.SearchDAO;
+
+import static org.mockito.Mockito.mock;
+import static org.mockito.Mockito.when;
+import static org.junit.Assert.*;
+
+import java.util.ArrayList;
+import java.util.List;
+
+import org.joda.time.DateTime;
+import org.junit.Before;
 import org.junit.Test;
 
 /**
  * API tests for OutboundApi
  */
-public class OutboundApiTest {
+public class OutboundApiTest extends NewsFeedTestBase {
 
-    private final OutboundApi api = null;
+	private OutboundDAO outDao = null;
+	private OutboundApiService api = null;
+	private Outbound outbound = null;
+	private SearchDAO esdao = new UnitTestSearchDAO();
+	private List<Outbound> outFeed = new ArrayList<Outbound>();
+	private List<Long> searchResults = new ArrayList<Long>();
 
-    
-    /**
-     * create a participant news item
-     *
-     * socially broadcast participant news
-     *
-     */
-    @Test
-    public void addOutboundTest() {
-        Outbound body = null;
-        // Outbound response = api.addOutbound(body);
+	@Before
+	public void setup() {
+		setupFriendSupport();
+		setupInboundSupport();
+		outbound = new Outbound.OutboundBuilder()
+				.withId(TEST_ID)
+				.withOccurred(new DateTime(System.currentTimeMillis()))
+				.withSubject(TEST_SUBJECT)
+				.withStory(TEST_STORY)
+				.build();
+		outFeed.add(outbound);
+		outDao = mock(OutboundDAO.class);
+		when(outDao.fetch(TEST_ID)).thenReturn(outFeed);
+		api = new OutboundApiServiceImpl(outDao, inDao, friendApi, esdao, new MessageLogger.DoNothingMessageLogger());
+		searchResults.add(TEST_ID);
+	}
 
-        // TODO: test validations
-    }
-    
-    /**
-     * retrieve the news posted by an individual participant
-     *
-     * fetch a participant news
-     *
-     */
-    @Test
-    public void getOutboundTest() {
-        Long id = null;
-        // List<Outbound> response = api.getOutbound(id);
+	/**
+	 * create a participant news item
+	 *
+	 * socially broadcast participant news
+	 *
+	 */
+	@Test
+	public void addOutboundTest() {
+		assertTrue("Expected add outbound to return the input object but it did not.", api.addOutbound(outbound).equals(outbound));
+	}
 
-        // TODO: test validations
-    }
-    
-    /**
-     * create a participant news item
-     *
-     * keyword search of participant news
-     *
-     */
-    @Test
-    public void searchOutboundTest() {
-        String keywords = null;
-        // List<Outbound> response = api.searchOutbound(keywords);
+	/**
+	 * retrieve the news posted by an individual participant
+	 *
+	 * fetch a participant news
+	 *
+	 */
+	@Test
+	public void getOutboundTest() {
+		assertTrue("Fetch outbound feed did not return expected results.", api.getOutbound(TEST_FROM).equals(outFeed));
+	}
 
-        // TODO: test validations
-    }
-    
+	/**
+	 * create a participant news item
+	 *
+	 * keyword search of participant news
+	 *
+	 */
+	@Test
+	public void searchOutboundTest() {
+		assertTrue("Feed search did not return expected results.", api.searchOutbound(TEST_SUBJECT).equals(searchResults));
+	}
+
+	class UnitTestSearchDAO extends SearchDAO {
+
+		@Override
+		public List<Long> find(String keywords) {
+			return searchResults;
+		}
+
+		@Override
+		public void upsert(UpsertRequest doc) {
+		}
+
+	}
+
 }
