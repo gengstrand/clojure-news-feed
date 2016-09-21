@@ -1,5 +1,9 @@
 # newsfeed-swagger
 
+These docs are swagger generated and cover how to call the micro-service.
+
+See the docs/setup.md for tips on how to stand up the service.
+
 ## Requirements
 
 Building the API client library requires [Maven](https://maven.apache.org/) to be installed.
