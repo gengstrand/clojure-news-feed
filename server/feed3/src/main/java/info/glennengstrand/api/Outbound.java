@@ -35,7 +35,7 @@ import org.joda.time.DateTime;
  */
 
 public class Outbound   {
-  private Long id = null;
+  private Long from = null;
 
   private DateTime occurred = null;
 
@@ -45,8 +45,8 @@ public class Outbound   {
 
   private Outbound() {}
   public Outbound ( 
-    @JsonProperty("id")
-    Long id,
+    @JsonProperty("from")
+    Long from,
     @JsonProperty("occurred")
     DateTime occurred,
     @JsonProperty("subject")
@@ -54,19 +54,19 @@ public class Outbound   {
     @JsonProperty("story")
     String story
     ) {
-      this.id = id;
+      this.from = from;
       this.occurred = occurred;
       this.subject = subject;
       this.story = story;
     }
     /**
-    * Get id
-    * @return id
+    * Get from
+    * @return from
     **/
-    @JsonProperty("id")
+    @JsonProperty("from")
     @ApiModelProperty(example = "null", value = "")
-    public Long getId() {
-      return id;
+    public Long getFrom() {
+      return from;
     }
     /**
     * Get occurred
@@ -105,7 +105,7 @@ public class Outbound   {
         return false;
       }
       Outbound outbound = (Outbound) o;
-      return Objects.equals(this.id, outbound.id) &&
+      return Objects.equals(this.from, outbound.from) &&
         Objects.equals(this.occurred, outbound.occurred) &&
         Objects.equals(this.subject, outbound.subject) &&
         Objects.equals(this.story, outbound.story);
@@ -113,7 +113,7 @@ public class Outbound   {
 
     @Override
     public int hashCode() {
-      return Objects.hash(id, occurred, subject, story);
+      return Objects.hash(from, occurred, subject, story);
     }
 
     @Override
@@ -121,7 +121,7 @@ public class Outbound   {
       StringBuilder sb = new StringBuilder();
       sb.append("class Outbound {\n");
       
-      sb.append("    id: ").append(toIndentedString(id)).append("\n");
+      sb.append("    from: ").append(toIndentedString(from)).append("\n");
       sb.append("    occurred: ").append(toIndentedString(occurred)).append("\n");
       sb.append("    subject: ").append(toIndentedString(subject)).append("\n");
       sb.append("    story: ").append(toIndentedString(story)).append("\n");
@@ -141,12 +141,12 @@ public class Outbound   {
     }
 
   public static class OutboundBuilder {
-    private Long id = null;
+    private Long from = null;
     private DateTime occurred = null;
     private String subject = null;
     private String story = null;
-    public OutboundBuilder withId(Long id) {
-      this.id = id;
+    public OutboundBuilder withFrom(Long from) {
+      this.from = from;
       return this;
     }
     public OutboundBuilder withOccurred(DateTime occurred) {
@@ -163,7 +163,7 @@ public class Outbound   {
     }
     public Outbound build() {
       return new Outbound (
-        id, 
+        from, 
         occurred, 
         subject, 
         story 

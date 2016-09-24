@@ -44,6 +44,10 @@ database:
 
   url: jdbc:mysql://mysql_host/feed
 
+  minSize: 3
+
+  maxSize: 18
+
 server:
 #  softNofileLimit: 1000
 #  hardNofileLimit: 1000

@@ -245,7 +245,7 @@ definitions:
   outbound:
     type: object
     properties:
-      id:
+      from:
         type: integer
         format: int64
       occurred:

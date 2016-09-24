@@ -56,7 +56,7 @@ public class OutboundApiTest extends NewsFeedTestBase {
 		setupFriendSupport();
 		setupInboundSupport();
 		outbound = new Outbound.OutboundBuilder()
-				.withId(TEST_ID)
+				.withFrom(TEST_ID)
 				.withOccurred(new DateTime(System.currentTimeMillis()))
 				.withSubject(TEST_SUBJECT)
 				.withStory(TEST_STORY)

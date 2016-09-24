@@ -32,7 +32,7 @@ public class OutboundDAO extends CassandraDAO<Outbound> {
 	
 	public void create(Outbound value) {
 		upsert(b -> {
-			b.setInt(0, value.getId().intValue());
+			b.setInt(0, value.getFrom().intValue());
 			b.setString(1, value.getSubject());
 			b.setString(2,  value.getStory());
 		});
@@ -43,7 +43,7 @@ public class OutboundDAO extends CassandraDAO<Outbound> {
 			b.setInt(0, new Long(id).intValue());
 		}, r -> {
 			return new Outbound.OutboundBuilder()
-					.withId(id)
+					.withFrom(id)
 					.withOccurred(new DateTime(r.getDate(OCCURRED_COLUMN)))
 					.withSubject(r.getString(SUBJECT_COLUMN))
 					.withStory(r.getString(STORY_COLUMN))

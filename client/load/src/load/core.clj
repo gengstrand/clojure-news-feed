@@ -37,7 +37,7 @@
         response 
         (if json-post
           (client/post 
-            (service-url entity-name "new") {:form-params entity-params} :content-type :json)
+            (service-url entity-name "new") {:body (json/write-str entity-params) :content-type :json :accept :json})
           (client/post 
             (service-url entity-name "new") {:form-params entity-params}))]
     (if 
@@ -51,8 +51,12 @@
   "call the service to create an entity and return results and timing"
   [entity-name entity-params]
   (let [before (System/currentTimeMillis)
-        response (client/post 
-                   (service-url entity-name "new") {:form-params entity-params})]
+        response 
+        (if json-post
+          (client/post 
+            (service-url entity-name "new") {:body (json/write-str entity-params) :content-type :json :accept :json})
+          (client/post 
+            (service-url entity-name "new") {:form-params entity-params}))]
     (if 
       (=
         (:status response)
@@ -89,12 +93,14 @@
 (defn test-create-participant
   "create a participant"
   [name]
-  (get 
-       (first 
-       	      (:results
+  (let [r (:results
 		(test-create-entity-service-call
           	"participant"
-          	{:name name}))) "id"))
+          	{:name name}))]
+    (if 
+      (list? r)
+      (get (first r) "id")
+      (get r "id"))))
 
 (defn test-fetch-participant
   "fetch a participant"

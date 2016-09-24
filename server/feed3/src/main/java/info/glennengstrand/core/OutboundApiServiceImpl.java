@@ -30,9 +30,9 @@ public class OutboundApiServiceImpl implements OutboundApiService {
 	@Override
 	public Outbound addOutbound(Outbound body) {
 		long before = System.currentTimeMillis();
-		for (Friend friend : friendService.getFriend(body.getId())) {
+		for (Friend friend : friendService.getFriend(body.getFrom())) {
 			Inbound in = new Inbound.InboundBuilder()
-					.withFrom(body.getId())
+					.withFrom(body.getFrom())
 					.withTo(friend.getTo())
 					.withOccurred(body.getOccurred())
 					.withSubject(body.getSubject())
@@ -42,7 +42,7 @@ public class OutboundApiServiceImpl implements OutboundApiService {
 		}
 		outdao.create(body);
 		SearchDAO.UpsertRequest doc = esdao.getBuilder()
-				.withSender(body.getId())
+				.withSender(body.getFrom())
 				.withStory(body.getStory())
 				.build();
 		esdao.upsert(doc);

@@ -78,7 +78,7 @@ public class OutboundApi {
    * @param keywords keywords to search for (required)
    * @return List<Long>
    */
-   public List<Long> searchOutbound(@QueryParam("keywords") String keywords) {
+   public List<Long> searchOutbound(String keywords) {
       return outboundService.searchOutbound(keywords);
    }
    public static interface OutboundApiService {
