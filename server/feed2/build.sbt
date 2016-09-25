@@ -42,7 +42,7 @@ assemblyMergeStrategy in assembly := {
 
 libraryDependencies ++= Seq(
     "org.scala-lang.modules"  %%  "scala-parser-combinators"  % "1.0.3",
-    "mysql"               %   "mysql-connector-java"  % "5.0.8",
+    "mysql"               %   "mysql-connector-java"  % "5.1.38",
     "postgresql"          %   "postgresql"    % "9.1-901.jdbc4",
     "com.datastax.cassandra"  % "cassandra-driver-core" % "2.1.4",
     "org.apache.kafka"    %   "kafka-clients"    % "0.9.0.1",

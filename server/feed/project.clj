@@ -12,7 +12,7 @@
                  [org.eclipse.jetty.orbit/javax.servlet "2.5.0.v201103041518"]
                  [org.eclipse.jetty/jetty-server "7.6.1.v20120215"]
                  [org.clojure/java.jdbc "0.4.2"]
-                 [mysql/mysql-connector-java "5.0.8"]
+                 [mysql/mysql-connector-java "5.1.38"]
                  [postgresql "9.1-901.jdbc4"]
                  [com.mchange/c3p0 "0.9.5.1"]
                  [com.taoensso/carmine "2.12.0"]

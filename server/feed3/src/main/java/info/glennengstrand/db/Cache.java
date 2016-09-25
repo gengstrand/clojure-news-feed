@@ -1,6 +1,7 @@
 package info.glennengstrand.db;
 
 import java.io.IOException;
+import java.util.ArrayList;
 import java.util.List;
 import java.util.function.Supplier;
 import com.fasterxml.jackson.core.JsonParseException;
@@ -48,7 +49,8 @@ public abstract class Cache<T> {
 	 * @throws IOException if cannot access redis
 	 */
 	protected List<T> hydrateMulti(String value) throws JsonParseException, JsonMappingException, IOException {
-		return (List<T>)mapper.readValue(value.getBytes(), serializationType);
+		List<T> stc = new ArrayList<T>();
+		return (List<T>)mapper.readValue(value.getBytes(), stc.getClass());
 	}
 
 	/**
