@@ -4,6 +4,8 @@ import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.function.Supplier;
+import java.util.stream.Collectors;
+
 import com.fasterxml.jackson.core.JsonParseException;
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.JsonMappingException;
@@ -50,7 +52,7 @@ public abstract class Cache<T> {
 	 */
 	protected List<T> hydrateMulti(String value) throws JsonParseException, JsonMappingException, IOException {
 		List<T> stc = new ArrayList<T>();
-		return (List<T>)mapper.readValue(value.getBytes(), stc.getClass());
+		return (List<T>)mapper.readValue(value.getBytes(), stc.getClass()).stream().map(lhm -> mapper.convertValue(lhm, serializationType)).collect(Collectors.toList());
 	}
 
 	/**

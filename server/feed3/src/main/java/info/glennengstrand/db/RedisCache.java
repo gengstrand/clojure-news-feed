@@ -66,6 +66,7 @@ public class RedisCache<T> extends Cache<T> {
 						LOGGER.debug(String.format("Could not load %s either.", key));
 					}
 				} else {
+					LOGGER.debug(result);
 					retVal = hydrateMulti(result);
 				}
 			} catch (Exception e) {
