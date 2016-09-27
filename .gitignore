@@ -1,0 +1,11 @@
+**/target
+**/project
+**/.project
+**/.classpath
+**/.gitignore
+**/.settings
+**/.cache*
+**/lib_managed
+**/bin
+server/swagger/swagger-output
+**/*~
