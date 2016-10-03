@@ -35,6 +35,11 @@ public class NewsFeedModule implements Module {
 	private static final Logger LOGGER = LoggerFactory.getLogger(NewsFeedModule.class);
 
 	private final DBIFactory factory = new DBIFactory();
+	private DBI dbi = null;
+	private JedisPool pool = null;
+	private Session session = null;
+	private SearchDAO esdao = null;
+	private MessageLogger<Long> logger = null;
 
 	@Override
 	public void configure(Binder binder) {
@@ -46,45 +51,76 @@ public class NewsFeedModule implements Module {
 	
     @Provides
 	public DBI getDbi(NewsFeedConfiguration config, Environment environment) {
-		return factory.build(environment, config.getDataSourceFactory(), "mysql");
+    	if (dbi == null) {
+    		synchronized(LOGGER) {
+    			if (dbi == null) {
+    				dbi = factory.build(environment, config.getDataSourceFactory(), "mysql");
+    			}
+    		}
+    	}
+		return dbi;
 	}
     
     @Provides
     public JedisPool getCache(NewsFeedConfiguration config) {
-    	JedisPoolConfig cacheConfig = new JedisPoolConfig();
-    	cacheConfig.setMaxTotal(config.getCachePoolSize());
-    	cacheConfig.setBlockWhenExhausted(false);
-    	return new JedisPool(cacheConfig, config.getCacheHost(), config.getCachePort(), config.getCacheTimeout());
+    	if (pool == null) {
+    		synchronized(LOGGER) {
+    			if (pool == null) {
+    		    	JedisPoolConfig cacheConfig = new JedisPoolConfig();
+    		    	cacheConfig.setMaxTotal(config.getCachePoolSize());
+    		    	cacheConfig.setBlockWhenExhausted(false);
+    		    	pool = new JedisPool(cacheConfig, config.getCacheHost(), config.getCachePort(), config.getCacheTimeout());
+    			}
+    		}
+    	}
+    	return pool;
     }
     
     @Provides
     public Session getNoSqlSession(NewsFeedConfiguration config) {
-    	Cluster cluster = Cluster.builder().addContactPoint(config.getNosqlHost()).build();
-    	return cluster.connect(config.getNosqlKeyspace());
+    	if (session == null) {
+    		synchronized(LOGGER) {
+    			if (session == null) {
+    		    	Cluster cluster = Cluster.builder().addContactPoint(config.getNosqlHost()).build();
+    		    	session = cluster.connect(config.getNosqlKeyspace());
+    			}
+    		}
+    	}
+    	return session;
     }
     
     @Provides
     public SearchDAO getElasticSearch(NewsFeedConfiguration config) {
-    	SearchDAO retVal = null;
-    	try {
-			retVal = new ElasticSearchDAO(config.getSearchHost(), config.getSearchPort(), config.getSearchIndex(), config.getSearchMapping());
-		} catch (Exception e) {
-			LOGGER.error("Cannot connect to elastic search: ", e);
-			retVal = new DoNothingSearchDAO();
-		}
-    	return retVal;
+    	if (esdao == null) {
+    		synchronized(LOGGER) {
+    			if (esdao == null) {
+    		    	try {
+    		    		esdao = new ElasticSearchDAO(config.getSearchHost(), config.getSearchPort(), config.getSearchIndex(), config.getSearchMapping());
+    				} catch (Exception e) {
+    					LOGGER.error("Cannot connect to elastic search: ", e);
+    					esdao = new DoNothingSearchDAO();
+    				}
+    			}
+    		}
+    	}
+    	return esdao;
     }
     
     @Provides
     public MessageLogger<Long> getPerformanceLogger(NewsFeedConfiguration config) {
-    	MessageLogger<Long> retVal = null;
-    	try {
-    		retVal = new KafkaPerformanceLogger(config.getMessageBroker(), config.getMessageTopic());
-    	} catch (Exception e) {
-    		LOGGER.error("Cannot connect to Kafka: ", e);
-    		retVal = new MessageLogger.DoNothingMessageLogger();
+    	if (logger == null) {
+    		synchronized(LOGGER) {
+    			if (logger == null) {
+    		    	try {
+    		    		logger = new KafkaPerformanceLogger(config.getMessageBroker(), config.getMessageTopic());
+    		    	} catch (Exception e) {
+    		    		LOGGER.error("Cannot connect to Kafka: ", e);
+    		    		logger = new MessageLogger.DoNothingMessageLogger();
+    		    	}
+    			}
+    		}
     	}
-    	return retVal;
+    	return logger;
     }
     
     public NewsFeedModule() {

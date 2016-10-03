@@ -19,7 +19,7 @@ public abstract class RelationalDAO<E> {
 
 	protected E fetchSingle(String sql, ResultSetMapper<E> mapper, Consumer<Query<Map<String, Object>>> binder) {
 		E retVal = null;
-		try(Handle h = dbi.open()) {
+		try (Handle h = dbi.open()) {
 			Query<Map<String, Object>> q = h.createQuery(sql);
 			binder.accept(q);
 			Query<E> result = q.map(mapper);
@@ -32,7 +32,7 @@ public abstract class RelationalDAO<E> {
 	
 	protected List<E> fetchMulti(String sql, ResultSetMapper<E> mapper, Consumer<Query<Map<String, Object>>> binder) {
 		List<E> retVal = null;
-		try(Handle h = dbi.open()) {
+		try (Handle h = dbi.open()) {
 			Query<Map<String, Object>> q = h.createQuery(sql);
 			binder.accept(q);
 			Query<E> result = q.map(mapper);
@@ -45,7 +45,7 @@ public abstract class RelationalDAO<E> {
 	
 	protected long upsert(String sql, Consumer<Query<Map<String, Object>>> binder) {
 		long retVal = 0l;
-		try(Handle h = dbi.open()) {
+		try (Handle h = dbi.open()) {
 			Query<Map<String, Object>> q = h.createQuery(sql);
 			binder.accept(q);
 			Query<Long> result = q.map(LongColumnMapper.PRIMITIVE);
