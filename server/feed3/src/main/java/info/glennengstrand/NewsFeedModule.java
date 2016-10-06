@@ -36,7 +36,6 @@ public class NewsFeedModule implements Module {
 
 	private final DBIFactory factory = new DBIFactory();
 	private DBI dbi = null;
-	private JedisPool pool = null;
 	private Session session = null;
 	private SearchDAO esdao = null;
 	private MessageLogger<Long> logger = null;
@@ -63,17 +62,10 @@ public class NewsFeedModule implements Module {
     
     @Provides
     public JedisPool getCache(NewsFeedConfiguration config) {
-    	if (pool == null) {
-    		synchronized(LOGGER) {
-    			if (pool == null) {
-    		    	JedisPoolConfig cacheConfig = new JedisPoolConfig();
-    		    	cacheConfig.setMaxTotal(config.getCachePoolSize());
-    		    	cacheConfig.setBlockWhenExhausted(false);
-    		    	pool = new JedisPool(cacheConfig, config.getCacheHost(), config.getCachePort(), config.getCacheTimeout());
-    			}
-    		}
-    	}
-    	return pool;
+    	JedisPoolConfig cacheConfig = new JedisPoolConfig();
+    	cacheConfig.setMaxTotal(config.getCachePoolSize());
+    	cacheConfig.setBlockWhenExhausted(false);
+    	return new JedisPool(cacheConfig, config.getCacheHost(), config.getCachePort(), config.getCacheTimeout());
     }
     
     @Provides

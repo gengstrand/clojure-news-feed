@@ -40,6 +40,8 @@ public class RedisCache<T> extends Cache<T> {
 				} catch (Exception ie) {
 					LOGGER.error(String.format("Cannot serialize %s and save it to Redis: ", key), ie);
 				}
+			} finally {
+				j.close();
 			}
 		} else {
 			LOGGER.error("Cannot access Jedis.");

@@ -98,7 +98,7 @@
           	"participant"
           	{:name name}))]
     (if 
-      (list? r)
+      (vector? r)
       (get (first r) "id")
       (get r "id"))))
 

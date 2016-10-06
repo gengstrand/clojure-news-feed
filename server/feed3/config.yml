@@ -1,6 +1,6 @@
 # cache settings
 
-cache_pool: 10
+cache_pool: 30
 
 cache_host: redis_host
 
