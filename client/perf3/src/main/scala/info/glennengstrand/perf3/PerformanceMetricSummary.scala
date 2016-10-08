@@ -8,7 +8,7 @@ import java.util.logging.{Logger, Level}
 /** static helper routines for sending upsert requests to elastic search */
 object ElasticSearchRequest {
   val log = Logger.getLogger("info.glennengstrand.perf3.ElasticSearchRequest")
-  def generate(host: String, ts: String, entity: String, operation: String, throughput: Int, mean: Long, median: Long, upper5: Long): (String, String) = {
+  def generate(host: String, index: String, ts: String, entity: String, operation: String, throughput: Int, mean: Long, median: Long, upper5: Long): (String, String) = {
     val body = new StringBuilder
     body.append("{\"ts\":\"")
     body.append(ts)
@@ -25,15 +25,15 @@ object ElasticSearchRequest {
     body.append(",\"upper5\":")
     body.append(upper5.toString())
     body.append("}")
-    val url = s"http://${host}:9200/performance/feed/${entity}-${operation}-${ts}"
+    val url = s"http://${host}:9200/performance/${index}/${entity}-${operation}-${ts}"
     ( url, body.toString() )    
   }
 }
 
 /** responsible for interacting with elastic search */
-class ElasticSearchRequest(host: String) {
+class ElasticSearchRequest(host: String, index: String) {
   def update(ts: String, entity: String, operation: String, throughput: Int, mean: Long, median: Long, upper5: Long): Unit = {
-    val ( url, body ) = ElasticSearchRequest.generate(host, ts, entity, operation, throughput, mean, median, upper5)
+    val ( url, body ) = ElasticSearchRequest.generate(host, index, ts, entity, operation, throughput, mean, median, upper5)
     ElasticSearchRequest.log.finest(s"url: ${url}")
     ElasticSearchRequest.log.finest(s"body: ${body}")
     val r = Try {
@@ -68,8 +68,8 @@ class ElasticSearchRequest(host: String) {
 case class PerformanceMetricUpdate(ts: String, entity: String, operation: String, throughput: Int, mean: Long, median: Long, upper5: Long)
 
 /** sends performance metric updates to monitoring repository */
-class PerformanceMetricSummary(host: String) extends Actor {
-  val server = new ElasticSearchRequest(host)
+class PerformanceMetricSummary(host: String, index: String) extends Actor {
+  val server = new ElasticSearchRequest(host, index)
   def receive = {
     case PerformanceMetricUpdate(ts, entity, operation, throughput, mean, median, upper5) => {
       server.update(ts, entity, operation, throughput, mean, median, upper5)

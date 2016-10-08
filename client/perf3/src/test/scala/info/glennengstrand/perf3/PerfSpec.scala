@@ -4,7 +4,7 @@ import org.scalatest._
 
 class PerfSpec extends FlatSpec with Matchers {
   "an elastic search update request" should "be well formed" in {
-    val ( url, body ) = ElasticSearchRequest.generate("localhost", "20160205T132530.000Z", "outbound", "post", 6000, 200L, 186L, 315L)
+    val ( url, body ) = ElasticSearchRequest.generate("localhost", "feed", "20160205T132530.000Z", "outbound", "post", 6000, 200L, 186L, 315L)
     url should be ("http://localhost:9200/performance/feed/outbound-post-20160205T132530.000Z")
     body should be ("{\"ts\":\"20160205T132530.000Z\",\"entity\":\"outbound\",\"operation\":\"post\",\"throughput\":6000,\"mean\":200,\"median\":186,\"upper5\":315}")
   }

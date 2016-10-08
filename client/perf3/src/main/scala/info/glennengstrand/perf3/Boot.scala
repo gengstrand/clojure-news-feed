@@ -16,15 +16,16 @@ object Main extends App {
     "outbound|search" -> system.actorOf(Props(new PerformanceMetric("outbound", "search"))), 
     "participant|post" -> system.actorOf(Props(new PerformanceMetric("participant", "post")))
   )
-  lazy val elasticSearchActor = system.actorOf(Props(new PerformanceMetricSummary(args(1))))
+  lazy val elasticSearchActor = system.actorOf(Props(new PerformanceMetricSummary(args(1), args(2))))
 
   def printUsage: Unit = {
-    println("java -jar news-feed-performance-assembly-1.0.jar kafka_ip_address elastic_search_ip_address")
+    println("java -jar news-feed-performance-assembly-1.0.jar kafka_ip_address elastic_search_ip_address index")
   }
 
   args.size match {
     case 0 => printUsage
     case 1 => printUsage
+    case 2 => printUsage
     case _ => {
       val kafkaHost = args(0)
       val consumer = new PerformanceMetricConsumer(kafkaHost, "feed")
