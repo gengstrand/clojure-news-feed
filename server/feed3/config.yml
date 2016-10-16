@@ -8,6 +8,10 @@ cache_port: 6379
 
 cache_timeout: 60
 
+circuit_breaker_error_threshold: 20
+
+circuit_breaker_sleep_window: 20000
+
 # NoSql settings
 
 nosql_host: cassandra_host

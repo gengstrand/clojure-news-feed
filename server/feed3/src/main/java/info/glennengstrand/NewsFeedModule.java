@@ -61,14 +61,6 @@ public class NewsFeedModule implements Module {
 	}
     
     @Provides
-    public JedisPool getCache(NewsFeedConfiguration config) {
-    	JedisPoolConfig cacheConfig = new JedisPoolConfig();
-    	cacheConfig.setMaxTotal(config.getCachePoolSize());
-    	cacheConfig.setBlockWhenExhausted(false);
-    	return new JedisPool(cacheConfig, config.getCacheHost(), config.getCachePort(), config.getCacheTimeout());
-    }
-    
-    @Provides
     public Session getNoSqlSession(NewsFeedConfiguration config) {
     	if (session == null) {
     		synchronized(LOGGER) {

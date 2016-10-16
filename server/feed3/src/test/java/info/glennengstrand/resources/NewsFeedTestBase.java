@@ -9,6 +9,7 @@ import java.util.List;
 
 import org.joda.time.DateTime;
 
+import info.glennengstrand.NewsFeedConfiguration;
 import info.glennengstrand.api.Friend;
 import info.glennengstrand.api.Inbound;
 import info.glennengstrand.api.Outbound;
@@ -16,6 +17,7 @@ import info.glennengstrand.core.FriendApiServiceImpl;
 import info.glennengstrand.core.MessageLogger;
 import info.glennengstrand.db.FriendDAO;
 import info.glennengstrand.db.InboundDAO;
+import info.glennengstrand.db.RedisCache;
 import info.glennengstrand.resources.FriendApi.FriendApiService;
 import redis.clients.jedis.JedisPool;
 
@@ -27,7 +29,8 @@ public abstract class NewsFeedTestBase {
 	protected static final String TEST_SUBJECT = "test subject";
 	protected static final String TEST_STORY = "Mares eat oats and does eat oats and little lambs eat ivey.";
 	
-	protected JedisPool cache = null;
+	protected JedisPool pool = null;
+	protected RedisCache<Friend> cache = null;
 	protected FriendDAO friendDao = null;
 	protected FriendApiService friendApi = null;
 	protected Friend friend = null;
@@ -35,6 +38,7 @@ public abstract class NewsFeedTestBase {
 	protected InboundDAO inDao = null;
 	protected Inbound inbound = null;
 	protected List<Inbound> inFeed = new ArrayList<Inbound>();
+	protected NewsFeedConfiguration config = new NewsFeedConfiguration();
 
 	protected void setupFriendSupport() {
     	friend = new Friend.FriendBuilder()
@@ -43,12 +47,13 @@ public abstract class NewsFeedTestBase {
     			.withTo(TEST_TO)
     			.build();
     	friends.add(friend);
-    	cache = mock(JedisPool.class);
-    	when(cache.getResource()).thenReturn(null);
+    	pool = mock(JedisPool.class);
+    	when(pool.getResource()).thenReturn(null);
+    	cache = new RedisCache<Friend>(Friend.class, config, pool);
     	friendDao = mock(FriendDAO.class);
     	when(friendDao.upsertFriend(any(Long.class), any(Long.class))).thenReturn(TEST_ID);
     	when(friendDao.fetchFriend(any(Long.class))).thenReturn(friends);
-    	friendApi = new  FriendApiServiceImpl(friendDao, cache, new MessageLogger.DoNothingMessageLogger());
+    	friendApi = new  FriendApiServiceImpl(friendDao, config, new MessageLogger.DoNothingMessageLogger(), cache);
     }
 	
 	protected void setupInboundSupport() {

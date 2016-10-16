@@ -34,6 +34,8 @@ public class NewsFeedConfiguration extends Configuration {
 	private static final String SEARCH_MAPPING_PROPERTY_NAME = "search_mapping";
 	private static final String MESSAGE_BROKER_PROPERTY_NAME = "message_broker";
 	private static final String MESSAGE_TOPIC_PROPERTY_NAME = "message_topic";
+	private static final String CIRCUIT_BREAKER_ERROR_THRESHOLD = "circuit_breaker_error_threshold";
+	private static final String CIRCUIT_BREAKER_SLEEP_WINDOW = "circuit_breaker_sleep_window";
 	
     private DataSourceFactory database = new DataSourceFactory();
     
@@ -50,6 +52,8 @@ public class NewsFeedConfiguration extends Configuration {
     private String searchMapping = "stories";
     private String messageBroker = "localhost";
     private String messageTopic = "feed";
+    private int circuitBreakerErrorThreshold = 20;
+    private int circuitBreakerSleepWindow = 5000;
 	
     @JsonProperty(DATABASE_PROPERTY_NAME)
     public DataSourceFactory getDataSourceFactory() {
@@ -189,6 +193,26 @@ public class NewsFeedConfiguration extends Configuration {
 	@JsonProperty(MESSAGE_TOPIC_PROPERTY_NAME)
 	public void setMessageTopic(String messageTopic) {
 		this.messageTopic = messageTopic;
+	}
+
+	@JsonProperty(CIRCUIT_BREAKER_ERROR_THRESHOLD)
+	public int getCircuitBreakerErrorThreshold() {
+		return circuitBreakerErrorThreshold;
+	}
+
+	@JsonProperty(CIRCUIT_BREAKER_ERROR_THRESHOLD)
+	public void setCircuitBreakerErrorThreshold(int circuitBreakerErrorThreshold) {
+		this.circuitBreakerErrorThreshold = circuitBreakerErrorThreshold;
+	}
+
+	@JsonProperty(CIRCUIT_BREAKER_SLEEP_WINDOW)
+	public int getCircuitBreakerSleepWindow() {
+		return circuitBreakerSleepWindow;
+	}
+
+	@JsonProperty(CIRCUIT_BREAKER_SLEEP_WINDOW)
+	public void setCircuitBreakerSleepWindow(int circuitBreakerSleepWindow) {
+		this.circuitBreakerSleepWindow = circuitBreakerSleepWindow;
 	}
 
 }

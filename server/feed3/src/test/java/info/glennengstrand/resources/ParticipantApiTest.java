@@ -26,6 +26,7 @@ import info.glennengstrand.api.Participant;
 import info.glennengstrand.core.MessageLogger;
 import info.glennengstrand.core.ParticipantApiServiceImpl;
 import info.glennengstrand.db.ParticipantDAO;
+import info.glennengstrand.db.RedisCache;
 import info.glennengstrand.resources.ParticipantApi.ParticipantApiService;
 import redis.clients.jedis.JedisPool;
 
@@ -37,14 +38,15 @@ import static org.mockito.Mockito.*;
 /**
  * API tests for ParticipantApi
  */
-public class ParticipantApiTest {
+public class ParticipantApiTest extends NewsFeedTestBase {
 
 	private static final String TEST_MONIKER = "test";
 	private static final long TEST_ID = 1l;
 	
     private ParticipantApiService api = null;
     private Participant participant = null;
-    private JedisPool cache = null;
+    private JedisPool pool = null;
+    private RedisCache<Participant> cache = null;
     private ParticipantDAO dao = null;
 
     @Before
@@ -53,12 +55,13 @@ public class ParticipantApiTest {
     			.withId(TEST_ID)
     			.withName(TEST_MONIKER)
     			.build();
-    	cache = mock(JedisPool.class);
-    	when(cache.getResource()).thenReturn(null);
+    	pool = mock(JedisPool.class);
+    	when(pool.getResource()).thenReturn(null);
+    	cache = new RedisCache<Participant>(Participant.class, config, pool);
     	dao = mock(ParticipantDAO.class);
     	when(dao.upsertParticipant(any(String.class))).thenReturn(TEST_ID);
     	when(dao.fetchParticipant(TEST_ID)).thenReturn(participant);
-    	api = new  ParticipantApiServiceImpl(dao, cache, new MessageLogger.DoNothingMessageLogger());
+    	api = new  ParticipantApiServiceImpl(dao, config, new MessageLogger.DoNothingMessageLogger(), cache);
     }
     
     /**

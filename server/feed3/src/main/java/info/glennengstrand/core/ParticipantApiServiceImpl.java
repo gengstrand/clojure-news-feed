@@ -2,6 +2,7 @@ package info.glennengstrand.core;
 
 import com.google.inject.Inject;
 
+import info.glennengstrand.NewsFeedConfiguration;
 import info.glennengstrand.api.Participant;
 import info.glennengstrand.db.ParticipantDAO;
 import info.glennengstrand.db.RedisCache;
@@ -17,9 +18,15 @@ public class ParticipantApiServiceImpl implements ParticipantApiService {
 	private final MessageLogger<Long> logger;
 	
 	@Inject
-	public ParticipantApiServiceImpl(ParticipantDAO dao, JedisPool pool, MessageLogger<Long> logger) {
+	public ParticipantApiServiceImpl(ParticipantDAO dao, NewsFeedConfiguration config, MessageLogger<Long> logger) {
 		this.dao = dao;
-		cache = new RedisCache<Participant>(Participant.class, pool);
+		cache = new RedisCache<Participant>(Participant.class, config);
+		this.logger = logger;
+	}
+
+	public ParticipantApiServiceImpl(ParticipantDAO dao, NewsFeedConfiguration config, MessageLogger<Long> logger, RedisCache<Participant> cache) {
+		this.dao = dao;
+		this.cache = cache;
 		this.logger = logger;
 	}
 	
