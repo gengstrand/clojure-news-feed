@@ -24,6 +24,7 @@ public class NewsFeedConfiguration extends Configuration {
 	private static final String CACHE_POOL_PROPERTY_NAME = "cache_pool";
 	private static final String CACHE_HOST_PROPERTY_NAME = "cache_host";
 	private static final String CACHE_PORT_PROPERTY_NAME = "cache_port";
+	private static final String CACHE_TTL = "cache_ttl";
 	private static final String CACHE_TIMEOUT_PROPERTY_NAME = "cache_timeout";
 	private static final String NOSQL_HOST_PROPERTY_NAME = "nosql_host";
 	private static final String NOSQL_KEYSPACE_PROPERTY_NAME = "nosql_keyspace";
@@ -43,6 +44,7 @@ public class NewsFeedConfiguration extends Configuration {
     private String cacheHost = "localhost";
     private int cachePort = 6379;
     private int cacheTimeout = 60;
+    private int cacheTimeToLive = 600;
     private String nosqlHost = "localhost";
     private String nosqlKeyspace = "activity";
     private String nosqlConsistencyLevel = "one";
@@ -213,6 +215,16 @@ public class NewsFeedConfiguration extends Configuration {
 	@JsonProperty(CIRCUIT_BREAKER_SLEEP_WINDOW)
 	public void setCircuitBreakerSleepWindow(int circuitBreakerSleepWindow) {
 		this.circuitBreakerSleepWindow = circuitBreakerSleepWindow;
+	}
+
+    @JsonProperty(CACHE_TTL)
+	public int getCacheTimeToLive() {
+		return cacheTimeToLive;
+	}
+
+    @JsonProperty(CACHE_TTL)
+	public void setCacheTimeToLive(int cacheTimeToLive) {
+		this.cacheTimeToLive = cacheTimeToLive;
 	}
 
 }
