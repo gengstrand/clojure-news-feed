@@ -4,7 +4,7 @@ cache_pool: 30
 
 cache_host: redis_host
 
-cache_port: 6379
+cache_port: 11211
 
 cache_timeout: 60
 
