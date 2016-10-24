@@ -6,10 +6,12 @@ import static org.mockito.Mockito.any;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.function.Supplier;
 
 import org.joda.time.DateTime;
 
 import info.glennengstrand.NewsFeedConfiguration;
+import info.glennengstrand.NewsFeedModule.FriendCache;
 import info.glennengstrand.api.Friend;
 import info.glennengstrand.api.Inbound;
 import info.glennengstrand.api.Outbound;
@@ -30,7 +32,7 @@ public abstract class NewsFeedTestBase {
 	protected static final String TEST_STORY = "Mares eat oats and does eat oats and little lambs eat ivey.";
 	
 	protected JedisPool pool = null;
-	protected RedisCache<Friend> cache = null;
+	protected FriendCache cache = null;
 	protected FriendDAO friendDao = null;
 	protected FriendApiService friendApi = null;
 	protected Friend friend = null;
@@ -49,11 +51,11 @@ public abstract class NewsFeedTestBase {
     	friends.add(friend);
     	pool = mock(JedisPool.class);
     	when(pool.getResource()).thenReturn(null);
-    	cache = new RedisCache<Friend>(Friend.class, config, pool);
+    	cache = new PassThroughFriendCache(Friend.class, null);
     	friendDao = mock(FriendDAO.class);
     	when(friendDao.upsertFriend(any(Long.class), any(Long.class))).thenReturn(TEST_ID);
     	when(friendDao.fetchFriend(any(Long.class))).thenReturn(friends);
-    	friendApi = new  FriendApiServiceImpl(friendDao, config, new MessageLogger.DoNothingMessageLogger(), cache);
+    	friendApi = new  FriendApiServiceImpl(friendDao, cache, new MessageLogger.DoNothingMessageLogger());
     }
 	
 	protected void setupInboundSupport() {
@@ -68,5 +70,27 @@ public abstract class NewsFeedTestBase {
     	inDao = mock(InboundDAO.class);
     	when(inDao.fetch(any(Long.class))).thenReturn(inFeed);
     }
+	
+	private class PassThroughFriendCache extends FriendCache {
+
+		public PassThroughFriendCache(Class<Friend> serializationType, NewsFeedConfiguration config) {
+			super(serializationType, config);
+		}
+
+		@Override
+		public Friend get(Long id, Supplier<Friend> loader) {
+			return loader.get();
+		}
+
+		@Override
+		public List<Friend> getMulti(Long id, Supplier<List<Friend>> loader) {
+			return loader.get();
+		}
+
+		@Override
+		public void invalidate(Long id) {
+		}
+		
+	}
     
 }

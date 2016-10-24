@@ -12,10 +12,13 @@ import com.datastax.driver.core.Session;
 import com.datastax.driver.core.Cluster;
 
 import info.glennengstrand.db.ElasticSearchDAO;
+import info.glennengstrand.db.RedisCache;
 import info.glennengstrand.db.SearchDAO.DoNothingSearchDAO;
 import info.glennengstrand.db.SearchDAO;
 import info.glennengstrand.core.ParticipantApiServiceImpl;
 import info.glennengstrand.core.MessageLogger;
+import info.glennengstrand.api.Friend;
+import info.glennengstrand.api.Participant;
 import info.glennengstrand.core.FriendApiServiceImpl;
 import info.glennengstrand.core.InboundApiServiceImpl;
 import info.glennengstrand.core.KafkaPerformanceLogger;
@@ -24,6 +27,9 @@ import info.glennengstrand.resources.ParticipantApi.ParticipantApiService;
 import info.glennengstrand.resources.InboundApi.InboundApiService;
 import info.glennengstrand.resources.FriendApi.FriendApiService;
 import info.glennengstrand.resources.OutboundApi.OutboundApiService;
+
+import java.util.List;
+import java.util.function.Supplier;
 
 import org.apache.kafka.clients.producer.Producer;
 import org.skife.jdbi.v2.DBI;
@@ -39,6 +45,8 @@ public class NewsFeedModule implements Module {
 	private Session session = null;
 	private SearchDAO esdao = null;
 	private MessageLogger<Long> logger = null;
+	private FriendCache friendCache = null;
+	private ParticipantCache participantCache = null;
 
 	@Override
 	public void configure(Binder binder) {
@@ -91,6 +99,30 @@ public class NewsFeedModule implements Module {
     }
     
     @Provides
+    public ParticipantCache getParticipantCache(NewsFeedConfiguration config) {
+    	if (participantCache == null) {
+    		synchronized(LOGGER) {
+    			if (participantCache == null) {
+    				participantCache = new ParticipantCache(Participant.class, config);
+    			}
+    		}
+    	}
+    	return participantCache;
+    }
+    
+    @Provides
+    public FriendCache getFriendCache(NewsFeedConfiguration config) {
+    	if (friendCache == null) {
+    		synchronized(LOGGER) {
+    			if (friendCache == null) {
+    				friendCache = new FriendCache(Friend.class, config);
+    			}
+    		}
+    	}
+    	return friendCache;
+    }
+    
+    @Provides
     public MessageLogger<Long> getPerformanceLogger(NewsFeedConfiguration config) {
     	if (logger == null) {
     		synchronized(LOGGER) {
@@ -108,6 +140,22 @@ public class NewsFeedModule implements Module {
     }
     
     public NewsFeedModule() {
+    	
+    }
+    
+    public static class ParticipantCache extends RedisCache<Participant> {
+
+		public ParticipantCache(Class<Participant> serializationType, NewsFeedConfiguration config) {
+			super(serializationType, config);
+		}
+    	
+    }
+    
+    public static class FriendCache extends RedisCache<Friend> {
+
+		public FriendCache(Class<Friend> serializationType, NewsFeedConfiguration config) {
+			super(serializationType, config);
+		}
     	
     }
 

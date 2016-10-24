@@ -51,6 +51,7 @@ libraryDependencies ++= Seq(
     "org.apache.solr"	      %	  "solr-core"		    %	"5.3.1", 
     "org.apache.solr"	      %	  "solr-solrj"		    %	"5.3.1",
     "redis.clients"	      %	  "jedis"		    %	"2.7.2", 
+    "net.spy"	      		%	  "spymemcached"		    %	"2.12.1", 
   "com.twitter.finatra" %% "finatra-http" % versions.finatra,
   "com.twitter.finatra" %% "finatra-slf4j" % versions.finatra,
   "ch.qos.logback" % "logback-classic" % versions.logback,

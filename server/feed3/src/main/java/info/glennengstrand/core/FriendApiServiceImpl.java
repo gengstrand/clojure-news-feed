@@ -6,30 +6,20 @@ import java.util.List;
 import com.google.inject.Inject;
 
 import info.glennengstrand.NewsFeedConfiguration;
+import info.glennengstrand.NewsFeedModule.FriendCache;
 import info.glennengstrand.api.Friend;
-import info.glennengstrand.api.Participant;
-import info.glennengstrand.db.Cache;
 import info.glennengstrand.db.FriendDAO;
-import info.glennengstrand.db.MemcachedCache;
-import info.glennengstrand.db.RedisCache;
 import info.glennengstrand.resources.FriendApi.FriendApiService;
-import redis.clients.jedis.JedisPool;
 
 public class FriendApiServiceImpl implements FriendApiService {
 
 	private static final String ENTITY = "Friend";
 	private final FriendDAO dao;
-	private final Cache<Friend> cache;
+	private final FriendCache cache;
 	private final MessageLogger<Long> logger;
 	
 	@Inject 
-	public FriendApiServiceImpl(FriendDAO dao, NewsFeedConfiguration config, MessageLogger<Long> logger) {
-		this.dao = dao;
-		cache = new MemcachedCache<Friend>(Friend.class, config);
-		this.logger = logger;
-	}
-
-	public FriendApiServiceImpl(FriendDAO dao, NewsFeedConfiguration config, MessageLogger<Long> logger, Cache<Friend> cache) {
+	public FriendApiServiceImpl(FriendDAO dao, FriendCache cache, MessageLogger<Long> logger) {
 		this.dao = dao;
 		this.cache = cache;
 		this.logger = logger;

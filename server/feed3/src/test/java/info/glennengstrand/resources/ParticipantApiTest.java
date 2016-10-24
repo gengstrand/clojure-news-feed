@@ -22,18 +22,21 @@
 
 package info.glennengstrand.resources;
 
+import info.glennengstrand.NewsFeedConfiguration;
+import info.glennengstrand.NewsFeedModule.ParticipantCache;
 import info.glennengstrand.api.Participant;
 import info.glennengstrand.core.MessageLogger;
 import info.glennengstrand.core.ParticipantApiServiceImpl;
 import info.glennengstrand.db.ParticipantDAO;
-import info.glennengstrand.db.RedisCache;
 import info.glennengstrand.resources.ParticipantApi.ParticipantApiService;
-import redis.clients.jedis.JedisPool;
 
 import org.junit.Test;
 import org.junit.Before;
 import static org.junit.Assert.*;
 import static org.mockito.Mockito.*;
+
+import java.util.List;
+import java.util.function.Supplier;
 
 /**
  * API tests for ParticipantApi
@@ -45,8 +48,7 @@ public class ParticipantApiTest extends NewsFeedTestBase {
 	
     private ParticipantApiService api = null;
     private Participant participant = null;
-    private JedisPool pool = null;
-    private RedisCache<Participant> cache = null;
+    private ParticipantCache cache = null;
     private ParticipantDAO dao = null;
 
     @Before
@@ -55,13 +57,11 @@ public class ParticipantApiTest extends NewsFeedTestBase {
     			.withId(TEST_ID)
     			.withName(TEST_MONIKER)
     			.build();
-    	pool = mock(JedisPool.class);
-    	when(pool.getResource()).thenReturn(null);
-    	cache = new RedisCache<Participant>(Participant.class, config, pool);
+    	cache = new PassThroughParticipantCache(Participant.class, null);
     	dao = mock(ParticipantDAO.class);
     	when(dao.upsertParticipant(any(String.class))).thenReturn(TEST_ID);
     	when(dao.fetchParticipant(TEST_ID)).thenReturn(participant);
-    	api = new  ParticipantApiServiceImpl(dao, config, new MessageLogger.DoNothingMessageLogger(), cache);
+    	api = new  ParticipantApiServiceImpl(dao, cache, new MessageLogger.DoNothingMessageLogger());
     }
     
     /**
@@ -86,6 +86,28 @@ public class ParticipantApiTest extends NewsFeedTestBase {
     public void getParticipantTest() {
         Participant response = api.getParticipant(TEST_ID);
         assertTrue(String.format("expected participant name to be %s but instead it was %s", TEST_MONIKER, response.getName()), response.getName().equals(TEST_MONIKER));
+    }
+    
+    private class PassThroughParticipantCache extends ParticipantCache {
+
+		public PassThroughParticipantCache(Class<Participant> serializationType, NewsFeedConfiguration config) {
+			super(serializationType, config);
+		}
+
+		@Override
+		public Participant get(Long id, Supplier<Participant> loader) {
+			return loader.get();
+		}
+
+		@Override
+		public List<Participant> getMulti(Long id, Supplier<List<Participant>> loader) {
+			return loader.get();
+		}
+
+		@Override
+		public void invalidate(Long id) {
+		}
+    	
     }
     
 }

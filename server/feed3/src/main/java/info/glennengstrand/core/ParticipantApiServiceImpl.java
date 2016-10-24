@@ -3,6 +3,7 @@ package info.glennengstrand.core;
 import com.google.inject.Inject;
 
 import info.glennengstrand.NewsFeedConfiguration;
+import info.glennengstrand.NewsFeedModule.ParticipantCache;
 import info.glennengstrand.api.Participant;
 import info.glennengstrand.db.Cache;
 import info.glennengstrand.db.MemcachedCache;
@@ -16,17 +17,11 @@ public class ParticipantApiServiceImpl implements ParticipantApiService {
 	private static final String ENTITY = "Participant";
 
 	private final ParticipantDAO dao;
-	private final Cache<Participant> cache;
+	private final ParticipantCache cache;
 	private final MessageLogger<Long> logger;
 	
 	@Inject
-	public ParticipantApiServiceImpl(ParticipantDAO dao, NewsFeedConfiguration config, MessageLogger<Long> logger) {
-		this.dao = dao;
-		cache = new MemcachedCache<Participant>(Participant.class, config);
-		this.logger = logger;
-	}
-
-	public ParticipantApiServiceImpl(ParticipantDAO dao, NewsFeedConfiguration config, MessageLogger<Long> logger, Cache<Participant> cache) {
+	public ParticipantApiServiceImpl(ParticipantDAO dao, ParticipantCache cache, MessageLogger<Long> logger) {
 		this.dao = dao;
 		this.cache = cache;
 		this.logger = logger;
