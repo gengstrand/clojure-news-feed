@@ -16,6 +16,7 @@
                  [postgresql "9.1-901.jdbc4"]
                  [com.mchange/c3p0 "0.9.5.1"]
                  [com.taoensso/carmine "2.12.0"]
+                 [net.spy/spymemcached "2.12.1"]
                  [clj-kafka "0.3.2"]
                  [cc.qbits/alia "2.2.3"]
                  [log4j/log4j "1.2.17"]
