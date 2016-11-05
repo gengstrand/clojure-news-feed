@@ -7,7 +7,7 @@ import org.slf4j.LoggerFactory;
 import info.glennengstrand.io._
 
 /** helper functions for outbound object creation */
-object Outbound extends SolrSearcher {
+object Outbound extends ElasticSearchSearcher {
   val log = LoggerFactory.getLogger("info.glennengstrand.news.Outbound")
   val reader: PersistentDataStoreReader = new CassandraReader
   val cache: CacheAware = new MockCache
@@ -34,7 +34,7 @@ object Outbound extends SolrSearcher {
   val bindings = new OutboundBindings
   def apply(id: Int) : OutboundFeed = {
     val criteria: Map[String, Any] = Map("participantID" -> id)
-    new OutboundFeed(id, IO.cacheAwareRead(bindings, criteria, reader, cache)) with CassandraWriter with MockCacheAware with SolrSearcher
+    new OutboundFeed(id, IO.cacheAwareRead(bindings, criteria, reader, cache)) with CassandraWriter with MockCacheAware with ElasticSearchSearcher
   }
   def apply(state: String): Outbound = {
     val s = IO.fromFormPost(state)
@@ -95,7 +95,7 @@ class OutboundFeed(id: Int, state: Iterable[Map[String, Any]]) extends Iterator[
       case true => kv("dateOf(occurred)")
       case _ => kv("occurred")
     }
-    new Outbound(id, IO.convertToDate(occurred), kv("subject").toString, kv("story").toString) with CassandraWriter with MockCacheAware with SolrSearcher
+    new Outbound(id, IO.convertToDate(occurred), kv("subject").toString, kv("story").toString) with CassandraWriter with MockCacheAware with ElasticSearchSearcher
   }
   override def toJson: String = {
     "[" +  map(f => f.toJson).reduce(_ + "," + _) + "]"

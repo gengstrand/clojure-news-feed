@@ -35,6 +35,8 @@ object IO {
   val messagingBrokers = "messaging_brokers"
   val zookeeperServers = "zookeeper_servers"
   val searchHost = "search_host"
+  val searchPort = "search_port"
+  val searchPath = "search_path"
   val cacheHost = "cache_host"
   val cachePort = "cache_port"
   val cacheTimeout = "cache_timeout"
@@ -426,7 +428,7 @@ trait PersistentRelationalDataStoreWriter extends PersistentDataStoreWriter with
 trait PersistentDataStoreSearcher {
 
   /** search the collection of documents for keywords */
-  def search(terms: String): Iterable[java.lang.Long]
+  def search(terms: String): Iterable[Long]
 
   /** add a new document to the collection */
   def index(id: Long, content: String): Unit
