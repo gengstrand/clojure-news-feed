@@ -41,7 +41,7 @@ object Cassandra {
   /** generates the column name that ends up in the field list of the select statement */
   def generateSelectFieldName(fn: String, ft: String): String = {
     ft match {
-      case "Date" => "dateOf(" + fn + ")"
+      case "Date" => "toTimestamp(" + fn + ") as " + fn
       case _ => fn
     }
   }
@@ -145,7 +145,7 @@ object Cassandra {
     f._2 match {
       case "Long" => (f._1, r.getLong(f._1))
       case "Int" => (f._1, r.getInt(f._1))
-      case "Date" => (f._1, r.getDate("dateOf(" + f._1 + ")"))
+      case "Date" => (f._1, r.getDate(f._1))
       case _ => (f._1, r.getString(f._1))
     }
   }

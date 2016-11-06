@@ -16,7 +16,7 @@ import com.twitter.util.{FuturePool, Future}
 /** general common Input Output related helper functions */
 object IO {
   val settings = new Properties
-  val df = new SimpleDateFormat("yyyy-MM-dd")
+  val df = new SimpleDateFormat("EEE MMM d HH:mm:ss z yyyy")
   val log = LoggerFactory.getLogger("info.glennengstrand.io.IO")
   val r = new Random(Platform.currentTime)
   val jdbcVendor = "jdbc_vendor"
@@ -156,7 +156,7 @@ object IO {
     v match {
       case l: Long => new Date(l)
       case d: Date => d
-      case s: String => df.parse(s)
+      case s: String => convertToDate(s)
     }
   }
 

@@ -91,14 +91,14 @@ class OutboundFeed(id: Int, state: Iterable[Map[String, Any]]) extends Iterator[
   def next() = {
     val kv = i.next()
     Outbound.log.debug("kv = " + kv)
-    val occurred = kv.contains("dateOf(occurred)") match {
-      case true => kv("dateOf(occurred)")
-      case _ => kv("occurred")
-    }
-    new Outbound(id, IO.convertToDate(occurred), kv("subject").toString, kv("story").toString) with CassandraWriter with MockCacheAware with ElasticSearchSearcher
+    new Outbound(id, IO.convertToDate(kv("occurred")), kv("subject").toString, kv("story").toString) with CassandraWriter with MockCacheAware with ElasticSearchSearcher
   }
   override def toJson: String = {
-    "[" +  map(f => f.toJson).reduce(_ + "," + _) + "]"
+    val r = map(f => f.toJson).toList
+    r.size match {
+      case 0 => "[]"
+      case _ => "[" +  r.reduce(_ + "," + _) + "]"
+    }
   }
   override def toJson(factory: FactoryClass): String = toJson
 }

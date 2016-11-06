@@ -25,7 +25,6 @@ object ElasticSearch {
   /** set up the basic request for searching the index for documents */
   def createSearchRequest(keywords: String): BasicHttpEntityEnclosingRequest = {
     val retVal = new BasicHttpEntityEnclosingRequest("GET", s"/${IO.settings.get(IO.searchPath).asInstanceOf[String]}/_search?q=${keywords}")
-    log.warn(s"/feed/stories/_search?q=${keywords}")
     retVal.addHeader("Accept", JSON_MEDIA_TYPE)
     retVal
   }
@@ -62,7 +61,7 @@ object ElasticSearch {
     innerHits.map(hit => {
       val source = fetchChild[Map[String, Any]](hit, "_source", Map())
       fetchChild[Double](source, name, 0.0d).toLong
-    })
+    }).toList
   }
 }
 
@@ -70,7 +69,7 @@ trait ElasticSearchSearcher extends PersistentDataStoreSearcher {
   def search(terms: String): Iterable[Long] = {
     val req = ElasticSearch.createSearchRequest(terms)
     val client = new DefaultBHttpClientConnection(1000)
-    val s = new Socket(IO.settings.get(IO.searchHost).asInstanceOf[String], IO.settings.get(IO.searchPath).asInstanceOf[Integer])
+    val s = new Socket(IO.settings.get(IO.searchHost).asInstanceOf[String], IO.settings.get(IO.searchPort).asInstanceOf[String].toInt)
     client.bind(s)
     client.sendRequestHeader(req)
     client.flush()
@@ -101,7 +100,6 @@ trait ElasticSearchSearcher extends PersistentDataStoreSearcher {
     val req = ElasticSearch.createIndexRequest(id, key)
     val se = ElasticSearch.createEntity(id, key, content)
     req.setEntity(se)
-    //ElasticSearch.send(req)
   }
   
 }

@@ -163,7 +163,7 @@ class Feed extends Controller {
     val r = Try {
       val body = request.contentString
       val f = IO.workerPool {
-      val results = Outbound.lookup(body).map(o => o.toJson)
+      val results = Outbound.lookup(body).map(o => o.toJson).toList
       val retVal = results.isEmpty match {
         case true => "[]"
         case _ => "[" + results.reduce(_ + "," + _) + "]"

@@ -82,11 +82,7 @@ class InboundFeed(id: Int, state: Iterable[Map[String, Any]]) extends Iterator[I
   def next() = {
     val kv = i.next()
     Inbound.log.debug("kv = " + kv)
-    val occurred = kv.contains("dateOf(occurred)") match {
-      case true => kv("dateOf(occurred)")
-      case _ => kv("occurred")
-    }
-    new Inbound(id, IO.convertToDate(occurred), IO.convertToInt(kv("fromParticipantID")), kv("subject").toString, kv("story").toString) with CassandraWriter with MockCacheAware
+    new Inbound(id, IO.convertToDate(kv("occurred")), IO.convertToInt(kv("fromParticipantID")), kv("subject").toString, kv("story").toString) with CassandraWriter with MockCacheAware
   }
   override def toJson: String = {
     "[" +  map(f => f.toJson).reduce(_ + "," + _) + "]"
