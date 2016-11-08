@@ -199,7 +199,7 @@
   (let [results 
         (alia/execute cql/session 
           (s/replace-first cql/load-inbound-from-db-command "?" id))]
-    (map (fn [result] (Inbound. id ((keyword "dateOf(occurred)") result) (:fromparticipantid result) (:subject result) (:story result))) results)))
+    (map (fn [result] (Inbound. id (:occurred result) (:fromparticipantid result) (:subject result) (:story result))) results)))
   
 (defn save-inbound-to-db 
   "store this inbound activity to the db"
@@ -259,7 +259,7 @@
   (let [results 
       (alia/execute cql/session 
         (s/replace-first cql/load-outbound-from-db-command "?" id))]
-    (map (fn [result] (Outbound. id ((keyword "dateOf(occurred)") result) (:subject result) (:story result))) results)))
+    (map (fn [result] (Outbound. id (:occurred result) (:subject result) (:story result))) results)))
 
 (defn save-outbound-to-db 
   "store this outbound activity to the db"

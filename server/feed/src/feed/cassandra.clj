@@ -6,8 +6,8 @@
 (def cluster (if (nil? prop/service-config) nil (alia/cluster {:contact-points [(:nosql-host prop/service-config)] :query-options {:consistency (keyword (:nosql-consistency prop/service-config))}})))
 (def session (if (nil? prop/service-config) nil (alia/connect cluster "activity")))
 
-(def load-inbound-from-db-command "select dateOf(occurred), fromparticipantid, subject, story from Inbound where participantid = ? order by occurred desc")
+(def load-inbound-from-db-command "select toTimestamp(occurred) as occurred, fromparticipantid, subject, story from Inbound where participantid = ? order by occurred desc")
 (def save-inbound-to-db-command (str "insert into Inbound (ParticipantID, FromParticipantID, Occurred, Subject, Story) values (?, ?, now(), ?, ?) using ttl " (:nosql-ttl prop/service-config)))
-(def load-outbound-from-db-command "select dateOf(occurred), subject, story from Outbound where participantid = ? order by occurred desc")
+(def load-outbound-from-db-command "select toTimestamp(occurred) as occurred, subject, story from Outbound where participantid = ? order by occurred desc")
 (def save-outbound-to-db-command "insert into Outbound (ParticipantID, Occurred, Subject, Story) values (?, now(), ?, ?)")
 
