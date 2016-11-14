@@ -19,6 +19,8 @@
                  [net.spy/spymemcached "2.12.1"]
                  [clj-kafka "0.3.2"]
                  [cc.qbits/alia "2.2.3"]
+                 [org.clojure/data.json "0.2.4"]
+                 [clj-http "0.7.8"]
                  [log4j/log4j "1.2.17"]
                  [commons-logging/commons-logging "1.1"]
                  [commons-fileupload/commons-fileupload "1.3"]

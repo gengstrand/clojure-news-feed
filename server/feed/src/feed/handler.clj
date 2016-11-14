@@ -4,7 +4,7 @@
             [compojure.route :as route]
             [ring.adapter.jetty :as jetty]
             [feed.core :as c]
-            [feed.search :as search]
+            [feed.elastic :as search]
             [feed.metrics :as m]
             [feed.messaging-kafka :as l])
   (:gen-class :main true))

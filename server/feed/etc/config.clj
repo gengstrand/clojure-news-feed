@@ -8,4 +8,4 @@
  :nosql-ttl 7776000 
  :cache-host "redis_host"
  :messaging-host "kafka_host"
- :search-host "http://solr_host:8983/solr/outbound"}
+ :search-host "http://solr_host:9200/feed/stories"}

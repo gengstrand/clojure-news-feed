@@ -2,7 +2,7 @@
 
 (require '[feed.rdbms :as db])
 (require '[feed.cassandra :as cql])
-(require '[feed.search :as search])
+(require '[feed.elastic :as search])
 (require '[clojure.string :as s])
 (require '[clojure.java.jdbc :as j])
 (require '[qbits.alia :as alia])

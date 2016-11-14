@@ -1,76 +1,72 @@
 (ns feed.elastic
-  (:import java.util.UUID)
-  (:import org.apache.http.message.BasicHttpEntityEnclosingRequest)
-  (:import org.apache.http.impl.DefaultBHttpClientConnection)
-  (:import (org.apache.http.entity StringEntity ContentType)))
+  (:import java.util.UUID))
 
 (require '[feed.settings :as prop])
-
-(def json-media-type "application/json")
+(require '[clojure.data.json :as json])
+(require '[clj-http.client :as c])
 
 (defn create-search-request
   "query elastic search for these keywords"
   [keywords]
-  (let [retVal (BasicHttpEntityEnclosingRequest.
-                 "GET"
-                 (str 
-                   (:search-host prop/service-config)
-                   "/_search?q="
-                   keywords))]
-    (.addHeader retVal "Accept" json-media-type)
-    retVal))
+  (str 
+    (:search-host prop/service-config)
+    "/_search?q="
+    keywords))
 
 (defn create-index-request
   "add a document to the index"
   [id key]
-  (let [retVal (BasicHttpEntityEnclosingRequest.
-                 "PUT"
-                 (str 
-                   (:search-host prop/service-config)
-                   "/"
-                   id
-                   "-"
-                   key))]
-    (.addHeader retVal "Accept" json-media-type)
-    retVal))
+  (str 
+    (:search-host prop/service-config)
+    "/"
+    id
+    "-"
+    key))
 
 (defn create-entity
   "create a document to be sent to elastic search"
   [id key story]
-  (let [doc 
-        (str
-          "{\"id\":\""
-          key
-          "\",\"sender\":"
-          id
-          "\"story\":\""
-          story
-          "\"}")
-        content-type 
-        (ContentType/create json-media-type "UTF-8")]
-    (StringEntity. doc content-type)))
+  {:id key
+   :sender id
+   :story story})
 
-(defn send-to-elastic-search
-  "send the request to elastic search"
-  [request]
-  (let [client (DefaultBHttpClientConnection. 1000)]
-    (.sendRequestEntity client request)))
+(defn extract-sender 
+  "extract the sender from this hit"
+  [hit]
+  (if (contains? hit "_source")
+    (let [s (get hit "_source")]
+      (if (contains? s "sender")
+        (get s "sender")))))
+
+(defn extract-search-results
+  "extract the sender participant ids from the search response body"
+  [body]
+  (if (contains? body "hits")
+    (let [outer (get body "hits")]
+      (if (contains? outer "hits")
+        (let [inner (get outer "hits")]
+          (doall (map #(extract-sender %) inner)))))))
 
 (defn index
   "add this story to the search index"
   [from story]
   (let [key (.toString (UUID/randomUUID))
-        req (create-index-request from key)
-        se (create-entity from key story)]
-    (.setEntity req se)
-    (send-to-elastic-search req)))
+        uri (create-index-request from key)
+        se (create-entity from key story)
+        response (c/put uri {:body (json/write-str se) :content-type :json :accept :json})]
+    (if 
+      (<
+        (:status response)
+        300)
+      (:body response))))
 
 (defn search
   "search for these terms and return the matching list of senders"
   [terms]
-  (let [req (create-search-request terms)]
-    (send-to-elastic-search req)
-    (let [response (.getContent (.getEntity req))]
-      (with-open [rdr (clojure.java.io/reader response)]
-        (reduce conj [] (line-seq rdr))))))
-        
+  (let [uri (create-search-request terms)
+        response (c/get uri {:accept :json})]
+    (if 
+      (<
+        (:status response)
+        300)
+      (json/write-str (extract-search-results (json/read-str (:body response)))))))
