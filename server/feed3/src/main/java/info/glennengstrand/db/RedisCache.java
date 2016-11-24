@@ -102,8 +102,9 @@ public class RedisCache<T> extends Cache<T> {
 	
 	@Override
 	public void invalidate(Long id) {
+		Jedis j = null;
 		try {
-			Jedis j = getConnection();
+			j = getConnection();
 			String key = convertIdToKey(id);
 			if (j != null) {
 				j.del(key);
@@ -112,6 +113,10 @@ public class RedisCache<T> extends Cache<T> {
 			}
 		} catch (Exception e) {
 			LOGGER.warn("Cannot delete cache: ", e);
+		} finally {
+			if (j != null) {
+				j.close();
+			}
 		}
 		
 	}
@@ -213,6 +218,8 @@ public class RedisCache<T> extends Cache<T> {
 					} catch (Exception ie) {
 						LOGGER.error(String.format("Cannot serialize %s and save it to Redis: ", key), ie);
 					}
+				} finally {
+					j.close();
 				}
 			} else {
 				LOGGER.error("Cannot access Jedis.");
