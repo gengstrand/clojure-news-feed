@@ -11,6 +11,14 @@ import com.twitter.util.{Await, Future}
 /** where to hold  the global class factory */
 object Feed {
   var factory: FactoryClass = new EmptyFactoryClass
+  val messageTopic = "feed"
+  val participantEntity = "participant"
+  val outboundEntity = "outbound"
+  val inboundEntity = "inbound"
+  val friendEntity = "friends"
+  val getOperation = "get"
+  val postOperation = "post"
+  val searchOperation = "search"
 }
 
 /** provides routings for mapping requests to the code that processes the requests */
@@ -22,7 +30,7 @@ class Feed extends Controller {
         val before = System.currentTimeMillis()
         val retVal = Feed.factory.getObject("participant", request.params("id").toInt).get.asInstanceOf[MicroServiceSerializable].toJson
         val after = System.currentTimeMillis()
-        Feed.factory.getObject("logger").get.asInstanceOf[PerformanceLogger].log("feed", "participant", "get", after - before)
+        Feed.factory.getObject("logger").get.asInstanceOf[PerformanceLogger].log(Feed.messageTopic, Feed.participantEntity, Feed.getOperation, after - before)
         retVal
       }
       Await.result(f)
@@ -43,7 +51,7 @@ class Feed extends Controller {
         val p = Feed.factory.getObject("participant", body).get.asInstanceOf[Participant]
         val retVal = "[" + p.save.toJson + "]"
         val after = System.currentTimeMillis()
-        Feed.factory.getObject("logger").get.asInstanceOf[PerformanceLogger].log("feed", "participant", "post", after - before)
+        Feed.factory.getObject("logger").get.asInstanceOf[PerformanceLogger].log(Feed.messageTopic, Feed.participantEntity, Feed.postOperation, after - before)
         log.debug(retVal)
         retVal
       }
@@ -63,7 +71,7 @@ class Feed extends Controller {
         val before = System.currentTimeMillis()
         val retVal = Feed.factory.getObject("friends", request.params("id").toInt).get.asInstanceOf[MicroServiceSerializable].toJson(Feed.factory)
         val after = System.currentTimeMillis()
-        Feed.factory.getObject("logger").get.asInstanceOf[PerformanceLogger].log("feed", "friends", "get", after - before)
+        Feed.factory.getObject("logger").get.asInstanceOf[PerformanceLogger].log(Feed.messageTopic, Feed.friendEntity, Feed.getOperation, after - before)
         retVal
       }
       Await.result(f)
@@ -85,7 +93,7 @@ class Feed extends Controller {
         val f = friend.save
         val retVal = f.toJson(Feed.factory)
         val after = System.currentTimeMillis()
-        Feed.factory.getObject("logger").get.asInstanceOf[PerformanceLogger].log("feed", "friends", "post", after - before)
+        Feed.factory.getObject("logger").get.asInstanceOf[PerformanceLogger].log(Feed.messageTopic, Feed.friendEntity, Feed.postOperation, after - before)
         log.debug(retVal)
         retVal
       }
@@ -105,7 +113,7 @@ class Feed extends Controller {
         val before = System.currentTimeMillis()
         val retVal = Feed.factory.getObject("inbound", request.params("id").toInt).get.asInstanceOf[MicroServiceSerializable].toJson
         val after = System.currentTimeMillis()
-        Feed.factory.getObject("logger").get.asInstanceOf[PerformanceLogger].log("feed", "inbound", "get", after - before)
+        Feed.factory.getObject("logger").get.asInstanceOf[PerformanceLogger].log(Feed.messageTopic, Feed.inboundEntity, Feed.getOperation, after - before)
         retVal
       }
       Await.result(f)
@@ -124,7 +132,7 @@ class Feed extends Controller {
         val before = System.currentTimeMillis()
         val retVal = Feed.factory.getObject("outbound", request.params("id").toInt).get.asInstanceOf[MicroServiceSerializable].toJson
         val after = System.currentTimeMillis()
-        Feed.factory.getObject("logger").get.asInstanceOf[PerformanceLogger].log("feed", "outbound", "get", after - before)
+        Feed.factory.getObject("logger").get.asInstanceOf[PerformanceLogger].log(Feed.messageTopic, Feed.outboundEntity, Feed.getOperation, after - before)
         retVal
       }
       Await.result(f)
@@ -145,7 +153,7 @@ class Feed extends Controller {
         val retVal = Feed.factory.getObject("outbound", body).get.asInstanceOf[Outbound]
         retVal.save
         val after = System.currentTimeMillis()
-        Feed.factory.getObject("logger").get.asInstanceOf[PerformanceLogger].log("feed", "outbound", "post", after - before)
+        Feed.factory.getObject("logger").get.asInstanceOf[PerformanceLogger].log(Feed.messageTopic, Feed.outboundEntity, Feed.postOperation, after - before)
         retVal.toJson
       }
       Await.result(f)
@@ -169,7 +177,7 @@ class Feed extends Controller {
         case _ => "[" + results.reduce(_ + "," + _) + "]"
       }
       val after = System.currentTimeMillis()
-      Feed.factory.getObject("logger").get.asInstanceOf[PerformanceLogger].log("feed", "outbound", "search", after - before)
+      Feed.factory.getObject("logger").get.asInstanceOf[PerformanceLogger].log(Feed.messageTopic, Feed.outboundEntity, Feed.searchOperation, after - before)
       retVal
       }
       Await.result(f)

@@ -1,11 +1,11 @@
 {:sql-host "mysql_host"
  :sql-db-name "feed"
  :sql-db-user "feed"
- :sql-db-password "feed1234"
+ :sql-db-password "feed"
  :sql-vendor "mysql"
  :nosql-host "cassandra_host"
  :nosql-consistency "one" 
  :nosql-ttl 7776000 
  :cache-host "redis_host"
- :messaging-host "kafka_host"
+ :messaging-host "127.0.0.1"
  :search-host "http://solr_host:9200/feed/stories"}

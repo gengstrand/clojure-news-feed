@@ -13,7 +13,7 @@ import info.glennengstrand.resources.FriendApi.FriendApiService;
 
 public class FriendApiServiceImpl implements FriendApiService {
 
-	private static final String ENTITY = "Friend";
+	private static final String ENTITY = "friends";
 	private final FriendDAO dao;
 	private final FriendCache cache;
 	private final MessageLogger<Long> logger;
@@ -33,7 +33,7 @@ public class FriendApiServiceImpl implements FriendApiService {
 				.withFrom(body.getFrom())
 				.withTo(body.getTo())
 				.build();
-		logger.log(ENTITY, MessageLogger.LogOperation.ADD, System.currentTimeMillis()- before);
+		logger.log(ENTITY, MessageLogger.LogOperation.POST, System.currentTimeMillis() - before);
 		return retVal;
 	}
 
@@ -48,7 +48,7 @@ public class FriendApiServiceImpl implements FriendApiService {
 				retVal = Collections.emptyList();
 			}
 		}
-		logger.log(ENTITY, MessageLogger.LogOperation.GET, System.currentTimeMillis()- before);
+		logger.log(ENTITY, MessageLogger.LogOperation.GET, System.currentTimeMillis() - before);
 		return retVal;
 	}
 

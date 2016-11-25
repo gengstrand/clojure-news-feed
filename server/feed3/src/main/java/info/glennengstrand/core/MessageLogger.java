@@ -37,7 +37,7 @@ public abstract class MessageLogger<P> {
 	 *
 	 */
 	public static enum LogOperation {
-		ADD, GET, SEARCH;
+		POST, GET, SEARCH;
 		public String getTokenValue() {
 			return this.name().toLowerCase();
 		}

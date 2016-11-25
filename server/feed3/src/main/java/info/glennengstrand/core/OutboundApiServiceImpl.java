@@ -18,7 +18,7 @@ import info.glennengstrand.resources.OutboundApi.OutboundApiService;
 
 public class OutboundApiServiceImpl implements OutboundApiService {
 
-	private static final String ENTITY = "Outbound";
+	private static final String ENTITY = "outbound";
 	private static final Logger LOGGER = LoggerFactory.getLogger(OutboundApiServiceImpl.class);
 
 	private final OutboundDAO outdao;
@@ -46,7 +46,7 @@ public class OutboundApiServiceImpl implements OutboundApiService {
 				.withStory(body.getStory())
 				.build();
 		esdao.upsert(doc);
-		logger.log(ENTITY, MessageLogger.LogOperation.ADD, System.currentTimeMillis()- before);
+		logger.log(ENTITY, MessageLogger.LogOperation.POST, System.currentTimeMillis() - before);
 		return body;
 	}
 
@@ -54,7 +54,7 @@ public class OutboundApiServiceImpl implements OutboundApiService {
 	public List<Outbound> getOutbound(Long id) {
 		long before = System.currentTimeMillis();
 		List<Outbound> retVal = outdao.fetch(id);
-		logger.log(ENTITY, MessageLogger.LogOperation.GET, System.currentTimeMillis()- before);
+		logger.log(ENTITY, MessageLogger.LogOperation.GET, System.currentTimeMillis() - before);
 		return retVal;
 	}
 
@@ -62,7 +62,7 @@ public class OutboundApiServiceImpl implements OutboundApiService {
 	public List<Long> searchOutbound(String keywords) {
 		long before = System.currentTimeMillis();
 		List<Long> retVal = esdao.find(keywords);
-		logger.log(ENTITY, MessageLogger.LogOperation.SEARCH, System.currentTimeMillis()- before);
+		logger.log(ENTITY, MessageLogger.LogOperation.SEARCH, System.currentTimeMillis() - before);
 		return retVal;
 	}
 	

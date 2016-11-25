@@ -14,7 +14,7 @@ import redis.clients.jedis.JedisPool;
 
 public class ParticipantApiServiceImpl implements ParticipantApiService {
 	
-	private static final String ENTITY = "Participant";
+	private static final String ENTITY = "participant";
 
 	private final ParticipantDAO dao;
 	private final ParticipantCache cache;
@@ -34,7 +34,7 @@ public class ParticipantApiServiceImpl implements ParticipantApiService {
 				.withId(dao.upsertParticipant(body.getName()))
 				.withName(body.getName())
 				.build();
-		logger.log(ENTITY, MessageLogger.LogOperation.ADD, System.currentTimeMillis()- before);
+		logger.log(ENTITY, MessageLogger.LogOperation.POST, System.currentTimeMillis() - before);
 		return retVal;
 	}
 
@@ -42,7 +42,7 @@ public class ParticipantApiServiceImpl implements ParticipantApiService {
 	public Participant getParticipant(Long id) {
 		long before = System.currentTimeMillis();
 		Participant retVal =  cache.get(id, () -> dao.fetchParticipant(id));
-		logger.log(ENTITY, MessageLogger.LogOperation.GET, System.currentTimeMillis()- before);
+		logger.log(ENTITY, MessageLogger.LogOperation.GET, System.currentTimeMillis() - before);
 		return retVal;
 	}
 
