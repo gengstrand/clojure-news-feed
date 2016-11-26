@@ -1,0 +1,13 @@
+settings = dict(
+    mysql = '',
+    cassandra = '', 
+    cassandra_internal = '', 
+    kafka = '', 
+    redis = '', 
+    redis_internal = '', 
+    elastic = '',
+    solr = '', 
+    kong = '', 
+    feed = '', 
+    load = ''
+)
