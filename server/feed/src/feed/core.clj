@@ -272,7 +272,7 @@
   "serialize out the collection of entities in a client friendly format"
   [entities]
   (str "["
-       (reduce str (map #(str (to-client %) ", ") entities))
+       (s/join "," (map #(to-client %) entities))
        "]"))
 
 (defmulti save-to-db (fn [o] (type o)))
