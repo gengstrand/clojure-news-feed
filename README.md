@@ -20,6 +20,10 @@ I blogged about how this micro-service performs when running with MySql, with Po
 
 http://glennengstrand.info/software/performance/mysql/postgres/docker
 
+I returned back to Java and blogged about how the DropWizard version compared to the Clojure version of the news feed.
+
+http://glennengstrand.info/software/performance/clojure/dropwizard
+
 ## server
 
 These components are expected to be run on the server(s).
@@ -30,7 +34,11 @@ A basic news feed web service written in Clojure.
 
 ### feed2
 
-The same micro-service as feed only this time written in Scala.
+The same micro-service news feed only this time written in Scala.
+
+### feed3
+
+The same micro service news feed only this time written in DropWizard.
 
 ### solr
 
@@ -39,6 +47,10 @@ The supporting directory structure and configuration files needed to augment an 
 ### support
 
 This Java project builds a library used by the feed service for Solr integration and for publishing custom JMX performance metrics.
+
+### swagger
+
+Swagger templates and assets used to generate the api and resource classes for feed3.
 
 ## client
 

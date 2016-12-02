@@ -1,4 +1,4 @@
-# manually setting up the load test on AWS
+# semi manually setting up the load test on AWS
 
 Here are the scripts that I use to conduct this research.
 
@@ -51,11 +51,9 @@ cp etc/Dockerfile ../aws/feed
 
 ## starting a test run
 
-First, go to your AWS dashboard and allocate a dev MySql instance in RDS. I use a db.m4.large with 100 GB SSD. Next, go to EC2 and allocate 7 instances. I use m4.large with 10GB ESB HD. For testing, I keep all the relevant ports open to the Internet because it is easier to diagnose problems that way. See ports.txt for the list of ports.
+First, go to your AWS dashboard and allocate a dev MySql instance in RDS. I use a db.m4.large with 100 GB SSD. If you specify different credentials, then be sure to update all the relevant configuration files. Next, go to EC2 and allocate 7 instances with the default Amazon Linux AMI. I use m4.large with 10GB SSD. For testing, I keep all the relevant ports open to the Internet because it is easier to diagnose problems that way. See ports.txt for the list of ports.
 
 Copy build/hosts.py.empty to build/hosts.py then edit that python script specifying the IP addresses for each host. You will notice that this file needs the internal IP address for both Cassandra and Redis. You can obtain those IP addresses when you ssh to those machines and run the hostname -I command.
-
-You will need to edit the python scripts in the build folder in order to provide your AWS credentials correctly.
 
 After the hosts.py is ready, run the following.
 
@@ -63,7 +61,7 @@ After the hosts.py is ready, run the following.
 cd build
 ./build.sh
 cd ..
-# edit copy.sh to comment / uncomment out the lines which install news feed service you are testing with
+# edit copy.sh to comment / uncomment out the lines which installs the news feed service you are testing with
 ./copy.sh /path/to/your/aws.pem
 ```
 
@@ -99,3 +97,34 @@ exit
 docker build -t feed .
 docker run -d --net=host feed
 ```
+
+## Frequently Asked Questions
+
+Q: Why is installing and running the Clojure feed so complicated?
+
+A: The uberjar can no longer be built (it just hangs indefinitely) so you have to install a dev environment and run the service with lein.
+
+Q: The Clojure feed doesn't work. Response is slow and returns nothing. There are no errors in the log files. What do I do?
+
+A: Check the MySql credentials. 
+
+Q: You use OpenJDK for everything but the Clojure news feed where you use Oracle JDK instead. Why?
+
+A: I don't remember why but I couldn't get the lein run version to work with more recent versions of OpenJDK :(
+
+Q: Why don't you use the AWS PaaS offerings for Redis and ElasticSearch?
+
+A: I tried that once but could never get the access roles to work out correctly. Maybe it was early days or maybe I didn't try hard enough.
+
+Q: I think that everything is running but I don't see any statistics in Kibana. What do I do now?
+
+A: Go to the last 4 hours in Kibana and see if anything shows up.  
+
+Q: Nothing is in the Kibana logs for the past four hours. Now what?
+
+A: Those two extra jobs on your elasticsearch machine aren't running correctly. Did you run the run.sh job? 
+
+Q: I do get entries for the past four hours in Kibana but they are all _type:summary AND throughput:0 so what do I do next?
+
+A: Either something is wrong with the service (check the application logs) or something is wrong with kong. Try curl http://feed-ip-address:8080/participant/1 and see what happens.
+
