@@ -1,14 +1,20 @@
-# newsfeed-swagger
+# newsfeed-dropwizard
 
-These docs are swagger generated and cover how to call the micro-service.
+This Java project implements a rudimentary news feed micro-service using [Swagger](http://swagger.io/) and [DropWizard](http://www.dropwizard.io/1.0.5/docs/).
+
+This [article](http://glennengstrand.info/media/dropwizard.pdf) goes into detail about what was discovered while developing this micro-service.
+
+## newsfeed-swagger
+
+The rest of these docs are swagger generated and cover how to call the micro-service.
 
 See the docs/setup.md for tips on how to stand up the service.
 
-## Requirements
+### Requirements
 
 Building the API client library requires [Maven](https://maven.apache.org/) to be installed.
 
-## Installation
+### Installation
 
 To install the API client library to your local Maven repository, simply execute:
 
@@ -24,7 +30,7 @@ mvn deploy
 
 Refer to the [official documentation](https://maven.apache.org/plugins/maven-deploy-plugin/usage.html) for more information.
 
-### Maven users
+#### Maven users
 
 Add this dependency to your project's POM:
 
@@ -37,15 +43,7 @@ Add this dependency to your project's POM:
 </dependency>
 ```
 
-### Gradle users
-
-Add this dependency to your project's build file:
-
-```groovy
-compile "info.glennengstrand:newsfeed-swagger:1.0.0-SNAPSHOT"
-```
-
-### Others
+#### Others
 
 At first generate the JAR by executing:
 
@@ -56,10 +54,7 @@ Then manually install the following JARs:
 * target/newsfeed-swagger-1.0.0-SNAPSHOT.jar
 * target/lib/*.jar
 
-
-## Documentation for API Endpoints
-
-All URIs are relative to *http://glennengstrand.info/*
+### Documentation for API Endpoints
 
 Class | Method | HTTP request | Description
 ------------ | ------------- | ------------- | -------------
@@ -73,16 +68,11 @@ Class | Method | HTTP request | Description
 *ParticipantApi* | [**getParticipant**](docs/ParticipantApi.md#getParticipant) | **GET** /participant/{id} | retrieve an individual participant
 
 
-## Documentation for Models
+### Documentation for Models
 
  - [Friend](docs/Friend.md)
  - [Inbound](docs/Inbound.md)
  - [Outbound](docs/Outbound.md)
  - [Participant](docs/Participant.md)
 
-
-## Documentation for Authorization
-
-All endpoints do not require authorization.
-Authentication schemes defined for the API:
 
