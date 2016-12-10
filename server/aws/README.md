@@ -45,6 +45,7 @@ cd ../perf4
 mvn package 
 cp target/kong-logger-service-1.0.0-SNAPSHOT-fat.jar ../../server/aws/elasticsearch
 cd ../../server/feed
+mkdir ../aws/feed
 cp etc/run.sh ../aws/feed
 cp etc/Dockerfile ../aws/feed
 ```
