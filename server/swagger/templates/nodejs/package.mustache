@@ -1,0 +1,23 @@
+{
+  "name": "{{projectName}}",
+  "version": "{{appVersion}}",
+  "description": "{{{appDescription}}}",
+  "main": "index.js",
+  "scripts": {
+	"prestart": "npm install",
+	"start": "node index.js"
+  },  
+  "keywords": [
+    "swagger"
+  ],
+  "license": "Apache-2.0",
+  "private": true,
+  "dependencies": {
+    "cassandra-driver": "^3.1.6",
+    "connect": "^3.2.0",
+    "express": "^4.14.0",
+    "js-yaml": "^3.3.0",
+    "redis": "^2.6.3",
+    "swagger-tools": "0.10.1"
+  }
+}

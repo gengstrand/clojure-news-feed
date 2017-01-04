@@ -77,7 +77,7 @@
         [sender (take stories-per-user (repeat from))]
 	      (service/test-create-outbound 
 	        sender
-	        (str "2014-01-" (+ (rand-int 30) 1))
+	        (str "2014-01-0" (+ (rand-int 8) 1) "T19:25:51.490Z")
 	        (reduce str (map #(str (rand-int %) " ") (take subject-words (repeat dictionary-size))))
 	        (reduce str (map #(str (rand-int %) " ") (take story-words (repeat dictionary-size)))))))))
 

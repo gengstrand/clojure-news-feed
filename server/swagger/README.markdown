@@ -13,6 +13,8 @@ mvn clean compile install
 
 ### generating the news feed project files
 
+#### for dropwizard
+
 ```bash
 ./news.sh /path/to/swagger-codegen-cli.jar
 cd swagger-output
@@ -20,4 +22,8 @@ mvn compile
 mvn test
 ```
 
+#### for node.js
 
+```bash
+./news-nodejs.sh /path/to/swagger-codegen-cli.jar
+```
