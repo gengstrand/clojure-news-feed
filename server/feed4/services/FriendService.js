@@ -68,13 +68,13 @@ exports.getFriend = function(args, callback) {
 		      cache.set(key, retVal);
 		      callback(null, result);
 		      conn.release();
+		      cache.quit();
 		  });
 	      });
 	  } else {
 	      callback(null, JSON.parse(reply));
 	  }
       });
-      cache.quit();
   });
   
 }

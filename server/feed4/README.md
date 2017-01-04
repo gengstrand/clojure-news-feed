@@ -7,6 +7,7 @@ This is yet another implementation of the rudimentary news feed micro-service on
 ### Running the unit tests
 
 ```
+npm install
 npm test
 ```
 
