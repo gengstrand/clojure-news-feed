@@ -71,9 +71,15 @@
 (defn test-search-entity-service-call
   "call the service to search for entities and return results and timing"
   [entity-name entity-params]
+  (println entity-name)
+  (println (json/write-str entity-params))
   (let [before (System/currentTimeMillis)
-        response (client/post 
-                   (service-url entity-name "search") {:form-params entity-params})]
+        response 
+        (if json-post
+	    (client/post 
+                   (service-url entity-name "search") {:body (json/write-str entity-params)}  :content-type :json :accept :json)
+	    (client/post 
+                   (service-url entity-name "search") {:form-params entity-params}))]
     (if 
       (=
         (:status response)
@@ -138,5 +144,5 @@
 (defn test-search
   "search for participants who have posted outbound activity containing these terms"
   [terms]
-  (test-search-entity-service-call "outbound" {:terms terms}))
+  (test-search-entity-service-call "outbound" {:keywords (str terms)}))
 

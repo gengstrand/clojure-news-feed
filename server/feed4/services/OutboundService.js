@@ -72,3 +72,13 @@ exports.getOutbound = function(args, callback) {
   
 }
 
+exports.searchOutbound = function(args, callback) {
+  /**
+   * parameters expected in the args:
+  * keywords (string)
+  **/
+  const elastic = require('../repositories/elastic');
+  elastic.search(args.keywords.value, function(err, senders) {
+      callback(err, senders);
+  });
+}
