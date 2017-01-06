@@ -74,12 +74,8 @@
   (println entity-name)
   (println (json/write-str entity-params))
   (let [before (System/currentTimeMillis)
-        response 
-        (if json-post
-	    (client/post 
-                   (service-url entity-name "search") {:body (json/write-str entity-params)}  :content-type :json :accept :json)
-	    (client/post 
-                   (service-url entity-name "search") {:form-params entity-params}))]
+        response (client/post 
+                   (service-url entity-name "search") {:query-params entity-params})]
     (if 
       (=
         (:status response)

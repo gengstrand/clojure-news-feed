@@ -37,13 +37,13 @@ exports.search = function(terms, callback) {
 	});
 	response.on('end', function() {
 	    const r = JSON.parse(resp);
-	    if (r.includes('hits')) {
+	    if (r['hits']) {
 		const outer = r['hits'];
-		if (outer.includes('hits')) {
+		if (outer['hits']) {
 		    const senders = outer['hits'].map(function(hit) {
-			if (hit.includes('_source')) {
+			if (hit['_source']) {
 			    const s = hit['_source'];
-			    if (s.includes('sender')) {
+			    if (s['sender']) {
 				return s['sender'];
 			    }
 			}
