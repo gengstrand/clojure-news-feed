@@ -10,20 +10,19 @@ exports.addParticipant = function(args, callback) {
   pool.getConnection(function(err, conn) {
       if (err) {
 	  callback(err, null);
-	  conn.release();
 	  return;
       }
       conn.query(mysql.format("call UpsertParticipant(?)", [args.body.value.name]), function (err, rows) {
 	  if (err) {
-	      callback(err, null);
 	      conn.release();
+	      callback(err, null);
 	      return;
 	  }
 	  var result = rows[0].map(function(row) {
 	      return {'id':row['id'],'name':args.body.value.name};
 	  });
-	  callback(null, result);
 	  conn.release();
+	  callback(null, result);
       });
   });
   
@@ -41,22 +40,22 @@ exports.getParticipant = function(args, callback) {
   redis.getCache(function(cache) {
       cache.get(key, function (err, reply) {
 	  if (err) {
-	      callback(err, null);
 	      cache.quit();
+	      callback(err, null);
 	      return;
 	  }
 	  if (reply == null) {
 	      pool.getConnection(function(err, conn) {
 		  if (err) {
-		      callback(err, null);
 		      cache.quit();
+		      callback(err, null);
 		      return;
 		  }
 		  conn.query(mysql.format("call FetchParticipant(?)", [args.id.value]), function (err, rows) {
 		      if (err) {
-			  callback(err, null);
 			  cache.quit();
 			  conn.release();
+			  callback(err, null);
 			  return;
 		      }
 		      var result = rows[0].map(function(row) {
@@ -64,12 +63,13 @@ exports.getParticipant = function(args, callback) {
 		      });
 		      const retVal = JSON.stringify(result || {});
 		      cache.set(key, retVal);
-		      callback(null, result);
 		      conn.release();
 		      cache.quit();
+		      callback(null, result);
 		  });
 	      });
 	  } else {
+	      cache.quit();
 	      callback(null, JSON.parse(reply));
 	  }
       });

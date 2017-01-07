@@ -33,8 +33,6 @@
 (defn test-create-entity-service-call
   "call the service to create an entity and return results and timing"
   [entity-name entity-params]
-  (println entity-name)
-  (println (json/write-str entity-params))
   (let [before (System/currentTimeMillis)
         response 
         (if json-post
@@ -52,8 +50,6 @@
 (defn test-create-entity-service-call-without-results
   "call the service to create an entity and return results and timing"
   [entity-name entity-params]
-  (println entity-name)
-  (println (json/write-str entity-params))
   (let [before (System/currentTimeMillis)
         response 
         (if json-post
@@ -71,8 +67,6 @@
 (defn test-search-entity-service-call
   "call the service to search for entities and return results and timing"
   [entity-name entity-params]
-  (println entity-name)
-  (println (json/write-str entity-params))
   (let [before (System/currentTimeMillis)
         response (client/post 
                    (service-url entity-name "search") {:query-params entity-params})]
