@@ -3,7 +3,9 @@ package info.glennengstrand.io
 import org.apache.http.message.BasicHttpEntityEnclosingRequest
 import org.apache.http.impl.DefaultBHttpClientConnection
 import org.apache.http.entity.{StringEntity,ContentType}
-import org.apache.http.HttpResponse
+import org.apache.http.protocol.{HttpRequestExecutor,HttpCoreContext,HttpProcessor,HttpProcessorBuilder,RequestContent,RequestTargetHost,RequestConnControl,RequestUserAgent,RequestExpectContinue}
+import org.apache.http.{HttpResponse,HttpHost}
+import org.apache.http.util.EntityUtils
 import java.util.UUID
 import java.net.Socket
 import org.slf4j.Logger;
@@ -100,6 +102,27 @@ trait ElasticSearchSearcher extends PersistentDataStoreSearcher {
     val req = ElasticSearch.createIndexRequest(id, key)
     val se = ElasticSearch.createEntity(id, key, content)
     req.setEntity(se)
+    val p = HttpProcessorBuilder.create()
+            .add(new RequestContent())
+            .add(new RequestTargetHost())
+            .add(new RequestConnControl())
+            .add(new RequestUserAgent("Feed/1.1"))
+            .add(new RequestExpectContinue(true)).build()
+    val e = new HttpRequestExecutor()
+    val c = HttpCoreContext.create()
+    val h = new HttpHost(IO.settings.get(IO.searchHost).asInstanceOf[String], IO.settings.get(IO.searchPort).asInstanceOf[String].toInt)
+    c.setTargetHost(h)
+    val client = new DefaultBHttpClientConnection(1000)
+    val s = new Socket(IO.settings.get(IO.searchHost).asInstanceOf[String], IO.settings.get(IO.searchPort).asInstanceOf[String].toInt)
+    client.bind(s)
+    e.preProcess(req, p, c)
+    val r = e.execute(req, client, c)
+    e.postProcess(r, p, c)
+    if (r.getStatusLine().getStatusCode >= 300) {
+      ElasticSearch.log.warn(r.getStatusLine().toString())
+      ElasticSearch.log.warn(EntityUtils.toString(r.getEntity))
+    }
+    s.close()
   }
   
 }

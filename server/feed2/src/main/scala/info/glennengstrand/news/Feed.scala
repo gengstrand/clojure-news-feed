@@ -171,10 +171,10 @@ class Feed extends Controller {
     val r = Try {
       val body = request.contentString
       val f = IO.workerPool {
-      val results = Outbound.lookup(body).map(o => o.toJson).toList
+      val results = Outbound.lookup(body)
       val retVal = results.isEmpty match {
         case true => "[]"
-        case _ => "[" + results.reduce(_ + "," + _) + "]"
+        case _ => "[" + results.map(s => s.toString()).reduce(_ + "," + _) + "]"
       }
       val after = System.currentTimeMillis()
       Feed.factory.getObject("logger").get.asInstanceOf[PerformanceLogger].log(Feed.messageTopic, Feed.outboundEntity, Feed.searchOperation, after - before)

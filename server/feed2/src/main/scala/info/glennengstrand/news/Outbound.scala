@@ -43,10 +43,10 @@ object Outbound extends ElasticSearchSearcher {
     index(id, story)
     new Outbound(id, IO.convertToDate(s("occurred").asInstanceOf[String]), s("subject").asInstanceOf[String], story) with CassandraWriter with MockCacheAware
   }
-  def lookup(state: String): Iterable[OutboundFeed] = {
+  def lookup(state: String): Iterable[Long] = {
     val s = IO.fromFormPost(state)
-    val terms = s("terms").asInstanceOf[String]
-    search(terms).map(id => Outbound(id.toInt))
+    val terms = s("keywords").asInstanceOf[String]
+    search(terms)
   }
 }
 

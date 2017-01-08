@@ -69,7 +69,7 @@
   [entity-name entity-params]
   (let [before (System/currentTimeMillis)
         response (client/post 
-                   (service-url entity-name "search") {:query-params entity-params})]
+                   (service-url entity-name "search") {:query-params entity-params :form-params entity-params})]
     (if 
       (=
         (:status response)
