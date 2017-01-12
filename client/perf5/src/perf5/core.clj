@@ -3,6 +3,7 @@
 
 (require '[clojure.data.json :as json])
 (require '[clj-http.client :as client])
+(require '(clojure [zip :as zip]))
 
 (defn parse-long [s]
    (.longValue (Long. (re-find  #"\d+" s ))))
@@ -14,6 +15,14 @@
 (def index-time-running 0)
 (def query-total-running 0)
 (def query-time-running 0)
+(def total-docs 0)
+
+(defn extract-num-docs
+  "get the total number of docs from the solr stats"
+  [core]
+  (let [searcher (get core "searcher")
+        searcher-stats (get searcher "stats")]
+    (def total-docs (get searcher-stats "numDocs"))))
 
 (defn refresh-stats 
   "maintain incremental statistics data"
@@ -28,40 +37,79 @@
     (def query-total-running query-total)
     (def query-time-running query-time)
     retVal))
-    
+
+(defn following 
+  "call back with the item following the item that matches the tag"
+  [vector tag callback]
+  (loop [item (zip/vector-zip vector)]
+    (if (not (zip/end? item))
+      (let [next-item (zip/next item)]
+        (if (= (zip/node next-item) tag)
+          (callback (zip/node (zip/next next-item)))
+          (recur next-item))))))
+
+(defn report-stats 
+  "report the stats to the console"
+  [results total-docs]
+  (let [avg-index-time (if (= (:index-total results) 0) 0 (quot (:index-time results) (:index-total results)))
+        avg-query-time (if (= (:query-total results) 0) 0 (quot (:query-time results) (:query-total results)))]
+        (println 
+          (str
+            total-docs
+            ","
+            (:index-total results)
+            ","
+            avg-index-time
+            ","
+            (:query-total results)
+            ","
+            avg-query-time))))
+
+(defn report-solr-stats-handler-data
+  "extract relevant stats from solr request"
+  [query-handler]
+  (let [update (get query-handler "/update")
+        update-stats (get update "stats")
+        standard (get query-handler "standard")
+        standard-stats (get standard "stats")
+        results (refresh-stats (get update-stats "requests") (get update-stats "totalTime") (get standard-stats "requests") (get standard-stats "totalTime"))]
+    (report-stats results total-docs)))
+
+(defn report-solr-results
+  "process the response to the request for solr stats"
+  [results]
+  (let [solr-mbeans (get results "solr-mbeans")]
+    (following solr-mbeans "CORE" extract-num-docs)
+    (following solr-mbeans "QUERYHANDLER" report-solr-stats-handler-data)))
+
 (defn report-elastic-search-results
-  "extract relevant stats from elastic search request and print them to the console"
+  "extract relevant stats from elastic search request"
   [results index]
-  (if (contains? results "indices")
-    (let [indices (get results "indices")]
-      (if (contains? indices index)
-        (let [index-stats (get indices index)]
-          (if (contains? index-stats "total")
-            (let [total (get index-stats "total")]
-              (if (contains? total "docs")
-                (let [docs (get total "docs")]
-                  (if (contains? total "indexing")
-                    (let [indexing (get total "indexing")]
-                      (if (contains? total "search")
-                        (let [search (get total "search")
-                              results (refresh-stats (get indexing "index_total") (get indexing "index_time_in_millis") (get search "query_total") (get search "query_time_in_millis"))
-                              avg-index-time (if (= (:index-total results) 0) 0 (quot (:index-time results) (:index-total results)))
-                              avg-query-time (if (= (:query-total results) 0) 0 (quot (:query-time results) (:query-total results)))]
-                          (println 
-                            (str
-                              (get docs "count")
-                              ","
-                              (:index-total results)
-                              ","
-                              avg-index-time
-                              ","
-                              (:query-total results)
-                              ","
-                              avg-query-time)))))))))))))))
+  (let [indices (get results "indices")
+        index-stats (get indices index)
+        total (get index-stats "total")
+        docs (get total "docs")
+        indexing (get total "indexing")
+        search (get total "search")
+        results (refresh-stats (get indexing "index_total") (get indexing "index_time_in_millis") (get search "query_total") (get search "query_time_in_millis"))]
+        (report-stats results (get docs "count"))))
 
 (defn process-solr
-  ""
-  [host port index])
+  "fetch stats from solr"
+  [host port index]
+  (let [url 
+        (str "http://"
+             host
+             ":"
+             port
+             "/"
+             index
+             "/admin/mbeans?stats=true&wt=json")
+        response (client/get url)]
+    (if 
+      (< (:status response 300))
+      (report-solr-results (json/read-str (:body response)))
+      (println response))))
 
 (defn process-elastic-search
   "fetch stats from elastic search"
