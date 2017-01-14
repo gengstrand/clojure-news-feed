@@ -5,7 +5,7 @@
   "main": "index.js",
   "scripts": {
     "prestart": "npm install",
-    "start": "node index.js",
+    "start": "node --harmony index.js",
     "test": "mocha"
   },
   "keywords": [

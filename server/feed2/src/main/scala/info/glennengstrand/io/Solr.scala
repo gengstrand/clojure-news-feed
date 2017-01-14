@@ -6,7 +6,7 @@ import scala.collection.JavaConverters._
 /** helper function for connecting to solr */
 object Solr  {
   def getUri(): String = {
-    s"http://${IO.settings.get(IO.searchHost).asInstanceOf[String]}:${IO.settings.get(IO.searchPort).asInstanceOf[Integer]}/${IO.settings.get(IO.searchPath).asInstanceOf[String]}"
+    s"http://${IO.settings.get(IO.searchHost).asInstanceOf[String]}:${IO.settings.get(IO.searchPort).asInstanceOf[String]}/${IO.settings.get(IO.searchPath).asInstanceOf[String]}"
   }
   lazy val server = Search.server(getUri())
 }
