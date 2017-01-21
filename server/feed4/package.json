@@ -6,7 +6,7 @@
   "scripts": {
     "prestart": "npm install",
     "start": "node --harmony index.js",
-    "test": "mocha"
+    "test": "mocha --harmony"
   },
   "keywords": [
     "swagger"
