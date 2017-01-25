@@ -24,6 +24,10 @@ I returned back to Java and blogged about how the DropWizard version compared to
 
 http://glennengstrand.info/software/performance/clojure/dropwizard
 
+For something completely different, I blogged about a news feed micro-service implementation in Node.js and how it compared with the DropWizard version.
+
+http://glennengstrand.info/software/performance/nodejs/dropwizard
+
 ## server
 
 These components are expected to be run on the server(s).
@@ -40,6 +44,10 @@ The same micro-service news feed only this time written in Scala.
 
 The same micro service news feed only this time written in DropWizard.
 
+### feed4
+
+The same micro service news feed only this time written in Node.js
+
 ### solr
 
 The supporting directory structure and configuration files needed to augment an instance of Solr to support keyword search capability for the news feed on outbound activity.
@@ -50,7 +58,7 @@ This Java project builds a library used by the feed service for Solr integration
 
 ### swagger
 
-Swagger templates and assets used to generate the api and resource classes for feed3.
+Swagger templates and assets used to generate the api and resource classes for both feed3 and feed4.
 
 ## client
 
@@ -75,6 +83,14 @@ The same map reduce job as NewsFeedPerformance only this time written Scala for 
 ### perf3
 
 Instead of a map reduce job, the news feed performance data is aggregated once a minute and sent to elastic search.
+
+### perf4
+
+A micro-service written in Java with the vert.x framework. It is intended to be called by kong. It aggregates performance data then sends it to elastic search in batches.
+
+### perf5
+
+A CLI tool that queries either elastic search or solr performance statistics and writes out per time period metrics to the console.
 
 ### etl
 

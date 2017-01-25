@@ -47,6 +47,15 @@ curl -d from=19 -d occurred=2015-04-18 -d subject=test -d story=test http://loca
 ```bash
 curl -g 'http://localhost:8983/solr/outbound/update?stream.body=<delete><query>*:*</query></delete>&commit=true'
 ```
+### how to truncate elastic search
+
+```bash
+curl -XDELETE http://localhost:9200/feed/stories/_query -d '{
+   "query": {
+      "match_all": {}
+   }
+}'
+```
 
 ### how to clear redis
 

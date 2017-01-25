@@ -15,7 +15,8 @@ and output the relevant metrics to the command line in CSV format
 
 ## Options
 
-||name||description||
+|name|description|
+|---|---|
 |type|either solr or elasticsearch|
 |host|the ip address of the search appliance|
 |port|most likely either 8983 or 9200|
