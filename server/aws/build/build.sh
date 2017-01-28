@@ -1,5 +1,6 @@
 python cassandra.py >../cassandra/cassandra.yaml
 python config.py >../feed3/config.yml
+python envlist.py >../feed4/env.list
 python configclj.py >../feed/config.clj
 python redis.py >../redis/redis.conf
 python kong.py >../kong/kong.yml

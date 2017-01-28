@@ -72,7 +72,7 @@ Now you can ssh to each machine. All you have to do with most of these is simply
 2. ssh to kafka and run install.sh
 3. ssh to redis and run install.sh
 4. ssh to elasticsearch and run install-with-es.sh
-5. ssh to feed2 or feed3 and run install.sh (see below for feed)
+5. ssh to feed2 or feed3 or feed4 and run install.sh. For feed4 you will need to nohup run.sh too. See below for feed.
 6. ssh to kong and run install.sh
 7. ssh back to elasticsearch and run run.sh
 8. ssh to load and run install.sh then either runload2.sh (if testing feed or feed2) or runload3.sh (if testing feed3)

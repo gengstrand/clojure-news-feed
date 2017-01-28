@@ -26,23 +26,14 @@ export SEARCH_PATH="/feed/stories"
 npm start
 ```
 
+Be advised that, at the time of this writing, I was not able to re ssh back in to the EC2 instance once I have installed node there. 
+
 To view the Swagger UI interface:
 
 ```
 open http://localhost:8080/docs
 
 ```
-
-## Running on EC2
-
-```
-sudo yum install nodejs npm --enablerepo=epel
-npm install
-```
-
-See "Running the server" above.
-
-Be advised that, at the time of this writing, I was not able to re ssh back in to the EC2 instance once I have installed node there. 
 
 ## Running the Docker image
 
@@ -51,10 +42,8 @@ sudo yum update -y
 sudo yum install -y docker
 sudo service docker start
 sudo usermod -a -G docker ec2-user
-exit
-# ssh back in
-docker build -t feed .
-docker run -d --net=host --env-file ./env.list feed
+sudo docker build -t feed .
+sudo docker run -d --net=host --env-file ./env.list feed
 ```
 
 ## Dependencies
