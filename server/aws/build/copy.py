@@ -5,6 +5,7 @@ scp -i $PEM_FILE cassandra/* ec2-user@{cassandra}:/home/ec2-user
 scp -i $PEM_FILE kafka/* ec2-user@{kafka}:/home/ec2-user
 scp -i $PEM_FILE redis/* ec2-user@{redis}:/home/ec2-user
 scp -i $PEM_FILE elasticsearch/* ec2-user@{elastic}:/home/ec2-user
+# scp -i $PEM_FILE solr/* ec2-user@{solr}:/home/ec2-user
 scp -i $PEM_FILE kong/* ec2-user@{kong}:/home/ec2-user
 scp -i $PEM_FILE feed/* ec2-user@{feed}:/home/ec2-user
 # scp -i $PEM_FILE feed2/* ec2-user@{feed}:/home/ec2-user
@@ -17,6 +18,7 @@ mysql -h {mysql} -u feed -p feed <schema.mysql.sql
 '''.format(redis=hosts.settings['redis'],
            cassandra=hosts.settings['cassandra'],
            elastic=hosts.settings['elastic'], 
+           solr=hosts.settings['solr'], 
            feed=hosts.settings['feed'], 
            load=hosts.settings['load'], 
            kong=hosts.settings['kong'], 
