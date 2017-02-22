@@ -28,6 +28,10 @@ For something completely different, I blogged about a news feed micro-service im
 
 http://glennengstrand.info/software/performance/nodejs/dropwizard
 
+I documented my research into how this micro-service performed when integrated with ElasticSearch and with Solr for keyword based search.
+
+http://glennengstrand.info/software/performance/elasticsearch/solr
+
 ## server
 
 These components are expected to be run on the server(s).
