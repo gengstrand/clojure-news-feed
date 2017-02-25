@@ -30,6 +30,10 @@ I blogged about how this micro-service performs when running with MySql, with Po
 
 http://glennengstrand.info/software/performance/mysql/postgres/docker
 
+I documented my research into how this micro-service performed when integrated with ElasticSearch and with Solr for keyword based search.
+
+http://glennengstrand.info/software/performance/elasticsearch/solr
+
 ### feed3
 
 I returned back to Java and blogged about how the DropWizard version compared to the Clojure version of the news feed.
@@ -41,10 +45,6 @@ http://glennengstrand.info/software/performance/clojure/dropwizard
 For something completely different, I blogged about a news feed micro-service implementation in Node.js and how it compared with the DropWizard version.
 
 http://glennengstrand.info/software/performance/nodejs/dropwizard
-
-I documented my research into how this micro-service performed when integrated with ElasticSearch and with Solr for keyword based search.
-
-http://glennengstrand.info/software/performance/elasticsearch/solr
 
 ### solr
 
