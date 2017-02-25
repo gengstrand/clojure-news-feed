@@ -1,14 +1,24 @@
-# clojure-news-feed
+# news feed micro-services
 
-I wanted to find out how the latest crop of modern web service technologies scale. So I wrote a basic news feed micro-service in Clojure that uses a lot of modern open source supporting technology.
+Part of what I do as a Software Architect is to evaluate and recommend various technologies as they relate to micro-service development. Just reading other blogs or vendor originated marketing collateral is not sufficient. 
 
-There is a big trend in Java right now to use new programming languages, designed to run in the Java Virtual Machine, that support Functional Programming concepts. Clojure is a variant of Lisp that is one of the leaders in this trend. The question that I wanted to answer was this. Is Clojure ready for deliverying services at web scale?
+When I decide to learn more about a particular technology or programming language, I use it to build a rudimentary news feed micro-service. I document the developer experience. I subject it to various load tests whose performance is measured. Finally, I collect those measurements and analyze them. Since each news feed implementation has feature parity, I can blog about how the technology under evaluation compares to the other technologies previously implemented here.
 
-I blogged about the Clojure implementation.
+All of the code written by me in these evaluations is open source and is available here in this repository. Here is how it is organized.
+
+## server
+
+These components are expected to be run on the server(s).
+
+### feed
+
+When I started this repo, a big trend had started in Java to use new programming languages, designed to run in the Java Virtual Machine, that support Functional Programming concepts. Clojure is a variant of Lisp that is one of the leaders in this trend. The question that I wanted to answer was this. Is Clojure ready for deliverying services at web scale? This folder contains a basic news feed web service written in Clojure that I blogged about there.
 
 http://glennengstrand.info/software/architecture/oss/clojure
 
-I covered the Scala implementation and how it was different from the Clojure version in terms of code.
+### feed2
+
+Scala originally gained recognition with the big data community through the Apache Spark project which is basically perceived as a faster form of map reduce. Its creator, Martin Odersky, advocated that Scala demonstrates that you can have object orientation on equal footing with functional programming. I covered the Scala implementation and how it was different from the Clojure version in terms of code.
 
 http://glennengstrand.info/software/architecture/oss/scala
 
@@ -20,9 +30,13 @@ I blogged about how this micro-service performs when running with MySql, with Po
 
 http://glennengstrand.info/software/performance/mysql/postgres/docker
 
+### feed3
+
 I returned back to Java and blogged about how the DropWizard version compared to the Clojure version of the news feed.
 
 http://glennengstrand.info/software/performance/clojure/dropwizard
+
+### feed4
 
 For something completely different, I blogged about a news feed micro-service implementation in Node.js and how it compared with the DropWizard version.
 
@@ -31,26 +45,6 @@ http://glennengstrand.info/software/performance/nodejs/dropwizard
 I documented my research into how this micro-service performed when integrated with ElasticSearch and with Solr for keyword based search.
 
 http://glennengstrand.info/software/performance/elasticsearch/solr
-
-## server
-
-These components are expected to be run on the server(s).
-
-### feed
-
-A basic news feed web service written in Clojure.
-
-### feed2
-
-The same micro-service news feed only this time written in Scala.
-
-### feed3
-
-The same micro service news feed only this time written in DropWizard.
-
-### feed4
-
-The same micro service news feed only this time written in Node.js
 
 ### solr
 
@@ -102,6 +96,8 @@ This Clojure project takes the output from the Hadoop news feed performance map 
 
 ## License
 
-Copyright © 2013 - 2016 Glenn Engstrand
+Copyright © 2013 - 2017 Glenn Engstrand
 
-Distributed under the Eclipse Public License, the same as Clojure.
+Distributed under the Eclipse Public License
+
+https://www.eclipse.org/legal/epl-v10.html
