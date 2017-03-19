@@ -13,6 +13,10 @@ scp -i $PEM_FILE feed/* ec2-user@{feed}:/home/ec2-user
 # scp -i $PEM_FILE feed4/* ec2-user@{feed}:/home/ec2-user
 scp -i $PEM_FILE load/* ec2-user@{load}:/home/ec2-user
 cd ~/git/clojure-news-feed/server/feed/etc
+# mysql -h {mysql} -u root -p
+# create user 'feed'@'%' identified by 'feed1234';
+# create database feed;
+# grant all on feed.* to 'feed'@'%';
 mysql -h {mysql} -u feed -p feed <schema.mysql.sql
 # cqlsh {cassandra} <schema.cassandra.sql
 '''.format(redis=hosts.settings['redis'],

@@ -1,6 +1,14 @@
+function uninstall-if-present {
+  P=$1
+  T=`yum list installed $P | grep $P | wc -l`
+  if [ $T -ge 1 ]
+  then
+    sudo yum -y remove $P
+  fi
+}
 cd /home/ec2-user
 sudo yum -y update
-sudo yum -y remove java-1.7.0-openjdk
+uninstall-if-present java-1.7.0-openjdk
 sudo yum -y install java-1.8.0-openjdk
 gunzip elasticsearch-2.3.3.tar.gz 
 tar -xf elasticsearch-2.3.3.tar 
