@@ -1,17 +1,16 @@
 import hosts
 print '''
-PEM_FILE=$1
-scp -i $PEM_FILE cassandra/* ec2-user@{cassandra}:/home/ec2-user
-scp -i $PEM_FILE kafka/* ec2-user@{kafka}:/home/ec2-user
-scp -i $PEM_FILE redis/* ec2-user@{redis}:/home/ec2-user
-scp -i $PEM_FILE elasticsearch/* ec2-user@{elastic}:/home/ec2-user
-# scp -i $PEM_FILE solr/* ec2-user@{solr}:/home/ec2-user
-scp -i $PEM_FILE kong/* ec2-user@{kong}:/home/ec2-user
-scp -i $PEM_FILE feed/* ec2-user@{feed}:/home/ec2-user
-# scp -i $PEM_FILE feed2/* ec2-user@{feed}:/home/ec2-user
-# scp -i $PEM_FILE feed3/* ec2-user@{feed}:/home/ec2-user
-# scp -i $PEM_FILE feed4/* ec2-user@{feed}:/home/ec2-user
-scp -i $PEM_FILE load/* ec2-user@{load}:/home/ec2-user
+scp -i {cert} cassandra/* {user}@{cassandra}:/home/{user}
+scp -i {cert} kafka/* {user}@{kafka}:/home/{user}
+scp -i {cert} redis/* {user}@{redis}:/home/{user}
+scp -i {cert} elasticsearch/* {user}@{elastic}:/home/{user}
+# scp -i {cert} solr/* {user}@{solr}:/home/{user}
+scp -i {cert} kong/* {user}@{kong}:/home/{user}
+scp -i {cert} feed/* {user}@{feed}:/home/{user}
+# scp -i {cert} feed2/* {user}@{feed}:/home/{user}
+# scp -i {cert} feed3/* {user}@{feed}:/home/{user}
+# scp -i {cert} feed4/* {user}@{feed}:/home/{user}
+scp -i {cert} load/* {user}@{load}:/home/{user}
 cd ~/git/clojure-news-feed/server/feed/etc
 # mysql -h {mysql} -u root -p
 # create user 'feed'@'%' identified by 'feed1234';
@@ -27,4 +26,6 @@ mysql -h {mysql} -u feed -p feed <schema.mysql.sql
            load=hosts.settings['load'], 
            kong=hosts.settings['kong'], 
            kafka=hosts.settings['kafka'], 
-           mysql=hosts.settings['mysql'])
+           mysql=hosts.settings['mysql'],
+           user=hosts.settings['user'],
+           cert=hosts.settings['cert'])

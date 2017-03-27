@@ -9,6 +9,6 @@ function uninstall-if-present {
 sudo yum -y update
 uninstall-if-present java-1.7.0-openjdk
 sudo yum -y install java-1.8.0-openjdk
-sudo nohup /home/ec2-user/run.sh >/dev/null & 
+sudo nohup /home/$USER/run.sh >/dev/null & 
 
 

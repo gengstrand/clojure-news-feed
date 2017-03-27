@@ -6,7 +6,6 @@ function uninstall-if-present {
     sudo yum -y remove $P
   fi
 }
-cd /home/ec2-user
 sudo yum -y update
 uninstall-if-present java-1.7.0-openjdk
 sudo yum -y install java-1.8.0-openjdk
@@ -35,5 +34,5 @@ cd ..
 gunzip kibana-4.5.1-linux-x64.tar.gz
 tar -xf kibana-4.5.1-linux-x64.tar
 cd kibana-4.5.1-linux-x64
-sudo nohup /home/ec2-user/kibana-4.5.1-linux-x64/bin/kibana >/dev/null &
+sudo nohup /home/$USER/kibana-4.5.1-linux-x64/bin/kibana >/dev/null &
 echo "elastic search and kibana started. You now need to sh ./run.sh"

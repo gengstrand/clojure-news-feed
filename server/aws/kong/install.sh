@@ -1,4 +1,3 @@
-cd /home/ec2-user
 sudo yum -y update
 sudo yum -y install kong-0.8.3.aws.rpm
 sudo cp kong.yml /etc/kong/kong.yml

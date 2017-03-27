@@ -8,7 +8,8 @@ function uninstall-if-present {
     sudo yum -y remove $P
   fi
 }
-cd /home/ec2-user
+'''
+print '''
 sudo yum -y update
 uninstall-if-present java-1.7.0-openjdk
 sudo yum -y install java-1.8.0-openjdk
@@ -27,7 +28,8 @@ curl -XPOST http://{elastic}:9200/feed -d '{{
         }}
     }}
 }}'
-sudo nohup java -jar /home/ec2-user/news-feed-performance-assembly-1.0.jar {kafka} {elastic} summary >/dev/null &
-sudo nohup java -jar /home/ec2-user/kong-logger-service-1.0.0-SNAPSHOT-fat.jar -conf /home/ec2-user/my-conf.json >/dev/null & 
+sudo nohup java -jar /home/{user}/news-feed-performance-assembly-1.0.jar {kafka} {elastic} summary >/dev/null &
+sudo nohup java -jar /home/{user}/kong-logger-service-1.0.0-SNAPSHOT-fat.jar -conf /home/{user}/my-conf.json >/dev/null & 
 '''.format(elastic=hosts.settings['elastic'], 
-           kafka=hosts.settings['kafka'])
+           kafka=hosts.settings['kafka'],
+           user=hosts.settings['user'])
