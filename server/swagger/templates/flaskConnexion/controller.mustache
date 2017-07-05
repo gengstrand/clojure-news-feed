@@ -1,0 +1,65 @@
+import connexion
+{{#imports}}{{import}}
+{{/imports}}
+from ..services.{{classVarName}}_service import {{baseName}}Service
+from datetime import date, datetime
+from typing import List, Dict
+from six import iteritems
+from ..util import deserialize_date, deserialize_datetime
+
+service = {{baseName}}Service()
+
+{{#operations}}
+{{#operation}}
+def {{operationId}}({{#allParams}}{{paramName}}{{^required}}=None{{/required}}{{#hasMore}}, {{/hasMore}}{{/allParams}}):
+    """
+    {{#summary}}{{.}}{{/summary}}{{^summary}}{{operationId}}{{/summary}}
+    {{#notes}}{{.}}{{/notes}}
+    {{#allParams}}
+    :param {{paramName}}: {{description}}
+        {{^isContainer}}
+            {{#isPrimitiveType}}
+    :type {{paramName}}: {{>param_type}}
+            {{/isPrimitiveType}}
+            {{^isPrimitiveType}}
+                {{#isFile}}
+    :type {{paramName}}: werkzeug.datastructures.FileStorage
+                {{/isFile}}
+                {{^isFile}}
+    :type {{paramName}}: dict | bytes
+                {{/isFile}}
+            {{/isPrimitiveType}}
+        {{/isContainer}}
+        {{#isListContainer}}
+            {{#items}}
+                {{#isPrimitiveType}}
+    :type {{paramName}}: List[{{>param_type}}]
+                {{/isPrimitiveType}}
+                {{^isPrimitiveType}}
+    :type {{paramName}}: list | bytes
+                {{/isPrimitiveType}}
+            {{/items}}
+        {{/isListContainer}}
+        {{#isMapContainer}}
+            {{#items}}
+                {{#isPrimitiveType}}
+    :type {{paramName}}: Dict[str, {{>param_type}}]
+                {{/isPrimitiveType}}
+                {{^isPrimitiveType}}
+    :type {{paramName}}: dict | bytes
+                {{/isPrimitiveType}}
+            {{/items}}
+        {{/isMapContainer}}
+    {{/allParams}}
+
+    :rtype: {{#returnType}}{{.}}{{/returnType}}{{^returnType}}None{{/returnType}}
+    """
+    {{#hasBodyParam}}
+    return service.insert({{baseName}}.from_dict(body))
+    {{/hasBodyParam}}        
+    {{^hasBodyParam}}
+    return service.fetch(id)
+    {{/hasBodyParam}}        
+    
+{{/operation}}
+{{/operations}}
