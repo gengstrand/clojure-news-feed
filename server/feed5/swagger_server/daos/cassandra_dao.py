@@ -37,4 +37,4 @@ class CassandraDAO:
             if handler is None:
                 self.session().execute_async(bs)
             else:
-                return map(handler, self.session().execute(bs))
+                return list(map(handler, self.session().execute(bs)))

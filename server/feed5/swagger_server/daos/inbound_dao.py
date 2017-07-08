@@ -1,4 +1,4 @@
-from ..models.inbound import Inbound
+from ..models.inbound import Inbound as InboundModel
 from .cassandra_dao import CassandraDAO
 
 class Inbound(CassandraDAO):
@@ -17,11 +17,20 @@ class Inbound(CassandraDAO):
         self.prepare(self.insert, 'insert into Inbound (ParticipantID, FromParticipantID, Occurred, Subject, Story) values (?, ?, now(), ?, ?)')
         self.prepare(self.query, 'select toTimestamp(occurred) as occurred, fromparticipantid, subject, story from Inbound where participantid = ? order by occurred desc')
 
+    def makeInbound(self, dikt):
+        retVal = {}
+        retVal['occurred'] = dikt['occurred'].strftime('%Y-%m-%d')
+        retVal['from'] = dikt['fromparticipantid']
+        retVal['to'] = self.to
+        retVal['subject'] = dikt['subject']
+        retVal['story'] = dikt['story']
+        return retVal
+
     def save(self):
         self.execute(self.insert, [ self.to, self._from, self.subject, self.story ])
 
     def load(self):
-        return self.execute(self.query, [ self.to ], Inbound.from_dict)
+        return self.execute(self.query, [ self.to ], self.makeInbound)
 
     def __repr__(self):
         return '{"from":%d, "to":%d, "subject":"%s", "story":"%s"}' % (self._from, self.to, self.subject, self.story)

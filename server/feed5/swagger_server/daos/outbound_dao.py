@@ -18,8 +18,16 @@ class Outbound(CassandraDAO):
     def save(self):
         self.execute(self.insert, [ self._from, self.subject, self.story ])
 
+    def makeOutbound(self, dikt):
+        retVal = {}
+        retVal['occurred'] = dikt['occurred'].strftime('%Y-%m-%d')
+        retVal['from'] = self._from
+        retVal['subject'] = dikt['subject']
+        retVal['story'] = dikt['story']
+        return retVal
+
     def load(self):
-        return self.execute(self.query, [ self._from ], Outbound.from_dict)
+        return self.execute(self.query, [ self._from ], self.makeOutbound)
 
     def __repr__(self):
         return '{"from":%d, "subject":"%s", "story":"%s"}' % (self._from, self.subject, self.story)
