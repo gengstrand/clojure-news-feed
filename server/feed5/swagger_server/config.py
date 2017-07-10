@@ -3,4 +3,4 @@ class Config(object):
     CACHE_PORT = 6379
     NOSQL_KEYSPACE = 'activity'
     NOSQL_CONSISTENCY_LEVEL = 'one'
-
+    MESSAGE_TOPIC = 'feed'
