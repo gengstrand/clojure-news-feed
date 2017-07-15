@@ -55,10 +55,15 @@ def {{operationId}}({{#allParams}}{{paramName}}{{^required}}=None{{/required}}{{
     :rtype: {{#returnType}}{{.}}{{/returnType}}{{^returnType}}None{{/returnType}}
     """
     {{#hasBodyParam}}
-    return service.insert({{baseName}}.from_dict(body))
-    {{/hasBodyParam}}        
+    return service.insert({{baseName}}.from_dict({{#allParams}}{{paramName}}{{#hasMore}}, {{/hasMore}}{{/allParams}}))
+    {{/hasBodyParam}}
     {{^hasBodyParam}}
-    return service.fetch(id)
+      {{#restfulShow}}
+    return service.fetch({{#allParams}}{{paramName}}{{#hasMore}}, {{/hasMore}}{{/allParams}})
+      {{/restfulShow}}
+      {{^restfulShow}}
+    return service.search({{#allParams}}{{paramName}}{{#hasMore}}, {{/hasMore}}{{/allParams}})
+      {{/restfulShow}}
     {{/hasBodyParam}}        
     
 {{/operation}}

@@ -4,3 +4,5 @@ class Config(object):
     NOSQL_KEYSPACE = 'activity'
     NOSQL_CONSISTENCY_LEVEL = 'one'
     MESSAGE_TOPIC = 'feed'
+    SEARCH_INDEX = 'feed'
+    SEARCH_TYPE = 'stories'

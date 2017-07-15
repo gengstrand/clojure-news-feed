@@ -28,5 +28,5 @@ def get_friend(id):
 
     :rtype: List[Friend]
     """
-    return service.fetch(id)
+    return service.search(id)
     

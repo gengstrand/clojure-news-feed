@@ -43,5 +43,5 @@ class FriendService(CachingService):
         messages.log('friends', 'post', after - before)
         return self.to_friend(f)
 
-    def friends(self, fromFriend: int):
+    def search(self, fromFriend: int):
         return map(self.to_friend, FriendDAO.query.filter_by(FromParticipantID=fromFriend))

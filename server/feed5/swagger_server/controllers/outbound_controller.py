@@ -39,5 +39,5 @@ def search_outbound(keywords):
 
     :rtype: List[int]
     """
-    return service.fetch(id)
+    return service.search(keywords)
     
