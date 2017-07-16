@@ -12,7 +12,7 @@ if __name__ == '__main__':
     db = SQLAlchemy()
     db.init_app(app.app)
     logging.basicConfig()
-    logging.getLogger('sqlalchemy.engine').setLevel(logging.INFO)
+    logging.getLogger('sqlalchemy.engine').setLevel(logging.WARN)
     app.app.json_encoder = JSONEncoder
     app.add_api('swagger.yaml', arguments={'title': 'news feed api'})
     app.run(port=8080)
