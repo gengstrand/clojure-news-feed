@@ -26,7 +26,8 @@ class OutboundService:
         before = int(round(time.time() * 1000))
         o = OutboundDAO(outbound._from, outbound.subject, outbound.story)
         o.save()
-        for friend in friendService.search(outbound._from):
+        friends = list(map(Friend.from_dict, friendService.search(outbound._from)))
+        for friend in friends:
             inboundService.insert(Inbound(friend._from, friend.to, outbound.occurred, outbound.subject, outbound.story)) 
         elastic.create(outbound._from, outbound.story)
         after = int(round(time.time() * 1000))

@@ -1,4 +1,4 @@
-# Swagger generated server
+# news feed micro-service in javascript
 
 ## Overview
 

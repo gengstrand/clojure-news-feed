@@ -19,3 +19,6 @@ class CachingService:
 
     def set(self, key: str, value: dict):
         self.cache().set(key, json.dumps(value))
+
+    def remove(self, key: str):
+        self.cache().delete(key)
