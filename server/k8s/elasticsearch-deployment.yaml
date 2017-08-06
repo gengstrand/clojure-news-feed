@@ -1,0 +1,24 @@
+apiVersion: extensions/v1beta1
+kind: Deployment
+metadata:
+  creationTimestamp: null
+  name: elasticsearch
+spec:
+  replicas: 1
+  strategy: {}
+  template:
+    metadata:
+      creationTimestamp: null
+      labels:
+        io.kompose.service: elasticsearch
+    spec:
+      containers:
+      - env:
+        image: elasticsearch:2.4
+        name: elasticsearch
+        ports:
+        - containerPort: 9200
+          hostIP: 127.0.0.1
+        resources: {}
+      restartPolicy: Always
+status: {}

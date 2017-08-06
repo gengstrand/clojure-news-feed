@@ -1,0 +1,27 @@
+apiVersion: extensions/v1beta1
+kind: Deployment
+metadata:
+  creationTimestamp: null
+  name: cassandra
+spec:
+  replicas: 1
+  strategy: {}
+  template:
+    metadata:
+      creationTimestamp: null
+      labels:
+        io.kompose.service: cassandra
+    spec:
+      containers:
+      - args:
+        - /bin/bash
+        - -c
+        - sleep 1 && echo ' -- Pausing to let system catch up ... -->' && /docker-entrypoint.sh
+          cassandra -f
+        image: cassandra:2.2
+        name: cassandra
+        ports:
+        - containerPort: 9042
+        resources: {}
+      restartPolicy: Always
+status: {}

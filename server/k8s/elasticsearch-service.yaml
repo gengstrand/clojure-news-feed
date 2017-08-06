@@ -1,0 +1,15 @@
+apiVersion: v1
+kind: Service
+metadata:
+  creationTimestamp: null
+  labels:
+    io.kompose.service: elasticsearch
+  name: elasticsearch
+spec:
+  type: NodePort
+  ports:
+  - name: "9200"
+    port: 9200
+    targetPort: 9200
+  selector:
+    io.kompose.service: elasticsearch
