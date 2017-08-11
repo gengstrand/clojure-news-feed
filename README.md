@@ -46,6 +46,10 @@ For something completely different, I blogged about a news feed micro-service im
 
 http://glennengstrand.info/software/performance/nodejs/dropwizard
 
+### feed5
+
+This time, the news feed micro-service is implemented in Python running on Flask.
+
 ### solr
 
 The supporting directory structure and configuration files needed to augment an instance of Solr to support keyword search capability for the news feed on outbound activity.
@@ -56,7 +60,15 @@ This Java project builds a library used by the feed service for Solr integration
 
 ### swagger
 
-Swagger templates and assets used to generate the api and resource classes for both feed3 and feed4.
+Swagger templates and assets used to generate the api and resource classes for feed3, feed4 and feed5.
+
+### aws
+
+This folder contains assets for standing up the service, and it dependencies, on Amazon Web Services, Google Compute Engine, and Windows Azure.
+
+### k8s
+
+This folder contains assets for standing up the service, and its dependencies, in Kubernetes.
 
 ## client
 

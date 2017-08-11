@@ -8,8 +8,8 @@ metadata:
 spec:
   type: NodePort
   ports:
-  - name: "8088"
-    port: 8088
+  - name: "8080"
+    port: 8080
     targetPort: 8080
   selector:
     io.kompose.service: feed

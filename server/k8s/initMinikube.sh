@@ -14,7 +14,7 @@ sleep 10
 mysql -h $HOST -P $PORT -u feed -pfeed1234 --database=feed <../feed/etc/schema.mysql.sql
 extractHostPort cassandra
 cqlsh $HOST $PORT <../feed/etc/schema.cassandra.sql
-extractHostPort elastic
+extractHostPort elasticsearch
 curl -XPOST http://${HOST}:${PORT}/feed -d '{
     "settings" : {
         "number_of_shards" : 1
