@@ -27,3 +27,9 @@ mvn test
 ```bash
 ./news-nodejs.sh /path/to/swagger-codegen-cli.jar
 ```
+
+#### for python
+
+```bash
+./news-flask.sh /path/to/swagger-codegen-cli.jar
+```

@@ -12,11 +12,12 @@ Here is how to build and run this service.
 
 ### Installation
 
-Here are some installation steps that you will need to perform. This assumes that you already have python 3 installed.
+Here are some installation steps that you will need to perform. This assumes that you already have python 3 installed. You will need to install the [MySql Connector for Python](https://pypi.python.org/pypi/mysql-connector-python/2.0.4) which was at version 2.0.4 when I developed this.
 
 ```
 pip3 install -r requirements.txt
-unzip ~/Downloads/mysql-connector-python-2.0.4.zip 
+wget http://cdn.mysql.com/Downloads/Connector-Python/mysql-connector-python-2.0.4.zip#md5=3df394d89300db95163f17c843ef49df
+unzip mysql-connector-python-2.0.4.zip 
 cd mysql-connector-python-2.0.4
 sudo /usr/local/bin/python3.6 setup.py install
 ```

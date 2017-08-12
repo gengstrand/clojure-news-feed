@@ -13,7 +13,7 @@ eval $(minikube docker-env)
 
 ### setting up the dependencies
 
-I have written some scripts and configuration files to get the dependent services running. The first script should work on any Kubernetes cluster and the second script is minikube specific. You will need to have installed minikube, kubectl, mysql and cqlsh and that they are available in your $PATH environment. You have to run that first scipt only once (unless you delete services and deployments). The second script will need to be run every time you start up minikube.
+I have written some scripts and configuration files to get the dependent services running. The first script should work on any Kubernetes cluster and the second script is minikube specific. You will need to have installed minikube, kubectl, mysql and cqlsh and that they are available in your $PATH environment. You have to run that first scipt only once (unless you delete services and deployments). The second script will need to be run every time you start up minikube. You may need to wait a few minutes after starting minikube before you run that initMinikube.sh script.
 
 ```shell
 cd clojure-news-feed/server/k8s
