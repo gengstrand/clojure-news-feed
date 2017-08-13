@@ -29,6 +29,5 @@ cache_timeout=60
 '''.format(redis=hosts.settings['redis'],
            cassandra=hosts.settings['cassandra'],
            solr=hosts.settings['solr'], 
-           feed=hosts.settings['feed'], 
            kafka=hosts.settings['kafka'], 
            mysql=hosts.settings['mysql'])

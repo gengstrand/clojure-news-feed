@@ -10,7 +10,10 @@ kubectl create -f elasticsearch-deployment.yaml
 sleep 30
 kubectl get services | grep -v NAME | awk -f hosts.awk >../aws/build/hosts.py
 python ../aws/build/feed-deployment.py >../k8s/feed-deployment.yaml
+python ../aws/build/config.py >../feed3/etc/config.yml
+python ../aws/build/configclj.py >../feed/etc/config.clj
 python ../aws/build/config-k8s.py >../feed5/swagger_server/config-k8s.cfg
+python ../aws/build/settings.properties.py >../feed2/etc/settings.properties
 
 
 

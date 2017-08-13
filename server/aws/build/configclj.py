@@ -14,6 +14,5 @@ print '''
 '''.format(redis=hosts.settings['redis'],
            cassandra=hosts.settings['cassandra'],
            elastic=hosts.settings['elastic'], 
-           feed=hosts.settings['feed'], 
            kafka=hosts.settings['kafka'], 
            mysql=hosts.settings['mysql'])
