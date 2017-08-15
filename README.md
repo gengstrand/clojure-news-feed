@@ -64,7 +64,7 @@ Swagger templates and assets used to generate the api and resource classes for f
 
 ### aws
 
-This folder contains assets for standing up the service, and it dependencies, on Amazon Web Services, Google Compute Engine, and Windows Azure.
+This folder contains assets for standing up the service, and its dependencies, on Amazon Web Services, Google Compute Engine, and Windows Azure.
 
 ### k8s
 
@@ -78,33 +78,37 @@ These applications are expected to be run on the client(s).
 
 This Clojure application is what I used to load test the feed web service on AWS.
 
-### NewsFeedPerformance
+### offline analysis
+
+These applications run offline in order to aggregate raw kafka data into per minute summary data.
+
+#### NewsFeedPerformance
 
 This Java project builds a Hadoop map reduce job that inputs the Kafka feed topic performance data and outputs a per minute summary of various metrics used to load the OLAP cube.
 
-### perf
+#### perf
 
 The same map reduce job as NewsFeedPerformance only this time written in Clojure for Cascalog.
 
-### perf2
+#### etl
 
-The same map reduce job as NewsFeedPerformance only this time written Scala for Apache Spark.
+This Clojure project takes the output from the Hadoop news feed performance map reduce job and loads a MySql database ready for use by Mondrian's Pentaho OLAP server.
+
+#### perf2
+
+The same map reduce job as NewsFeedPerformance only this time written in Scala for Apache Spark.
 
 ### perf3
 
-Instead of a map reduce job, the news feed performance data is aggregated once a minute and sent to elastic search.
+Instead of a map reduce job, the news feed performance data is consumed from kafka where it is aggregated once a minute and sent to elastic search.
 
 ### perf4
 
-A micro-service written in Java with the vert.x framework. It is intended to be called by kong. It aggregates performance data then sends it to elastic search in batches.
+A micro-service written in Java with the vert.x framework. It is intended to be called by kong. It aggregates performance data then sends it to elastic search in batches. It does not require kafka.
 
 ### perf5
 
 A CLI tool that queries either elastic search or solr performance statistics and writes out per time period metrics to the console.
-
-### etl
-
-This Clojure project takes the output from the Hadoop news feed performance map reduce job and loads a MySql database ready for use by Mondrian's Pentaho OLAP server.
 
 ## License
 
