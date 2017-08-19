@@ -10,6 +10,7 @@ scp -i {cert} feed/* {user}@{feed}:/home/{user}
 # scp -i {cert} feed2/* {user}@{feed}:/home/{user}
 # scp -i {cert} feed3/* {user}@{feed}:/home/{user}
 # scp -i {cert} feed4/* {user}@{feed}:/home/{user}
+# scp -i {cert} feed5/* {user}@{feed}:/home/{user}
 scp -i {cert} load/* {user}@{load}:/home/{user}
 cd ~/git/clojure-news-feed/server/feed/etc
 # mysql -h {mysql} -u root -p
