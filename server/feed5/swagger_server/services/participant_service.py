@@ -25,9 +25,10 @@ class ParticipantService(CachingService):
         retVal = None
         cv = self.get(self.key(id))
         if cv is None:
-            p = ParticipantDAO.query.get_or_404(id)
+            p = ParticipantDAO.fetch(id)
             retVal = self.to_participant(p)
             self.set(self.key(id), self.to_dict(p))
+            p.close()
         else:
             retVal = Participant.from_dict(cv)
         after = int(round(time.time() * 1000))
@@ -38,6 +39,9 @@ class ParticipantService(CachingService):
         before = int(round(time.time() * 1000))
         p = ParticipantDAO(participant.name)
         p.save()
+        retVal = self.to_participant(p)
+        p.close()
         after = int(round(time.time() * 1000))
         messages.log('participant', 'post', after - before)
-        return self.to_participant(p)
+        return retVal
+

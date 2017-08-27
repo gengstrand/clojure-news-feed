@@ -26,17 +26,21 @@ class FriendService(CachingService):
         f = FriendDAO(friend._from, friend.to)
         f.save()
         self.remove(self.key(friend._from))
+        retVal = self.to_friend(f)
+        f.close()
         after = int(round(time.time() * 1000))
         messages.log('friends', 'post', after - before)
-        return self.to_friend(f)
+        return retVal
 
     def search(self, fromFriend: int):
         before = int(round(time.time() * 1000))
         k = self.key(fromFriend)
         retVal = self.get(k)
         if retVal is None:
-            retVal = list(map(self.to_dict, FriendDAO.query.filter_by(FromParticipantID=fromFriend)))
+            f = FriendDAO.fetch(fromFriend)
+            retVal = list(map(self.to_dict, f))
             self.set(k, retVal)
+            f.session.close()
         after = int(round(time.time() * 1000))
         messages.log('friends', 'get', after - before)
         return retVal

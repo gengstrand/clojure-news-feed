@@ -8,6 +8,10 @@ class Friend(db.Model):
     ToParticipantID = db.Column(db.Integer)
     __tablename__ = 'Friends'
 
+    @classmethod
+    def fetch(cls, id):
+        return Friend.query.filter_by(FromParticipantID=id)
+
     def __init__(self, _from, to):
         self.FromParticipantID = _from
         self.ToParticipantID = to
@@ -15,6 +19,9 @@ class Friend(db.Model):
     def save(self):
         db.session.add(self)
         db.session.commit()
+
+    def close(self):
+        db.session.close()
 
     def __repr__(self):
         return '{"id":%d, "from":%d, "to":%d}' % (self.FriendsID, self.FromParticipantID, self.ToParticipantID)
