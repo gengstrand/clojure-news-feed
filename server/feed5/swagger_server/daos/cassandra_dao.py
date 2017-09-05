@@ -25,8 +25,9 @@ class CassandraDAO:
 
     def prepare(self, key: str, cql: str):
         global cassandraStatements
-        if key not in cassandraStatements.keys():
-            cassandraStatements[key] = self.session().prepare(cql)
+        if 'NOSQL_HOST' in current_app.config:
+            if key not in cassandraStatements.keys():
+                cassandraStatements[key] = self.session().prepare(cql)
 
     def execute(self, key, binding, handler = None):
         global cassandraStatements

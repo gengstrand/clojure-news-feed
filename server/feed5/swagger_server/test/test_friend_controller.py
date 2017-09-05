@@ -17,23 +17,12 @@ class TestFriendController(BaseTestCase):
 
         create a new friendship
         """
-        body = friend()
-        response = self.client.open('//friends/new',
+        body = Friend(1, 1, 2)
+        response = self.client.open('/friends/new',
                                     method='POST',
                                     data=json.dumps(body),
                                     content_type='application/json')
         self.assert200(response, "Response body is : " + response.data.decode('utf-8'))
-
-    def test_get_friend(self):
-        """
-        Test case for get_friend
-
-        retrieve the list of friends for an individual participant
-        """
-        response = self.client.open('//friends/{id}'.format(id=789),
-                                    method='GET')
-        self.assert200(response, "Response body is : " + response.data.decode('utf-8'))
-
 
 if __name__ == '__main__':
     import unittest

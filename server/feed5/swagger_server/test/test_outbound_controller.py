@@ -7,7 +7,6 @@ from . import BaseTestCase
 from six import BytesIO
 from flask import json
 
-
 class TestOutboundController(BaseTestCase):
     """ OutboundController integration test stubs """
 
@@ -17,8 +16,8 @@ class TestOutboundController(BaseTestCase):
 
         create a participant news item
         """
-        body = outbound()
-        response = self.client.open('//outbound/new',
+        body = Outbound()
+        response = self.client.open('/outbound/new',
                                     method='POST',
                                     data=json.dumps(body),
                                     content_type='application/json')
@@ -30,7 +29,7 @@ class TestOutboundController(BaseTestCase):
 
         retrieve the news posted by an individual participant
         """
-        response = self.client.open('//outbound/{id}'.format(id=789),
+        response = self.client.open('/outbound/{id}'.format(id=789),
                                     method='GET')
         self.assert200(response, "Response body is : " + response.data.decode('utf-8'))
 
@@ -41,7 +40,7 @@ class TestOutboundController(BaseTestCase):
         create a participant news item
         """
         query_string = [('keywords', 'keywords_example')]
-        response = self.client.open('//outbound/search',
+        response = self.client.open('/outbound/search',
                                     method='POST',
                                     query_string=query_string)
         self.assert200(response, "Response body is : " + response.data.decode('utf-8'))

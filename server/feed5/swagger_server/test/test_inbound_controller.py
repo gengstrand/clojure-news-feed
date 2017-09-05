@@ -17,7 +17,7 @@ class TestInboundController(BaseTestCase):
 
         retrieve the inbound feed for an individual participant
         """
-        response = self.client.open('//inbound/{id}'.format(id=789),
+        response = self.client.open('/inbound/{id}'.format(id=789),
                                     method='GET')
         self.assert200(response, "Response body is : " + response.data.decode('utf-8'))
 
