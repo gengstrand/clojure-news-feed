@@ -4,6 +4,8 @@
 
 This is yet another implementation of the rudimentary news feed micro-service only this time implemented in node.js
 
+You can learn more about this project by reading the following blogs; [Node.js vs DropWizard](http://glennengstrand.info/software/performance/nodejs/dropwizard) and [Python Flask vs Node.js](http://glennengstrand.info/software/performance/nodejs/python).
+
 ### Running the unit tests
 
 ```
