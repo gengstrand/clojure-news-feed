@@ -4,6 +4,7 @@ import connexion
 import logging
 from .encoder import JSONEncoder
 from flask_sqlalchemy import SQLAlchemy
+from flask_cors import CORS
 
 if __name__ == '__main__':
     app = connexion.App(__name__, specification_dir='./swagger/')
@@ -15,4 +16,5 @@ if __name__ == '__main__':
     logging.getLogger('sqlalchemy.engine').setLevel(logging.WARN)
     app.app.json_encoder = JSONEncoder
     app.add_api('swagger.yaml', arguments={'title': 'news feed api'})
+    CORS(app.app)
     app.run(port=8080, threaded=True)

@@ -1,0 +1,25 @@
+<ion-header>
+
+  <ion-navbar>
+    <ion-title>{{ 'LIST_MASTER_TITLE' | translate }}</ion-title>
+
+    <ion-buttons end>
+      <button ion-button icon-only (click)="addOutbound()">
+        <ion-icon name="add"></ion-icon>
+      </button>
+    </ion-buttons>
+  </ion-navbar>
+
+</ion-header>
+
+<ion-content>
+
+  <ion-list>
+    <ion-item-sliding *ngFor="let inbound of currentInbound">
+      <button ion-item (click)="openInbound(inbound)">
+        <h2>{{inbound.subject}}</h2>
+        <p>{{inbound.story}}</p>
+      </button>
+    </ion-item-sliding>
+  </ion-list>
+</ion-content>
