@@ -1,14 +1,21 @@
-# The Ionic Super Starter 🎮
+# Mobile Feed Client 🎮
+
+I started this repo three years ago and have yet to have provided a GUI for the news feed micro-service. It was time to rectify that. 
+
+<img src="newsfeed.png" width="816" />
+
+Here you will find a project for a mobile client that is based on the [Ionic Framework](https://ionicframework.com/). I started with the [ionic-super-starter](https://github.com/ionic-team/ionic-starter-super) template and combined it with the output from the swager-codegen module for typescript-angular2 when run with the swagger yaml specification for the news feed (used in feeds 3 through 5).
 
 _Note: the Ionic Super Starter requires Ionic CLI 3._
 
 <img src="super2.png" width="400" />
 
-The Ionic Super Starter is a batteries-included starter project for Ionic apps complete with pre-built pages, providers, and best practices for Ionic development.
+Like most popular modern open source projects, Ionic is layered on top of other quality open source projects. 
 
-The goal of the Super Starter is to get you from zero to app store faster than before, with a set of opinions from the Ionic team around page layout, data/user management, and project structure.
-
-The way to use this starter is to pick and choose the various page types you want use, and remove the ones you don't. If you want a blank slate, this starter isn't for you (use the `blank` type instead).
+* [Angular2](https://angular.io/)
+* [TypeScript](https://www.typescriptlang.org/)
+* [webpack](https://webpack.js.org/)
+* [Apache Cordova](https://cordova.apache.org/)
 
 One of the big advances in Ionic was moving from a rigid route-based navigation system to a flexible push/pop navigation system modeled off common native SDKs. We've embraced this pattern to provide a set of reusable pages that can be navigated to anywhere in the app. Take a look at the [Settings page](https://github.com/ionic-team/ionic-starter-super/blob/master/src/pages/settings/settings.html#L38) for a cool example of a page navigating to itself to provide a different UI without duplicating code.
 
@@ -21,29 +28,48 @@ One of the big advances in Ionic was moving from a rigid route-based navigation 
 
 ## <a name="getting-started"></a>Getting Started
 
-To test this starter out, install the latest version of the Ionic CLI and run:
+You will need to set up all the dependencies and run one of the micro-services. May I suggest using [minikube](https://github.com/gengstrand/clojure-news-feed/tree/master/server/k8s) for this? That is most probably is easiest route. Be sure to run those curl commands at the bottom of the README in order to load some data.
 
 ```bash
-ionic start mySuperApp super
+npm install -g cordova ionic
+cd clojure-news-feed/client/mobile/feed
+vi src/providers/variables.ts
+# edit the BASE_PATH value to point to where your news feed micro-service is listening
+ionic serve
 ```
+### Navigating Around in the GUI
+
+Here is how to get started with this GUI
+
+* When logging in, just type 2 in the email field then click sign in.
+* You will see the news feed items that you created with that curl script.
+* Click the item to see the detail view.
+* Click the plus sign so create your own news feed item
+* Items you create will not appear in your own news feed
+* Click the search tab and search for Kubernetes
+* Cliks the result to see the participant
 
 ## Pages
 
-The Super Starter comes with a variety of ready-made pages. These pages help you assemble common building blocks for your app so you can focus on your unique features and branding.
+This application is currently composed of the following pages.
 
-The app loads with the `FirstRunPage` set to `TutorialPage` as the default. If the user has already gone through this page once, it will be skipped the next time they load the app.
-
-If the tutorial is skipped but the user hasn't logged in yet, the Welcome page will be displayed which is a "splash" prompting the user to log in or create an account.
-
-Once the user is authenticated, the app will load with the `MainPage` which is set to be the `TabsPage` as the default.
-
-The entry and main pages can be configured easily by updating the corresponding variables in [src/pages/pages.ts](https://github.com/ionic-team/ionic-starter-super/blob/master/src/pages/pages.ts).
-
-Please read the [Pages](https://github.com/ionic-team/ionic-starter-super/tree/master/src/pages) readme, and the readme for each page in the source for more documentation on each.
+* content - provides more explanation of this project
+* inbound-detail - shown when you click on a feed item from the master list
+* list-master - you land here after logging in which shows your news feed items
+* login - the page used to log in
+* menu - responsible for the menu GUI
+* outcound-create - modal dialog for creating a news feed item
+* participant-detail - shown when you click on a search result
+* search - used for keyword search of news feed items
+* settings - vestigial part of the super template that I did not remove
+* signup - vestigial part of the super template that I did not remove
+* tabs - navigation bar at the bottom
+* tutorial - initial experience when you launch the app
+* welcome - vestigial part of the super template that I did not remove
 
 ## Providers
 
-The Super Starter comes with some basic implementations of common providers.
+The Super Starter comes with some basic implementations of common providers which I have combined with the providers generated by swagger.
 
 ### User
 
@@ -56,6 +82,22 @@ The `Api` provider is a simple CRUD frontend to an API. Simply put the root of y
 ## i18n
 
 Ionic Super Starter comes with internationalization (i18n) out of the box with [ngx-translate](https://github.com/ngx-translate/core). This makes it easy to change the text used in the app by modifying only one file. 
+
+## ParticipantApi
+
+CRUD for participants
+
+## FriendApi
+
+CRUD for friends
+
+## InboundApi
+
+CRUD for inbound (news feed items from your friends).
+
+## OutboundApi
+
+CRUD for outbound (your news feed items to your friends).
 
 ### Adding Languages
 

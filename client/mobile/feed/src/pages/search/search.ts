@@ -1,7 +1,6 @@
 import { Component } from '@angular/core';
 import { IonicPage, NavController, NavParams } from 'ionic-angular';
 
-import { Outbound } from '../../model/Outbound';
 import { Participant } from '../../model/Participant';
 import { OutboundApi } from '../../providers/providers';
 import { ParticipantApi } from '../../providers/providers';

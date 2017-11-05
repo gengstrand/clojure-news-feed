@@ -2,6 +2,7 @@ import { Component } from '@angular/core';
 import { IonicPage, ModalController, NavController } from 'ionic-angular';
 import { User } from '../../providers/providers';
 import { Inbound } from '../../model/Inbound';
+import { Outbound } from '../../model/Outbound';
 import { InboundApi } from '../../providers/providers';
 import { OutboundApi } from '../../providers/providers';
 
@@ -30,13 +31,17 @@ export class ListMasterPage {
    * modal and then adds the new item to our data source if the user created one.
    */
   addOutbound() {
+    console.log('showing modal for create outbound');
     let addModal = this.modalCtrl.create('OutboundCreatePage');
     addModal.onDidDismiss(data => {
-    	if (data) {
-	   this.outboundApi.addOutbound(data);
-	} else {
-	   console.log("data empty");
-	}
+    	var outbound: Outbound = {
+	    from: Number(this.user._user.id),
+	    subject: data.subject,
+	    story: data.story
+	};
+	this.outboundApi.addOutbound(outbound).subscribe(o => {
+	    console.log("outbound created");
+	});
     });
     addModal.present();
   }
