@@ -4,7 +4,7 @@ I started this repo three years ago and have yet to have provided a GUI for the 
 
 <img src="newsfeed.png" width="816" />
 
-Here you will find a project for a mobile client that is based on the [Ionic Framework](https://ionicframework.com/). I started with the [ionic-super-starter](https://github.com/ionic-team/ionic-starter-super) template and combined it with the output from the swager-codegen module for typescript-angular2 when run with the swagger yaml specification for the news feed (used in feeds 3 through 5).
+Here you will find a project for a mobile client that is based on the [Ionic Framework](https://ionicframework.com/). I started with the [ionic-super-starter](https://github.com/ionic-team/ionic-starter-super) template and combined it with the output from the swagger-codegen module for typescript-angular2 when run with the swagger yaml specification for the news feed (used in feeds 3 through 5).
 
 _Note: the Ionic Super Starter requires Ionic CLI 3._
 
@@ -28,7 +28,7 @@ One of the big advances in Ionic was moving from a rigid route-based navigation 
 
 ## <a name="getting-started"></a>Getting Started
 
-You will need to set up all the dependencies and run one of the micro-services. May I suggest using [minikube](https://github.com/gengstrand/clojure-news-feed/tree/master/server/k8s) for this? That is most probably is easiest route. Be sure to run those curl commands at the bottom of the README in order to load some data.
+You will need to set up all the dependencies and run one of the micro-services. May I suggest using [minikube](https://github.com/gengstrand/clojure-news-feed/tree/master/server/k8s) for this? That is most probably the easiest route. Be sure to run those curl commands at the bottom of the README in order to load some data.
 
 ```bash
 npm install -g cordova ionic
@@ -43,11 +43,11 @@ Here is how to get started with this GUI
 
 * When logging in, just type 2 in the email field then click sign in.
 * You will see the news feed items that you created with that curl script.
-* Click the item to see the detail view.
-* Click the plus sign so create your own news feed item
+* Click the plus sign to create your own news feed item
 * Items you create will not appear in your own news feed
+* Click the item to see the detail view.
 * Click the search tab and search for Kubernetes
-* Cliks the result to see the participant
+* Click the result to see the participant
 
 ## Pages
 
@@ -58,7 +58,7 @@ This application is currently composed of the following pages.
 * list-master - you land here after logging in which shows your news feed items
 * login - the page used to log in
 * menu - responsible for the menu GUI
-* outcound-create - modal dialog for creating a news feed item
+* outbound-create - modal dialog for creating a news feed item
 * participant-detail - shown when you click on a search result
 * search - used for keyword search of news feed items
 * settings - vestigial part of the super template that I did not remove
@@ -73,7 +73,7 @@ The Super Starter comes with some basic implementations of common providers whic
 
 ### User
 
-The `User` provider is used to authenticate users through its `login(accountInfo)` and `signup(accountInfo)` methods, which perform `POST` requests to an API endpoint that you will need to configure.
+The `User` provider is where the participant id for the current user is accessed.
 
 ### Api
 
@@ -85,19 +85,19 @@ Ionic Super Starter comes with internationalization (i18n) out of the box with [
 
 ## ParticipantApi
 
-CRUD for participants
+Swagger generated CRUD API for participants
 
 ## FriendApi
 
-CRUD for friends
+Swagger generated CRUD API for friends
 
 ## InboundApi
 
-CRUD for inbound (news feed items from your friends).
+Swagger generated CRUD API for inbound (news feed items from your friends).
 
 ## OutboundApi
 
-CRUD for outbound (your news feed items to your friends).
+Swagger generated CRUD API for outbound (your news feed items to your friends).
 
 ### Adding Languages
 

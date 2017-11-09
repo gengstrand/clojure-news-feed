@@ -112,6 +112,10 @@ A micro-service written in Java with the vert.x framework. It is intended to be 
 
 A CLI tool that queries either elastic search or solr performance statistics and writes out per time period metrics to the console.
 
+### mobile/feed
+
+A cross mobile platform GUI for the news feed micro-service that uses the Ionic Framework.
+
 ## License
 
 Copyright © 2013 - 2017 Glenn Engstrand

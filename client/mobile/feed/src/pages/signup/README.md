@@ -1,3 +1,3 @@
 # Signup
 
-The Signup page renders a signup form with email/password by default and an optional username field.
+The Signup page renders a signup form with email/password by default and an optional username field. This page is currently not functional although it can be reached in the GUI.
