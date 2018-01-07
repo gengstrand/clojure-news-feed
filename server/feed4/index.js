@@ -2,6 +2,7 @@
 
 var app = require('express')();
 const cluster = require('cluster');
+const cors = require('cors');
 var http = require('http');
 var swaggerTools = require('swagger-tools');
 var jsyaml = require('js-yaml');
@@ -46,6 +47,8 @@ if (cluster.isMaster) {
 
     // Serve the Swagger documents and Swagger UI
     app.use(middleware.swaggerUi());
+
+    app.use(cors());
 
     // Start the server
     http.createServer(app).listen(serverPort, function () {

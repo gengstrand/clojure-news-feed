@@ -6,7 +6,7 @@ BEGIN {
     settings["elasticsearch"] = "127.0.0.1"
 }
 {
-    settings[$1] = $2
+    settings[$1] = $3
 }
 END {
     print "settings = dict("
