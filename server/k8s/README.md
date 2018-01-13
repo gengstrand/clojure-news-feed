@@ -7,7 +7,7 @@ Introduction on how to run the news feed service in Kubernetes.
 For developer purposes, I am using [minikube](https://github.com/kubernetes/minikube) on a CentOS 7 laptop. The commands to start up minikube may be different for you.
 
 ```shell
-minikube start --vm-driver=kvm
+minikube start --vm-driver=kvm2
 eval $(minikube docker-env)
 ```
 

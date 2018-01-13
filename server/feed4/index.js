@@ -23,6 +23,7 @@ if (cluster.isMaster) {
     console.log('worker ${worker.process.pid} died');
   });
 } else {
+  app.use(cors());
   // swaggerRouter configuration
   var options = {
     swaggerUi: '/swagger.json',
@@ -48,7 +49,7 @@ if (cluster.isMaster) {
     // Serve the Swagger documents and Swagger UI
     app.use(middleware.swaggerUi());
 
-    app.use(cors());
+
 
     // Start the server
     http.createServer(app).listen(serverPort, function () {

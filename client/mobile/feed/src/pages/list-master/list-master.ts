@@ -1,5 +1,5 @@
 import { Component } from '@angular/core';
-import { IonicPage, ModalController, NavController } from 'ionic-angular';
+import { IonicPage, ModalController, NavController, ToastController } from 'ionic-angular';
 import { User } from '../../providers/providers';
 import { Inbound } from '../../model/Inbound';
 import { Outbound } from '../../model/Outbound';
@@ -14,16 +14,10 @@ import { OutboundApi } from '../../providers/providers';
 export class ListMasterPage {
   currentInbound: Inbound[];
 
-  constructor(public navCtrl: NavController, public inboundApi: InboundApi, public outboundApi: OutboundApi, public user: User, public modalCtrl: ModalController) {
+  constructor(public navCtrl: NavController, public toastCtrl: ToastController, public inboundApi: InboundApi, public outboundApi: OutboundApi, public user: User, public modalCtrl: ModalController) {
     this.inboundApi.getInbound(this.user._user.id).subscribe(f => {
         this.currentInbound =  f;
     });
-  }
-
-  /**
-   * The view loaded, let's query our items for the list
-   */
-  ionViewDidLoad() {
   }
 
   /**
@@ -41,6 +35,12 @@ export class ListMasterPage {
 	};
 	this.outboundApi.addOutbound(outbound).subscribe(o => {
 	    console.log("outbound created");
+	    let toast = this.toastCtrl.create({
+	    	message: 'Item was added successfully',
+		duration: 3000,
+		position: 'top'
+  	    });
+	    toast.present();
 	});
     });
     addModal.present();
