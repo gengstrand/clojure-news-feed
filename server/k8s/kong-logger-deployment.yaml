@@ -1,0 +1,21 @@
+apiVersion: extensions/v1beta1
+kind: Deployment
+metadata:
+  creationTimestamp: null
+  name: kong-logger
+spec:
+  replicas: 1
+  template:
+    metadata:
+      creationTimestamp: null
+      labels:
+        io.kompose.service: kong-logger
+    spec:
+      containers:
+      - env:
+        image: kong-logger:1.0
+        name: kong-logger
+        ports:
+        - containerPort: 8888
+      restartPolicy: Always
+

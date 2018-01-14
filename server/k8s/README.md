@@ -2,6 +2,8 @@
 
 Introduction on how to run the news feed service in Kubernetes.
 
+<img src="components.png" />
+
 ## minikube
 
 For developer purposes, I am using [minikube](https://github.com/kubernetes/minikube) on a CentOS 7 laptop. The commands to start up minikube may be different for you.
@@ -58,3 +60,36 @@ curl ${FEED_URL}/inbound/2
 
 curl -X POST -g "${FEED_URL}/outbound/search?keywords=kubernetes"
 ```
+
+### Optional Kong Integration
+
+While it is not neccessary to use the open source API Gateway software [Kong](https://getkong.org), it can be very helpful especially if you want to measure performance without Kafka. 
+
+#### Build the Kong-Logger service
+
+```shell
+cd clojure-news-feed/client/perf4
+mvn package
+docker build -t kong-logger:1.0 .
+```
+
+#### Launch Kong and Kong Logger
+
+```shell
+cd clojure-news-feed/server/k8s
+kubectl create -f kong_logger_service.yaml
+kubectl create -f kong_migration_cassandra.yaml
+kubectl create -f kong_cassandra.yaml
+kubectl create -f kong_logger_deployment.yaml
+./perfSetup.sh
+```
+
+#### Launch  Kibana
+
+```shell
+kubectl create -f kibana-service.yaml 
+kubectl create -f kibana-deployment.yaml
+```
+
+If you call the news feed APIs with the kong-proxy URL, then you will be able to track performance by pointing your web browser to the kibana-logger URL.
+

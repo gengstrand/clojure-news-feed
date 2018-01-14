@@ -1,0 +1,19 @@
+digraph feed_components {
+	kong -> feed;
+	kong -> cassandra;
+	kong -> kl;
+	kl -> es;
+	kibana -> es;
+	feed -> cassandra;
+	feed -> redis;
+	feed -> mysql;
+	feed -> es;
+	kong [shape=box,label="Kong"];
+	feed [shape=box,label="Feed"];
+	cassandra [shape=box,label="Cassandra"];
+	redis [shape=box,label="Redis"];
+	mysql [shape=box,label="MySql"];
+	es [shape=box,label="Elastic\nSearch"];
+	kl [shape=box,label="Kong\nLogger"];
+	kibana [shape=box,label="Kibana"];
+}

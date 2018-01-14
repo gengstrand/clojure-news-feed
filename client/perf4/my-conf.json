@@ -1,0 +1,11 @@
+{
+  "elasticsearch" : {
+  	"host" : "elasticsearch", 
+  	"port" : 9200, 
+  	"index" : "performance", 
+  	"type" : "detail", 
+  	"interval" : 5000
+  }, 
+  "port" : 8888  
+}
+

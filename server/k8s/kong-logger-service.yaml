@@ -1,0 +1,17 @@
+apiVersion: v1
+kind: Service
+metadata:
+  creationTimestamp: null
+  labels:
+    io.kompose.service: kong-logger
+  name: kong-logger
+spec:
+  type: NodePort
+  ports:
+  - name: "8888"
+    port: 8888
+    targetPort: 8888
+  selector:
+    io.kompose.service: kong-logger
+status:
+  loadBalancer: {}
