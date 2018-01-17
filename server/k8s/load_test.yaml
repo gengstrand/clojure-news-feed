@@ -1,0 +1,22 @@
+apiVersion: batch/v1
+kind: Job
+metadata:
+  name: load-test
+spec:
+  template:
+    metadata:
+      name: load-test
+    spec:
+      containers:
+      - name: load-test
+        image: load:1.0
+        env:
+          - name: FEED_HOST
+            value: 'kong-proxy'
+          - name: CONCURRENT_USERS
+            value: 3
+          - name: PERCENT_SEARCHES
+            value: 10
+          - name: USE_JSON
+            value: true
+      restartPolicy: Never

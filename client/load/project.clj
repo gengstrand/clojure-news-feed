@@ -6,5 +6,6 @@
   :dependencies [[org.clojure/clojure "1.5.1"]
                  [org.clojure/data.json "0.2.4"]
                  [clj-http "0.7.8"]]
+  :plugins [[lein2-eclipse "2.0.0"]]
   :main load.handler
   :aot [load.handler])

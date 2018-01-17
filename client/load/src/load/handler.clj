@@ -101,7 +101,8 @@
 (defn -main 
   "perform the load test"
   [& args]
-  (if 
-    (>= (count args) 3)
-    (initiate-concurrent-test-load (nth args 0) (parse-int (nth args 1)) (parse-int (nth args 2)) (> (count args) 3))
-    (println "usage: java -jar load.jar feed-host concurrent-users percent-searches [json]")))
+  (let [feed-host (if (>= (count args) 1) (nth args 0) (System/getenv "FEED_HOST"))
+        concurrent-users (parse-int (if (>= (count args) 2) (nth args 1) (System/getenv "CONCURRENT_USERS")))
+        percent-searches (parse-int (if (>= (count args) 3) (nth args 2) (System/getenv "PERCENT_SEARCHES")))
+        use-json (if (> (count args) 3) true (= (System/getenv "USE_JSON")) "true")]
+    (initiate-concurrent-test-load feed-host concurrent-users percent-searches use-json)))
