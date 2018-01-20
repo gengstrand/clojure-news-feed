@@ -4,4 +4,5 @@ RUN \
   mkdir /usr/app
 WORKDIR /usr/app
 COPY target/load-0.1.0-SNAPSHOT-standalone.jar /usr/app/
-CMD ["java", "-jar", "/usr/app/load-0.1.0-SNAPSHOT-standalone.jar"]
+COPY setup.sh /usr/app/
+CMD ["/bin/sh", "/usr/app/setup.sh"]

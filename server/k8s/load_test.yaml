@@ -12,11 +12,14 @@ spec:
         image: load:1.0
         env:
           - name: FEED_HOST
-            value: 'kong-proxy'
+            value: "kong-proxy"
+          - name: FEED_PORT
+            value: "8000"
           - name: CONCURRENT_USERS
-            value: 3
+            value: "3"
           - name: PERCENT_SEARCHES
-            value: 10
+            value: "10"
           - name: USE_JSON
-            value: true
+            value: "true"
+        command: [ "/bin/sh", "-c", "/usr/app/setup.sh" ]
       restartPolicy: Never

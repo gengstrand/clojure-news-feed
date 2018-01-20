@@ -5,7 +5,7 @@
 
 (declare host)
 (declare json-post)
-(def port "8080")
+(declare port)
 
 (defn set-json-post 
   "switch to determine whether or not content type is json"
@@ -13,9 +13,10 @@
   (def json-post switch-value))
 
 (defn set-feed-host
-  "the ip address where the service is listening"
-  [feed-host]
-  (def host feed-host))
+  "the ip address and port where the service is listening"
+  [feed-host feed-port]
+  (def host feed-host)
+  (def port feed-port))
 
 (defn service-url
   "generate the proper RESTful service url"

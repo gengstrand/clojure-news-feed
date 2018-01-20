@@ -89,8 +89,8 @@
 
 (defn initiate-concurrent-test-load 
   "spin up the threads for the concurrent load tests"
-  [feed-host concurrent-users percent-searches use-json]
-  (service/set-feed-host feed-host)
+  [feed-host feed-port concurrent-users percent-searches use-json]
+  (service/set-feed-host feed-host feed-port)
   (service/set-json-post use-json)
   (doseq [user (range concurrent-users)]
     (if 
@@ -102,7 +102,8 @@
   "perform the load test"
   [& args]
   (let [feed-host (if (>= (count args) 1) (nth args 0) (System/getenv "FEED_HOST"))
-        concurrent-users (parse-int (if (>= (count args) 2) (nth args 1) (System/getenv "CONCURRENT_USERS")))
-        percent-searches (parse-int (if (>= (count args) 3) (nth args 2) (System/getenv "PERCENT_SEARCHES")))
-        use-json (if (> (count args) 3) true (= (System/getenv "USE_JSON")) "true")]
-    (initiate-concurrent-test-load feed-host concurrent-users percent-searches use-json)))
+        feed-port (if (>= (count args) 2) (nth args 1) (System/getenv "FEED_PORT"))
+        concurrent-users (parse-int (if (>= (count args) 3) (nth args 2) (System/getenv "CONCURRENT_USERS")))
+        percent-searches (parse-int (if (>= (count args) 4) (nth args 3) (System/getenv "PERCENT_SEARCHES")))
+        use-json (if (> (count args) 4) true (= (System/getenv "USE_JSON") "true"))]
+    (initiate-concurrent-test-load feed-host feed-port concurrent-users percent-searches use-json)))

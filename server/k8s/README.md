@@ -65,26 +65,39 @@ curl -X POST -g "${FEED_URL}/outbound/search?keywords=kubernetes"
 
 While it is not neccessary to use the open source API Gateway software [Kong](https://getkong.org), it can be very helpful especially if you want to measure performance without Kafka. 
 
-#### Build the Kong-Logger service
+#### Build the Kong-Logger service and the load test job
 
 ```shell
 cd clojure-news-feed/client/perf4
 mvn package
 docker build -t kong-logger:1.0 .
+cd ../load
+lein uberjar
+docker build -t load:1.0 .
 ```
 
-#### Launch Kong and Kong Logger
+#### Launch Kong, Kong Logger, and the load test job
 
 ```shell
 cd clojure-news-feed/server/k8s
-kubectl create -f kong_logger_service.yaml
+kubectl create -f kong-logger-service.yaml
+kubectl create -f kong-service.yaml
 kubectl create -f kong_migration_cassandra.yaml
+# run this next line until the kong-migration job is successful
+kubectl get jobs
 kubectl create -f kong_cassandra.yaml
-kubectl create -f kong_logger_deployment.yaml
+kubectl create -f kong-logger-deployment.yaml
 ./perfSetup.sh
+kubectl create -f load_test.yaml 
 ```
 
-#### Launch  Kibana
+After that, you should be able to reach the feed service via Kong this way.
+
+```shell
+FEED_URL=$(minikube service kong-proxy --url | head -n 1)
+```
+
+#### Launch Kibana
 
 ```shell
 kubectl create -f kibana-service.yaml 
@@ -92,4 +105,6 @@ kubectl create -f kibana-deployment.yaml
 ```
 
 If you call the news feed APIs with the kong-proxy URL, then you will be able to track performance by pointing your web browser to the kibana-logger URL.
+
+
 
