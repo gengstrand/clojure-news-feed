@@ -26,6 +26,8 @@ spec:
             value: "2"
           - name: KONG_PROXY_ACCESS_LOG
             value: "/dev/stdout"
+          - name: KONG_ADMIN_LISTEN
+            value: "0.0.0.0:8001"
           - name: KONG_ADMIN_ACCESS_LOG
             value: "/dev/stdout"
           - name: KONG_PROXY_ERROR_LOG
@@ -33,15 +35,15 @@ spec:
           - name: KONG_ADMIN_ERROR_LOG
             value: "/dev/stderr"      
         ports:
-        - name: admin
+        - name: kong-admin
           containerPort: 8001
           protocol: TCP
-        - name: proxy
+        - name: knog-proxy
           containerPort: 8000
           protocol: TCP
-        - name: proxy-ssl
+        - name: kong-proxy-ssl
           containerPort: 8443
           protocol: TCP
-        - name: admin-ssl
+        - name: kong-admin-ssl
           containerPort: 8444
           protocol: TCP

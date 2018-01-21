@@ -5,4 +5,3 @@ RUN \
 WORKDIR /usr/app
 COPY target/load-0.1.0-SNAPSHOT-standalone.jar /usr/app/
 COPY setup.sh /usr/app/
-CMD ["/bin/sh", "/usr/app/setup.sh"]

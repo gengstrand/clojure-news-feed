@@ -81,7 +81,7 @@ docker build -t load:1.0 .
 ```shell
 cd clojure-news-feed/server/k8s
 kubectl create -f kong-logger-service.yaml
-kubectl create -f kong-service.yaml
+kubectl create -f kong_service.yaml
 kubectl create -f kong_migration_cassandra.yaml
 # run this next line until the kong-migration job is successful
 kubectl get jobs
@@ -96,6 +96,8 @@ After that, you should be able to reach the feed service via Kong this way.
 ```shell
 FEED_URL=$(minikube service kong-proxy --url | head -n 1)
 ```
+
+Be advised that, after running the load test, my minikube cluster is pretty much maxed out. I actually have to delete the load test job before launching kibana.
 
 #### Launch Kibana
 

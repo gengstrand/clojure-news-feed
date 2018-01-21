@@ -8,7 +8,12 @@ kubectl create -f redis-deployment.yaml
 kubectl create -f mysql-deployment.yaml
 kubectl create -f elasticsearch-deployment.yaml
 sleep 30
-kubectl get services | grep -v NAME | awk -f hosts.awk >../aws/build/hosts.py
+if [ "$#" -ge "1" ]
+then
+    cp hosts.py ../aws/build/hosts.py
+else
+    kubectl get services | grep -v NAME | awk -f hosts.awk >../aws/build/hosts.py
+fi
 python ../aws/build/feed-deployment.py >../k8s/feed-deployment.yaml
 python ../aws/build/config.py >../feed3/etc/config.yml
 python ../aws/build/configclj.py >../feed/etc/config.clj
