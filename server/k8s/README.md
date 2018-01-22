@@ -67,6 +67,8 @@ While it is not neccessary to use the open source API Gateway software [Kong](ht
 
 #### Build the Kong-Logger service and the load test job
 
+Currently, the deployment configurations point to these images on my [Docker Hub account](https://hub.docker.com/r/gengstrand) so you don't really need to build these locally. If you wanted to modify what these do, then you will need to build the images and modify the deployment configurations to reference the local docker repository.
+
 ```shell
 cd clojure-news-feed/client/perf4
 mvn package

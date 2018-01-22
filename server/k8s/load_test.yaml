@@ -9,7 +9,7 @@ spec:
     spec:
       containers:
       - name: load-test
-        image: load:1.0
+        image: gengstrand/load:1.0
         env:
           - name: FEED_HOST
             value: "kong-proxy"

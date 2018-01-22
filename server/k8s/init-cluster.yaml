@@ -1,0 +1,15 @@
+apiVersion: batch/v1
+kind: Job
+metadata:
+  name: init-cluster
+spec:
+  template:
+    metadata:
+      name: init-cluster
+    spec:
+      containers:
+      - name: init-cluster
+        image: gengstrand/init-cluster:1.0
+        env:
+        command: [ "/bin/sh", "-c", "/usr/app/initCluster.sh" ]
+      restartPolicy: Never
