@@ -15,11 +15,28 @@ eval $(minikube docker-env)
 
 ### setting up the dependencies
 
-I have written some scripts and configuration files to get the dependent services running. The first script should work on any Kubernetes cluster and the second script is minikube specific. You will need to have installed minikube, kubectl, mysql and cqlsh and that they are available in your $PATH environment. You have to run that first scipt only once (unless you delete services and deployments). The second script will need to be run every time you start up minikube. You may need to wait a few minutes after starting minikube before you run that initMinikube.sh script.
+I have written some scripts and configuration files to get the dependent services running. 
+
+#### starting up the cluster
+
+The setup script should work on any Kubernetes cluster. Alternatively, you can provide a use_cluster_ip parameter if you do not want to use the kube-dns cabality. You have to run this scipt only once (unless you delete services and deployments). 
 
 ```shell
 cd clojure-news-feed/server/k8s
 ./setup.sh
+```
+
+#### initializing the dependent services
+
+You have two alternatives here. You can either run a kubernetes job or a minikube specific script. Here is the kubernetes job. You need to perform this step every time you start up minikube.
+
+```shell
+kubectl create -f init-cluster.yaml
+```
+
+Here is the minikube specific script approach. You will need to have installed minikube, kubectl, mysql and cqlsh and that they are available in your $PATH environment. You may need to wait a few minutes after starting minikube before you run that initMinikube.sh script.
+
+```shell
 ./initMinikube.sh
 ```
 
@@ -89,7 +106,6 @@ kubectl create -f kong_migration_cassandra.yaml
 kubectl get jobs
 kubectl create -f kong_cassandra.yaml
 kubectl create -f kong-logger-deployment.yaml
-./perfSetup.sh
 kubectl create -f load_test.yaml 
 ```
 

@@ -1,3 +1,4 @@
+curl -X PUT http://elasticsearch:9200/performance
 curl -i -X POST --url http://kong-proxy:8001/apis \
 --data 'name=feed' \
 --data "upstream_url=http://feed:8080/" \
