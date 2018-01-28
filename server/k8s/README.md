@@ -126,5 +126,59 @@ kubectl create -f kibana-deployment.yaml
 
 If you call the news feed APIs with the kong-proxy URL, then you will be able to track performance by pointing your web browser to the kibana-logger URL.
 
+## Google Kubernetes Engine
 
+I created a project called feed and a cluster called feed-test using 7 n1-standard-4 instances through Kubernetes Engine part of the the Google Cloud Platform dashboard. Then I ran the following in the gcloud console.
 
+```
+gcloud config set project feed-193503
+gcloud config set compute/zone us-central1-a
+gcloud container clusters get-credentials feed-test --zone us-central1-a --project feed-193503
+git clone https://github.com/gengstrand/clojure-news-feed.git
+cd clojure-news-feed/server/k8s
+kubectl create -f cassandra-service.yaml
+kubectl create -f redis-service.yaml
+kubectl create -f mysql-service.yaml
+kubectl create -f elasticsearch-service.yaml
+kubectl create -f cassandra-deployment.yaml
+kubectl create -f redis-deployment.yaml
+kubectl create -f mysql-deployment.yaml
+kubectl create -f elasticsearch-deployment.yaml
+kubectl create -f init-cluster.yaml
+kubectl create -f feed-service.yaml
+kubectl create -f feed-deployment.yaml
+kubectl create -f kong-logger-service.yaml
+kubectl create -f kong_service.yaml
+kubectl create -f kong_migration_cassandra.yaml
+# run this next line until the kong-migration job is successful
+kubectl get jobs
+kubectl create -f kong_cassandra.yaml
+kubectl create -f kong-logger-deployment.yaml
+kubectl create -f load_test.yaml
+kubectl create -f kibana-service.yaml 
+kubectl create -f kibana-deployment.yaml
+```
+
+Once I collected the data, I cleaned up everything before deleting the cluster.
+
+```
+kubectl delete job init-cluster
+kubectl delete job kong-migration
+kubectl delete job load-test
+kubectl delete deployment kibana-logger
+kubectl delete deployment kong-logger
+kubectl delete deployment kong-proxy
+kubectl delete deployment feed
+kubectl delete deployment elasticsearch
+kubectl delete deployment redis
+kubectl delete deployment mysql
+kubectl delete deployment cassandra
+kubectl delete service cassandra
+kubectl delete service elasticsearch
+kubectl delete service feed
+kubectl delete service kibana-logger
+kubectl delete service kong-logger
+kubectl delete service kong-proxy
+kubectl delete service mysql
+kubectl delete service redis
+```
