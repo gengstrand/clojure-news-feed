@@ -144,7 +144,11 @@ kubectl create -f cassandra-deployment.yaml
 kubectl create -f redis-deployment.yaml
 kubectl create -f mysql-deployment.yaml
 kubectl create -f elasticsearch-deployment.yaml
+# run this next line until all of the pods are running
+kubectl get pods
 kubectl create -f init-cluster.yaml
+# run this next line until the init-cluster job is successful
+kubectl get jobs
 kubectl create -f feed-service.yaml
 kubectl create -f feed-deployment.yaml
 kubectl create -f kong-logger-service.yaml
@@ -154,9 +158,9 @@ kubectl create -f kong_migration_cassandra.yaml
 kubectl get jobs
 kubectl create -f kong_cassandra.yaml
 kubectl create -f kong-logger-deployment.yaml
-kubectl create -f load_test.yaml
 kubectl create -f kibana-service.yaml 
 kubectl create -f kibana-deployment.yaml
+kubectl create -f load_test.yaml
 ```
 
 Once I collected the data, I cleaned up everything before deleting the cluster.
