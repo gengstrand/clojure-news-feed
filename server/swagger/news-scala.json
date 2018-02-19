@@ -1,0 +1,5 @@
+{
+    "package": "info.glennengstrand.news.api",
+    "modelPackage": "info.glennengstrand.news.model",
+    "apiPackage": "info.glennengstrand.news.api"
+}

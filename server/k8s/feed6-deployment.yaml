@@ -1,0 +1,30 @@
+
+apiVersion: extensions/v1beta1
+kind: Deployment
+metadata:
+  creationTimestamp: null
+  name: feed
+spec:
+  replicas: 1
+  template:
+    metadata:
+      creationTimestamp: null
+      labels:
+        io.kompose.service: feed
+    spec:
+      containers:
+      - env:
+        - name: MYSQL_HOST
+          value: mysql
+        - name: NOSQL_HOST
+          value: cassandra
+        - name: CACHE_HOST
+          value: redis
+        - name: SEARCH_HOST
+          value: elasticsearch
+        image: feed6:1.0
+        name: feed
+        ports:
+        - containerPort: 8080
+      restartPolicy: Always
+
