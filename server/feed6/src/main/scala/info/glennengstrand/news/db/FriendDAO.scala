@@ -25,7 +25,7 @@ class FriendDAO extends EntityDAO[Friend] {
     val retVal = for {
       from <- friend.from
       to <- friend.to
-      val result = sql"call UpsertFriend(${from}, ${to})"
+      val result = sql"call UpsertFriends(${from}, ${to})"
         .query[Long]
         .to[List]
         .transact(db)

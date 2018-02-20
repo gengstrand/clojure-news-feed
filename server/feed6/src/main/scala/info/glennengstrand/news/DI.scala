@@ -6,8 +6,10 @@ import org.json4s._
 import org.json4s.jackson.Serialization
 import info.glennengstrand.news.core._
 import info.glennengstrand.news.db._
+import org.slf4j.{ Logger, LoggerFactory }
 
 object DI {
+  val logger = LoggerFactory.getLogger(DI.getClass.getCanonicalName)
   val dbHost = sys.env.get("MYSQL_HOST").getOrElse("localhost")
   val dbUser = sys.env.get("MYSQL_USER").getOrElse("feed")
   val dbPass = sys.env.get("MYSQL_PASSWORD").getOrElse("feed1234")
@@ -16,9 +18,10 @@ object DI {
   val cacheTimeout = sys.env.get("CACHE_TIMEOUT").map(_.toInt).getOrElse(5000)
   val cachePool = sys.env.get("CACHE_POOL").map(_.toInt).getOrElse(10)
   val testMode = sys.env.get("TEST_MODE").getOrElse("false").toBoolean
+  val jdbcConnect = "jdbc:mysql://" + dbHost + ":3306/feed"
   implicit val db: Transactor[IO] = testMode match {
     case true => null
-    case false => Transactor.fromDriverManager[IO]("com.mysql.jdbc.Driver", "jdbc:mysql://${dbHost}/feed", dbUser, dbPass)
+    case false => Transactor.fromDriverManager[IO]("com.mysql.jdbc.Driver", jdbcConnect, dbUser, dbPass)
   }
   implicit val formats = Serialization.formats(NoTypeHints)
   implicit val cache: Cache = testMode match {
