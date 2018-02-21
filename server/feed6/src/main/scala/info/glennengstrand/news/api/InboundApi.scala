@@ -42,11 +42,11 @@ class InboundApi(implicit val swagger: Swagger) extends ScalatraServlet
     summary "retrieve the inbound feed for an individual participant"
     parameters (pathParam[Long]("id").description("")))
 
-  get("/inbound/:id", operation(getInboundOperation)) {
+  get("/:id", operation(getInboundOperation)) {
 
     val id = params.getOrElse("id", halt(400))
 
-    inboundService.get(id.toLong)
+    inboundService.gets(id.toLong)
   }
 
 }

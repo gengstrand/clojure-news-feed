@@ -6,9 +6,12 @@ import org.json4s.jackson.Serialization
 import org.json4s.jackson.Serialization.{ read, write }
 import info.glennengstrand.news.DI._
 
-class InboundService {
-  def get(id: Long): Inbound = {
-    Inbound(None, None, None, None, None)
+class InboundService extends ItemService[Inbound] {
+  def gets(id: Long)(implicit dao: ItemDAO[Inbound]): List[Inbound] = {
+    dao.gets(id)
+  }
+  def add(item: Inbound)(implicit dao: ItemDAO[Inbound]): Inbound = {
+    dao.add(item)
   }
 
 }

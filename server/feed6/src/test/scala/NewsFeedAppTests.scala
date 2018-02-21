@@ -16,6 +16,7 @@ class NewsFeedAppTests extends ScalatraSuite with FunSuiteLike {
 
   addServlet(new ParticipantApi, "/participant/*")
   addServlet(new FriendApi, "/friends/*")
+  addServlet(new InboundApi, "/inbound/*")
   test("participant tests") {
     get("/participant/1") {
       status should equal(200)
@@ -34,6 +35,12 @@ class NewsFeedAppTests extends ScalatraSuite with FunSuiteLike {
     post("/friends/new", NewsFeedAppTests.friendPost) {
       status should equal(200)
       body should equal(NewsFeedAppTests.friendPost)
+    }
+  }
+  test("imbound test") {
+    get("/inbound/1") {
+      status should equal(200)
+      body should equal("[]")
     }
   }
 }
