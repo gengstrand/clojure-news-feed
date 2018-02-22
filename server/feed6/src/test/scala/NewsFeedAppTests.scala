@@ -6,6 +6,7 @@ import info.glennengstrand.news.api._
 import info.glennengstrand.news.DI._
 
 object NewsFeedAppTests {
+  def outboundPost = "{\"from\":1,\"subject\":\"test\"}"
   def friendPost = "{\"id\":1,\"from\":1,\"to\":2}"
   def friendResult = "[" + friendPost + "]"
   def participantPost = "{\"name\":\"test\"}"
@@ -17,6 +18,7 @@ class NewsFeedAppTests extends ScalatraSuite with FunSuiteLike {
   addServlet(new ParticipantApi, "/participant/*")
   addServlet(new FriendApi, "/friends/*")
   addServlet(new InboundApi, "/inbound/*")
+  addServlet(new OutboundApi, "/outbound/*")
   test("participant tests") {
     get("/participant/1") {
       status should equal(200)
@@ -41,6 +43,16 @@ class NewsFeedAppTests extends ScalatraSuite with FunSuiteLike {
     get("/inbound/1") {
       status should equal(200)
       body should equal("[]")
+    }
+  }
+  test("outbound tests") {
+    get("/outbound/1") {
+      status should equal(200)
+      body should equal("[]")
+    }
+    post("/outbound/new", NewsFeedAppTests.outboundPost) {
+      status should equal(200)
+      body should equal(NewsFeedAppTests.outboundPost)
     }
   }
 }

@@ -13,5 +13,8 @@ class InboundService extends ItemService[Inbound] {
   def add(item: Inbound)(implicit dao: ItemDAO[Inbound]): Inbound = {
     dao.add(item)
   }
+  def search(keywords: Option[String]): List[Int] = {
+    List()
+  }
 
 }

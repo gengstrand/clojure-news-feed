@@ -42,7 +42,7 @@ class OutboundApi(implicit val swagger: Swagger) extends ScalatraServlet
     summary "create a participant news item"
     parameters (bodyParam[Outbound]("body").description("")))
 
-  post("/outbound/new", operation(addOutboundOperation)) {
+  post("/new", operation(addOutboundOperation)) {
 
     val body = parsedBody.extract[Outbound]
 
@@ -53,18 +53,18 @@ class OutboundApi(implicit val swagger: Swagger) extends ScalatraServlet
     summary "retrieve the news posted by an individual participant"
     parameters (pathParam[Long]("id").description("")))
 
-  get("/outbound/:id", operation(getOutboundOperation)) {
+  get("/:id", operation(getOutboundOperation)) {
 
     val id = params.getOrElse("id", halt(400))
 
-    outboundService.get(id.toLong)
+    outboundService.gets(id.toLong)
   }
 
   val searchOutboundOperation = (apiOperation[List[Long]]("searchOutbound")
     summary "create a participant news item"
     parameters (queryParam[String]("keywords").description("")))
 
-  post("/outbound/search", operation(searchOutboundOperation)) {
+  post("/search", operation(searchOutboundOperation)) {
 
     val keywords = params.getAs[String]("keywords")
 

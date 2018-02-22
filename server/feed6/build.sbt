@@ -21,6 +21,7 @@ libraryDependencies ++= Seq(
   "org.tpolecat" %% "doobie-hikari"    % "0.5.0",  
   "mysql" % "mysql-connector-java" % "5.1.34",
   "redis.clients"	      %	  "jedis"		    %	"2.9.0", 
+  "com.datastax.cassandra"  % "cassandra-driver-core" % "3.4.0",
   "ch.qos.logback"    %  "logback-classic"      % "1.2.3" % Provided
 )
 

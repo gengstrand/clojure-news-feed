@@ -39,7 +39,9 @@ class InboundDAO(select: PreparedStatement, upsert: PreparedStatement) extends I
       bs.setString(2, d._3)
       bs.setString(3, d._4)
     })
-    db.execute(bs.bind())
+    if (data.size > 0) {
+      db.execute(bs.bind())
+    }
     item
   }
 }

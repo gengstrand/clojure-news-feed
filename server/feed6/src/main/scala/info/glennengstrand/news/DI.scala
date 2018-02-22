@@ -51,8 +51,12 @@ object DI {
     case true => new MockInboundDAO
     case false => InboundDAO(session)
   }
+  implicit val outboundDAO = testMode match {
+    case true => new MockOutboundDAO
+    case false => OutboundDAO(session)
+  }
   lazy val participantService = new ParticipantService
   lazy val friendService = new FriendService
   lazy val inboundService = new InboundService
-  lazy val outboundService = new OutboundService
+  lazy val outboundService = new OutboundService(friendService, inboundService)
 }
