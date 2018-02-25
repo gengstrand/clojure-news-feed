@@ -1,6 +1,6 @@
 package info.glennengstrand.news.db
 
-import info.glennengstrand.news.core.ItemDAO
+import info.glennengstrand.news.core.{ ItemDAO, DocumentDAO, DocumentIdentity }
 import info.glennengstrand.news.model.Inbound
 import com.datastax.driver.core.{ Session, PreparedStatement, BoundStatement }
 import scala.collection.JavaConverters._
@@ -18,11 +18,11 @@ class InboundDAO(select: PreparedStatement, upsert: PreparedStatement) extends I
     bs.setInt(0, id.toInt)
     val retVal = for {
       r <- db.execute(bs.bind()).iterator().asScala
-      val occurred = r.getDate(0)
+      val occurred = r.getTimestamp(0)
       val from = r.getInt(1)
       val subject = r.getString(2)
       val story = r.getString(3)
-    } yield Inbound(Option(from.toLong), Option(id), Option(new java.util.Date(occurred.getMillisSinceEpoch)), Option(subject), Option(story))
+    } yield Inbound(Option(from.toLong), Option(id), Option(occurred), Option(subject), Option(story))
     retVal.toList
   }
   def add(item: Inbound)(implicit db: Session): Inbound = {
@@ -51,5 +51,17 @@ class MockInboundDAO extends ItemDAO[Inbound] {
   }
   def add(item: Inbound)(implicit db: Session): Inbound = {
     item
+  }
+}
+class MockInboundDocumentDAO extends DocumentDAO[Inbound] {
+
+  def identity: DocumentIdentity = {
+    null
+  }
+  override def index(doc: Inbound): Unit = {
+
+  }
+  def search(keywords: String): List[Int] = {
+    List()
   }
 }

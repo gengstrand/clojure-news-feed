@@ -18,6 +18,8 @@ spec:
           value: mysql
         - name: NOSQL_HOST
           value: cassandra
+        - name: NOSQL_KEYSPACE
+          value: activity
         - name: CACHE_HOST
           value: redis
         - name: SEARCH_HOST

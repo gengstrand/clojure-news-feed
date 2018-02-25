@@ -7,16 +7,17 @@ import org.elasticsearch.index.query.QueryBuilders
 import org.elasticsearch.action.search.SearchRequest
 import org.elasticsearch.search.builder.SearchSourceBuilder
 import org.elasticsearch.rest.RestStatus
+import collection.JavaConversions._
 
 trait ElasticSearchDAO[D <: AnyRef] extends DocumentDAO[D] {
   def client: RestHighLevelClient
   def index(doc: D): Unit = {
     identity match {
       case DocumentIdentity(docIndex, docType, docId, docTerm, docResult) => {
-        val request = new IndexRequest(docIndex, docType, docId).source(source(doc, docId))
+        val request = new IndexRequest(docIndex, docType, docId).source(mapAsJavaMap(source(doc, docId)).asInstanceOf[java.util.Map[java.lang.String, java.lang.Object]])
         client.index(request)
       }
-      case _ =>
+      case _ => Unit
     }
   }
   def search(keywords: String): List[Int] = {
@@ -29,7 +30,12 @@ trait ElasticSearchDAO[D <: AnyRef] extends DocumentDAO[D] {
         val response = client.search(request)
         response.status() match {
           case RestStatus.OK => {
-            response.getHits().getHits.map(sh => sh.getSourceAsMap().get(docResult).asInstanceOf[Int]).toList
+            val hits = response.getHits
+            if (hits.getTotalHits > 0l) {
+              hits.getHits.map(sh => sh.getSourceAsMap().get(docResult).asInstanceOf[Int]).toList
+            } else {
+              List()
+            }
           }
           case _ => List()
         }

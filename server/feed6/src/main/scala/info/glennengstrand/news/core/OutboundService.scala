@@ -7,11 +7,11 @@ import org.json4s.jackson.Serialization.{ read, write }
 import info.glennengstrand.news.db.ElasticSearchDAO
 import info.glennengstrand.news.DI._
 
-class OutboundService(friendService: FriendService, inboundService: InboundService, searchDAO: ElasticSearchDAO[Outbound]) extends ItemService[Outbound] {
+class OutboundService(friendService: FriendService, inboundService: InboundService) extends ItemService[Outbound] {
   def gets(id: Long)(implicit dao: ItemDAO[Outbound]): List[Outbound] = {
     dao.gets(id)
   }
-  def add(o: Outbound)(implicit dao: ItemDAO[Outbound]): Outbound = {
+  def add(o: Outbound)(implicit dao: ItemDAO[Outbound], searchDAO: DocumentDAO[Outbound]): Outbound = {
     o.from match {
       case Some(id) => {
         friendService.gets(id).foreach(f => {
@@ -23,7 +23,7 @@ class OutboundService(friendService: FriendService, inboundService: InboundServi
       case None => o
     }
   }
-  def search(keywords: Option[String]): List[Int] = {
+  def search(keywords: Option[String])(implicit searchDAO: DocumentDAO[Outbound]): List[Int] = {
     keywords match {
       case Some(terms) => searchDAO.search(terms)
       case None => List()

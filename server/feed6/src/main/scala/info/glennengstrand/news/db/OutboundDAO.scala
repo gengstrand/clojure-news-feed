@@ -24,11 +24,11 @@ class OutboundItemDAO(select: PreparedStatement, upsert: PreparedStatement) exte
     bs.setInt(0, id.toInt)
     val retVal = for {
       r <- db.execute(bs.bind()).iterator().asScala
-      val occurred = r.getDate(0)
+      val occurred = r.getTimestamp(0)
       val from = r.getInt(1)
       val subject = r.getString(2)
       val story = r.getString(3)
-    } yield Outbound(Option(from.toLong), Option(new java.util.Date(occurred.getMillisSinceEpoch)), Option(subject), Option(story))
+    } yield Outbound(Option(from.toLong), Option(occurred), Option(subject), Option(story))
     retVal.toList
   }
   def add(item: Outbound)(implicit db: Session): Outbound = {
@@ -68,9 +68,16 @@ class OutboundDocumentDAO(es: RestHighLevelClient) extends ElasticSearchDAO[Outb
   def identity: DocumentIdentity = {
     DocumentIdentity("feed", "stories", UUID.randomUUID().toString(), "story", "sender")
   }
-  override def source(doc: Outbound, key: String): String = {
-    val retVal = ("id" -> key) ~ ("sender" -> doc.from) ~ ("story" -> doc.story)
-    compact(render(retVal))
+  override def source(doc: Outbound, key: String): Map[String, Object] = {
+    val retVal = for {
+      from <- doc.from
+      story <- doc.story
+    } yield Map("id" -> key, "sender" -> from, "story" -> story)
+    if (retVal.size > 0) {
+      retVal.head.asInstanceOf[Map[String, Object]]
+    } else {
+      Map()
+    }
   }
 }
 
@@ -81,8 +88,8 @@ class MockOutboundDocumentDAO extends ElasticSearchDAO[Outbound] {
   def identity: DocumentIdentity = {
     DocumentIdentity("feed", "stories", "test", "story", "sender")
   }
-  def source(doc: Outbound): String = {
-    ""
+  def source(doc: Outbound): Map[String, Object] = {
+    Map()
   }
   override def index(doc: Outbound): Unit = {
 

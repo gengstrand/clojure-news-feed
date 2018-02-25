@@ -24,7 +24,7 @@ object DI {
   val cachePool = sys.env.get("CACHE_POOL").map(_.toInt).getOrElse(10)
   val noSqlHost = sys.env.get("NOSQL_HOST").getOrElse("localhost")
   val noSqlTtl = sys.env.get("NOSQL_TTL").getOrElse(1000 * 60 * 60 * 24)
-  val noSqlKeyspace = sys.env.get("NOSQL_KEYSPACE").getOrElse("feed")
+  val noSqlKeyspace = sys.env.get("NOSQL_KEYSPACE").getOrElse("activity")
   val searchHost = sys.env.get("SEARCH_HOST").getOrElse("localhost")
   val testMode = sys.env.get("TEST_MODE").getOrElse("false").toBoolean
   val jdbcConnect = "jdbc:mysql://" + dbHost + ":3306/feed"
@@ -67,16 +67,17 @@ object DI {
     case true => new MockOutboundItemDAO
     case false => OutboundItemDAO(session)
   }
-  lazy val searchClient = testMode match {
+  val searchClient = testMode match {
     case true => null
     case false => new RestHighLevelClient(RestClient.builder(new HttpHost(searchHost, 9200)))
   }
-  lazy val searchDAO = testMode match {
+  implicit val searchOutboundDAO = testMode match {
     case true => new MockOutboundDocumentDAO
     case false => new OutboundDocumentDAO(searchClient)
   }
+  implicit val searchInboundDAO = new MockInboundDocumentDAO
   lazy val participantService = new ParticipantService
   lazy val friendService = new FriendService
   lazy val inboundService = new InboundService
-  lazy val outboundService = new OutboundService(friendService, inboundService, searchDAO)
+  lazy val outboundService = new OutboundService(friendService, inboundService)
 }
