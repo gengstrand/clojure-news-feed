@@ -1,6 +1,8 @@
 package info.glennengstrand.news
 
 import doobie.imports._
+import doobie.hikari.HikariTransactor
+import com.zaxxer.hikari.{ HikariDataSource, HikariConfig }
 import cats.effect._
 import org.json4s._
 import org.json4s.jackson.Serialization
@@ -8,6 +10,8 @@ import info.glennengstrand.news.core._
 import info.glennengstrand.news.db._
 import org.slf4j.{ Logger, LoggerFactory }
 import com.datastax.driver.core.{ Session, Cluster }
+import org.elasticsearch.client.{ RestHighLevelClient, RestClient }
+import org.apache.http.HttpHost
 
 object DI {
   val logger = LoggerFactory.getLogger(DI.getClass.getCanonicalName)
@@ -21,11 +25,19 @@ object DI {
   val noSqlHost = sys.env.get("NOSQL_HOST").getOrElse("localhost")
   val noSqlTtl = sys.env.get("NOSQL_TTL").getOrElse(1000 * 60 * 60 * 24)
   val noSqlKeyspace = sys.env.get("NOSQL_KEYSPACE").getOrElse("feed")
+  val searchHost = sys.env.get("SEARCH_HOST").getOrElse("localhost")
   val testMode = sys.env.get("TEST_MODE").getOrElse("false").toBoolean
   val jdbcConnect = "jdbc:mysql://" + dbHost + ":3306/feed"
   implicit val db: Transactor[IO] = testMode match {
     case true => null
-    case false => Transactor.fromDriverManager[IO]("com.mysql.jdbc.Driver", jdbcConnect, dbUser, dbPass)
+    case false => {
+      val config = new HikariConfig
+      config.setJdbcUrl(jdbcConnect)
+      config.setDriverClassName("com.mysql.jdbc.Driver")
+      config.setUsername(dbUser)
+      config.setPassword(dbPass)
+      HikariTransactor[IO](new HikariDataSource(config))
+    }
   }
   implicit val session: Session = testMode match {
     case true => null
@@ -52,11 +64,19 @@ object DI {
     case false => InboundDAO(session)
   }
   implicit val outboundDAO = testMode match {
-    case true => new MockOutboundDAO
-    case false => OutboundDAO(session)
+    case true => new MockOutboundItemDAO
+    case false => OutboundItemDAO(session)
+  }
+  lazy val searchClient = testMode match {
+    case true => null
+    case false => new RestHighLevelClient(RestClient.builder(new HttpHost(searchHost, 9200)))
+  }
+  lazy val searchDAO = testMode match {
+    case true => new MockOutboundDocumentDAO
+    case false => new OutboundDocumentDAO(searchClient)
   }
   lazy val participantService = new ParticipantService
   lazy val friendService = new FriendService
   lazy val inboundService = new InboundService
-  lazy val outboundService = new OutboundService(friendService, inboundService)
+  lazy val outboundService = new OutboundService(friendService, inboundService, searchDAO)
 }

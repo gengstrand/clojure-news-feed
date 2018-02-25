@@ -39,7 +39,7 @@ class NewsFeedAppTests extends ScalatraSuite with FunSuiteLike {
       body should equal(NewsFeedAppTests.friendPost)
     }
   }
-  test("imbound test") {
+  test("inbound test") {
     get("/inbound/1") {
       status should equal(200)
       body should equal("[]")
@@ -53,6 +53,10 @@ class NewsFeedAppTests extends ScalatraSuite with FunSuiteLike {
     post("/outbound/new", NewsFeedAppTests.outboundPost) {
       status should equal(200)
       body should equal(NewsFeedAppTests.outboundPost)
+    }
+    post("/outbound/search?keywords=test") {
+      status should equal(200)
+      body should equal("[]")
     }
   }
 }

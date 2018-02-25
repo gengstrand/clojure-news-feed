@@ -8,6 +8,11 @@ mainClass in assembly := Some("JettyMain")
 
 val ScalatraVersion = "2.6.2"
 
+assemblyMergeStrategy in assembly := {
+  case "META-INF/io.netty.versions.properties" => MergeStrategy.first
+  case other => MergeStrategy.defaultMergeStrategy(other)
+}
+
 libraryDependencies ++= Seq(
   "org.scalatra"      %% "scalatra"             % ScalatraVersion,
   "org.scalatra"      %% "scalatra-swagger"     % ScalatraVersion,
@@ -22,6 +27,7 @@ libraryDependencies ++= Seq(
   "mysql" % "mysql-connector-java" % "5.1.34",
   "redis.clients"	      %	  "jedis"		    %	"2.9.0", 
   "com.datastax.cassandra"  % "cassandra-driver-core" % "3.4.0",
+  "org.elasticsearch.client" % "elasticsearch-rest-high-level-client" %	"6.2.2", 
   "ch.qos.logback"    %  "logback-classic"      % "1.2.3" % Provided
 )
 

@@ -1,18 +1,24 @@
 package info.glennengstrand.news.db
 
-import info.glennengstrand.news.core.ItemDAO
+import info.glennengstrand.news.core.{ ItemDAO, DocumentIdentity }
 import info.glennengstrand.news.model.Outbound
 import com.datastax.driver.core.{ Session, PreparedStatement, BoundStatement }
 import scala.collection.JavaConverters._
+import org.elasticsearch.client.RestHighLevelClient
+import java.util.UUID
+import org.json4s.JsonDSL._
+import org.json4s._
+import org.json4s.jackson.JsonMethods._
 
-object OutboundDAO {
-  def apply(db: Session): OutboundDAO = {
+object OutboundItemDAO {
+  def apply(db: Session): OutboundItemDAO = {
     val select = "select toTimestamp(occurred) as occurred, subject, story from Outbound where participantid = ? order by occurred desc"
     val upsert = "insert into Outbound (ParticipantID, Occurred, Subject, Story) values (?, now(), ?, ?)"
-    new OutboundDAO(db.prepare(select), db.prepare(upsert))
+    new OutboundItemDAO(db.prepare(select), db.prepare(upsert))
   }
 }
-class OutboundDAO(select: PreparedStatement, upsert: PreparedStatement) extends ItemDAO[Outbound] {
+class OutboundItemDAO(select: PreparedStatement, upsert: PreparedStatement) extends ItemDAO[Outbound] {
+
   def gets(id: Long)(implicit db: Session): List[Outbound] = {
     val bs = new BoundStatement(select)
     bs.setInt(0, id.toInt)
@@ -45,7 +51,8 @@ class OutboundDAO(select: PreparedStatement, upsert: PreparedStatement) extends 
 
 }
 
-class MockOutboundDAO extends ItemDAO[Outbound] {
+class MockOutboundItemDAO extends ItemDAO[Outbound] {
+
   def gets(id: Long)(implicit db: Session): List[Outbound] = {
     List()
   }
@@ -53,3 +60,35 @@ class MockOutboundDAO extends ItemDAO[Outbound] {
     item
   }
 }
+
+class OutboundDocumentDAO(es: RestHighLevelClient) extends ElasticSearchDAO[Outbound] {
+  def client: RestHighLevelClient = {
+    es
+  }
+  def identity: DocumentIdentity = {
+    DocumentIdentity("feed", "stories", UUID.randomUUID().toString(), "story", "sender")
+  }
+  override def source(doc: Outbound, key: String): String = {
+    val retVal = ("id" -> key) ~ ("sender" -> doc.from) ~ ("story" -> doc.story)
+    compact(render(retVal))
+  }
+}
+
+class MockOutboundDocumentDAO extends ElasticSearchDAO[Outbound] {
+  def client: RestHighLevelClient = {
+    null
+  }
+  def identity: DocumentIdentity = {
+    DocumentIdentity("feed", "stories", "test", "story", "sender")
+  }
+  def source(doc: Outbound): String = {
+    ""
+  }
+  override def index(doc: Outbound): Unit = {
+
+  }
+  override def search(keywords: String): List[Int] = {
+    List()
+  }
+}
+
