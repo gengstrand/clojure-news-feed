@@ -12,7 +12,7 @@ import com.twitter.finatra.logging.modules.Slf4jBridgeModule
 
 /** responsible for creating main entity abstraction objects for the real service */
 class ServiceFactoryClass extends FactoryClass {
-  val performanceLogger = new Kafka
+  val performanceLogger = new MockPerformanceLogger
   def isEmpty: Boolean = false
   def getObject(name: String, id: Int): Option[Object] = {
     name match {

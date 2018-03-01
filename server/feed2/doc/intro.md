@@ -18,10 +18,7 @@ java -Dsolr.solr.home=multicore -jar start.jar
 
 cd ~/git/clojure-news-feed/server/feed2
 
-sbt
-compile
-assembly
-exit
+sbt 'set test in assembly := {}' clean assembly
 
 cat server/etcHosts4localhost >>/etc/hosts 
 

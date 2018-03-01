@@ -29,3 +29,8 @@ class Kafka extends PerformanceLogger {
   }
 }
 
+class MockPerformanceLogger extends PerformanceLogger {
+  def log(topic: String, entity: String, operation: String, duration: Long): Unit = {
+
+  }
+}

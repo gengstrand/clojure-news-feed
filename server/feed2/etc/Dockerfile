@@ -1,11 +1,8 @@
-FROM ubuntu
+FROM java:8-jre
 RUN \
   apt-get update && \
-  apt-get install -y openjdk-7-jdk && \
-  rm -rf /var/lib/apt/lists/* && \
   mkdir /usr/app
 WORKDIR /usr/app
-ENV JAVA_HOME /usr/lib/jvm/java-7-openjdk-amd64
 ENV APP_CONFIG /usr/app/settings.properties
 COPY settings.properties /usr/app/
 COPY news-feed-assembly-0.1.0-SNAPSHOT.jar /usr/app/
