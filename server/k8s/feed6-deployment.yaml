@@ -24,7 +24,7 @@ spec:
           value: redis
         - name: SEARCH_HOST
           value: elasticsearch
-        image: feed6:1.0
+        image: gengstrand/feed6:1.0
         name: feed
         ports:
         - containerPort: 8080
