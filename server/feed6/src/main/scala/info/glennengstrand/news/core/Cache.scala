@@ -18,14 +18,18 @@ object RedisCache {
 
 class RedisCache(pool: JedisPool) extends Cache {
   def get(key: String): Option[String] = {
-    val retVal = pool.getResource().get(key)
+    val p = pool.getResource()
+    val retVal = p.get(key)
+    p.close()
     retVal match {
       case (v: String) => Some(retVal)
       case _ => None
     }
   }
   def set(key: String, value: String): Unit = {
-    pool.getResource().set(key, value)
+    val p = pool.getResource()
+    p.set(key, value)
+    p.close()
   }
 
 }
