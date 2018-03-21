@@ -4,6 +4,8 @@ This Java project implements a rudimentary news feed micro-service using [Swagge
 
 This [article](http://glennengstrand.info/media/dropwizard.pdf) goes into detail about what was discovered while developing this micro-service.
 
+http://glennengstrand.info/software/performance/clojure/dropwizard
+
 ## newsfeed-swagger
 
 The rest of these docs are swagger generated and cover how to call the micro-service.

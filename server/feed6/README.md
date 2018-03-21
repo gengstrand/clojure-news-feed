@@ -1,7 +1,7 @@
 # Another News Feed Microservice in Scala
 
 Like feed2, this microservice implements the news feed requirements in Scala. This time, using type classes and
-[scalatra](http://scalatra.org/) instead of the Cake Pattern and Finagle.
+[scalatra](http://scalatra.org/) instead of the Cake Pattern and Finatra.
 
 ## Overview
 

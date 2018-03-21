@@ -52,6 +52,12 @@ This time, the news feed micro-service is implemented in Python running on Flask
 
 http://glennengstrand.info/software/performance/nodejs/python
 
+### feed6
+
+This time, the scala microservice was rewritten in an attempt to lower complexity and improve performance.
+
+http://glennengstrand.info/software/architecture/scala/rewrite
+
 ### solr
 
 The supporting directory structure and configuration files needed to augment an instance of Solr to support keyword search capability for the news feed on outbound activity.
