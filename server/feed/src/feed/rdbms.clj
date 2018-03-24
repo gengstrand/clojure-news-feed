@@ -27,7 +27,8 @@
                       (is-postgres)
                       ":5432/" 
                       ":3306/")
-                    (:sql-db-name prop/service-config))
+                    (:sql-db-name prop/service-config)
+                    "?useSSL=false")
                :user (:sql-db-user prop/service-config)
                :password (:sql-db-password prop/service-config)}))
 
