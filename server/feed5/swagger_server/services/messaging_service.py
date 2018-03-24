@@ -18,5 +18,6 @@ class MessagingService:
         return now.strftime('%Y|%m|%d|%H|%M') + '|' + entity + '|' + operation + '|' + str(duration)
 
     def log(self, entity: str, operation: str, duration: int):
-        self.producer().send(current_app.config['MESSAGE_TOPIC'], self.logRecord(entity, operation, duration).encode("utf-8"))
+        if current_app.config['MESSAGING_ENABLED'] == 'true':
+            self.producer().send(current_app.config['MESSAGE_TOPIC'], self.logRecord(entity, operation, duration).encode("utf-8"))
 
