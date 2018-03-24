@@ -10,24 +10,25 @@
 (defn log
   "log a message to topic via kafka"
   [topic entity operation duration]
-  (let [now (java.util.Calendar/getInstance)
-        msg (str (.get now java.util.Calendar/YEAR)
-                 "|"
-                 (.get now java.util.Calendar/MONTH)
-                 "|"
-                 (.get now java.util.Calendar/DAY_OF_MONTH)
-                 "|"
-                 (.get now java.util.Calendar/HOUR_OF_DAY)
-                 "|"
-                 (.get now java.util.Calendar/MINUTE)
-                 "|"
-                 entity
-                 "|"
-                 operation
-                 "|"
-                 duration)]
-  (try 
-    (send-message p (message topic (.getBytes msg)))
-    (catch Exception e 
-      (println "messaging not available")
-      nil))))
+  (if (== (System/getenv "MESSAGING_ENABLED") "true")
+    (let [now (java.util.Calendar/getInstance)
+          msg (str (.get now java.util.Calendar/YEAR)
+                   "|"
+                   (.get now java.util.Calendar/MONTH)
+                   "|"
+                   (.get now java.util.Calendar/DAY_OF_MONTH)
+                   "|"
+                   (.get now java.util.Calendar/HOUR_OF_DAY)
+                   "|"
+                   (.get now java.util.Calendar/MINUTE)
+                   "|"
+                   entity
+                   "|"
+                   operation
+                   "|"
+                   duration)]
+      (try 
+        (send-message p (message topic (.getBytes msg)))
+        (catch Exception e 
+          (println "messaging not available")
+          nil)))))

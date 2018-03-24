@@ -1,0 +1,24 @@
+
+apiVersion: extensions/v1beta1
+kind: Deployment
+metadata:
+  creationTimestamp: null
+  name: feed
+spec:
+  replicas: 1
+  template:
+    metadata:
+      creationTimestamp: null
+      labels:
+        io.kompose.service: feed
+    spec:
+      containers:
+      - env:
+        - name: MESSAGING_ENABLED
+          value: false
+        image: gengstrand/feed:1.0
+        name: feed
+        ports:
+        - containerPort: 8080
+      restartPolicy: Always
+
