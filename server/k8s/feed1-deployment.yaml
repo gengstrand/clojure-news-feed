@@ -15,7 +15,7 @@ spec:
       containers:
       - env:
         - name: MESSAGING_ENABLED
-          value: false
+          value: "false"
         image: gengstrand/feed:1.0
         name: feed
         ports:
