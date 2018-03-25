@@ -7,10 +7,12 @@
                   "serializer.class" "kafka.serializer.DefaultEncoder"
                   "partitioner.class" "kafka.producer.DefaultPartitioner"})))
 
+(def messaging-enabled (= (System/getenv "MESSAGING_ENABLED") "true"))
+
 (defn log
   "log a message to topic via kafka"
   [topic entity operation duration]
-  (if (= (System/getenv "MESSAGING_ENABLED") "true")
+  (if messaging-enabled
     (let [now (java.util.Calendar/getInstance)
           msg (str (.get now java.util.Calendar/YEAR)
                    "|"
