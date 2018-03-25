@@ -10,7 +10,7 @@
 (defn log
   "log a message to topic via kafka"
   [topic entity operation duration]
-  (if (== (System/getenv "MESSAGING_ENABLED") "true")
+  (if (= (System/getenv "MESSAGING_ENABLED") "true")
     (let [now (java.util.Calendar/getInstance)
           msg (str (.get now java.util.Calendar/YEAR)
                    "|"
