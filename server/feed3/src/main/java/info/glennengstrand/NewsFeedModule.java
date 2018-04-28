@@ -39,6 +39,7 @@ import org.slf4j.LoggerFactory;
 public class NewsFeedModule implements Module {
 
 	private static final Logger LOGGER = LoggerFactory.getLogger(NewsFeedModule.class);
+	private static final String KAFKA_ENABLED = "KAFKA_ENABLED";
 
 	private final DBIFactory factory = new DBIFactory();
 	private DBI dbi = null;
@@ -127,12 +128,18 @@ public class NewsFeedModule implements Module {
     	if (logger == null) {
     		synchronized(LOGGER) {
     			if (logger == null) {
-    		    	try {
-    		    		logger = new KafkaPerformanceLogger(config.getMessageBroker(), config.getMessageTopic());
-    		    	} catch (Exception e) {
-    		    		LOGGER.error("Cannot connect to Kafka: ", e);
-    		    		logger = new MessageLogger.DoNothingMessageLogger();
-    		    	}
+    				String ke = System.getenv(KAFKA_ENABLED);
+    				boolean useKafka = ke == null || "true".equalsIgnoreCase(ke);
+    				if (useKafka) {
+	    		    	try {
+	    		    		logger = new KafkaPerformanceLogger(config.getMessageBroker(), config.getMessageTopic());
+	    		    	} catch (Exception e) {
+	    		    		LOGGER.error("Cannot connect to Kafka: ", e);
+	    		    		logger = new MessageLogger.DoNothingMessageLogger();
+	    		    	}
+    				} else {
+    					logger = new MessageLogger.DoNothingMessageLogger();
+    				}
     			}
     		}
     	}
