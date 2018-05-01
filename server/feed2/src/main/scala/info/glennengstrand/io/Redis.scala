@@ -25,7 +25,7 @@ object RedisService {
 trait JedisCacheAware extends CacheAware {
   
   def key(o: PersistentDataStoreBindings, criteria: Map[String, Any]): String = {
-    o.entity + ":" + criteria.map((f) => f._2).reduce(_ + ":" + _)
+    o.entity + "::" + criteria.map((f) => f._2).reduce(_ + ":" + _)
   }
     
   def load(o: PersistentDataStoreBindings, criteria: Map[String, Any]): Iterable[Map[String, Any]] = {

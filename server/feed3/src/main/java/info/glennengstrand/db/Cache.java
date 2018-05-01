@@ -27,7 +27,7 @@ public abstract class Cache<T> {
 	 * @return a safely namespaced key for the actual cache lookup
 	 */
 	protected String convertIdToKey(Long id) {
-		return serializationType.getCanonicalName().concat(":").concat(id.toString());
+		return serializationType.getName().concat("::").concat(id.toString());
 	}
 	
 	/**

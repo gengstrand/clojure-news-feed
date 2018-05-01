@@ -1,7 +1,9 @@
 (ns load.handler
+  (:require [clojure.tools.logging :as log])
   (:gen-class))
 
 (require '[load.core :as service])
+(require '[load.integration :as integration])
 
 (def participant-batch-size 10)
 (def min-friends 2)
@@ -101,9 +103,15 @@
 (defn -main 
   "perform the load test"
   [& args]
-  (let [feed-host (if (>= (count args) 1) (nth args 0) (System/getenv "FEED_HOST"))
-        feed-port (if (>= (count args) 2) (nth args 1) (System/getenv "FEED_PORT"))
-        concurrent-users (parse-int (if (>= (count args) 3) (nth args 2) (System/getenv "CONCURRENT_USERS")))
-        percent-searches (parse-int (if (>= (count args) 4) (nth args 3) (System/getenv "PERCENT_SEARCHES")))
-        use-json (if (> (count args) 4) true (= (System/getenv "USE_JSON") "true"))]
-    (initiate-concurrent-test-load feed-host feed-port concurrent-users percent-searches use-json)))
+  (log/info (str "count args = " (count args)))
+  (let [integration-test (if (>= (count args) 1) (= (first args) "--integration-test") false)]
+    (log/info (first args))
+    (log/info (str "integration-test = " integration-test))
+    (if integration-test
+      (integration/perform-integration-test)
+      (let [feed-host (if (>= (count args) 1) (nth args 0) (System/getenv "FEED_HOST"))
+            feed-port (if (>= (count args) 2) (nth args 1) (System/getenv "FEED_PORT"))
+            concurrent-users (parse-int (if (>= (count args) 3) (nth args 2) (System/getenv "CONCURRENT_USERS")))
+            percent-searches (parse-int (if (>= (count args) 4) (nth args 3) (System/getenv "PERCENT_SEARCHES")))
+            use-json (if (> (count args) 4) true (= (System/getenv "USE_JSON") "true"))]
+        (initiate-concurrent-test-load feed-host feed-port concurrent-users percent-searches use-json)))))
