@@ -78,6 +78,8 @@ curl ${FEED_URL}/inbound/2
 curl -X POST -g "${FEED_URL}/outbound/search?keywords=kubernetes"
 ```
 
+Alternatively, you can also run the testMinikube.sh to perform the automated version of this test.
+
 ### Optional Kong Integration
 
 While it is not neccessary to use the open source API Gateway software [Kong](https://getkong.org), it can be very helpful especially if you want to measure performance without Kafka. 

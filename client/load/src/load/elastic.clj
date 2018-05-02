@@ -10,6 +10,7 @@
   "query elastic search for these keywords"
   [keywords]
   (str 
+    "http://"
     elastic-host
     ":"
     (if (nil? elastic-port) "9200" elastic-port)
