@@ -43,5 +43,5 @@
       (<
         (:status response)
         300)
-      (json/write-str (extract-search-results (json/read-str (:body response)))))))
+      (extract-search-results (json/read-str (:body response))))))
 

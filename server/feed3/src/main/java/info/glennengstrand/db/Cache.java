@@ -6,6 +6,9 @@ import java.util.List;
 import java.util.function.Supplier;
 import java.util.stream.Collectors;
 
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+
 import com.fasterxml.jackson.core.JsonParseException;
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.JsonMappingException;
@@ -18,6 +21,7 @@ import com.fasterxml.jackson.databind.ObjectMapper;
  * @param <T> is the type of object to be cached
  */
 public abstract class Cache<T> {
+
 	private ObjectMapper mapper = new ObjectMapper();
 	private final Class<T> serializationType;
 	
@@ -27,7 +31,7 @@ public abstract class Cache<T> {
 	 * @return a safely namespaced key for the actual cache lookup
 	 */
 	protected String convertIdToKey(Long id) {
-		return serializationType.getName().concat("::").concat(id.toString());
+		return serializationType.getSimpleName().concat("::").concat(id.toString());
 	}
 	
 	/**

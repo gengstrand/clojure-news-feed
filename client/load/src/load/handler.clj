@@ -103,10 +103,7 @@
 (defn -main 
   "perform the load test"
   [& args]
-  (log/info (str "count args = " (count args)))
   (let [integration-test (if (>= (count args) 1) (= (first args) "--integration-test") false)]
-    (log/info (first args))
-    (log/info (str "integration-test = " integration-test))
     (if integration-test
       (integration/perform-integration-test)
       (let [feed-host (if (>= (count args) 1) (nth args 0) (System/getenv "FEED_HOST"))

@@ -78,7 +78,7 @@ curl ${FEED_URL}/inbound/2
 curl -X POST -g "${FEED_URL}/outbound/search?keywords=kubernetes"
 ```
 
-Alternatively, you can also run the testMinikube.sh to perform the automated version of this test.
+Alternatively, you can also run the testMinikube.sh to perform the automated version of this test. This script runs the load test app in integration test mode so you will need to have built what is in the client/load project.
 
 ### Optional Kong Integration
 

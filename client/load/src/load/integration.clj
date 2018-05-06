@@ -7,6 +7,7 @@
 (require '[load.redis :as redis])
 (require '[load.cassandra :as cassandra])
 (require '[load.elastic :as elastic])
+(require '[clojure.string :as s])
 
 (def from-name "joe")
 (def to-name "larry")
@@ -26,17 +27,11 @@
   (log/error error)
   (System/exit -1))
 
-(defn perform-integration-test
-  "perform basic use case and verify with underlying data stores"
-  []
-  (core/set-feed-host (System/getenv "FEED_HOST") (System/getenv "FEED_PORT"))
-  (core/set-json-post (= (System/getenv "USE_JSON") "true"))
-  (log/info "about to create participants")
-  (try 
-    (let [from-id (core/test-create-participant from-name)
-          to-id (core/test-create-participant to-name)
-          extracted-from-name (mysql/load-participant-from-db from-id)
-          extracted-to-name (mysql/load-participant-from-db to-id)]
+(defn verify-two-participants
+  "verify participant creation in mysql and redis"
+  [from-id to-id]
+  (let [extracted-from-name (mysql/load-participant-from-db from-id)
+        extracted-to-name (mysql/load-participant-from-db to-id)]
       (log/info (str "extracted-from-name = " extracted-from-name))
       (log/info (str "extracted-to-name = " extracted-to-name))
       (if (not (and (= extracted-from-name from-name)
@@ -58,21 +53,45 @@
                  to-participant-name-via-cache (get extracted-to-participant "name")]
             (if (not (and (= from-participant-name-via-service from-participant-name-via-cache)
                           (= to-participant-name-via-service to-participant-name-via-cache)))
-              (report-error "error fetching participants"))))
-        (log/info "about to friend participants")
-        (core/test-create-friends from-id to-id)
-        (log/info "about to broadcast socially")
-        (core/test-create-outbound from-id (str "2014-01-0" (+ (rand-int 8) 1) "T19:25:51.490Z") test-subject test-story)
-        (let [inbound-message (first (:results (core/test-fetch-inbound to-id)))
-              inbound-subject-from-message (get inbound-message "subject")
-              inbound-subject-from-cassandra (cassandra/load-inbound-subject-from-db to-id)]
-          (log/info (str "fetch inbound = " inbound-message))
-          (log/info (str "inbound subject from cassandra = " inbound-subject-from-cassandra))
-          (log/info (str "inbound subject from feed = " inbound-subject-from-message))
-          (if (not (and (= inbound-subject-from-message inbound-subject-from-cassandra)
-                        (= inbound-subject-from-cassandra test-subject)))
-            (report-error "error in social broadcast logic")))
-        (if (not (>= (count (doall (filter (fn [sender] (= sender from-id)) (elastic/search "test")))) 1))
-          (report-error "error in keyword search"))))
-  (catch Exception e
-    (report-error (str "unexpected error: " (.getLocalizedMessage e))))))
+              (let [from-participant-name-via-cache-for-feed2 (get (first extracted-from-participant) "Moniker")
+                 to-participant-name-via-cache-for-feed2 (get (first extracted-to-participant) "Moniker")]
+                (if (not (and (= from-participant-name-via-service from-participant-name-via-cache-for-feed2)
+                              (= to-participant-name-via-service to-participant-name-via-cache-for-feed2)))
+                  (report-error "error fetching participants")))))))))
+
+(defn test-verify-social-broadcast
+  "post outbound and verify results"
+  [from-id to-id]
+  (log/info "about to broadcast socially")
+  (core/test-create-outbound from-id (str "2014-01-0" (+ (rand-int 8) 1) "T19:25:51.490Z") test-subject test-story)
+  (let [inbound-message (first (:results (core/test-fetch-inbound to-id)))
+        inbound-subject-from-message (get inbound-message "subject")
+        inbound-subject-from-cassandra (cassandra/load-inbound-subject-from-db to-id)]
+    (log/info (str "fetch inbound = " inbound-message))
+    (log/info (str "inbound subject from cassandra = " inbound-subject-from-cassandra))
+    (log/info (str "inbound subject from feed = " inbound-subject-from-message))
+    (if (not (and (= inbound-subject-from-message inbound-subject-from-cassandra)
+                  (or (= inbound-subject-from-cassandra test-subject)
+                      (= inbound-subject-from-cassandra (s/replace test-subject " " "+")))))
+      (report-error "error in social broadcast logic")))
+  (Thread/sleep 10000)
+  (if (not (>= (count (doall (filter (fn [sender] (= sender from-id)) (elastic/search "test")))) 1))
+    (report-error (str "Error in keyword search. Cannot find sender " from-id " in " (json/write-str (elastic/search "test"))))))
+
+(defn perform-integration-test
+  "perform basic use case and verify with underlying data stores"
+  []
+  (core/set-feed-host (System/getenv "FEED_HOST") (System/getenv "FEED_PORT"))
+  (core/set-json-post (= (System/getenv "USE_JSON") "true"))
+  (log/info "about to create participants")
+  (try 
+    (let [from-id (core/test-create-participant from-name)
+          to-id (core/test-create-participant to-name)]
+      (verify-two-participants from-id to-id)
+      (log/info "about to friend participants")
+      (core/test-create-friends from-id to-id)
+      (test-verify-social-broadcast from-id to-id))
+    (log/info "tests passed")
+    (System/exit 0)
+(catch Exception e
+  (report-error (str "unexpected error: " (.getLocalizedMessage e))))))

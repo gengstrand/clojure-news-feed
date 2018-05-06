@@ -15,5 +15,6 @@
                  [org.slf4j/slf4j-simple "1.6.4"]
                  [clj-http "0.7.8"]]
   :plugins [[lein2-eclipse "2.0.0"]]
+  :repl-options { :timeout 120000 }
   :main load.handler
   :aot [load.handler])
