@@ -1,30 +1,27 @@
-
-apiVersion: extensions/v1beta1
+apiVersion: apps/v1beta2
 kind: Deployment
 metadata:
-  creationTimestamp: null
   name: feed
 spec:
   replicas: 1
+  strategy:
+    type: Recreate
+  selector:
+    matchLabels:
+      app: feed
   template:
     metadata:
-      creationTimestamp: null
       labels:
-        io.kompose.service: feed
+        app: feed
     spec:
       containers:
-      - env:
-        - name: MYSQL_HOST
-          value: mysql
-        - name: NOSQL_HOST
-          value: cassandra
-        - name: REDIS_HOST
-          value: redis
-        - name: SEARCH_HOST
-          value: elasticsearch
+      - name: feed
+        envFrom:
+        - configMapRef:
+            name: feed-config
         image: gengstrand/feed4:1.0
-        name: feed
         ports:
         - containerPort: 8080
+        imagePullPolicy: Always
       restartPolicy: Always
 
