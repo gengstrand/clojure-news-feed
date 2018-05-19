@@ -1,0 +1,27 @@
+namespace info.glennengstrand
+abstract asset NewsItem  identified by newsId {
+    o String newsId
+    o DateTime created
+    o String subject
+    o String story
+}
+asset Inbound extends NewsItem {
+    --> Broadcaster recipient 
+}
+asset Outbound extends NewsItem {
+    --> Broadcaster sender 
+}
+participant Broadcaster identified by participantId {
+    o String participantId
+    o String moniker
+    --> Participant[] friends
+}
+transaction Broadcast {
+    o String subject
+    o String story
+    --> Broadcaster sender
+}
+transaction Friend {
+    --> Broadcaster from
+    --> Broadcaster to
+}

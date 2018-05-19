@@ -1,0 +1,82 @@
+/*
+ * Licensed under the Apache License, Version 2.0 (the "License");
+ * you may not use this file except in compliance with the License.
+ * You may obtain a copy of the License at
+ *
+ * http://www.apache.org/licenses/LICENSE-2.0
+ *
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an "AS IS" BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
+ */
+
+/**
+ * Highly permissive access control list.
+ */
+rule EverybodyCanReadEverything {
+    description: "Allow all participants read access to all resources"
+    participant: "info.glennengstrand.Broadcaster"
+    operation: READ
+    resource: "info.glennengstrand.*"
+    action: ALLOW
+}
+
+rule EverybodyCanBroadcast {
+    description: "Allow all participants to submit transactions"
+    participant: "info.glennengstrand.Broadcaster"
+    operation: CREATE
+    resource: "info.glennengstrand.Broadcast"
+    action: ALLOW
+}
+
+rule EverybodyCanFriend {
+    description: "Allow all participants to submit transactions"
+    participant: "info.glennengstrand.Broadcaster"
+    operation: CREATE
+    resource: "info.glennengstrand.Friend"
+    action: ALLOW
+}
+
+rule OwnerHasFullAccessToTheirInboundAssets {
+    description: "Allow all participants full access to their assets"
+    participant(p): "info.glennengstrand.Broadcaster"
+    operation: ALL
+    resource(r): "info.glennengstrand.Inbound"
+    condition: (r.owner.getIdentifier() === p.getIdentifier())
+    action: ALLOW
+}
+
+rule OwnerHasFullAccessToTheirOutboundboundAssets {
+    description: "Allow all participants full access to their assets"
+    participant(p): "info.glennengstrand.Broadcaster"
+    operation: ALL
+    resource(r): "info.glennengstrand.Outbound"
+    condition: (r.owner.getIdentifier() === p.getIdentifier())
+    action: ALLOW
+}
+
+rule SystemACL {
+    description: "System ACL to permit all access"
+    participant: "org.hyperledger.composer.system.Participant"
+    operation: ALL
+    resource: "org.hyperledger.composer.system.**"
+    action: ALLOW
+}
+
+rule NetworkAdminUser {
+    description: "Grant business network administrators full access to user resources"
+    participant: "org.hyperledger.composer.system.NetworkAdmin"
+    operation: ALL
+    resource: "**"
+    action: ALLOW
+}
+
+rule NetworkAdminSystem {
+    description: "Grant business network administrators full access to system resources"
+    participant: "org.hyperledger.composer.system.NetworkAdmin"
+    operation: ALL
+    resource: "org.hyperledger.composer.system.**"
+    action: ALLOW
+}
