@@ -1,0 +1,28 @@
+{
+  "name": "news-feed",
+  "version": "1.0.0",
+  "description": "news feed api",
+  "main": "index.js",
+  "scripts": {
+    "prestart": "npm install",
+    "start": "node --harmony index.js",
+    "test": "mocha --harmony"
+  },
+  "keywords": [
+    "swagger"
+  ],
+  "license": "Apache-2.0",
+  "private": true,
+  "dependencies": {
+    "chai": "^3.5.0",
+    "connect": "^3.2.0",
+    "cors": "^2.8.4",
+    "express": "^4.14.0",
+    "js-yaml": "^3.3.0",
+    "composer-client": "0.19.6", 
+    "lodash": "^4.17.10", 
+    "mocha": "^3.2.0",
+    "mockery": "^2.0.0",
+    "swagger-tools": "0.10.1"
+  }
+}
