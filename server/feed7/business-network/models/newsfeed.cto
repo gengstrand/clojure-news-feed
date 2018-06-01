@@ -14,7 +14,7 @@ asset Outbound extends NewsItem {
 participant Broadcaster identified by participantId {
     o String participantId
     o String moniker
-    --> Participant[] friends
+    --> Broadcaster[] friends
 }
 transaction Broadcast {
     o String subject
