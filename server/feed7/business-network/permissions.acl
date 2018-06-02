@@ -40,16 +40,23 @@ rule EverybodyCanFriend {
 }
 
 rule OwnerHasFullAccessToTheirInboundAssets {
-    description: "Allow all participants full access to their assets"
+    description: "Allow all participants full access to their inbouond assets"
     participant(p): "info.glennengstrand.Broadcaster"
     operation: ALL
     resource(r): "info.glennengstrand.Inbound"
     condition: (r.owner.getIdentifier() === p.getIdentifier())
     action: ALLOW
 }
-
+rule OwnerHasFullAccessToTheirFriendshipAssets {
+    description: "Allow all participants full access to their friendship assets"
+    participant(p): "info.glennengstrand.Broadcaster"
+    operation: ALL
+    resource(r): "info.glennengstrand.Friendship"
+    condition: (r.owner.getIdentifier() === p.getIdentifier())
+    action: ALLOW
+}
 rule OwnerHasFullAccessToTheirOutboundboundAssets {
-    description: "Allow all participants full access to their assets"
+    description: "Allow all participants full access to their outbound assets"
     participant(p): "info.glennengstrand.Broadcaster"
     operation: ALL
     resource(r): "info.glennengstrand.Outbound"

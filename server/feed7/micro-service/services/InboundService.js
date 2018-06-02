@@ -1,6 +1,6 @@
 'use strict';
 function generateId() {
-   return Math.abs(Math.floor(Math.random() * Math.floor(1000)));
+   return Math.abs(Math.floor(Math.random() * Math.floor(10000000)));
 }
 exports.addInbound = function(feedItem, callback) {
   /**
@@ -38,7 +38,7 @@ exports.getInbound = function(args, callback) {
   bizNetworkConnection.connect(process.env.CARD_NAME)
     .then((bizNetworkDefinition) => {
 	var query = bizNetworkConnection.buildQuery('SELECT info.glennengstrand.Inbound WHERE (recipient == _$broadcaster)');
-	bizNetworkConnection.query(query, { broadcaster: 'resource:info.glennengstrand.Broadcaster#PID:' + args.id.value })
+	bizNetworkConnection.query(query, { broadcaster: 'resource:info.glennengstrand.Broadcaster#' + args.id.value })
 	  .then((results) => {
 	      const retVal = results.map(function(result) {
 		  return {

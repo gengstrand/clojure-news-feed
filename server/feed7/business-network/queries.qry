@@ -1,0 +1,6 @@
+query broadcasterFriends {
+  description: "Select all friends of a broadcaster"
+  statement:
+      SELECT info.glennengstrand.Friendship 
+          WHERE (from == _$broadcaster)
+}

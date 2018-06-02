@@ -11,8 +11,8 @@ exports.addFriend = function(args, callback) {
     .then((bizNetworkDefinition) => {
 	const factory = bizNetworkDefinition.getFactory();
 	var transaction = factory.newTransaction('info.glennengstrand', 'Friend');
-	transaction.from = factory.newRelationship('info.glennengstrand', 'Broadcaster', 'PID:' + args.body.value.from);
-	transaction.to = factory.newRelationship('info.glennengstrand', 'Broadcaster', 'PID:' + args.body.value.to);
+	transaction.from = factory.newRelationship('info.glennengstrand', 'Broadcaster', args.body.value.from);
+	transaction.to = factory.newRelationship('info.glennengstrand', 'Broadcaster', args.body.value.to);
 	bizNetworkConnection.submitTransaction(transaction)
 	  .then((result) => {
 	      const retVal = {
@@ -33,17 +33,15 @@ exports.getFriend = function(args, callback) {
   const bizNetworkConnection = new BusinessNetworkConnection();
   bizNetworkConnection.connect(process.env.CARD_NAME)
     .then((bizNetworkDefinition) => {
-	bizNetworkConnection.getParticipantRegistry('info.glennengstrand.Broadcaster')
-	  .then((participantRegistry) => {
-	      participantRegistry.get('PID:' + args.id.value)
-		.then((result) => {
-		    const retVal = result.friends.map(function(friend) {
-			return {'id': null, 
-				'from': args.id.value,
-				'to': friend.participantId };
-		    });
-		    callback(null, retVal);
-		});
+	var query = bizNetworkConnection.buildQuery('SELECT info.glennengstrand.Friendship WHERE (from == _$broadcaster)');
+	bizNetworkConnection.query(query, { broadcaster: 'resource:info.glennengstrand.Broadcaster#' + args.id.value })
+	  .then((friends) => {
+	      const retVal = friends.map(function(friend) {
+		return {'id': null, 
+			'from': args.id.value,
+			'to': friend.to.participantId };
+	      });
+  	      callback(null, retVal);
 	  });
     });
 }
