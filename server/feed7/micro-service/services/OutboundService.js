@@ -12,7 +12,7 @@ exports.addOutbound = function(args, callback) {
     .then((bizNetworkDefinition) => {
 	const factory = bizNetworkDefinition.getFactory();
 	var transaction = factory.newTransaction('info.glennengstrand', 'Broadcast');
-	transaction.sender = factory.newRelationship('info.glennengstrand', 'Broadcaster', args.body.value.from);
+	transaction.sender = factory.newRelationship('info.glennengstrand', 'Broadcaster', 'PID:' + args.body.value.from);
 	transaction.subject = args.body.value.subject;
 	transaction.story = args.body.value.story;
 	bizNetworkConnection.submitTransaction(transaction)
@@ -39,7 +39,7 @@ exports.getOutbound = function(args, callback) {
   bizNetworkConnection.connect(process.env.CARD_NAME)
     .then((bizNetworkDefinition) => {
 	var query = bizNetworkConnection.buildQuery("SELECT info.glennengstrand.Outbound WHERE (sender == _$broadcaster)");
-	bizNetworkConnection.query(query, { broadcaster: 'resource:info.glennengstrand.Broadcaster#' + args.id.value })
+	bizNetworkConnection.query(query, { broadcaster: 'resource:info.glennengstrand.Broadcaster#PID:' + args.id.value })
 	  .then((results) => {
 	      const retVal = results.map(function(result) {
 		  return {

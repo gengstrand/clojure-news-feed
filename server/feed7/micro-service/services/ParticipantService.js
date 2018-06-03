@@ -15,9 +15,8 @@ exports.addParticipant = function(args, callback) {
 	const id = generateId();
 	bizNetworkConnection.getParticipantRegistry('info.glennengstrand.Broadcaster')
 	  .then((participantRegistry) => {
-	      var p = factory.newResource('info.glennengstrand', 'Broadcaster', id);
+	      var p = factory.newResource('info.glennengstrand', 'Broadcaster', 'PID:' + id);
 	      p.moniker = args.body.value.name;
-	      p.friends = [];
 	      participantRegistry.add(p);
 	      var retVal = {'id':id,'name':p.moniker};
 	      callback(null, retVal);
@@ -36,7 +35,7 @@ exports.getParticipant = function(args, callback) {
     .then((bizNetworkDefinition) => {
 	bizNetworkConnection.getParticipantRegistry('info.glennengstrand.Broadcaster')
 	  .then((participantRegistry) => {
-	      participantRegistry.get(args.id.value)
+	      participantRegistry.get('PID:' + args.id.value)
 		.then((result) => {
 		    var retVal = {'id':args.id.value,'name': result.moniker};
 		    callback(null, retVal);

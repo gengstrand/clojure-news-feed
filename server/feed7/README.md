@@ -8,7 +8,13 @@ This is dev focused. Spin up an m4.xlarge with Ubuntu AMI then ssh to it.
 curl -O https://hyperledger.github.io/composer/latest/prereqs-ubuntu.sh
 chmod u+x prereqs-ubuntu.sh
 ./prereqs-ubuntu.sh
-cd fabric-dev-servers/
+# log out and back in
+npm install -g composer-cli
+mkdir ~/fabric-tools
+cd ~/fabric-tools
+curl -O https://raw.githubusercontent.com/hyperledger/composer-tools/master/packages/fabric-dev-servers/fabric-dev-servers.zip
+unzip fabric-dev-servers.zip
+./downloadFabric.sh
 ./startFabric.sh 
 ./createPeerAdminCard.sh 
 cd ~/
