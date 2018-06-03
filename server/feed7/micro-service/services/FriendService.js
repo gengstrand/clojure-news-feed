@@ -1,5 +1,21 @@
 'use strict';
 
+function submitTransaction(bizNetworkConnection, transaction, from, to, callback, retry) {
+    bizNetworkConnection.submitTransaction(transaction)
+	.then((result) => {
+	    const retVal = {
+		'id':null,
+		'from':from, 
+		'to': to };
+	    callback(null, retVal);
+	}).catch(() => {
+	    console.log('error while submitting add friend transaction');
+	    setTimeout(() => {
+		submitTransaction(bizNetworkConnection, transaction, from, to, callback, 2 * retry);
+	    }, retry + Math.floor(Math.random() * Math.floor(1000)));
+	});
+}
+
 exports.addFriend = function(args, callback) {
   /**
    * parameters expected in the args:
@@ -13,14 +29,7 @@ exports.addFriend = function(args, callback) {
 	var transaction = factory.newTransaction('info.glennengstrand', 'Friend');
 	transaction.from = factory.newRelationship('info.glennengstrand', 'Broadcaster', 'PID:' + args.body.value.from);
 	transaction.to = factory.newRelationship('info.glennengstrand', 'Broadcaster', 'PID:' + args.body.value.to);
-	bizNetworkConnection.submitTransaction(transaction)
-	  .then((result) => {
-	      const retVal = {
-		  'id':null,
-		  'from':args.body.value.from, 
-		  'to': args.body.value.to };
-	      callback(null, retVal);
-	  });
+	submitTransaction(bizNetworkConnection, transaction, args.body.value.from, args.body.value.to, callback, 3000);
     });
 }
 

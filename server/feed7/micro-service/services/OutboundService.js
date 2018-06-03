@@ -1,11 +1,30 @@
 'use strict';
 
+function submitTransaction(bizNetworkConnection, transaction, from, subject, story, callback, retry) {
+    const elastic = require('../repositories/elastic');
+    bizNetworkConnection.submitTransaction(transaction)
+	.then((result) => {
+	    const retVal = {
+		  "from": from,
+		  "occurred": Date.now(), 
+		  "subject": subject, 
+		  "story": story
+	    };
+	    elastic.index(from, story);
+	    callback(null, retVal);
+	}).catch(() => {
+	    console.log('error while submitting add outbound transaction');
+	    setTimeout(() => {
+		submitTransaction(bizNetworkConnection, transaction, from, subject, story, callback, 2 * retry);
+	    }, retry + Math.floor(Math.random() * Math.floor(1000)));
+	});
+}
+
 exports.addOutbound = function(args, callback) {
   /**
    * parameters expected in the args:
   * body (Outbound)
   **/
-  const elastic = require('../repositories/elastic');
   const BusinessNetworkConnection = require('composer-client').BusinessNetworkConnection;
   const bizNetworkConnection = new BusinessNetworkConnection();
   bizNetworkConnection.connect(process.env.CARD_NAME)
@@ -15,17 +34,7 @@ exports.addOutbound = function(args, callback) {
 	transaction.sender = factory.newRelationship('info.glennengstrand', 'Broadcaster', 'PID:' + args.body.value.from);
 	transaction.subject = args.body.value.subject;
 	transaction.story = args.body.value.story;
-	bizNetworkConnection.submitTransaction(transaction)
-	  .then((result) => {
-	      const retVal = {
-		  "from": args.body.value.from,
-		  "occurred": Date.now(), 
-		  "subject": args.body.value.subject, 
-		  "story": args.body.value.story
-	      };
-	      elastic.index(args.body.value.from, args.body.value.story);
-	      callback(null, retVal);
-	  });
+	submitTransaction(bizNetworkConnection, transaction, args.body.value.from, args.body.value.subject, args.body.value.story, callback, 4000);
     });
 }
 
