@@ -12,9 +12,8 @@ COPY controllers /usr/app/controllers/
 COPY repositories /usr/app/repositories/
 COPY services /usr/app/services/
 COPY index.js /usr/app/
-ENV MYSQL_USER feed
-ENV MYSQL_PASS feed1234
-ENV MYSQL_DB feed
+ENV CARD_NAME admin@news-feed
+ENV SEARCH_HOST elasticsearch
 ENV SEARCH_PATH /feed/stories
 EXPOSE 8080
 CMD [ "npm", "start" ]

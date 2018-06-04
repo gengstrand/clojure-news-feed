@@ -27,6 +27,8 @@ composer card import --file networkAdmin.card
 composer network ping --card admin@news-feed
 cd ../micro-service
 export CARD_NAME=admin@news-feed 
+export SEARCH_HOST=<<ip address>>
+export SEARCH_PATH=/feed/stories
 npm install
 npm start
 ```
