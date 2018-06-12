@@ -1,6 +1,6 @@
 'use strict';
 
-function submitTransaction(bizNetworkConnection, transaction, from, to, callback, retry) {
+function submitTransactionRetry(bizNetworkConnection, transaction, from, to, callback, retry) {
     bizNetworkConnection.submitTransaction(transaction)
 	.then((result) => {
 	    const retVal = {
@@ -10,8 +10,21 @@ function submitTransaction(bizNetworkConnection, transaction, from, to, callback
 	    callback(null, retVal);
 	}).catch(() => {
 	    console.log('error while submitting add friend transaction');
+	    callback({'message':'MVCC read conflict while attempting to add friend'}, null);
+	});
+}
+
+function submitTransaction(bizNetworkConnection, transaction, from, to, callback, retry) {
+    bizNetworkConnection.submitTransaction(transaction)
+	.then((result) => {
+	    const retVal = {
+		'id':null,
+		'from':from, 
+		'to': to };
+	    callback(null, retVal);
+	}).catch(() => {
 	    setTimeout(() => {
-		submitTransaction(bizNetworkConnection, transaction, from, to, callback, 2 * retry);
+		submitTransactionRetry(bizNetworkConnection, transaction, from, to, callback, 2 * retry);
 	    }, retry + Math.floor(Math.random() * Math.floor(1000)));
 	});
 }
@@ -29,7 +42,7 @@ exports.addFriend = function(args, callback) {
 	var transaction = factory.newTransaction('info.glennengstrand', 'Friend');
 	transaction.from = factory.newRelationship('info.glennengstrand', 'Broadcaster', 'PID:' + args.body.value.from);
 	transaction.to = factory.newRelationship('info.glennengstrand', 'Broadcaster', 'PID:' + args.body.value.to);
-	submitTransaction(bizNetworkConnection, transaction, args.body.value.from, args.body.value.to, callback, 3000);
+	submitTransaction(bizNetworkConnection, transaction, args.body.value.from, args.body.value.to, callback, 1500);
     });
 }
 

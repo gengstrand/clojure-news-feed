@@ -1,6 +1,6 @@
 'use strict';
 
-function submitTransaction(bizNetworkConnection, transaction, from, subject, story, callback, retry) {
+function submitTransactionRetry(bizNetworkConnection, transaction, from, subject, story, callback, retry) {
     const elastic = require('../repositories/elastic');
     bizNetworkConnection.submitTransaction(transaction)
 	.then((result) => {
@@ -14,8 +14,25 @@ function submitTransaction(bizNetworkConnection, transaction, from, subject, sto
 	    callback(null, retVal);
 	}).catch(() => {
 	    console.log('error while submitting add outbound transaction');
+	    callback({'message':'MVCC read conflict while attempting to add outbound news item'}, null);
+	});
+}
+
+function submitTransaction(bizNetworkConnection, transaction, from, subject, story, callback, retry) {
+    const elastic = require('../repositories/elastic');
+    bizNetworkConnection.submitTransaction(transaction)
+	.then((result) => {
+	    const retVal = {
+		  "from": from,
+		  "occurred": Date.now(), 
+		  "subject": subject, 
+		  "story": story
+	    };
+	    elastic.index(from, story);
+	    callback(null, retVal);
+	}).catch(() => {
 	    setTimeout(() => {
-		submitTransaction(bizNetworkConnection, transaction, from, subject, story, callback, 2 * retry);
+		submitTransactionRetry(bizNetworkConnection, transaction, from, subject, story, callback, 2 * retry);
 	    }, retry + Math.floor(Math.random() * Math.floor(1000)));
 	});
 }
@@ -34,7 +51,7 @@ exports.addOutbound = function(args, callback) {
 	transaction.sender = factory.newRelationship('info.glennengstrand', 'Broadcaster', 'PID:' + args.body.value.from);
 	transaction.subject = args.body.value.subject;
 	transaction.story = args.body.value.story;
-	submitTransaction(bizNetworkConnection, transaction, args.body.value.from, args.body.value.subject, args.body.value.story, callback, 4000);
+	submitTransaction(bizNetworkConnection, transaction, args.body.value.from, args.body.value.subject, args.body.value.story, callback, 2000);
     });
 }
 
