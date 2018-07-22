@@ -1,8 +1,8 @@
-# news feed micro-services
+# news feed microservices
 
-Part of what I do as a Software Architect is to evaluate and recommend various technologies as they relate to micro-service development. Just reading other blogs or vendor originated marketing collateral is not sufficient. 
+Part of what I do as a Software Architect is to evaluate and recommend various technologies as they relate to microservice development. Just reading other blogs or vendor originated marketing collateral is not sufficient. 
 
-When I decide to learn more about a particular technology or programming language, I use it to build a rudimentary news feed micro-service. I document the developer experience. I subject it to various load tests whose performance is measured. Finally, I collect those measurements and analyze them. Since each news feed implementation has feature parity, I can blog about how the technology under evaluation compares to the other technologies previously implemented here.
+When I decide to learn more about a particular technology or programming language, I use it to build a rudimentary news feed microservice. I document the developer experience. I subject it to various load tests whose performance is measured. Finally, I collect those measurements and analyze them. Since each news feed implementation has feature parity, I can blog about how the technology under evaluation compares to the other technologies previously implemented here.
 
 All of the code written by me in these evaluations is open source and is available here in this repository. Here is how it is organized.
 
@@ -26,11 +26,11 @@ I blogged about the performance differences.
 
 http://glennengstrand.info/software/performance/scala/clojure
 
-I blogged about how this micro-service performs when running with MySql, with PostGreSql, and with Docker.
+I blogged about how this microservice performs when running with MySql, with PostGreSql, and with Docker.
 
 http://glennengstrand.info/software/performance/mysql/postgres/docker
 
-I documented my research into how this micro-service performed when integrated with ElasticSearch and with Solr for keyword based search.
+I documented my research into how this microservice performed when integrated with ElasticSearch and with Solr for keyword based search.
 
 http://glennengstrand.info/software/performance/elasticsearch/solr
 
@@ -42,13 +42,13 @@ http://glennengstrand.info/software/performance/clojure/dropwizard
 
 ### feed4
 
-For something completely different, I blogged about a news feed micro-service implementation in Node.js and how it compared with the DropWizard version.
+For something completely different, I blogged about a news feed microservice implementation in Node.js and how it compared with the DropWizard version.
 
 http://glennengstrand.info/software/performance/nodejs/dropwizard
 
 ### feed5
 
-This time, the news feed micro-service is implemented in Python running on Flask.
+This time, the news feed microservice is implemented in Python running on Flask.
 
 http://glennengstrand.info/software/performance/nodejs/python
 
@@ -57,6 +57,10 @@ http://glennengstrand.info/software/performance/nodejs/python
 This time, the scala microservice was rewritten in an attempt to lower complexity and improve performance.
 
 http://glennengstrand.info/software/architecture/scala/rewrite
+
+### feed7
+
+News feed microservice built on top of Hyperledger Composer
 
 ### solr
 
@@ -112,7 +116,7 @@ Instead of a map reduce job, the news feed performance data is consumed from kaf
 
 ### perf4
 
-A micro-service written in Java with the vert.x framework. It is intended to be called by kong. It aggregates performance data then sends it to elastic search in batches. It does not require kafka.
+A microservice written in Java with the vert.x framework. It is intended to be called by kong. It aggregates performance data then sends it to elastic search in batches. It does not require kafka.
 
 ### perf5
 
@@ -120,7 +124,7 @@ A CLI tool that queries either elastic search or solr performance statistics and
 
 ### mobile/feed
 
-A cross mobile platform GUI for the news feed micro-service that uses the Ionic Framework.
+A cross mobile platform GUI for the news feed microservice that uses the Ionic Framework.
 
 ## License
 
