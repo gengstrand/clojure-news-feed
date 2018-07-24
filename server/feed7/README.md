@@ -2,8 +2,8 @@
 
 This is another implementation of the news feed using Hyperledger Composer.
 
-## installation
-This is dev focused. Spin up an m4.xlarge with Ubuntu AMI then ssh to it.
+## Installation on AWS
+This is dev focused. Spin up an m4.2xlarge with Ubuntu AMI then ssh to it.
 ```
 curl -O https://hyperledger.github.io/composer/latest/prereqs-ubuntu.sh
 chmod u+x prereqs-ubuntu.sh
@@ -32,6 +32,8 @@ export SEARCH_PATH=/feed/stories
 npm install
 npm start
 ```
+
+The Hyperledger Composer Client API version has to match what is running on the server and they release new versions pretty frequently so be prepared to edit the micro-service/package.json file by editing the composer-client version number.
 
 ## License <a name="license"></a>
 Hyperledger Project source code files are made available under the Apache License, Version 2.0 (Apache-2.0), located in the LICENSE file. Hyperledger Project documentation files are made available under the Creative Commons Attribution 4.0 International License (CC-BY-4.0), available at http://creativecommons.org/licenses/by/4.0/.
