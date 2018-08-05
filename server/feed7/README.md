@@ -1,9 +1,23 @@
-# News Feed Business Network
+# News Feed via Hyperledger Composer
 
 This is another implementation of the news feed using Hyperledger Composer.
 
+## Components
+
+This project is made up of two components, a [Hyperledger Composer](https://www.hyperledger.org/wp-content/uploads/2017/05/Hyperledger-Composer-Overview.pdf) business network and a DApp microservice that calls the business network.
+
+### business-network
+
+Contains the model, transactions, and query needed to implement the news feed on [Hyperledger Fabric](https://www.hyperledger.org/projects/fabric).
+
+### micro-service
+
+This is a Node.js microservice where I took the feed4 application and replaced all calls to MySql, Redis, and Cassandra with calls to the Composer API referencing the business network.
+
 ## Installation on AWS
+
 This is dev focused. Spin up an m4.2xlarge with Ubuntu AMI then ssh to it.
+
 ```
 curl -O https://hyperledger.github.io/composer/latest/prereqs-ubuntu.sh
 chmod u+x prereqs-ubuntu.sh
