@@ -60,7 +60,9 @@ http://glennengstrand.info/software/architecture/scala/rewrite
 
 ### feed7
 
-News feed microservice built on top of Hyperledger Composer
+News feed microservice built on top of Hyperledger Composer.
+
+https://www.infoq.com/articles/evaluating-hyperledger-composer
 
 ### solr
 

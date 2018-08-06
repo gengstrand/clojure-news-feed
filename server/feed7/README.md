@@ -1,6 +1,6 @@
 # News Feed via Hyperledger Composer
 
-This is another implementation of the news feed using Hyperledger Composer.
+This is another implementation of the news feed using Hyperledger Composer. You can read more about how this project was used in [Evaluating Hyperledger Composer](https://www.infoq.com/articles/evaluating-hyperledger-composer).
 
 ## Components
 
