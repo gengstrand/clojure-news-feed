@@ -12,6 +12,16 @@ For developer purposes, I am using [minikube](https://github.com/kubernetes/mini
 minikube start --vm-driver=kvm2
 eval $(minikube docker-env)
 ```
+If you get an error like this...
+
+Requested operation is not valid: network 'minikube-net' is not active
+
+...then try this...
+
+```shell
+virsh
+net-start minikube-net
+```
 
 ### setting up the dependencies
 
