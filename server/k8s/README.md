@@ -139,7 +139,11 @@ kubectl create -f kibana-deployment.yaml
 
 If you call the news feed APIs with the kong-proxy URL, then you will be able to track performance by pointing your web browser to the kibana-logger URL.
 
-## Google Kubernetes Engine
+## Kubernetes in the Cloud
+
+Once you have everything working the way you want on your personal computer, you will most likely want to see how to deploy it to the cloud. Here are some tips on how to do that on both GKE and EKS.
+
+### Google Kubernetes Engine
 
 I created a project called feed and a cluster called feed-test using 7 n1-standard-4 instances through Kubernetes Engine part of the the Google Cloud Platform dashboard. Then I ran the following in the gcloud console.
 
@@ -149,6 +153,41 @@ gcloud config set compute/zone us-central1-a
 gcloud container clusters get-credentials feed-test --zone us-central1-a --project feed-193503
 git clone https://github.com/gengstrand/clojure-news-feed.git
 cd clojure-news-feed/server/k8s
+```
+
+### Amazon Elastic Container Service for Kubernetes
+
+It is not as easy to provision a Kubernetes cluster on EKS as it is on GKE. If you are new to EKS, then it will take hours to make it through this [getting started](https://docs.aws.amazon.com/eks/latest/userguide/getting-started.html) topic but that is what you are going to have to do. Read that long and detailed topic very carefully and be prepared to follow it to the letter. There are plenty of gotchas here and you need to be very familiar with IAM, CloudFormation, EKS, AWS CLI, and the AWS IAM Authenticator for Kubernetes. You will need to use both the AWS Console and CLI. Some things that they list as optional are actually mandatory.
+
+* Create the EKS Service Role
+* Ensure that you have IAM user credentials (with AWS_ACCESS_KEY_ID and AWS_SECRET_ACCESS_KEY) that is allowed to sts:AssumeRole with the EKS Service Role.
+* Create the EKS Cluster VPC
+* Install the latest AWS CLI with the IAM user credentials above
+* You should create the EKS cluster via the command line.
+
+```
+aws eks create-cluster --name devel --role-arn arn:aws:iam::111122223333:role/eks-service-role-AWSServiceRoleForAmazonEKS-EXAMPLEBKZRQR --resources-vpc-config subnetIds=subnet-a9189fe2,subnet-50432629,securityGroupIds=sg-f5c54184
+aws eks describe-cluster --name devel --query cluster.status
+aws eks describe-cluster --name devel  --query cluster.endpoint --output text
+aws eks describe-cluster --name devel  --query cluster.certificateAuthority.data --output text
+```
+
+* Install and Configure kubectl for EKS
+* Install aws-iam-authenticator for EKS
+* Launch and configure EKS Worker Nodes. I used 7 m4.xlarge instances.
+* Enable those worker nodes to join the cluster
+
+```
+curl -O https://amazon-eks.s3-us-west-2.amazonaws.com/cloudformation/2018-08-30/aws-auth-cm.yaml
+# edit that file as documented
+kubectl apply -f aws-auth-cm.yaml
+```
+
+### Spinning up the Services
+
+Once you have provisioned your cluster on the Public Cloud vendor of choice, you can proceed with the cloud vendor neutral Kubernetes commands. 
+
+```
 kubectl create -f cassandra-service.yaml
 kubectl create -f redis-service.yaml
 kubectl create -f mysql-service.yaml
