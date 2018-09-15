@@ -122,7 +122,7 @@ kubectl create -f kong-logger-deployment.yaml
 kubectl create -f load_test.yaml 
 ```
 
-After that, you should be able to reach the feed service via Kong this way.
+Be advised that, if you are testing feed 1 or 2, then you should use the load_test_legacy.yaml instead of the load_test.yaml manifest. After that, you should be able to reach the feed service via Kong this way.
 
 ```shell
 FEED_URL=$(minikube service kong-proxy --url | head -n 1)
