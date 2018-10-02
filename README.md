@@ -84,6 +84,8 @@ This folder contains assets for standing up the service, and its dependencies, o
 
 This folder contains assets for standing up the service, and its dependencies, in Kubernetes.
 
+http://glennengstrand.info/software/performance/eks/gke
+
 ## client
 
 These applications are expected to be run on the client(s).
