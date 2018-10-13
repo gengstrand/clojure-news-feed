@@ -5,7 +5,7 @@ if (is.na(args[1]) || is.na(args[2]) || is.na(args[3])) {
     q()
 }
 print(paste("reading from ", args[1]))
-print(paste("writing per second latency data to ", args[2]))
+print(paste("writing per minute latency data to ", args[2]))
 print(paste("writing per minute throughput data to ", args[3]))
 raw <- read_csv(args[1])
 r1 <- select(raw, year, month, day, hour, minute, second, cloud, feed, entity, operation, status, duration) 
