@@ -25,7 +25,7 @@ done
 cd $ETL
 echo "year,month,day,hour,minute,cloud,feed,friends POST,outbound POST,participant POST" >throughput.csv
 cat $WD/throughput/*.csv | grep -v 'year,month,day,hour,minute' >>throughput.csv
-echo "year,month,day,hour,minute,second,cloud,feed,friends POST,outbound POST,participant POST" >latency.csv
+echo "year,month,day,hour,minute,cloud,feed,friends POST,outbound POST,participant POST" >latency.csv
 cat $WD/latency/*.csv | grep -v 'year,month,day,hour,minute' >>latency.csv
 rm -Rf $WD
 
