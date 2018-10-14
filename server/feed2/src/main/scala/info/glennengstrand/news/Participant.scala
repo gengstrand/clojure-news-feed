@@ -69,7 +69,9 @@ class Participant(id: Int, name: String) extends ParticipantState(id, name) with
     )
     val result = write(Participant.bindings, state, criteria)
     val newId = result.getOrElse("id", 0l).asInstanceOf[Int]
-    invalidate(Participant.bindings, criteria)
+    if (id != 0) {
+      invalidate(Participant.bindings, criteria)
+    }
     Participant.create(newId, name)
   }
 
