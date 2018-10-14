@@ -10,9 +10,9 @@ def readcsv(filename):
     target = []
     for row in reader:
         if rownum > 0:
-            view = [ row[7], row[8], row[9], row[10] ]
+            view = [ row[6], row[7], row[8], row[9] ]
             data.append(view)
-	    target.append(row[6])
+	    target.append(row[5])
         rownum += 1
     ifile.close()
     return [ data, target ]

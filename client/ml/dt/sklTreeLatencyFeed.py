@@ -11,11 +11,11 @@ def readcsv(filename):
     for row in reader:
         if rownum > 0:
             cloud = 0.0
-            if row[6] == "GKE":
+            if row[5] == "GKE":
                 cloud = 1.0
-            view = [ cloud, row[8], row[9], row[10] ]
+            view = [ cloud, row[7], row[8], row[9] ]
             data.append(view)
-	    target.append(row[7])
+	    target.append(row[6])
         rownum += 1
     ifile.close()
     return [ data, target ]
