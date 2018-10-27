@@ -32,4 +32,18 @@ The path/to/data is the root folder where all the raw data fetched by extract.py
 
 The dt folder contains the scripts used to analyze the data collected by the assets in the etl folder.
 
-There are assets here that analyze the data using decision trees from the R programming language, scikit-learn, and Spark MLlib.
+There are programs here that analyze the data using decision trees from the R programming language, tensorflow, scikit-learn, and Spark MLlib.
+
+There are hard coded folders and file names in these scripts so you will need to edit these files before running them.
+
+I used the clipboard and spark-shell for the scala files. I did something similar for the R program.
+
+You will need to install some libraries for the python programs before running them.
+
+```bash
+pip install --upgrade --user tensorflow
+pip install numpy
+pip install scikit-learn
+```
+
+I ran these programs with python 2.7 on Ubuntu Bionic Beaver.

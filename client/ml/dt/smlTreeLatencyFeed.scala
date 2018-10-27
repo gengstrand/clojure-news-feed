@@ -7,8 +7,8 @@ val hr = sc.textFile("/home/glenn/git/clojure-news-feed/client/ml/etl/latency.cs
 val header = hr.first()
 val records = hr.filter(r => !r.equals(header)).map(line => line.split(","))
 val data = records.map { r =>
-    val label = r(7).toDouble
-    val features = r.slice(8, 10).map(d => d.toDouble)
+    val label = r(6).toDouble
+    val features = r.slice(7, 9).map(d => d.toDouble)
     LabeledPoint(label, Vectors.dense(features))
 }
 val splits = data.randomSplit(Array(0.7, 0.3))
