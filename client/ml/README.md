@@ -4,6 +4,10 @@ Here are some assets used to collect and analyze the performance data that went 
 
 http://glennengstrand.info/software/performance/eks/gke
 
+You can learn more about how these scripts were used here.
+
+http://glennengstrand.info/software/architecture/msa/ml
+
 ## Extract, Transform, and Load
 
 The etl folder contains scripts used to extract the performance data from elasticsearch, convert it to a format that is more appropriate for machine learning algorithms, and write aggregated CSV files for throughput and latency.
