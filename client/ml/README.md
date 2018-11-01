@@ -48,6 +48,7 @@ You will need to install some libraries for the python programs before running t
 pip install --upgrade --user tensorflow
 pip install numpy
 pip install scikit-learn
+pip install pandas
 ```
 
 I ran these programs with python 2.7 on Ubuntu Bionic Beaver.
