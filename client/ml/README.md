@@ -8,6 +8,8 @@ You can learn more about how these scripts were used here.
 
 http://glennengstrand.info/software/architecture/msa/ml
 
+The ml.ipynb file is a Jupyter notebook for the scikit-learn programs.
+
 ## Extract, Transform, and Load
 
 The etl folder contains scripts used to extract the performance data from elasticsearch, convert it to a format that is more appropriate for machine learning algorithms, and write aggregated CSV files for throughput and latency.

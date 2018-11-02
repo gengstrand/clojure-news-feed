@@ -1,31 +1,14 @@
 import csv
 import tensorflow as tf
 import numpy as np
+import pandas
 from tensorflow.python.ops import parsing_ops
 from tensorflow.contrib.tensor_forest.python import tensor_forest
 from tensorflow.contrib.learn.python.learn.utils import input_fn_utils
 
-def readcsv(filename):	
-    ifile = open(filename, "rU")
-    reader = csv.reader(ifile, delimiter=",")
-    rownum = 0	
-    data = []
-    target = []
-    for row in reader:
-        if rownum > 0:
-            view = [ row[7], row[8], row[9] ]
-            data.append(view)
-            cloud = 0
-            if row[5] == 'EKS':
-                cloud = 1
-	    target.append(cloud)
-        rownum += 1
-    ifile.close()
-    return [ data, target ]
-
-input = readcsv("/home/glenn/git/clojure-news-feed/client/ml/etl/throughput.csv")
-data = np.array(input[0], dtype=np.float32)
-target = np.array(input[1], dtype=np.float32)
+input = pandas.read_csv("/home/glenn/git/clojure-news-feed/client/ml/etl/throughput.csv")
+data = np.array(input[input.columns[6:9]], dtype=np.float32)
+target = np.array(input['cloud'].apply(lambda x: 1.0 if x == 'GKE' else 0.0), dtype=np.float32)
 hparams = tensor_forest.ForestHParams(num_classes=2,
                                       num_features=3,
                                       num_trees=1,
