@@ -44,6 +44,8 @@ There are hard coded folders and file names in these scripts so you will need to
 
 I used the clipboard and spark-shell for the scala files. I did something similar for the R program.
 
+There is also a jupyter notebook which compares the accuracy between scikit-learn and tensorflow.
+
 You will need to install some libraries for the python programs before running them.
 
 ```bash
