@@ -1,23 +1,18 @@
 package com.dynamicalsoftware.support;
 
-import java.io.File;
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.UUID;
 
 import org.apache.log4j.Logger;
-import org.apache.solr.client.solrj.SolrQuery;
 import org.apache.solr.client.solrj.SolrClient;
 import org.apache.solr.client.solrj.SolrServerException;
-import org.apache.solr.client.solrj.embedded.EmbeddedSolrServer;
 import org.apache.solr.client.solrj.impl.HttpSolrClient;
 import org.apache.solr.client.solrj.response.QueryResponse;
 import org.apache.solr.common.SolrDocument;
 import org.apache.solr.common.SolrInputDocument;
 import org.apache.solr.common.params.ModifiableSolrParams;
-import org.apache.solr.common.params.SolrParams;
-import org.apache.solr.core.CoreContainer;
 
 public abstract class Search {
 
@@ -27,13 +22,9 @@ public abstract class Search {
 	private static final String CONTENT_COL_NAME = "story";
 	
 	public static SolrClient server(String baseUrl) {
-		return new HttpSolrClient(baseUrl);
-	}
-	
-	public static SolrClient server(String homeFolder, String core) {
-	    File home = new File(homeFolder);
-	    CoreContainer container = CoreContainer.createAndLoad(homeFolder, new File(home, "solr.xml"));
-	    return new EmbeddedSolrServer(container, core);
+		return new HttpSolrClient.Builder()
+				.withBaseSolrUrl(baseUrl)
+				.build();
 	}
 	
 	public static void add(SolrClient server, long senderID, String story) {

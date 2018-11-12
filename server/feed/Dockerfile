@@ -6,10 +6,10 @@ RUN \
   mkdir -p /usr/app/bin && \
   mkdir -p /home/glenn/.m2
 WORKDIR /usr/app
-ADD http://www-eu.apache.org/dist/maven/maven-3/3.5.2/binaries/apache-maven-3.5.2-bin.tar.gz /usr/app/
+ADD http://mirror.cogentco.com/pub/apache/maven/maven-3/3.6.0/binaries/apache-maven-3.6.0-bin.tar.gz /usr/app/
 ADD https://raw.githubusercontent.com/technomancy/leiningen/stable/bin/lein /usr/app/bin/
 COPY config.clj /usr/app/
-ENV PATH $PATH:/usr/app/apache-maven-3.5.2/bin:/usr/app/bin:/usr/lib/jvm/java-7-openjdk-amd64/bin
+ENV PATH $PATH:/usr/app/apache-maven-3.6.0/bin:/usr/app/bin:/usr/lib/jvm/java-7-openjdk-amd64/bin
 ENV APP_CONFIG /usr/app/config.clj
 RUN \
   chmod a+x /usr/app/bin/lein && \

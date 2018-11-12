@@ -1,11 +1,13 @@
-{:sql-host "mysql_host"
+
+{:sql-host "mysql"
  :sql-db-name "feed"
  :sql-db-user "feed"
- :sql-db-password "feed"
+ :sql-db-password "feed1234"
  :sql-vendor "mysql"
- :nosql-host "cassandra_host"
+ :nosql-host "cassandra"
  :nosql-consistency "one" 
  :nosql-ttl 7776000 
- :cache-host "redis_host"
+ :cache-host "redis"
  :messaging-host "127.0.0.1"
- :search-host "http://solr_host:9200/feed/stories"}
+ :search-host "http://elasticsearch:9200/feed/stories"}
+
