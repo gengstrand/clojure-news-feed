@@ -8,6 +8,8 @@ You can learn more about how these scripts were used here.
 
 http://glennengstrand.info/software/architecture/msa/ml
 
+http://glennengstrand.info/software/architecture/ml/oss
+
 The ml.ipynb file is a Jupyter notebook for the scikit-learn programs.
 
 ## Extract, Transform, and Load

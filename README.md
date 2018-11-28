@@ -136,6 +136,8 @@ Scripts used to analyze microservice performance data with machine learning algo
 
 http://glennengstrand.info/software/architecture/msa/ml
 
+http://glennengstrand.info/software/architecture/ml/oss
+
 ## License
 
 Copyright © 2013 - 2017 Glenn Engstrand
