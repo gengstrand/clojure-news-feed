@@ -140,7 +140,7 @@ http://glennengstrand.info/software/architecture/ml/oss
 
 ## License
 
-Copyright © 2013 - 2017 Glenn Engstrand
+Copyright © 2013 - 2018 Glenn Engstrand
 
 Distributed under the Eclipse Public License
 
