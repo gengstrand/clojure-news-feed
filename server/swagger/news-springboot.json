@@ -1,0 +1,7 @@
+{
+    "artifactId": "newsfeed-springboot", 
+    "apiPackage": "info.glennengstrand.resources", 
+    "modelPackage": "info.glennengstrand.api",
+    "groupId": "info.glennengstrand", 
+    "artifactVersion": "1.0.0-SNAPSHOT"
+}

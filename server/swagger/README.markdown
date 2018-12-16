@@ -1,7 +1,8 @@
 ## news feed swagger
 
 http://swagger.io/ is a popular MDSD framework that focuses on building
-micro-services. This folder explores how to use swagger for the news feed.
+micro-services. The Swagger Code Generator is licensed under Apache 2.
+This folder explores how to use swagger for the news feed.
 
 ### installing swagger codegen
 
@@ -32,4 +33,13 @@ mvn test
 
 ```bash
 ./news-flask.sh /path/to/swagger-codegen-cli.jar
+```
+
+#### for spring boot
+
+```bash
+./springboot-feed-server.sh /path/to/swagger-codegen-cli.jar
+cd swagger-output
+mvn compile
+mvn test
 ```
