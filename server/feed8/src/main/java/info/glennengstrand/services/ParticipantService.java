@@ -3,6 +3,7 @@ package info.glennengstrand.services;
 import java.util.Optional;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Service;
 
 import info.glennengstrand.api.Participant;
 import info.glennengstrand.resources.NotFoundException;
@@ -10,6 +11,7 @@ import info.glennengstrand.resources.ParticipantApi;
 import io.swagger.configuration.RedisConfiguration.ParticipantRedisTemplate;
 import info.glennengstrand.dao.ParticipantRepository;
 
+@Service
 public class ParticipantService implements ParticipantApi {
 
 	@Autowired

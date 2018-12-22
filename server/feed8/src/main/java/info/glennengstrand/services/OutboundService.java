@@ -5,6 +5,7 @@ import java.util.List;
 import java.util.stream.Collectors;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Service;
 
 import info.glennengstrand.api.Outbound;
 import info.glennengstrand.dao.OutboundRepository;
@@ -12,6 +13,7 @@ import info.glennengstrand.resources.FriendsApi;
 import info.glennengstrand.resources.InboundApi;
 import info.glennengstrand.resources.OutboundApi;
 
+@Service
 public class OutboundService implements OutboundApi {
 
 	@Autowired

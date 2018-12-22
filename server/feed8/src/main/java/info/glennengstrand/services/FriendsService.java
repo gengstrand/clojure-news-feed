@@ -4,6 +4,7 @@ import java.util.List;
 import java.util.stream.Collectors;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Service;
 
 import info.glennengstrand.api.Friend;
 import info.glennengstrand.resources.FriendsApi;
@@ -12,6 +13,7 @@ import io.swagger.configuration.RedisConfiguration.FriendRedisTemplate;
 import io.swagger.configuration.RedisConfiguration.Friends;
 import info.glennengstrand.dao.FriendRepository;
 
+@Service
 public class FriendsService implements FriendsApi {
 
 	@Autowired
