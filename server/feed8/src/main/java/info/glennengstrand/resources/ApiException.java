@@ -1,7 +1,7 @@
-package {{apiPackage}};
+package info.glennengstrand.resources;
 
-{{>generatedAnnotation}}
-public class ApiException extends RuntimeException{
+
+public class ApiException extends RuntimeException {
     private int code;
     public ApiException (int code, String msg) {
         super(msg);
