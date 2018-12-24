@@ -1,4 +1,4 @@
-package info.glennengstrand.dao;
+package info.glennengstrand.dao.cassandra;
 
 import org.springframework.data.cassandra.core.mapping.PrimaryKey;
 import org.springframework.data.cassandra.core.mapping.Table;

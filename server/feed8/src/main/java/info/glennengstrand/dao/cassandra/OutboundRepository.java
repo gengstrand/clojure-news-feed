@@ -1,4 +1,4 @@
-package info.glennengstrand.dao;
+package info.glennengstrand.dao.cassandra;
 
 import java.util.List;
 

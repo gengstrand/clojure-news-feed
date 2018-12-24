@@ -7,7 +7,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import info.glennengstrand.api.Inbound;
-import info.glennengstrand.dao.InboundRepository;
+import info.glennengstrand.dao.cassandra.InboundRepository;
 import info.glennengstrand.resources.InboundApi;
 
 @Service
@@ -30,7 +30,7 @@ public class InboundService implements InboundApi {
 
 	@Override
 	public Inbound addInbound(Inbound body) {
-		info.glennengstrand.dao.Inbound i = new info.glennengstrand.dao.Inbound();
+		info.glennengstrand.dao.cassandra.Inbound i = new info.glennengstrand.dao.cassandra.Inbound();
 		i.setParticipantId(body.getTo());
 		i.setFromParticipantId(body.getFrom());
 		i.setSubject(body.getSubject());

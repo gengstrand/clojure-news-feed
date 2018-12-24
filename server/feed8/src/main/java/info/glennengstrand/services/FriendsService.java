@@ -11,7 +11,7 @@ import info.glennengstrand.resources.FriendsApi;
 import info.glennengstrand.resources.NotFoundException;
 import io.swagger.configuration.RedisConfiguration.FriendRedisTemplate;
 import io.swagger.configuration.RedisConfiguration.Friends;
-import info.glennengstrand.dao.FriendRepository;
+import info.glennengstrand.dao.mysql.FriendRepository;
 
 @Service
 public class FriendsService implements FriendsApi {
@@ -24,10 +24,10 @@ public class FriendsService implements FriendsApi {
 	
 	@Override
 	public Friend addFriend(Friend body) {
-		info.glennengstrand.dao.Friend p = new info.glennengstrand.dao.Friend();
+		info.glennengstrand.dao.mysql.Friend p = new info.glennengstrand.dao.mysql.Friend();
 		p.setFromParticipantId(body.getFrom());
 		p.setToParticipantId(body.getTo());
-		info.glennengstrand.dao.Friend retVal = repository.save(p);
+		info.glennengstrand.dao.mysql.Friend retVal = repository.save(p);
 		return body.id(retVal.getId());
 	}
 
@@ -37,7 +37,7 @@ public class FriendsService implements FriendsApi {
 		if (template.hasKey(key)) {
 			return template.boundValueOps(key).get();
 		} else {
-			List<info.glennengstrand.dao.Friend> r = repository.findByFromParticipantId(id);
+			List<info.glennengstrand.dao.mysql.Friend> r = repository.findByFromParticipantId(id);
 			if (r.isEmpty()) {
 				throw new NotFoundException(404, String.format("no friends for {}", id));
 			} else {

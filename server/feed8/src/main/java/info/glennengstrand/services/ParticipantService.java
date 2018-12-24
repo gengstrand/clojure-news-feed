@@ -9,7 +9,7 @@ import info.glennengstrand.api.Participant;
 import info.glennengstrand.resources.NotFoundException;
 import info.glennengstrand.resources.ParticipantApi;
 import io.swagger.configuration.RedisConfiguration.ParticipantRedisTemplate;
-import info.glennengstrand.dao.ParticipantRepository;
+import info.glennengstrand.dao.mysql.ParticipantRepository;
 
 @Service
 public class ParticipantService implements ParticipantApi {
@@ -22,9 +22,9 @@ public class ParticipantService implements ParticipantApi {
 	
 	@Override
 	public Participant addParticipant(Participant body) {
-		info.glennengstrand.dao.Participant p = new info.glennengstrand.dao.Participant();
+		info.glennengstrand.dao.mysql.Participant p = new info.glennengstrand.dao.mysql.Participant();
 		p.setMoniker(body.getName());
-		info.glennengstrand.dao.Participant retVal = repository.save(p);
+		info.glennengstrand.dao.mysql.Participant retVal = repository.save(p);
 		return body.id(retVal.getId());
 	}
 
@@ -34,9 +34,9 @@ public class ParticipantService implements ParticipantApi {
 		if (template.hasKey(key)) {
 			return template.boundValueOps(key).get();
 		} else {
-			Optional<info.glennengstrand.dao.Participant> r = repository.findById(id);
+			Optional<info.glennengstrand.dao.mysql.Participant> r = repository.findById(id);
 			if (r.isPresent()) {
-				info.glennengstrand.dao.Participant p = r.get();
+				info.glennengstrand.dao.mysql.Participant p = r.get();
 				Participant retVal = new Participant().id(p.getId()).name(p.getMoniker());
 				template.boundSetOps(key).add(retVal);
 				return retVal;
