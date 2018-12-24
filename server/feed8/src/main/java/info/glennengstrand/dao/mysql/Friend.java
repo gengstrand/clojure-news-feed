@@ -1,7 +1,9 @@
 package info.glennengstrand.dao.mysql;
 
+import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
+import javax.persistence.GenerationType;
 import javax.persistence.Id;
 import javax.persistence.Table;
 
@@ -9,10 +11,14 @@ import javax.persistence.Table;
 @Table(name = "Friends")
 public class Friend {
 	@Id
-	@GeneratedValue
+	@GeneratedValue(strategy = GenerationType.IDENTITY)
+	@Column(name = "FriendsID")
 	private Long friendsId;
 
+	@Column(name = "FromParticipantID")
 	private Long fromParticipantId;
+
+	@Column(name = "ToParticipantID")
 	private Long toParticipantId;
 	
 	public Friend() {
