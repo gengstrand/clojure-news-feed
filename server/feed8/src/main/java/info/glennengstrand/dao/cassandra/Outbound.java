@@ -13,6 +13,9 @@ public class Outbound implements Serializable {
 	private NewsFeedItemKey key;
 	private String subject;
 	private String story;
+	public Outbound() {
+		key = new NewsFeedItemKey();
+	}
 	public Long getParticipantId() {
 		return key.getParticipantId();
 	}

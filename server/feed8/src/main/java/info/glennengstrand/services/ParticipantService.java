@@ -38,7 +38,7 @@ public class ParticipantService implements ParticipantApi {
 			if (r.isPresent()) {
 				info.glennengstrand.dao.mysql.Participant p = r.get();
 				Participant retVal = new Participant().id(p.getId()).name(p.getMoniker());
-				template.boundSetOps(key).add(retVal);
+				template.boundValueOps(key).set(retVal);
 				return retVal;
 			} else {
 				throw new NotFoundException(404, String.format("participant {} not found", id));

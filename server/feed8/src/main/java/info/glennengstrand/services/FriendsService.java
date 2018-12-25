@@ -44,7 +44,7 @@ public class FriendsService implements FriendsApi {
 				Friends retVal = r.stream().map(dbf -> {
 					return new Friend().id(dbf.getId()).from(dbf.getFromParticipantId()).to(dbf.getToParticipantId());
 				}).collect(Collectors.toCollection(() -> { return new Friends(); }));
-				template.boundSetOps(key).add(retVal);
+				template.boundValueOps(key).set(retVal);
 				return retVal;
 			}
 		}

@@ -14,6 +14,10 @@ public class Inbound implements Serializable {
 	private Long fromParticipantId;
 	private String subject;
 	private String story;
+	
+	public Inbound() {
+		key = new NewsFeedItemKey();
+	}
 	public Long getParticipantId() {
 		return key.getParticipantId();
 	}
