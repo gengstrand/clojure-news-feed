@@ -1,4 +1,4 @@
-package info.glennengstrand.dao;
+package info.glennengstrand.dao.mysql;
 
 import java.util.List;
 

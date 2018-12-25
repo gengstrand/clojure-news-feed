@@ -8,7 +8,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import info.glennengstrand.api.Outbound;
-import info.glennengstrand.dao.OutboundRepository;
+import info.glennengstrand.dao.cassandra.OutboundRepository;
 import info.glennengstrand.resources.FriendsApi;
 import info.glennengstrand.resources.InboundApi;
 import info.glennengstrand.resources.OutboundApi;
@@ -27,7 +27,7 @@ public class OutboundService implements OutboundApi {
 
 	@Override
 	public Outbound addOutbound(Outbound body) {
-		info.glennengstrand.dao.Outbound o = new info.glennengstrand.dao.Outbound();
+		info.glennengstrand.dao.cassandra.Outbound o = new info.glennengstrand.dao.cassandra.Outbound();
 		o.setParticipantId(body.getFrom());
 		o.setSubject(body.getSubject());
 		o.setStory(body.getStory());

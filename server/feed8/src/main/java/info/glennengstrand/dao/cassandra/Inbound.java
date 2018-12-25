@@ -1,4 +1,4 @@
-package info.glennengstrand.dao;
+package info.glennengstrand.dao.cassandra;
 
 import org.springframework.data.cassandra.core.mapping.PrimaryKey;
 import org.springframework.data.cassandra.core.mapping.Table;
@@ -6,13 +6,18 @@ import org.springframework.data.cassandra.core.mapping.Table;
 import java.io.Serializable;
 import java.util.UUID;
 
-@Table("Outbound")
-public class Outbound implements Serializable {
+@Table("Inbound")
+public class Inbound implements Serializable {
 
 	@PrimaryKey
 	private NewsFeedItemKey key;
+	private Long fromParticipantId;
 	private String subject;
 	private String story;
+	
+	public Inbound() {
+		key = new NewsFeedItemKey();
+	}
 	public Long getParticipantId() {
 		return key.getParticipantId();
 	}
@@ -37,5 +42,11 @@ public class Outbound implements Serializable {
 	public void setStory(String story) {
 		this.story = story;
 	}
-	
+	public Long getFromParticipantId() {
+		return fromParticipantId;
+	}
+	public void setFromParticipantId(Long fromParticipantId) {
+		this.fromParticipantId = fromParticipantId;
+	}
+
 }

@@ -17,7 +17,7 @@ import info.glennengstrand.api.Friend;
 @Configuration
 public class RedisConfiguration {
 
-	@Value("${redis.host|")
+	@Value("${redis.host}")
 	private String redisHost;
 	
 	@Bean

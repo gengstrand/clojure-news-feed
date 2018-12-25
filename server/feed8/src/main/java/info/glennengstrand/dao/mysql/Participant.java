@@ -1,14 +1,22 @@
-package info.glennengstrand.dao;
+package info.glennengstrand.dao.mysql;
 
+import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
+import javax.persistence.GenerationType;
 import javax.persistence.Id;
+import javax.persistence.Table;
+
 
 @Entity
+@Table(name = "Participant")
 public class Participant {
 	@Id
-	@GeneratedValue
+	@GeneratedValue(strategy = GenerationType.IDENTITY)
+	@Column(name = "ParticipantID")
 	private Long participantId;
+	
+	@Column(name = "Moniker")
 	private String moniker;
 	
 	public Participant() {
