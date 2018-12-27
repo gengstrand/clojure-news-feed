@@ -7,6 +7,8 @@ import java.util.stream.Collectors;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import com.datastax.driver.core.utils.UUIDs;
+
 import info.glennengstrand.api.Outbound;
 import info.glennengstrand.dao.cassandra.OutboundRepository;
 import info.glennengstrand.resources.FriendsApi;
@@ -31,24 +33,25 @@ public class OutboundService implements OutboundApi {
 		o.setParticipantId(body.getFrom());
 		o.setSubject(body.getSubject());
 		o.setStory(body.getStory());
-		repository.save(o);
+		o = repository.save(o);
 		friendService.getFriend(body.getFrom()).stream().forEach(f -> {
 			info.glennengstrand.api.Inbound i = new info.glennengstrand.api.Inbound()
 					.from(body.getFrom())
-					.to(f.getId())
+					.to(f.getTo())
 					.subject(body.getSubject())
 					.story(body.getStory());
 			inboundService.addInbound(i);
 		});
-		return body;
+		// TODO: elasticsearch
+		return body.occurred(convert(UUIDs.unixTimestamp(o.getOccured())));
 	}
 
 	@Override
 	public List<Outbound> getOutbound(Long id) {
-		// TODO: figure out what to do with occurred
 		return repository.findByParticipantId(id).stream().map(i -> {
 			return new Outbound()
 					.from(i.getParticipantId())
+					.occurred(convert(UUIDs.unixTimestamp(i.getOccured())))
 					.subject(i.getSubject())
 					.story(i.getStory());
 		}).collect(Collectors.toList());

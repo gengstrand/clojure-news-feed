@@ -1,5 +1,6 @@
 package info.glennengstrand.dao.cassandra;
 
+import org.springframework.data.cassandra.core.mapping.Column;
 import org.springframework.data.cassandra.core.mapping.PrimaryKey;
 import org.springframework.data.cassandra.core.mapping.Table;
 
@@ -11,8 +12,13 @@ public class Outbound implements Serializable {
 
 	@PrimaryKey
 	private NewsFeedItemKey key;
+
+	@Column(value = "Subject")
 	private String subject;
+	
+	@Column(value = "Story")
 	private String story;
+	
 	public Outbound() {
 		key = new NewsFeedItemKey();
 	}

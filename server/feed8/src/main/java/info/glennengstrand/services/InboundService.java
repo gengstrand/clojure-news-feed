@@ -10,6 +10,8 @@ import info.glennengstrand.api.Inbound;
 import info.glennengstrand.dao.cassandra.InboundRepository;
 import info.glennengstrand.resources.InboundApi;
 
+import com.datastax.driver.core.utils.UUIDs;
+
 @Service
 public class InboundService implements InboundApi {
 
@@ -17,12 +19,12 @@ public class InboundService implements InboundApi {
 	private InboundRepository repository;
 
 	@Override
-	public List<Inbound> getInbound(Long id) {
-		// TODO: figure out what to do with occurred
-		return repository.findByParticipantId(id).stream().map(i -> {
+	public List<Inbound> getInbound(Integer id) {
+		return repository.findByNewsFeedItemKey_ParticipantId(id).map(i -> {
 			return new Inbound()
 					.from(i.getFromParticipantId())
 					.to(i.getParticipantId())
+					.occurred(convert(UUIDs.unixTimestamp(i.getOccured())))
 					.subject(i.getSubject())
 					.story(i.getStory());
 		}).collect(Collectors.toList());

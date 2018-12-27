@@ -2,6 +2,7 @@ package info.glennengstrand.dao.cassandra;
 
 import org.springframework.data.cassandra.core.mapping.PrimaryKey;
 import org.springframework.data.cassandra.core.mapping.Table;
+import org.springframework.data.cassandra.core.mapping.Column;
 
 import java.io.Serializable;
 import java.util.UUID;
@@ -11,8 +12,14 @@ public class Inbound implements Serializable {
 
 	@PrimaryKey
 	private NewsFeedItemKey key;
+	
+	@Column(value = "FromParticipantID")
 	private Long fromParticipantId;
+
+	@Column(value = "Subject")
 	private String subject;
+	
+	@Column(value = "Story")
 	private String story;
 	
 	public Inbound() {

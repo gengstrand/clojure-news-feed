@@ -9,7 +9,7 @@ import java.util.List;
 
 import info.glennengstrand.api.Outbound;
 
-public interface OutboundApi {
+public interface OutboundApi extends DateAware {
       Outbound addOutbound(Outbound body);
       List<Outbound> getOutbound(Long id);
       List<Long> searchOutbound(String keywords);

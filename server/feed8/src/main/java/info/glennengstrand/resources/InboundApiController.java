@@ -30,7 +30,7 @@ public class InboundApiController {
     @RequestMapping(value = "/inbound/{id}",
         produces = { "application/json" }, 
         method = RequestMethod.GET)
-    public List<Inbound> getInbound(@ApiParam(value = "uniquely identifies the participant",required=true) @PathVariable("id") Long id) {
+    public List<Inbound> getInbound(@ApiParam(value = "uniquely identifies the participant",required=true) @PathVariable("id") Integer id) {
         return service.getInbound(id);
     }
 }

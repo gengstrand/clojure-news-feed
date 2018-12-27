@@ -10,7 +10,7 @@ import java.util.List;
 import info.glennengstrand.api.Inbound;
 import info.glennengstrand.api.Outbound;
 
-public interface InboundApi {
+public interface InboundApi extends DateAware {
     Inbound addInbound(Inbound body);
-    List<Inbound> getInbound(Long id);
+    List<Inbound> getInbound(Integer id);
 }

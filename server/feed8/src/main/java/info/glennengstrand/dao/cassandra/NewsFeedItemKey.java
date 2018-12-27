@@ -9,6 +9,7 @@ import org.springframework.data.cassandra.core.mapping.PrimaryKeyClass;
 import org.springframework.data.cassandra.core.mapping.PrimaryKeyColumn;
 import org.springframework.data.cassandra.core.cql.PrimaryKeyType;
 
+import com.datastax.driver.core.utils.UUIDs;
 
 import com.datastax.driver.core.DataType;
 
@@ -20,7 +21,7 @@ public class NewsFeedItemKey implements Serializable {
 	private Long participantId;
 	@PrimaryKeyColumn(name = "occurred", ordinal = 1, ordering = Ordering.DESCENDING)
 	@CassandraType(type = DataType.Name.TIMEUUID)
-	private UUID occurred;
+	private UUID occurred = UUIDs.timeBased();
 	public Long getParticipantId() {
 		return participantId;
 	}
