@@ -1,6 +1,5 @@
 package info.glennengstrand.dao.cassandra;
 
-import java.util.List;
 import java.util.stream.Stream;
 
 import org.springframework.data.cassandra.repository.CassandraRepository;

@@ -11,6 +11,7 @@ import com.datastax.driver.core.utils.UUIDs;
 
 import info.glennengstrand.api.Outbound;
 import info.glennengstrand.dao.cassandra.OutboundRepository;
+import info.glennengstrand.dao.elasticsearch.OutboundSearchRepository;
 import info.glennengstrand.resources.FriendsApi;
 import info.glennengstrand.resources.InboundApi;
 import info.glennengstrand.resources.OutboundApi;
@@ -26,6 +27,9 @@ public class OutboundService implements OutboundApi {
 
     @Autowired
     private InboundApi inboundService;
+    
+    @Autowired
+    private OutboundSearchRepository searchService;
 
 	@Override
 	public Outbound addOutbound(Outbound body) {
@@ -42,13 +46,16 @@ public class OutboundService implements OutboundApi {
 					.story(body.getStory());
 			inboundService.addInbound(i);
 		});
-		// TODO: elasticsearch
+		info.glennengstrand.dao.elasticsearch.Outbound so = new info.glennengstrand.dao.elasticsearch.Outbound();
+		so.setSender(body.getFrom().intValue());
+		so.setStory(body.getStory());
+		searchService.save(so);
 		return body.occurred(convert(UUIDs.unixTimestamp(o.getOccured())));
 	}
 
 	@Override
-	public List<Outbound> getOutbound(Long id) {
-		return repository.findByParticipantId(id).stream().map(i -> {
+	public List<Outbound> getOutbound(Integer id) {
+		return repository.findByNewsFeedItemKey_ParticipantId(id).map(i -> {
 			return new Outbound()
 					.from(i.getParticipantId())
 					.occurred(convert(UUIDs.unixTimestamp(i.getOccured())))
@@ -58,9 +65,8 @@ public class OutboundService implements OutboundApi {
 	}
 
 	@Override
-	public List<Long> searchOutbound(String keywords) {
-		// TODO: layer up the elastic search code
-		return new ArrayList<Long>();
+	public List<Integer> searchOutbound(String keywords) {
+		return searchService.findByStory(keywords).map(so -> { return so.getSender(); }).collect(Collectors.toList());
 	}
 
 }

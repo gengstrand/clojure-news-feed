@@ -11,7 +11,7 @@ import info.glennengstrand.api.Outbound;
 
 public interface OutboundApi extends DateAware {
       Outbound addOutbound(Outbound body);
-      List<Outbound> getOutbound(Long id);
-      List<Long> searchOutbound(String keywords);
+      List<Outbound> getOutbound(Integer id);
+      List<Integer> searchOutbound(String keywords);
 
 }

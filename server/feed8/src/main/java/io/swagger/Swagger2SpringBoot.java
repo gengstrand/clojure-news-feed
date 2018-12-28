@@ -13,7 +13,7 @@ import springfox.documentation.swagger2.annotations.EnableSwagger2;
 @SpringBootApplication
 @EnableSwagger2
 @EntityScan(basePackages = {"info.glennengstrand.dao.mysql"})
-@ComponentScan(basePackages = { "io.swagger", "info.glennengstrand.resources", "info.glennengstrand.services", "info.glennengstrand.dao.mysql", "info.glennengstrand.dao.cassandra", "io.swagger.configuration"})
+@ComponentScan(basePackages = { "io.swagger", "info.glennengstrand.resources", "info.glennengstrand.services", "info.glennengstrand.dao.mysql", "info.glennengstrand.dao.cassandra", "info.glennengstrand.dao.elasticsearch", "io.swagger.configuration"})
 @EnableJpaRepositories("info.glennengstrand.dao.mysql")
 public class Swagger2SpringBoot implements CommandLineRunner {
 

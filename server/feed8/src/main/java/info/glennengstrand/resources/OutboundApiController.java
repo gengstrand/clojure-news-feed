@@ -41,7 +41,7 @@ public class OutboundApiController {
     @RequestMapping(value = "/outbound/{id}",
         produces = { "application/json" }, 
         method = RequestMethod.GET)
-    public List<Outbound> getOutbound(@ApiParam(value = "uniquely identifies the participant",required=true) @PathVariable("id") Long id) {
+    public List<Outbound> getOutbound(@ApiParam(value = "uniquely identifies the participant",required=true) @PathVariable("id") Integer id) {
         return service.getOutbound(id);
     }
 
@@ -51,7 +51,7 @@ public class OutboundApiController {
     @RequestMapping(value = "/outbound/search",
         produces = { "application/json" }, 
         method = RequestMethod.POST)
-    public List<Long> searchOutbound(@NotNull @ApiParam(value = "keywords to search for", required = true) @Valid @RequestParam(value = "keywords", required = true) String keywords) {
+    public List<Integer> searchOutbound(@NotNull @ApiParam(value = "keywords to search for", required = true) @Valid @RequestParam(value = "keywords", required = true) String keywords) {
         return service.searchOutbound(keywords);
     }
 }
