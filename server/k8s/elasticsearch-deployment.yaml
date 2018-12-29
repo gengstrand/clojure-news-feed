@@ -5,7 +5,6 @@ metadata:
   name: elasticsearch
 spec:
   replicas: 1
-  strategy: {}
   template:
     metadata:
       creationTimestamp: null
@@ -14,11 +13,15 @@ spec:
     spec:
       containers:
       - env:
-        image: elasticsearch:2.4
+        - name: discovery.type
+          value: "single-node"
+        - name: bootstrap.memory_lock
+          value: "true"
+        - name: ES_JAVA_OPTS
+          value: "-Xms256m -Xmx256m"
+        image: elasticsearch:6.5.4
         name: elasticsearch
         ports:
         - containerPort: 9200
-          hostIP: 127.0.0.1
-        resources: {}
       restartPolicy: Always
 status: {}
