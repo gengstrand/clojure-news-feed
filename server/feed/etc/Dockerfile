@@ -9,5 +9,5 @@ WORKDIR /usr/app
 COPY schema.mysql.sql /usr/app/
 COPY schema.cassandra.sql /usr/app/
 COPY initCluster.sh /usr/app/
-ADD http://apache.claz.org/cassandra/2.2.11/apache-cassandra-2.2.11-bin.tar.gz /usr/app/
-ENV PATH $PATH:/usr/app/apache-cassandra-2.2.11/bin
+ADD http://www.apache.org/dyn/closer.lua/cassandra/2.2.13/apache-cassandra-2.2.13-bin.tar.gz /usr/app/
+ENV PATH $PATH:/usr/app/apache-cassandra-2.2.13/bin

@@ -6,7 +6,7 @@ EOF
 sleep 10
 mysql -h mysql -u feed -pfeed1234 --database=feed <schema.mysql.sql
 cqlsh cassandra <schema.cassandra.sql
-curl -XPUT -H 'Content-Type: application/json' http://elasticsearch/feed -d '{
+curl -XPUT -H 'Content-Type: application/json' http://elasticsearch:9200/feed -d '{
     "settings" : {
         "number_of_shards" : 1
     },
