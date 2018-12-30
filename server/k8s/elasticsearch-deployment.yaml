@@ -17,8 +17,6 @@ spec:
           value: "single-node"
         - name: bootstrap.memory_lock
           value: "true"
-        - name: ES_JAVA_OPTS
-          value: "-Xms750m -Xmx750m"
         image: elasticsearch:6.5.4
         name: elasticsearch
         ports:
