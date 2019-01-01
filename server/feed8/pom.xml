@@ -10,6 +10,7 @@
         <maven.compiler.source>${java.version}</maven.compiler.source>
         <maven.compiler.target>${java.version}</maven.compiler.target>
         <springfox-version>2.7.0</springfox-version>
+        <spring-data-releasetrain.version>Moore-M1</spring-data-releasetrain.version>
 	<project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
 	<project.reporting.outputEncoding>UTF-8</project.reporting.outputEncoding>
     </properties>
@@ -109,4 +110,10 @@
             <scope>test</scope>
         </dependency>
     </dependencies>
+    <repositories>
+		<repository>
+		    <id>spring-libs-milestone</id>
+		    <url>https://repo.spring.io/libs-milestone</url>
+		</repository>
+    </repositories>
 </project>
