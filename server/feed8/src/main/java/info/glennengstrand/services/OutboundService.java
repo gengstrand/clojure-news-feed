@@ -1,23 +1,43 @@
 package info.glennengstrand.services;
 
+import java.io.IOException;
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
+import java.util.UUID;
 import java.util.stream.Collectors;
+
+import org.slf4j.LoggerFactory;
+import org.slf4j.Logger;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
-
 import com.datastax.driver.core.utils.UUIDs;
+
+import org.elasticsearch.client.RestHighLevelClient;
+import org.elasticsearch.action.index.IndexRequest;
+import org.elasticsearch.action.search.SearchRequest;
+import org.elasticsearch.action.search.SearchResponse;
+import org.elasticsearch.search.SearchHit;
+import org.elasticsearch.search.builder.SearchSourceBuilder;
+import org.elasticsearch.index.query.QueryBuilders;
+import org.elasticsearch.rest.RestStatus;
 
 import info.glennengstrand.api.Outbound;
 import info.glennengstrand.dao.cassandra.OutboundRepository;
-import info.glennengstrand.dao.elasticsearch.OutboundSearchRepository;
 import info.glennengstrand.resources.FriendsApi;
 import info.glennengstrand.resources.InboundApi;
 import info.glennengstrand.resources.OutboundApi;
 
 @Service
 public class OutboundService implements OutboundApi {
+
+	private static Logger LOGGER = LoggerFactory.getLogger(OutboundService.class.getCanonicalName());
+	private static final String DOCUMENT_INDEX = "feed";
+	private static final String DOCUMENT_TYPE = "stories";
+	private static final String DOCUMENT_SEARCH_FIELD = "story";
+	private static final String DOCUMENT_RESULT_FIELD = "sender";
 
 	@Autowired
 	private OutboundRepository repository;
@@ -29,7 +49,42 @@ public class OutboundService implements OutboundApi {
     private InboundApi inboundService;
     
     @Autowired
-    private OutboundSearchRepository searchService;
+    private RestHighLevelClient esClient;
+    
+    private void indexStory(String sender, String story) {
+    	Map<String, String> doc = new HashMap<>();
+    	doc.put(DOCUMENT_RESULT_FIELD, sender);
+    	doc.put(DOCUMENT_SEARCH_FIELD, story);
+    	IndexRequest req = new IndexRequest(DOCUMENT_INDEX, DOCUMENT_TYPE, UUID.randomUUID().toString()).source(doc);
+    	try {
+			esClient.index(req);
+		} catch (IOException e) {
+			LOGGER.warn("cannot index elasticsearch document: ", e);
+		}
+    }
+    
+    private List<Integer> searchStories(String keywords) {
+    	SearchRequest req = new SearchRequest(DOCUMENT_INDEX).types(DOCUMENT_TYPE);
+    	SearchSourceBuilder builder = new SearchSourceBuilder();
+    	builder.query(QueryBuilders.termQuery(DOCUMENT_SEARCH_FIELD, keywords));
+    	req.source(builder);
+		try {
+			SearchResponse resp = esClient.search(req);
+	    	if (resp.status() == RestStatus.OK) {
+	    		SearchHit[] hits = resp.getHits().getHits();
+	    		List<Integer> retVal = new ArrayList<>();
+	    		for (SearchHit hit : hits) {
+	    			retVal.add(Integer.parseInt(hit.getSourceAsMap().get(DOCUMENT_RESULT_FIELD).toString()));
+	    		}
+	    		return retVal;
+	    	} else {
+	    		return new ArrayList<Integer>();
+	    	}
+		} catch (IOException e) {
+			LOGGER.warn("cannot query elasticsearch: ", e);
+			return new ArrayList<Integer>();
+		}
+    }
 
 	@Override
 	public Outbound addOutbound(Outbound body) {
@@ -46,10 +101,7 @@ public class OutboundService implements OutboundApi {
 					.story(body.getStory());
 			inboundService.addInbound(i);
 		});
-		info.glennengstrand.dao.elasticsearch.Outbound so = new info.glennengstrand.dao.elasticsearch.Outbound();
-		so.setSender(body.getFrom().intValue());
-		so.setStory(body.getStory());
-		searchService.save(so);
+		indexStory(body.getFrom().toString(), body.getStory());
 		return body.occurred(convert(UUIDs.unixTimestamp(o.getOccured())));
 	}
 
@@ -66,7 +118,7 @@ public class OutboundService implements OutboundApi {
 
 	@Override
 	public List<Integer> searchOutbound(String keywords) {
-		return searchService.findByStory(keywords).map(so -> { return so.getSender(); }).collect(Collectors.toList());
+		return searchStories(keywords);
 	}
 
 }
