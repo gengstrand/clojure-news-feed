@@ -43,6 +43,12 @@
         </plugins>
     </build>
     <dependencies>
+		<dependency>
+		    <groupId>org.springframework.data</groupId>
+		    <artifactId>spring-data-releasetrain</artifactId>
+		    <version>Moore-M1</version>
+		    <type>pom</type>
+		</dependency>
         <dependency>
             <groupId>org.springframework.boot</groupId>
             <artifactId>spring-boot-starter-web</artifactId>
