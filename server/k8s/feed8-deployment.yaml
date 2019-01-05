@@ -18,10 +18,10 @@ spec:
       - env:
         - name: KAFKA_ENABLED
           value: "false"
-        image: feed8:1.0
+        image: gengstrand/feed8:1.0
         name: feed
         ports:
         - containerPort: 8080
-        imagePullPolicy: Never
+        imagePullPolicy: Always
       restartPolicy: Always
 

@@ -6,12 +6,14 @@ import org.springframework.beans.factory.annotation.Value;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.data.redis.connection.RedisStandaloneConfiguration;
+import org.springframework.data.redis.connection.jedis.JedisClientConfiguration;
 import org.springframework.data.redis.connection.jedis.JedisConnectionFactory;
 import org.springframework.data.redis.core.RedisTemplate;
 import org.springframework.data.redis.serializer.Jackson2JsonRedisSerializer;
 import org.springframework.data.redis.serializer.StringRedisSerializer;
 
 import info.glennengstrand.api.Participant;
+import redis.clients.jedis.JedisPoolConfig;
 import info.glennengstrand.api.Friend;
 
 @Configuration
@@ -22,7 +24,12 @@ public class RedisConfiguration {
 	
 	@Bean
 	JedisConnectionFactory jedisConnectionFactory() {
-	    return new JedisConnectionFactory(new RedisStandaloneConfiguration(redisHost));
+        JedisPoolConfig poolConfig = new JedisPoolConfig();
+		poolConfig.setMaxTotal(10);
+		poolConfig.setMinIdle(2);
+		poolConfig.setMaxIdle(5);
+		JedisClientConfiguration clientConfig = JedisClientConfiguration.builder().usePooling().poolConfig(poolConfig).build();
+	    return new JedisConnectionFactory(new RedisStandaloneConfiguration(redisHost), clientConfig);
 	}
 
 	@Bean
