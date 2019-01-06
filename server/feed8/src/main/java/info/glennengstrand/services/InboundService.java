@@ -23,7 +23,7 @@ public class InboundService implements InboundApi {
 		return repository.findByNewsFeedItemKey_ParticipantId(id).map(i -> {
 			return new Inbound()
 					.from(i.getFromParticipantId())
-					.to(i.getParticipantId())
+					.to(id.longValue())
 					.occurred(convert(UUIDs.unixTimestamp(i.getOccured())))
 					.subject(i.getSubject())
 					.story(i.getStory());

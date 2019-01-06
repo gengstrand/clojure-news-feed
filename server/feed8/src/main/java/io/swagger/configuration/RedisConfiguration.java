@@ -25,7 +25,7 @@ public class RedisConfiguration {
 	@Bean
 	JedisConnectionFactory jedisConnectionFactory() {
         JedisPoolConfig poolConfig = new JedisPoolConfig();
-		poolConfig.setMaxTotal(10);
+		poolConfig.setMaxTotal(20);
 		poolConfig.setMinIdle(2);
 		poolConfig.setMaxIdle(5);
 		JedisClientConfiguration clientConfig = JedisClientConfiguration.builder().usePooling().poolConfig(poolConfig).build();
