@@ -64,6 +64,10 @@ News feed microservice built on top of Hyperledger Composer.
 
 https://www.infoq.com/articles/evaluating-hyperledger-composer
 
+### feed8
+
+News feed microservice implemented in Java with Spring Boot 5
+
 ### solr
 
 The supporting directory structure and configuration files needed to augment an instance of Solr to support keyword search capability for the news feed on outbound activity.
