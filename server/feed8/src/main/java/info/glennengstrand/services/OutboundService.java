@@ -58,7 +58,7 @@ public class OutboundService implements OutboundApi {
     	IndexRequest req = new IndexRequest(DOCUMENT_INDEX, DOCUMENT_TYPE, UUID.randomUUID().toString()).source(doc);
     	try {
 			esClient.index(req);
-		} catch (IOException e) {
+		} catch (Exception e) {
 			LOGGER.warn("cannot index elasticsearch document: ", e);
 		}
     }
