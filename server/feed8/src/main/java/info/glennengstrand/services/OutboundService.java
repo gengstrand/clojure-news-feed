@@ -15,8 +15,11 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import com.datastax.driver.core.utils.UUIDs;
 
+import org.elasticsearch.client.RequestOptions;
 import org.elasticsearch.client.RestHighLevelClient;
+import org.elasticsearch.action.ActionListener;
 import org.elasticsearch.action.index.IndexRequest;
+import org.elasticsearch.action.index.IndexResponse;
 import org.elasticsearch.action.search.SearchRequest;
 import org.elasticsearch.action.search.SearchResponse;
 import org.elasticsearch.search.SearchHit;
@@ -57,10 +60,22 @@ public class OutboundService implements OutboundApi {
     	doc.put(DOCUMENT_SEARCH_FIELD, story);
     	IndexRequest req = new IndexRequest(DOCUMENT_INDEX, DOCUMENT_TYPE, UUID.randomUUID().toString()).source(doc);
     	try {
-			esClient.index(req);
-		} catch (Exception e) {
-			LOGGER.warn("cannot index elasticsearch document: ", e);
-		}
+    		esClient.indexAsync(req, RequestOptions.DEFAULT, new ActionListener<IndexResponse>() {
+
+    			@Override
+    			public void onResponse(IndexResponse response) {
+    				LOGGER.debug(response.toString());
+    			}
+
+    			@Override
+    			public void onFailure(Exception e) {
+    				LOGGER.warn("cannot index elasticsearch document: ", e);
+    			}
+    			
+    		});
+    	} catch (Exception e) {
+    		LOGGER.warn("Cannot call elasticsearch: ", e);
+    	}
     }
     
     private List<Integer> searchStories(String keywords) {
