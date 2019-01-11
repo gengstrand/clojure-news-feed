@@ -12,7 +12,7 @@ These components are expected to be run on the server(s).
 
 ### feed
 
-When I started this repo, a big trend had started in Java to use new programming languages, designed to run in the Java Virtual Machine, that support Functional Programming concepts. Clojure is a variant of Lisp that is one of the leaders in this trend. The question that I wanted to answer was this. Is Clojure ready for deliverying services at web scale? This folder contains a basic news feed web service written in Clojure that I blogged about there.
+When I started this repo, a big trend had started in Java to use new programming languages, designed to run in the Java Virtual Machine, that support Functional Programming concepts. Clojure is a variant of Lisp that is one of the leaders in this trend. The question that I wanted to answer was this. Is Clojure ready for delivering services at web scale? This folder contains a basic news feed web service written in Clojure that I blogged about there.
 
 http://glennengstrand.info/software/architecture/oss/clojure
 
