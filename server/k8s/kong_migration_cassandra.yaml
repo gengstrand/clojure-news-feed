@@ -9,7 +9,7 @@ spec:
     spec:
       containers:
       - name: kong-migration
-        image: kong
+        image: kong:0.15.0
         env:
           - name: KONG_NGINX_DAEMON
             value: 'off'

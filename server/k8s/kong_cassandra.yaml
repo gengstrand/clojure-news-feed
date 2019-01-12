@@ -12,7 +12,7 @@ spec:
     spec:
       containers:
       - name: kong
-        image: kong
+        image: kong:0.15.0
         env:
           - name: KONG_DATABASE
             value: cassandra

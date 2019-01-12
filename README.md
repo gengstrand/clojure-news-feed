@@ -66,7 +66,7 @@ https://www.infoq.com/articles/evaluating-hyperledger-composer
 
 ### feed8
 
-News feed microservice implemented in Java with Spring Boot 5
+News feed microservice implemented in Java with Spring Boot
 
 ### solr
 
