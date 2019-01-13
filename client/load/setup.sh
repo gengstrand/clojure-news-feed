@@ -1,9 +1,10 @@
 curl -X PUT http://elasticsearch:9200/performance
-curl -i -X POST --url http://kong-proxy:8001/apis \
+curl -i -X POST --url http://kong-proxy:8001/services \
 --data 'name=feed' \
---data "upstream_url=http://feed:8080/" \
---data 'methods=GET,PUT,POST,OPTIONS'
-curl -i -X POST --url http://kong-proxy:8001/apis/feed/plugins \
+--data 'url=http://feed:8080/'
+curl -i -X POST --url http://kong-proxy:8001/services/feed/routes \
+--data 'methods[]=GET&methods[]=PUT&methods[]=POST&methods[]=OPTIONS'
+curl -i -X POST --url http://kong-proxy:8001/plugins \
 --data 'name=http-log' \
 --data "config.http_endpoint=http://kong-logger:8888" \
 --data 'config.method=PUT' \

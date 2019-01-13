@@ -19,6 +19,9 @@ public class ElasticSearchConfiguration {
 
     @Value("${elasticsearch.host}")
     private String host;
+    
+    @Value("${elasticsearch.pool}")
+    private int pool;
 
     private int port = 9200;
     
@@ -31,7 +34,7 @@ public class ElasticSearchConfiguration {
 
 		@Override
 		public HttpAsyncClientBuilder customizeHttpClient(HttpAsyncClientBuilder httpClientBuilder) {
-			httpClientBuilder.setMaxConnTotal(20);
+			httpClientBuilder.setMaxConnTotal(pool);
 			return httpClientBuilder;
 		}
     	
