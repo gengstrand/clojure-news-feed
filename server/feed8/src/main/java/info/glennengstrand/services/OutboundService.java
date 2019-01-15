@@ -64,7 +64,7 @@ public class OutboundService implements OutboundApi {
 
     			@Override
     			public void onResponse(IndexResponse response) {
-    				LOGGER.debug(response.toString());
+    				LOGGER.debug(response == null ? "no response" : response.toString());
     			}
 
     			@Override
