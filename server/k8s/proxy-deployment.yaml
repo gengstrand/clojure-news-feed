@@ -1,0 +1,25 @@
+apiVersion: apps/v1beta2
+kind: Deployment
+metadata:
+  name: kong-proxy
+spec:
+  replicas: 1
+  strategy:
+    type: Recreate
+  selector:
+    matchLabels:
+      app: kong-proxy
+  template:
+    metadata:
+      labels:
+        app: kong-proxy
+    spec:
+      containers:
+      - env:
+        image: proxy:1.0
+        name: kong-proxy
+        ports:
+        - containerPort: 8000
+        imagePullPolicy: Never
+      restartPolicy: Always
+

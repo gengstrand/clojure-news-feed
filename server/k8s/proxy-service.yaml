@@ -1,0 +1,15 @@
+apiVersion: v1
+kind: Service
+metadata:
+  labels:
+    app: kong-proxy
+  name: kong-proxy
+spec:
+  type: NodePort
+  ports:
+  - name: kong-proxy
+    port: 8000
+    targetPort: 8000
+    protocol: TCP
+  selector:
+    app: kong-proxy
