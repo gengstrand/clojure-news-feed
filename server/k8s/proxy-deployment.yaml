@@ -16,10 +16,10 @@ spec:
     spec:
       containers:
       - env:
-        image: proxy:1.0
+        image: gengstrand/proxy:1.0
         name: kong-proxy
         ports:
         - containerPort: 8000
-        imagePullPolicy: Never
+        imagePullPolicy: Always
       restartPolicy: Always
 
