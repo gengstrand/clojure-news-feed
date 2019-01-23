@@ -10,63 +10,63 @@ import (
 )
 
 type HttpLogRequest struct {
-	Uri string						`json:"uri"`
-	Method string					`json:"method"`
+    Uri string                      `json:"uri"`
+    Method string                   `json:"method"`
 }
 
 type HttpLogResponse struct {
-	Status int						`json:"status"`
+    Status int                      `json:"status"`
 }
 
 type HttpLogLatencies struct {
-	Request int64					`json:"request"`
+    Request int64                   `json:"request"`
 }
 
 type HttpLog struct {
-	Request HttpLogRequest			`json:"request"`
-	Response HttpLogResponse		`json:"response"`
-	Latencies HttpLogLatencies		`json:"latencies"`
+    Request HttpLogRequest          `json:"request"`
+    Response HttpLogResponse        `json:"response"`
+    Latencies HttpLogLatencies      `json:"latencies"`
 }
 
 func makePerfLogEntry(path string, method string, status int, duration int64) HttpLog {
-	req := HttpLogRequest{path, method}
-	resp := HttpLogResponse{status}
-	lat := HttpLogLatencies{duration}
-	return HttpLog{req, resp, lat}
+    req := HttpLogRequest{path, method}
+    resp := HttpLogResponse{status}
+    lat := HttpLogLatencies{duration}
+    return HttpLog{req, resp, lat}
 }
 
 var activity = make(chan HttpLog)
 
 func handlePerfLog() {
-	client := &http.Client{}
-	client.Timeout = time.Second * 5
-	for {
-		msg := <- activity
-		b, err := json.Marshal(msg)
-		if err == nil {
-			body := bytes.NewBuffer(b)
-			req, err := http.NewRequest(http.MethodPut, "http://kong-logger:8888", body)
-			if err == nil {
-				resp, err := client.Do(req)
-				if err == nil {
-					defer resp.Body.Close()
-				} else {
-					log.Fatalf("encountered error when calling kong logger", err)
-				}
-			} else {
-				log.Fatalf("cannot create request to kong logger", err)
-			}
-		} else {
-			log.Fatalf("cannot marshal performance log %s", err)
-		}
-	}
+    client := &http.Client{}
+    client.Timeout = time.Second * 10
+    for {
+        msg := <- activity
+        b, err := json.Marshal(msg)
+        if err == nil {
+            body := bytes.NewBuffer(b)
+            req, err := http.NewRequest(http.MethodPut, "http://kong-logger:8888", body)
+            if err == nil {
+                resp, err := client.Do(req)
+                if err == nil {
+                    defer resp.Body.Close()
+                } else {
+                    log.Fatalf("encountered error when calling kong logger", err)
+                }
+            } else {
+                log.Fatalf("cannot create request to kong logger", err)
+            }
+        } else {
+            log.Fatalf("cannot marshal performance log %s", err)
+        }
+    }
 }
 
 func handleHTTP(w http.ResponseWriter, req *http.Request) {
-	req.Host = "http://feed:8080"
-	req.URL.Host = "feed:8080"
-	req.URL.Scheme = "http"
-	before := time.Now()
+    req.Host = "http://feed:8080"
+    req.URL.Host = "feed:8080"
+    req.URL.Scheme = "http"
+    before := time.Now()
     resp, err := http.DefaultTransport.RoundTrip(req)
     after := time.Now()
     if err != nil {
@@ -95,7 +95,9 @@ func main() {
             handleHTTP(w, r)
         }),
     }
-    go handlePerfLog()
-	log.Fatal(server.ListenAndServe())
+    for i:=0;i<3;i++ {
+        go handlePerfLog()
+    }
+    log.Fatal(server.ListenAndServe())
 }
 
