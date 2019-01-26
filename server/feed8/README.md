@@ -23,5 +23,5 @@ See the [Kubernetes](https://github.com/gengstrand/clojure-news-feed/tree/master
 
 ## Performance under load
 
-I ran this service under the usual load test on GKE which experienced an average throughput of 16,913 outbound post RPM. Average latency was 3.5 ms. Median latency was 2 ms, 95th percentile was 11 ms and 99th percentile was 17 ms.
+I ran this service under the usual load test on GKE which experienced an average throughput of 13,966 outbound post RPM. Average latency was 3 ms. Median latency was 3 ms, 95th percentile was 5 ms and 99th percentile was 9 ms.
 

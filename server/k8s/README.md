@@ -209,12 +209,17 @@ kubectl create -f configmap.yaml
 kubectl create -f feed-service.yaml
 kubectl create -f feed-deployment.yaml
 kubectl create -f kong-logger-service.yaml
-kubectl create -f kong_service.yaml
-kubectl create -f kong_migration_cassandra.yaml
+# I used to use kong as the performance logging proxy but
+# version 1 underperformed so I replaced it with a
+# custom proxy written in go
+# kubectl create -f kong_service.yaml
+# kubectl create -f kong_migration_cassandra.yaml
 # run this next line until the kong-migration job is successful
-kubectl get jobs
-kubectl create -f kong_cassandra.yaml
+# kubectl get jobs
+# kubectl create -f kong_cassandra.yaml
 kubectl create -f kong-logger-deployment.yaml
+kubectl create -f proxy-service.yaml
+kubectl create -f proxy-deployment.yaml
 kubectl create -f kibana-service.yaml 
 kubectl create -f kibana-deployment.yaml
 kubectl create -f load_test.yaml
@@ -224,7 +229,7 @@ Once I collected the data, I cleaned up everything before deleting the cluster.
 
 ```
 kubectl delete job init-cluster
-kubectl delete job kong-migration
+# kubectl delete job kong-migration
 kubectl delete job load-test
 kubectl delete deployment kibana-logger
 kubectl delete deployment kong-logger

@@ -1,6 +1,6 @@
 digraph feed_components {
+	load -> kong;
 	kong -> feed;
-	kong -> cassandra;
 	kong -> kl;
 	kl -> es;
 	kibana -> es;
@@ -8,7 +8,8 @@ digraph feed_components {
 	feed -> redis;
 	feed -> mysql;
 	feed -> es;
-	kong [shape=box,label="Kong"];
+	load [shape=box,label="load\ntest"];
+	kong [shape=box,label="proxy"];
 	feed [shape=box,label="Feed"];
 	cassandra [shape=box,label="Cassandra"];
 	redis [shape=box,label="Redis"];
