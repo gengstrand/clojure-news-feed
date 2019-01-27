@@ -63,7 +63,7 @@ func handlePerfLog() {
 }
 
 func handleHTTP(w http.ResponseWriter, req *http.Request) {
-    req.Host = "http://feed:8080"
+    req.Host = "feed:8080"
     req.URL.Host = "feed:8080"
     req.URL.Scheme = "http"
     before := time.Now()
