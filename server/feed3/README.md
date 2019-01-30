@@ -6,6 +6,10 @@ This [article](http://glennengstrand.info/media/dropwizard.pdf) goes into detail
 
 http://glennengstrand.info/software/performance/clojure/dropwizard
 
+## Performance Under Load
+
+Using the [load test](https://github.com/gengstrand/clojure-news-feed/tree/master/client/load) application, this microservice exhibits a throuhgput of 18,907 outbound post RPM with an average latency of 4 ms, a 95th percentile of 6 ms, and a 99th percentile of 10 ms.
+
 ## newsfeed-swagger
 
 The rest of these docs are swagger generated and cover how to call the micro-service.

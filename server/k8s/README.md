@@ -91,11 +91,49 @@ curl -X POST -g "${FEED_URL}/outbound/search?keywords=kubernetes"
 
 Alternatively, you can also run the testMinikube.sh to perform the automated version of this test. This script runs the load test app in integration test mode so you will need to have built what is in the client/load project.
 
+## Measuring Performance Under Load
+
+An important part to researching different technologies for the news feed microservice is evaluating
+their performance under test load. I used to use Kafka to capture the performance data but Kafka is
+not easy to set up in Kubernetes. I switched to a different approach where the load test application
+makes all of its calls through a full reverse proxy which also sends performance data to another
+microservice which prepares it for ingestion into elasticsearch in a kibana friendly way.
+
+I don't recommend running the load test in minikube as it pretty much overwhelms it. You should most
+probably conduct load tests on a real Kubernetes cluster.
+
 ### Optional Kong Integration
 
-While it is not neccessary to use the open source API Gateway software [Kong](https://getkong.org), it can be very helpful especially if you want to measure performance without Kafka. 
+I used to use the open source API Gateway software [Kong](https://getkong.org) for this full reverse proxy that captures performance data. With version 1, I started encountering [throughput issues](https://discuss.konghq.com/t/http-log-plugin-not-logging-every-request/2655) so I replaced Kong with a feature identical (for my purposes) custom [proxy](https://github.com/gengstrand/clojure-news-feed/tree/master/server/proxy) written in go.
 
-#### Build the Kong-Logger service and the load test job
+```shell
+kubectl create -f kong_service.yaml
+kubectl create -f kong_migration_cassandra.yaml
+# run this next line until the kong-migration job is successful
+kubectl get jobs
+kubectl create -f kong_cassandra.yaml
+```
+
+### Using the custom go proxy
+
+This is a drop in replacement that looks just like the Kong proxy.
+
+```shell
+kubectl create -f proxy-service.yaml
+kubectl create -f proxy-deployment.yaml
+```
+
+### Launching the Kong Logger Service and Running the Load Test Job
+
+```shell
+cd clojure-news-feed/server/k8s
+kubectl create -f kong-logger-service.yaml
+kubectl create -f kong-logger-deployment.yaml
+kubectl create -f load_test.yaml 
+```
+Be advised that, if you are testing feed 1 or 2, then you should use the load_test_legacy.yaml instead of the load_test.yaml manifest. After that, you should be able to reach the feed service via Kong this way.
+
+#### Optional Build the Kong-Logger service and the load test job
 
 Currently, the deployment configurations point to these images on my [Docker Hub account](https://hub.docker.com/r/gengstrand) so you don't really need to build these locally. If you wanted to modify what these do, then you will need to build the images and modify the deployment configurations to reference the local docker repository.
 
@@ -108,29 +146,7 @@ lein uberjar
 docker build -t load:1.0 .
 ```
 
-#### Launch Kong, Kong Logger, and the load test job
-
-```shell
-cd clojure-news-feed/server/k8s
-kubectl create -f kong-logger-service.yaml
-kubectl create -f kong_service.yaml
-kubectl create -f kong_migration_cassandra.yaml
-# run this next line until the kong-migration job is successful
-kubectl get jobs
-kubectl create -f kong_cassandra.yaml
-kubectl create -f kong-logger-deployment.yaml
-kubectl create -f load_test.yaml 
-```
-
-Be advised that, if you are testing feed 1 or 2, then you should use the load_test_legacy.yaml instead of the load_test.yaml manifest. After that, you should be able to reach the feed service via Kong this way.
-
-```shell
-FEED_URL=$(minikube service kong-proxy --url | head -n 1)
-```
-
-Be advised that, after running the load test, my minikube cluster is pretty much maxed out. I actually have to delete the load test job before launching kibana.
-
-#### Launch Kibana
+### Launch Kibana
 
 ```shell
 kubectl create -f kibana-service.yaml 
