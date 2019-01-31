@@ -4,7 +4,7 @@ News Feed microservice in Spring Boot
 
 ## Overview  
 
-It connects to MySql, Redis, and Cassandra via Spring Data repositories. I was not able to use the Spring Data repository for ElasticSearch because I wanted to use the high level REST client instead of the native transport client. At the time of this writing, that repository did not work with the high level REST client. The elasticsearch folks recommend the high level rest client over the native transport client which will soon be deprecated.
+It connects to MySql, Redis, and Cassandra via Spring Data repositories. I was not able to use the Spring Data repository for ElasticSearch because I wanted to use the high level REST client instead of the native transport client. At the time of this writing, that repository did not work with the high level REST client. The ElasticSearch folks recommend the high level rest client over the native transport client which will soon be deprecated.
 
 I started this service with the generated output from the [swagger-codegen](https://github.com/swagger-api/swagger-codegen) project using a custom [spring boot template](https://github.com/gengstrand/clojure-news-feed/tree/master/server/swagger/templates/springboot).
 
@@ -19,9 +19,16 @@ cd ../k8s
 kubectl create -f feed8-deployment.yaml
 ```
 
-See the [Kubernetes](https://github.com/gengstrand/clojure-news-feed/tree/master/server/k8s) README from this repo on how to set up the rest of the environment. If you make any changes to the code, then be sure to edit the k8s/feed8-deployment.yaml file to launch your new image.
+See the [Kubernetes README](https://github.com/gengstrand/clojure-news-feed/tree/master/server/k8s) from this repo on how to set up the rest of the environment. If you make any changes to the code, then be sure to edit the k8s/feed8-deployment.yaml file to launch your new image.
 
 ## Performance under load
 
-I ran this service under the usual load test on GKE which experienced an average throughput of 13,966 outbound post RPM. Average latency was 3 ms. Median latency was 3 ms, 95th percentile was 5 ms and 99th percentile was 9 ms.
+With Spring boot you can switch out the underlying servlet engine. Here are the performance benchmarks for Tomcat and Jetty.
+
+| servlet engine | throughput (RPM) | avg latency (ms) | 95th (ms) | 99th (ms) | RAM (MB) |
+|----------------|------------------|------------------|-----------|-----------|----------|
+| Tomcat         | 13,966           | 3                | 5         | 9         | 800      |
+| Jetty          | 13,895           | 2.76             | 4         | 7         | 1,536    |
+ 
+
 
