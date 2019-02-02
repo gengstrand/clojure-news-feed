@@ -1,10 +1,10 @@
 # Introduction
 
-News Feed microservice in Spring Boot 
+News Feed microservice in [Spring Boot](https://spring.io/projects/spring-boot)
 
 ## Overview  
 
-It connects to MySql, Redis, and Cassandra via Spring Data repositories. I was not able to use the Spring Data repository for ElasticSearch because I wanted to use the high level REST client instead of the native transport client. At the time of this writing, that repository did not work with the high level REST client. The ElasticSearch folks recommend the high level rest client over the native transport client which will soon be deprecated.
+It connects to MySql, Redis, and Cassandra via [Spring Data](https://spring.io/projects/spring-data) repositories. I was not able to use the Spring Data repository for ElasticSearch because I wanted to use the high level REST client instead of the native transport client. At the time of this writing, that repository did not work with the high level REST client. The ElasticSearch folks recommend the high level rest client over the native transport client which will soon be deprecated.
 
 I started this service with the generated output from the [swagger-codegen](https://github.com/swagger-api/swagger-codegen) project using a custom [spring boot template](https://github.com/gengstrand/clojure-news-feed/tree/master/server/swagger/templates/springboot).
 
@@ -30,5 +30,6 @@ With Spring boot you can switch out the underlying servlet engine. Here are the 
 | Tomcat         | 13,966           | 3                | 5         | 9         | 800      |
 | Jetty          | 13,895           | 2.76             | 4         | 7         | 1,536    |
  
+The above benchmark numbers were run with the default Hikari connection pool size of 10. I ran the load test with a pool size of 18 (because that is the pool size for the [dropwizard version](https://github.com/gengstrand/clojure-news-feed/tree/master/server/feed3) of the news feed microservice) but the throughput was one third of what you see here and the latency was double.
 
 
