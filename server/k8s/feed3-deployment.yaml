@@ -18,7 +18,7 @@ spec:
       - env:
         - name: KAFKA_ENABLED
           value: "false"
-        image: gengstrand/feed3:1.0
+        image: gengstrand/ybfeed3:1.0
         name: feed
         ports:
         - containerPort: 8080

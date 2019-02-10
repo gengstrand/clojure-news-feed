@@ -2,7 +2,7 @@
 
 cache_pool: 30
 
-cache_host: redis
+cache_host: yb-tservers
 
 cache_port: 6379
 
@@ -16,7 +16,7 @@ circuit_breaker_sleep_window: 20000
 
 # NoSql settings
 
-nosql_host: cassandra
+nosql_host: yb-tservers
 
 nosql_keyspace: activity
 
