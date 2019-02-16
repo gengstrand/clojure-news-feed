@@ -7,6 +7,7 @@ import (
     "time"
     "bytes"
     "encoding/json"
+    "io/ioutil"
 )
 
 type HttpLogRequest struct {
@@ -49,7 +50,8 @@ func handlePerfLog() {
             if err == nil {
                 resp, err := client.Do(req)
                 if err == nil {
-                    defer resp.Body.Close()
+		    io.Copy(ioutil.Discard, resp.Body)
+                    resp.Body.Close()
                 } else {
                     log.Fatalf("encountered error when calling kong logger", err)
                 }
@@ -89,6 +91,15 @@ func copyHeader(dst, src http.Header) {
 }
 
 func main() {
+    defaultRoundTripper := http.DefaultTransport
+    defaultTransportPointer, ok := defaultRoundTripper.(*http.Transport)
+    if ok {
+        defaultTransport := *defaultTransportPointer 
+    	defaultTransport.MaxIdleConns = 200
+    	defaultTransport.MaxIdleConnsPerHost = 100
+    } else {
+        log.Fatalf("defaultRoundTripper not an *http.Transport")
+    }
     server := &http.Server{
         Addr: ":8000",
         Handler: http.HandlerFunc(func(w http.ResponseWriter, r *http.Request) {
