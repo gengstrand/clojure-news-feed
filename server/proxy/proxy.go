@@ -95,8 +95,8 @@ func main() {
     defaultTransportPointer, ok := defaultRoundTripper.(*http.Transport)
     if ok {
         defaultTransport := *defaultTransportPointer 
-    	defaultTransport.MaxIdleConns = 200
-    	defaultTransport.MaxIdleConnsPerHost = 100
+    	defaultTransport.MaxIdleConns = 100
+    	defaultTransport.MaxIdleConnsPerHost = 50
     } else {
         log.Fatalf("defaultRoundTripper not an *http.Transport")
     }
