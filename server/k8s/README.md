@@ -192,7 +192,7 @@ aws eks describe-cluster --name devel  --query cluster.endpoint --output text
 aws eks describe-cluster --name devel  --query cluster.certificateAuthority.data --output text
 ```
 
-* Install and Configure kubectl for EKS
+* Install and configure kubectl for EKS. You will need to update the configuration with the cluster endpoint and certificate authority data retrieved above.
 * Install aws-iam-authenticator for EKS
 * Launch and configure EKS Worker Nodes. I used 7 m4.xlarge instances.
 * Enable those worker nodes to join the cluster
