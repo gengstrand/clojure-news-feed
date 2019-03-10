@@ -1,6 +1,8 @@
 # Introduction
 
-News Feed microservice in [Spring Boot](https://spring.io/projects/spring-boot)
+News Feed microservice in [Spring Boot](https://spring.io/projects/spring-boot). I evaluated this microservice when compared to the Dropwizard version.
+
+http://glennengstrand.info/software/performance/springboot/dropwizard
 
 ## Overview  
 

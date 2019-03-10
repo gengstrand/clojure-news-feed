@@ -68,6 +68,8 @@ https://www.infoq.com/articles/evaluating-hyperledger-composer
 
 News feed microservice implemented in Java with Spring Boot
 
+http://glennengstrand.info/software/performance/springboot/dropwizard
+
 ### solr
 
 The supporting directory structure and configuration files needed to augment an instance of Solr to support keyword search capability for the news feed on outbound activity.
