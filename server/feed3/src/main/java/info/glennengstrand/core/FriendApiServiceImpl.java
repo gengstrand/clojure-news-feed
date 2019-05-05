@@ -33,6 +33,8 @@ public class FriendApiServiceImpl implements FriendApiService {
 				.withFrom(body.getFrom())
 				.withTo(body.getTo())
 				.build();
+		cache.invalidate(body.getFrom());
+		cache.invalidate(body.getTo());
 		logger.log(ENTITY, MessageLogger.LogOperation.POST, System.currentTimeMillis() - before);
 		return retVal;
 	}

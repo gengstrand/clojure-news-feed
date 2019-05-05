@@ -26,7 +26,11 @@ class FriendService extends EntityService[Friend] {
       }
     }
   }
-  def add(p: Friend)(implicit dao: EntityDAO[Friend]): Friend = {
+  def add(p: Friend)(implicit cache: Cache, dao: EntityDAO[Friend]): Friend = {
+    val fk = FriendService.namespace + p.from.toString()
+    cache.delete(fk)
+    val tk = FriendService.namespace + p.to.toString()
+    cache.delete(tk)
     dao.add(p)
   }
 }

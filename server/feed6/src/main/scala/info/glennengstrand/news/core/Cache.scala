@@ -5,6 +5,7 @@ import redis.clients.jedis.{ Jedis, JedisPool, JedisPoolConfig }
 trait Cache {
   def get(key: String): Option[String]
   def set(key: String, value: String): Unit
+  def delete(key: String): Unit
 }
 
 object RedisCache {
@@ -31,6 +32,11 @@ class RedisCache(pool: JedisPool) extends Cache {
     p.set(key, value)
     p.close()
   }
+  def delete(key: String): Unit = {
+    val p = pool.getResource()
+    p.del(key)
+    p.close()    
+  }
 
 }
 class MockCache extends Cache {
@@ -40,5 +46,8 @@ class MockCache extends Cache {
   }
   def set(key: String, value: String): Unit = {
     db.put(key, value)
+  }
+  def delete(key: String): Unit = {
+    db.remove(key)
   }
 }

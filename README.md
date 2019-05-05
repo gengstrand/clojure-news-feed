@@ -80,7 +80,7 @@ This Java project builds a library used by the feed service for Solr integration
 
 ### swagger
 
-Swagger templates and assets used to generate the api and resource classes for feed3, feed4 and feed5.
+Swagger templates and assets used to generate the api and resource classes for all feed services version 3 or greater.
 
 ### aws
 
@@ -146,7 +146,7 @@ http://glennengstrand.info/software/architecture/ml/oss
 
 ## License
 
-Copyright © 2013 - 2018 Glenn Engstrand
+Copyright © 2013 - 2019 Glenn Engstrand
 
 Distributed under the Eclipse Public License
 

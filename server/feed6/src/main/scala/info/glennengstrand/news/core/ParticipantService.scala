@@ -31,7 +31,9 @@ class ParticipantService extends EntityService[Participant] {
   def gets(id: Long)(implicit cache: Cache, dao: EntityDAO[Participant]): List[Participant] = {
     List()
   }
-  def add(p: Participant)(implicit dao: EntityDAO[Participant]): Participant = {
+  def add(p: Participant)(implicit cache: Cache, dao: EntityDAO[Participant]): Participant = {
+    val k = ParticipantService.namespace + p.id.toString()
+    cache.delete(k)
     dao.add(p)
   }
 }

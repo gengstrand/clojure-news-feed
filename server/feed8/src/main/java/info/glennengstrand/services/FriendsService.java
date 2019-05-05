@@ -28,6 +28,10 @@ public class FriendsService implements FriendsApi {
 		p.setFromParticipantId(body.getFrom());
 		p.setToParticipantId(body.getTo());
 		info.glennengstrand.dao.mysql.Friend retVal = repository.save(p);
+		String fk = "Friend::".concat(body.getFrom().toString());
+		template.delete(fk);
+		String tk = "Friend::".concat(body.getTo().toString());
+		template.delete(tk);
 		return body.id(retVal.getId());
 	}
 
