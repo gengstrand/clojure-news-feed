@@ -1,12 +1,9 @@
-# Go API Server for newsfeedserver
-
-news feed api
+# Go API Server for newsfeed
 
 ## Overview
 
 This folder contains a golang implementation of the news feed microservice. I started by using the
-[go-server template](https://github.com/swagger-api/swagger-codegen/tree/master/modules/swagger-codegen/src/main/resources/go-server) from the [swagger-codegen]
-(https://github.com/swagger-api/swagger-codegen) project.
+[go-server template](https://github.com/swagger-api/swagger-codegen/tree/master/modules/swagger-codegen/src/main/resources/go-server) from the [swagger-codegen](https://github.com/swagger-api/swagger-codegen) project.
 
 ## Dependencies
 
