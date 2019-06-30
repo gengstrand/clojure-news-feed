@@ -3,12 +3,21 @@ package newsfeedserver
 import (
         "fmt"
 	"time"
+	"reflect"
 	"strconv"
 	"net/http"
 	"encoding/json"
+	"github.com/google/uuid"
 	"github.com/gorilla/mux"
 	"github.com/gocql/gocql"
+	"gopkg.in/olivere/elastic.v3"
 )
+
+type OutboundStoryDocument struct {
+     	Id string `json:"id"`
+	Sender string `json:"sender"`
+	Story string `json:"story"`
+}
 
 func AddOutbound(w http.ResponseWriter, r *http.Request) {
 	w.Header().Set("Content-Type", "application/json; charset=UTF-8")
@@ -31,6 +40,19 @@ func AddOutbound(w http.ResponseWriter, r *http.Request) {
 	   w.WriteHeader(http.StatusInternalServerError)
 	   return
 	}
+	esclient, err := elastic.NewClient(elastic.SetURL("http://elasticsearch:9200"))
+	if err != nil {
+	   fmt.Fprintf(w, "cannot connect to elasticsearch: %s", err)
+	   w.WriteHeader(http.StatusInternalServerError)
+	   return
+	}
+	esidr, err := uuid.NewRandom()
+	if err != nil {
+	   fmt.Fprintf(w, "cannot generate a random id: %s", err)
+	   w.WriteHeader(http.StatusInternalServerError)
+	   return
+	}
+	esid := fmt.Sprintf("%s", esidr)
 	for _, friend := range friends {
 	   inb := Inbound {
 	      From: ob.From,
@@ -44,7 +66,17 @@ func AddOutbound(w http.ResponseWriter, r *http.Request) {
 	stmt := session.Query("insert into Outbound (ParticipantID, Occurred, Subject, Story) values (?, now(), ?, ?) using ttl 7776000", ob.From, ob.Subject, ob.Story)
 	stmt.Consistency(gocql.One)
 	stmt.Exec()
-	// TODO: elasticsearch insert
+	osd := OutboundStoryDocument{
+	    Id: esid,
+	    Sender: id,
+	    Story: ob.Story,
+	}
+	esclient.Index().
+		Index("feed").
+		Type("stories").
+		Id(esid).
+		BodyJson(osd).
+		Do()
 	w.WriteHeader(http.StatusOK)
 }
 
@@ -91,6 +123,42 @@ func GetOutbound(w http.ResponseWriter, r *http.Request) {
 
 func SearchOutbound(w http.ResponseWriter, r *http.Request) {
 	w.Header().Set("Content-Type", "application/json; charset=UTF-8")
-	// TODO: elasticsearch query
+	keywords, ok := r.URL.Query()["keywords"]
+	if !ok || len(keywords[0]) < 1 {
+	   fmt.Fprint(w, "must specify keywords")
+	   w.WriteHeader(http.StatusBadRequest)
+	   return
+	}
+	esclient, err := elastic.NewClient(elastic.SetURL("http://elasticsearch:9200"))
+	if err != nil {
+	   fmt.Fprintf(w, "cannot connect to elasticsearch: %s", err)
+	   w.WriteHeader(http.StatusInternalServerError)
+	   return
+	}
+	query := elastic.NewMatchQuery("story", string(keywords[0]))
+	searchResult, err := esclient.Search().
+		      Index("feed").
+		      Query(query).
+		      Do()
+	if err != nil {
+	   fmt.Fprintf(w, "cannot query elasticsearch: %s", err)
+	   w.WriteHeader(http.StatusInternalServerError)
+	   return	   
+	}
+	var osd OutboundStoryDocument
+	var results []string
+	for _, result := range searchResult.Each(reflect.TypeOf(osd)) {
+	    doc, ok := result.(OutboundStoryDocument)
+	    if ok {
+	       results = append(results, doc.Sender)
+	    }
+	}
+	resultb, err := json.Marshal(results)
+	if err != nil {
+	    fmt.Fprintf(w, "cannot marshal data: %s", err)
+	    w.WriteHeader(http.StatusInternalServerError)
+	    return
+	}
+	fmt.Fprint(w, string(resultb))
 	w.WriteHeader(http.StatusOK)
 }
