@@ -33,3 +33,14 @@ Here is how to deploy the docker image.
 cd ../k8s
 kubectl create -f feed9-deployment.yaml
 ```
+
+## Load Testing
+
+We were seeing about 10,000 create outbound RPM for the first 10 minutes. After that, the cassandra driver destabilized with "runtime error: invalid memory address or nil pointer dereference" panics about every 2 minutes. Here is the bug report.
+
+https://github.com/gocql/gocql/issues/1329
+
+
+
+
+
