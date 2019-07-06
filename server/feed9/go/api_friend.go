@@ -1,6 +1,7 @@
 package newsfeedserver
 
 import (
+	"os"
         "fmt"
 	"log"
 	"strconv"
@@ -22,7 +23,8 @@ func AddFriend(w http.ResponseWriter, r *http.Request) {
 	   w.WriteHeader(http.StatusBadRequest)
 	   return
 	}
-	db, err := sql.Open("mysql", "feed:feed1234@tcp(mysql:3306)/feed")
+	dbhost := fmt.Sprintf("feed:feed1234@tcp(%s:3306)/feed", os.Getenv("MYSQL_HOST"))
+	db, err := sql.Open("mysql", dbhost)
 	if err != nil {
 	   fmt.Fprintf(w, "cannot open the database: %s", err)
 	   w.WriteHeader(http.StatusInternalServerError)
@@ -72,7 +74,8 @@ func AddFriend(w http.ResponseWriter, r *http.Request) {
 }
 
 func GetFriendsFromDB(id string) ([]Friend, error) {
-	db, err := sql.Open("mysql", "feed:feed1234@tcp(mysql:3306)/feed")
+	dbhost := fmt.Sprintf("feed:feed1234@tcp(%s:3306)/feed", os.Getenv("MYSQL_HOST"))
+	db, err := sql.Open("mysql", dbhost)
 	if err != nil {
 	   log.Printf("cannot open the database: %s", err)
 	   return nil, err
@@ -115,8 +118,9 @@ func GetFriendsFromDB(id string) ([]Friend, error) {
 }
 
 func GetFriendsInner(id string) (string, []Friend, error) {
+	cacheHost := fmt.Sprintf("%s:6379", os.Getenv("CACHE_HOST"))
 	cache := redis.NewClient(&redis.Options{
-	      Addr: "redis:6379",
+	      Addr: cacheHost,
 	      Password: "",
 	      DB: 0,
 	})

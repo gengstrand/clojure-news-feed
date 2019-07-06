@@ -1,6 +1,7 @@
 package newsfeedserver
 
 import (
+	"os"
         "fmt"
 	"strconv"
 	"net/http"
@@ -21,7 +22,8 @@ func AddParticipant(w http.ResponseWriter, r *http.Request) {
 	   w.WriteHeader(http.StatusBadRequest)
 	   return
 	}
-	db, err := sql.Open("mysql", "feed:feed1234@tcp(mysql:3306)/feed")
+	dbhost := fmt.Sprintf("feed:feed1234@tcp(%s:3306)/feed", os.Getenv("MYSQL_HOST"))
+	db, err := sql.Open("mysql", dbhost)
 	if err != nil {
 	   fmt.Fprintf(w, "cannot open the database: %s", err)
 	   w.WriteHeader(http.StatusInternalServerError)
@@ -71,7 +73,8 @@ func AddParticipant(w http.ResponseWriter, r *http.Request) {
 }
 
 func GetParticipantFromDB(id string, cache *redis.Client, w http.ResponseWriter) {
-	db, err := sql.Open("mysql", "feed:feed1234@tcp(mysql:3306)/feed")
+	dbhost := fmt.Sprintf("feed:feed1234@tcp(%s:3306)/feed", os.Getenv("MYSQL_HOST"))
+	db, err := sql.Open("mysql", dbhost)
 	if err != nil {
 	   fmt.Fprintf(w, "cannot open the database: %s", err)
 	   w.WriteHeader(http.StatusInternalServerError)
@@ -127,8 +130,9 @@ func GetParticipantFromDB(id string, cache *redis.Client, w http.ResponseWriter)
 
 func GetParticipant(w http.ResponseWriter, r *http.Request) {
 	w.Header().Set("Content-Type", "application/json; charset=UTF-8")
+	cacheHost := fmt.Sprintf("%s:6379", os.Getenv("CACHE_HOST"))
 	cache := redis.NewClient(&redis.Options{
-	      Addr: "redis:6379",
+	      Addr: cacheHost,
 	      Password: "",
 	      DB: 0,
 	})

@@ -2,6 +2,7 @@
 package newsfeedserver
 
 import (
+        "os"
         "fmt"
 	"time"
 	"strconv"
@@ -19,8 +20,8 @@ func AddInbound(i Inbound, session *gocql.Session) {
 
 func GetInbound(w http.ResponseWriter, r *http.Request) {
 	w.Header().Set("Content-Type", "application/json; charset=UTF-8")
-	cluster := gocql.NewCluster("cassandra")
-	cluster.Keyspace = "activity"
+	cluster := gocql.NewCluster(os.Getenv("NOSQL_HOST"))
+	cluster.Keyspace = os.Getenv("NOSQL_KEYSPACE")
 	session, _ := cluster.CreateSession()
 	defer session.Close()
 

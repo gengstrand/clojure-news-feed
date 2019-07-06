@@ -1,6 +1,7 @@
 package newsfeedserver
 
 import (
+        "os"
         "fmt"
 	"time"
 	"reflect"
@@ -29,8 +30,8 @@ func AddOutbound(w http.ResponseWriter, r *http.Request) {
 	   w.WriteHeader(http.StatusBadRequest)
 	   return
 	}
-	cluster := gocql.NewCluster("cassandra")
-	cluster.Keyspace = "activity"
+	cluster := gocql.NewCluster(os.Getenv("NOSQL_HOST"))
+	cluster.Keyspace = os.Getenv("NOSQL_KEYSPACE")
 	session, _ := cluster.CreateSession()
 	defer session.Close()
 	id := strconv.FormatInt(ob.From, 10)
@@ -40,7 +41,8 @@ func AddOutbound(w http.ResponseWriter, r *http.Request) {
 	   w.WriteHeader(http.StatusInternalServerError)
 	   return
 	}
-	esclient, err := elastic.NewClient(elastic.SetURL("http://elasticsearch:9200"))
+	eshost := fmt.Sprintf("http://%s:9200", os.Getenv("SEARCH_HOST"))
+	esclient, err := elastic.NewClient(elastic.SetURL(eshost))
 	if err != nil {
 	   fmt.Fprintf(w, "cannot connect to elasticsearch: %s", err)
 	   w.WriteHeader(http.StatusInternalServerError)
@@ -82,8 +84,8 @@ func AddOutbound(w http.ResponseWriter, r *http.Request) {
 
 func GetOutbound(w http.ResponseWriter, r *http.Request) {
 	w.Header().Set("Content-Type", "application/json; charset=UTF-8")
-	cluster := gocql.NewCluster("cassandra")
-	cluster.Keyspace = "activity"
+	cluster := gocql.NewCluster(os.Getenv("NOSQL_HOST"))
+	cluster.Keyspace = os.Getenv("NOSQL_KEYSPACE")
 	session, _ := cluster.CreateSession()
 	defer session.Close()
 
@@ -129,7 +131,8 @@ func SearchOutbound(w http.ResponseWriter, r *http.Request) {
 	   w.WriteHeader(http.StatusBadRequest)
 	   return
 	}
-	esclient, err := elastic.NewClient(elastic.SetURL("http://elasticsearch:9200"))
+	eshost := fmt.Sprintf("http://%s:9200", os.Getenv("SEARCH_HOST"))
+	esclient, err := elastic.NewClient(elastic.SetURL(eshost))
 	if err != nil {
 	   fmt.Fprintf(w, "cannot connect to elasticsearch: %s", err)
 	   w.WriteHeader(http.StatusInternalServerError)

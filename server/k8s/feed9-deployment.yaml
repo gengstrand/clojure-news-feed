@@ -1,0 +1,30 @@
+apiVersion: apps/v1beta2
+kind: Deployment
+metadata:
+  name: feed
+spec:
+  replicas: 1
+  strategy:
+    type: Recreate
+  selector:
+    matchLabels:
+      app: feed
+  template:
+    metadata:
+      labels:
+        app: feed
+    spec:
+      containers:
+      - env:
+        - name: KAFKA_ENABLED
+          value: "false"
+        envFrom:
+        - configMapRef:
+            name: feed-config
+        image: gengstrand/feed9:1.0
+        name: feed
+        ports:
+        - containerPort: 8080
+        imagePullPolicy: Always
+      restartPolicy: Always
+
