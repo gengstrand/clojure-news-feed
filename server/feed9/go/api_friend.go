@@ -20,6 +20,7 @@ func AddFriend(w http.ResponseWriter, r *http.Request) {
     	err := decoder.Decode(&f)
 	if err != nil {
 	   fmt.Fprintf(w, "friend body error: %s", err)
+	   log.Printf("friend body error: %s", err)
 	   w.WriteHeader(http.StatusBadRequest)
 	   return
 	}
@@ -27,6 +28,7 @@ func AddFriend(w http.ResponseWriter, r *http.Request) {
 	db, err := sql.Open("mysql", dbhost)
 	if err != nil {
 	   fmt.Fprintf(w, "cannot open the database: %s", err)
+	   log.Printf("cannot open the database: %s", err)
 	   w.WriteHeader(http.StatusInternalServerError)
 	   return
 	}
@@ -34,6 +36,7 @@ func AddFriend(w http.ResponseWriter, r *http.Request) {
 	stmt, err := db.Prepare("call UpsertFriends(?, ?)")
 	if err != nil {
 	   fmt.Fprintf(w, "cannot prepare the upsert statement: %s", err)
+	   log.Printf("cannot prepare the upsert friend statement: %s", err)
 	   w.WriteHeader(http.StatusInternalServerError)
 	   return
 	}
@@ -41,6 +44,7 @@ func AddFriend(w http.ResponseWriter, r *http.Request) {
 	rows, err := stmt.Query(f.To, f.From)
 	if err != nil {
 	   fmt.Fprintf(w, "cannot insert friend: %s", err)
+	   log.Printf("cannot insert friend: %s", err)
 	   w.WriteHeader(http.StatusInternalServerError)
 	   return
 	}
@@ -50,12 +54,14 @@ func AddFriend(w http.ResponseWriter, r *http.Request) {
 	    err := rows.Scan(&id)
 	    if err != nil {
 	       fmt.Fprintf(w, "cannot fetch data: %s", err)
+	       log.Printf("cannot fetch friend pk: %s", err)
 	       w.WriteHeader(http.StatusInternalServerError)
 	       return
 	    }
 	    i, err := strconv.ParseInt(id, 0, 16)
 	    if err != nil {
 	       fmt.Fprintf(w, "id is not an integer: %s", err)
+	       log.Printf("id is not an integer: %s", err)
 	       w.WriteHeader(http.StatusInternalServerError)
 	       return
 	    }
@@ -63,13 +69,23 @@ func AddFriend(w http.ResponseWriter, r *http.Request) {
 	    result, err := json.Marshal(f)
 	    if err != nil {
 	       fmt.Fprintf(w, "cannot marshal data: %s", err)
+	       log.Printf("cannot marshal friend response: %s", err)
 	       w.WriteHeader(http.StatusInternalServerError)
 	       return
 	    }
+	    cacheHost := fmt.Sprintf("%s:6379", os.Getenv("CACHE_HOST"))
+	    cache := redis.NewClient(&redis.Options{
+	      	  Addr: cacheHost,
+	      	  Password: "",
+	      	  DB: 0,
+	    })
+	    cache.Del(fmt.Sprintf("Friends::%d", f.From)).Result()
+	    cache.Del(fmt.Sprintf("Friends::%d", f.To)).Result()
 	    fmt.Fprint(w, string(result))
 	    w.WriteHeader(http.StatusOK)
 	    return
 	}
+	log.Print("cannot retrieve pk from upsert friend")
 	w.WriteHeader(http.StatusNoContent)
 }
 
@@ -83,7 +99,7 @@ func GetFriendsFromDB(id string) ([]Friend, error) {
 	defer db.Close()
 	stmt, err := db.Prepare("call FetchFriends(?)")
 	if err != nil {
-	   log.Printf("cannot prepare the fetch statement: %s", err)
+	   log.Printf("cannot prepare the fetch friends statement: %s", err)
 	   return nil, err
 	}
 	defer stmt.Close()
@@ -104,7 +120,7 @@ func GetFriendsFromDB(id string) ([]Friend, error) {
 	for rows.Next() {
 	    err := rows.Scan(&fid, &pid)
   	    if err != nil {
-	       log.Printf("cannot fetch data: %s", err)
+	       log.Printf("cannot fetch friend data: %s", err)
 	       return nil, err
 	    }
 	    f := Friend{
@@ -124,7 +140,8 @@ func GetFriendsInner(id string) (string, []Friend, error) {
 	      Password: "",
 	      DB: 0,
 	})
-	val, err := cache.Get("Friends::" + id).Result()
+	key := "Friends::" + id
+	val, err := cache.Get(key).Result()
 	if err == redis.Nil {
 	   results, err := GetFriendsFromDB(id)
 	   if err != nil {
@@ -132,7 +149,7 @@ func GetFriendsInner(id string) (string, []Friend, error) {
 	   } else {
 	      resultb, err := json.Marshal(results)
 	      if err != nil {
-	      	 log.Printf("cannot marshal data: %s", err)
+	      	 log.Printf("cannot marshal friends response: %s", err)
 	    	 return "", nil, err
 	      }
 	      response := string(resultb)
@@ -140,7 +157,7 @@ func GetFriendsInner(id string) (string, []Friend, error) {
 	      return response, results, nil
 	   }
 	} else if err != nil {
-	   log.Printf("cannot fetch from cache: %s", err)
+	   log.Printf("cannot fetch %s from cache: %s", key, err)
 	   return "", nil, err
 	} else {
 	   var friends []Friend
@@ -159,6 +176,7 @@ func GetFriend(w http.ResponseWriter, r *http.Request) {
 	result, _, err := GetFriendsInner(vars["id"])
 	if err != nil {
 	   fmt.Fprintf(w, "system error while getting friend %s", vars["id"])
+	   log.Printf("system error while getting friend %s", vars["id"])
 	   w.WriteHeader(http.StatusInternalServerError)
 	} else {
 	   fmt.Fprint(w, result)

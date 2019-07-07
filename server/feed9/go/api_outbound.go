@@ -3,6 +3,7 @@ package newsfeedserver
 import (
         "os"
         "fmt"
+	"log"
 	"time"
 	"reflect"
 	"strconv"
@@ -26,18 +27,29 @@ func AddOutbound(w http.ResponseWriter, r *http.Request) {
     	var ob Outbound
     	err := decoder.Decode(&ob)
 	if err != nil {
-	   fmt.Fprintf(w, "outbound body error: %s", err)
-	   w.WriteHeader(http.StatusBadRequest)
-	   return
+	    fmt.Fprintf(w, "outbound body error: %s", err)
+	    log.Printf("outbound body error: %s", err)
+	    w.WriteHeader(http.StatusBadRequest)
+	    return
 	}
 	cluster := gocql.NewCluster(os.Getenv("NOSQL_HOST"))
 	cluster.Keyspace = os.Getenv("NOSQL_KEYSPACE")
-	session, _ := cluster.CreateSession()
+	cluster.Timeout = 20 * time.Second
+	cluster.ConnectTimeout = 20 * time.Second
+	cluster.Consistency = gocql.Any
+	session, err := cluster.CreateSession()
+	if err != nil {
+	    fmt.Fprintf(w, "cannot create cassandra session: %s", err)
+	    log.Printf("cannot create cassandra session: %s", err)
+	    w.WriteHeader(http.StatusInternalServerError)
+	    return
+	}
 	defer session.Close()
 	id := strconv.FormatInt(ob.From, 10)
 	_, friends, err := GetFriendsInner(id)
 	if err != nil {
 	   fmt.Fprintf(w, "system error while fetching friends for %s", id)
+	   log.Printf("system error while fetching friends for %s", id)
 	   w.WriteHeader(http.StatusInternalServerError)
 	   return
 	}
@@ -45,12 +57,14 @@ func AddOutbound(w http.ResponseWriter, r *http.Request) {
 	esclient, err := elastic.NewClient(elastic.SetURL(eshost))
 	if err != nil {
 	   fmt.Fprintf(w, "cannot connect to elasticsearch: %s", err)
+	   log.Printf("cannot connect to elasticsearch: %s", err)
 	   w.WriteHeader(http.StatusInternalServerError)
 	   return
 	}
 	esidr, err := uuid.NewRandom()
 	if err != nil {
 	   fmt.Fprintf(w, "cannot generate a random id: %s", err)
+	   log.Printf("cannot generate a random id: %s", err)
 	   w.WriteHeader(http.StatusInternalServerError)
 	   return
 	}
@@ -79,6 +93,14 @@ func AddOutbound(w http.ResponseWriter, r *http.Request) {
 		Id(esid).
 		BodyJson(osd).
 		Do()
+	resultb, err := json.Marshal(ob)
+	if err != nil {
+	    fmt.Fprintf(w, "cannot marshal outbound response: %s", err)
+	    log.Printf("cannot marshal search outbound response: %s", err)
+	    w.WriteHeader(http.StatusInternalServerError)
+	    return
+	}
+	fmt.Fprint(w, string(resultb))
 	w.WriteHeader(http.StatusOK)
 }
 
@@ -86,13 +108,23 @@ func GetOutbound(w http.ResponseWriter, r *http.Request) {
 	w.Header().Set("Content-Type", "application/json; charset=UTF-8")
 	cluster := gocql.NewCluster(os.Getenv("NOSQL_HOST"))
 	cluster.Keyspace = os.Getenv("NOSQL_KEYSPACE")
-	session, _ := cluster.CreateSession()
+	cluster.Timeout = 20 * time.Second
+	cluster.ConnectTimeout = 20 * time.Second
+	cluster.Consistency = gocql.One
+	session, err := cluster.CreateSession()
+	if err != nil {
+	    fmt.Fprintf(w, "cannot create cassandra session: %s", err)
+	    log.Printf("cannot create cassandra session: %s", err)
+	    w.WriteHeader(http.StatusInternalServerError)
+	    return
+	}
 	defer session.Close()
 
 	vars := mux.Vars(r)
 	from, err := strconv.ParseInt(vars["id"], 0, 16)
 	if err != nil {
 	    fmt.Fprintf(w, "id is not an integer: %s", err)
+	    log.Printf("id is not an integer: %s", err)
 	    w.WriteHeader(http.StatusBadRequest)
 	    return
 	}
@@ -116,6 +148,7 @@ func GetOutbound(w http.ResponseWriter, r *http.Request) {
 	resultb, err := json.Marshal(results)
 	if err != nil {
 	    fmt.Fprintf(w, "cannot marshal data: %s", err)
+	    log.Printf("cannot marshal outbound response: %s", err)
 	    w.WriteHeader(http.StatusInternalServerError)
 	    return
 	}
@@ -128,6 +161,7 @@ func SearchOutbound(w http.ResponseWriter, r *http.Request) {
 	keywords, ok := r.URL.Query()["keywords"]
 	if !ok || len(keywords[0]) < 1 {
 	   fmt.Fprint(w, "must specify keywords")
+	   log.Printf("must specify keywords")
 	   w.WriteHeader(http.StatusBadRequest)
 	   return
 	}
@@ -135,6 +169,7 @@ func SearchOutbound(w http.ResponseWriter, r *http.Request) {
 	esclient, err := elastic.NewClient(elastic.SetURL(eshost))
 	if err != nil {
 	   fmt.Fprintf(w, "cannot connect to elasticsearch: %s", err)
+	   log.Printf("cannot connect to elasticsearch: %s", err)
 	   w.WriteHeader(http.StatusInternalServerError)
 	   return
 	}
@@ -145,6 +180,7 @@ func SearchOutbound(w http.ResponseWriter, r *http.Request) {
 		      Do()
 	if err != nil {
 	   fmt.Fprintf(w, "cannot query elasticsearch: %s", err)
+	   log.Printf("cannot query elasticsearch: %s", err)
 	   w.WriteHeader(http.StatusInternalServerError)
 	   return	   
 	}
@@ -159,6 +195,7 @@ func SearchOutbound(w http.ResponseWriter, r *http.Request) {
 	resultb, err := json.Marshal(results)
 	if err != nil {
 	    fmt.Fprintf(w, "cannot marshal data: %s", err)
+	    log.Printf("cannot marshal search outbound results: %s", err)
 	    w.WriteHeader(http.StatusInternalServerError)
 	    return
 	}

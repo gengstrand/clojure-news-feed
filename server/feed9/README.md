@@ -36,9 +36,9 @@ kubectl create -f feed9-deployment.yaml
 
 ## Load Testing
 
-We were seeing about 10,000 create outbound RPM for the first 10 minutes. After that, the cassandra driver destabilized with "runtime error: invalid memory address or nil pointer dereference" panics about every 2 minutes. Here is the bug report.
+We see a little under 8,000 create outbound RPM with 5 ms average latency for about 10 minutes. After that, the CPU maxes out and throughput grinds to a halt. Not sure why. Nothing in the application log indicates any problems.
 
-https://github.com/gocql/gocql/issues/1329
+
 
 
 

@@ -11,10 +11,8 @@
 package newsfeedserver
 
 import (
-	"fmt"
 	"net/http"
 	"strings"
-
 	"github.com/gorilla/mux"
 )
 
@@ -45,7 +43,7 @@ func NewRouter() *mux.Router {
 }
 
 func Index(w http.ResponseWriter, r *http.Request) {
-	fmt.Fprintf(w, "Hello World!")
+	http.Redirect(w, r, "http://glennengstrand.info", http.StatusSeeOther)
 }
 
 var routes = Routes{
