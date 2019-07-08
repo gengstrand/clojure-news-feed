@@ -1,25 +1,49 @@
-apiVersion: batch/v1
-kind: Job
+apiVersion: v1
+kind: Service
+metadata:
+  name: load-test
+  labels:
+    app: load-test
+spec:
+  type: LoadBalancer
+  ports:
+  - name: "8080"
+    port: 8080
+    targetPort: 8080
+  selector:
+    app: load-test
+---
+apiVersion: apps/v1beta2
+kind: Deployment
 metadata:
   name: load-test
 spec:
+  replicas: 1
+  strategy:
+    type: Recreate
+  selector:
+    matchLabels:
+      app: load-test
   template:
     metadata:
-      name: load-test
+      labels:
+        app: load-test
     spec:
       containers:
       - name: load-test
-        image: gengstrand/load:1.0
+        image: load:1.1
         env:
           - name: FEED_HOST
             value: "kong-proxy"
           - name: FEED_PORT
             value: "8000"
           - name: CONCURRENT_USERS
-            value: "3"
+            value: "1"
           - name: PERCENT_SEARCHES
-            value: "10"
+            value: "0"
           - name: USE_JSON
             value: "true"
-        command: [ "/bin/sh", "-c", "/usr/app/setup.sh" ]
-      restartPolicy: Never
+        ports:
+        - containerPort: 8080
+        imagePullPolicy: Never
+      restartPolicy: Always

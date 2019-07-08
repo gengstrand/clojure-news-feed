@@ -1,9 +1,11 @@
 (ns load.handler
   (:require [clojure.tools.logging :as log])
+  (:require [org.httpkit.server :refer [run-server]])
   (:gen-class))
 
 (require '[load.core :as service])
 (require '[load.integration :as integration])
+(require '[clojure.data.json :as json])
 
 (def participant-batch-size 10)
 (def min-friends 2)
@@ -14,6 +16,15 @@
 (def searches-per-user 5)
 (def dictionary-size 40000)
 (def participant-space 1000000)
+(def errors (agent {}))
+
+(defn collect-error [existing-errors new-error]
+  (assoc existing-errors new-error (+ (get existing-errors new-error 0) 1)))
+
+(defn report-app [req]
+  {:status 200
+   :headers {"Content-type" "application/json"}
+   :body (json/write-str (deref errors))})
 
 (defn parse-int [s]
    (Integer. (re-find  #"\d+" s )))
@@ -36,6 +47,7 @@
 	    {:latency (- (System/currentTimeMillis) before)
 	     :errors 0})
 	  (catch Exception e 
+     (send errors collect-error (.getLocalizedMessage e))
 	    {:latency 0 :errors 1})))
 
 (defn run-search 
@@ -111,4 +123,5 @@
             concurrent-users (parse-int (if (>= (count args) 3) (nth args 2) (System/getenv "CONCURRENT_USERS")))
             percent-searches (parse-int (if (>= (count args) 4) (nth args 3) (System/getenv "PERCENT_SEARCHES")))
             use-json (if (> (count args) 4) true (= (System/getenv "USE_JSON") "true"))]
-        (initiate-concurrent-test-load feed-host feed-port concurrent-users percent-searches use-json)))))
+        (initiate-concurrent-test-load feed-host feed-port concurrent-users percent-searches use-json)
+        (run-server report-app {:port 8080})))))
