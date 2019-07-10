@@ -31,19 +31,19 @@ spec:
     spec:
       containers:
       - name: load-test
-        image: load:1.1
+        image: gengstrand/load:1.1
         env:
           - name: FEED_HOST
             value: "kong-proxy"
           - name: FEED_PORT
             value: "8000"
           - name: CONCURRENT_USERS
-            value: "1"
+            value: "3"
           - name: PERCENT_SEARCHES
-            value: "0"
+            value: "10"
           - name: USE_JSON
             value: "true"
         ports:
         - containerPort: 8080
-        imagePullPolicy: Never
+        imagePullPolicy: Always
       restartPolicy: Always
