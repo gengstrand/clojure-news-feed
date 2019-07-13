@@ -121,7 +121,7 @@ func GetOutbound(w http.ResponseWriter, r *http.Request) {
 	defer session.Close()
 
 	vars := mux.Vars(r)
-	from, err := strconv.ParseInt(vars["id"], 0, 16)
+	from, err := strconv.ParseInt(vars["id"], 0, 64)
 	if err != nil {
 	    fmt.Fprintf(w, "id is not an integer: %s", err)
 	    log.Printf("id is not an integer: %s", err)
