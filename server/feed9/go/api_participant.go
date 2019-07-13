@@ -58,7 +58,7 @@ func AddParticipant(w http.ResponseWriter, r *http.Request) {
 	       w.WriteHeader(http.StatusInternalServerError)
 	       return
 	    }
-	    i, err := strconv.ParseInt(id, 0, 16)
+	    i, err := strconv.ParseInt(id, 0, 64)
 	    if err != nil {
 	       fmt.Fprintf(w, "id is not an integer: %s", err)
 	       log.Printf("id is not an integer: %s", err)
@@ -99,7 +99,7 @@ func GetParticipantFromDB(id string, cache *redis.Client, w http.ResponseWriter)
 	   return
 	}
 	defer stmt.Close()
-	i, err := strconv.ParseInt(id, 0, 16)
+	i, err := strconv.ParseInt(id, 0, 64)
 	if err != nil {
 	    fmt.Fprintf(w, "id is not an integer: %s", err)
 	    log.Printf("id is not an integer: %s", err)
@@ -151,6 +151,7 @@ func GetParticipant(w http.ResponseWriter, r *http.Request) {
 	      Password: "",
 	      DB: 0,
 	})
+	defer cache.Close()
 	vars := mux.Vars(r)
 	key := "Participant::" + vars["id"]
 	val, err := cache.Get(key).Result()

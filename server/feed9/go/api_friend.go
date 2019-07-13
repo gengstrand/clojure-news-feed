@@ -58,7 +58,7 @@ func AddFriend(w http.ResponseWriter, r *http.Request) {
 	       w.WriteHeader(http.StatusInternalServerError)
 	       return
 	    }
-	    i, err := strconv.ParseInt(id, 0, 16)
+	    i, err := strconv.ParseInt(id, 0, 64)
 	    if err != nil {
 	       fmt.Fprintf(w, "id is not an integer: %s", err)
 	       log.Printf("id is not an integer: %s", err)
@@ -103,7 +103,7 @@ func GetFriendsFromDB(id string) ([]Friend, error) {
 	   return nil, err
 	}
 	defer stmt.Close()
-	i, err := strconv.ParseInt(id, 0, 16)
+	i, err := strconv.ParseInt(id, 0, 64)
 	if err != nil {
 	    log.Printf("id is not an integer: %s", err)
 	    return nil, err
@@ -140,6 +140,7 @@ func GetFriendsInner(id string) (string, []Friend, error) {
 	      Password: "",
 	      DB: 0,
 	})
+	defer cache.Close()
 	key := "Friends::" + id
 	val, err := cache.Get(key).Result()
 	if err == redis.Nil {

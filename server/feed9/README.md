@@ -36,7 +36,12 @@ kubectl create -f feed9-deployment.yaml
 
 ## Load Testing
 
-We see a little under 8,000 create outbound RPM with 5 ms average latency for about 10 minutes. After that, the CPU maxes out and throughput grinds to a halt. Not sure why. Nothing in the application log indicates any problems.
+We tested this microservice using our standard load test environment. For the first 10 minutes, it maintained a steady outbound post throughput of 5,000 RPM with an average duration of 25 ms and a 99th percentile of 111 ms. After that, performance became very sporatic. Throughput ranged from 13 to 3,000 RPM and average latency ranged from 2 to 91 seconds. There were very few messages in the application log indicating loss of connectivity to cassandra, mysql, and elasticsearch but not enough to account for the destabilization. Nothing in the data store metrics indicated any loss of capability.
+
+
+
+
+
 
 
 

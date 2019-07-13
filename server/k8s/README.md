@@ -246,7 +246,7 @@ Once I collected the data, I cleaned up everything before deleting the cluster.
 ```
 kubectl delete job init-cluster
 # kubectl delete job kong-migration
-kubectl delete job load-test
+kubectl delete deployment load-test
 kubectl delete deployment kibana-logger
 kubectl delete deployment kong-logger
 kubectl delete deployment kong-proxy
@@ -255,6 +255,7 @@ kubectl delete deployment elasticsearch
 kubectl delete deployment redis
 kubectl delete deployment mysql
 kubectl delete deployment cassandra
+kubectl delete service load-test
 kubectl delete service cassandra
 kubectl delete service elasticsearch
 kubectl delete service feed
