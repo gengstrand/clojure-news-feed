@@ -5,6 +5,7 @@ import (
         "fmt"
 	"log"
 	"time"
+	"sync"
 	"reflect"
 	"strconv"
 	"net/http"
@@ -15,10 +16,45 @@ import (
 	"gopkg.in/olivere/elastic.v3"
 )
 
+var esPool = &sync.Pool{
+	New: func() interface{} {
+		eshost := fmt.Sprintf("http://%s:9200", os.Getenv("SEARCH_HOST"))
+		esclient, err := elastic.NewClient(elastic.SetURL(eshost))
+		if err != nil {
+	   	   log.Printf("cannot connect to elasticsearch: %s", err)
+		}
+		return esclient
+	},
+}
+
 type OutboundStoryDocument struct {
      	Id string `json:"id"`
 	Sender string `json:"sender"`
 	Story string `json:"story"`
+}
+
+var ElasticSearchIndexer = make(chan OutboundStoryDocument)
+
+func handleIndexRequest() {
+	eshost := fmt.Sprintf("http://%s:9200", os.Getenv("SEARCH_HOST"))
+	esclient, err := elastic.NewClient(elastic.SetURL(eshost))
+	if err != nil {
+	   log.Printf("cannot connect to elasticsearch: %s", err)
+	}
+	for {
+     	    req := <- ElasticSearchIndexer
+	    esclient.Index().
+		Index("feed").
+		Type("stories").
+		Id(req.Id).
+		BodyJson(req).
+		Do()
+        }
+}
+
+func init() {
+        go handleIndexRequest()
+        go handleIndexRequest()
 }
 
 func AddOutbound(w http.ResponseWriter, r *http.Request) {
@@ -34,7 +70,7 @@ func AddOutbound(w http.ResponseWriter, r *http.Request) {
 	}
 	cluster := gocql.NewCluster(os.Getenv("NOSQL_HOST"))
 	cluster.Keyspace = os.Getenv("NOSQL_KEYSPACE")
-	cluster.Timeout = 20 * time.Second
+	cluster.Timeout = 10 * time.Second
 	cluster.ConnectTimeout = 20 * time.Second
 	cluster.Consistency = gocql.Any
 	session, err := cluster.CreateSession()
@@ -50,14 +86,6 @@ func AddOutbound(w http.ResponseWriter, r *http.Request) {
 	if err != nil {
 	   fmt.Fprintf(w, "system error while fetching friends for %s", id)
 	   log.Printf("system error while fetching friends for %s", id)
-	   w.WriteHeader(http.StatusInternalServerError)
-	   return
-	}
-	eshost := fmt.Sprintf("http://%s:9200", os.Getenv("SEARCH_HOST"))
-	esclient, err := elastic.NewClient(elastic.SetURL(eshost))
-	if err != nil {
-	   fmt.Fprintf(w, "cannot connect to elasticsearch: %s", err)
-	   log.Printf("cannot connect to elasticsearch: %s", err)
 	   w.WriteHeader(http.StatusInternalServerError)
 	   return
 	}
@@ -87,12 +115,7 @@ func AddOutbound(w http.ResponseWriter, r *http.Request) {
 	    Sender: id,
 	    Story: ob.Story,
 	}
-	esclient.Index().
-		Index("feed").
-		Type("stories").
-		Id(esid).
-		BodyJson(osd).
-		Do()
+	ElasticSearchIndexer <- osd
 	resultb, err := json.Marshal(ob)
 	if err != nil {
 	    fmt.Fprintf(w, "cannot marshal outbound response: %s", err)
@@ -108,7 +131,7 @@ func GetOutbound(w http.ResponseWriter, r *http.Request) {
 	w.Header().Set("Content-Type", "application/json; charset=UTF-8")
 	cluster := gocql.NewCluster(os.Getenv("NOSQL_HOST"))
 	cluster.Keyspace = os.Getenv("NOSQL_KEYSPACE")
-	cluster.Timeout = 20 * time.Second
+	cluster.Timeout = 10 * time.Second
 	cluster.ConnectTimeout = 20 * time.Second
 	cluster.Consistency = gocql.One
 	session, err := cluster.CreateSession()
@@ -165,14 +188,7 @@ func SearchOutbound(w http.ResponseWriter, r *http.Request) {
 	   w.WriteHeader(http.StatusBadRequest)
 	   return
 	}
-	eshost := fmt.Sprintf("http://%s:9200", os.Getenv("SEARCH_HOST"))
-	esclient, err := elastic.NewClient(elastic.SetURL(eshost))
-	if err != nil {
-	   fmt.Fprintf(w, "cannot connect to elasticsearch: %s", err)
-	   log.Printf("cannot connect to elasticsearch: %s", err)
-	   w.WriteHeader(http.StatusInternalServerError)
-	   return
-	}
+	esclient := esPool.Get().(*elastic.Client)
 	query := elastic.NewMatchQuery("story", string(keywords[0]))
 	searchResult, err := esclient.Search().
 		      Index("feed").
@@ -184,6 +200,7 @@ func SearchOutbound(w http.ResponseWriter, r *http.Request) {
 	   w.WriteHeader(http.StatusInternalServerError)
 	   return	   
 	}
+	esPool.Put(esclient)
 	var osd OutboundStoryDocument
 	var results []string
 	for _, result := range searchResult.Each(reflect.TypeOf(osd)) {

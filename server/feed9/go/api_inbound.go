@@ -23,7 +23,7 @@ func GetInbound(w http.ResponseWriter, r *http.Request) {
 	w.Header().Set("Content-Type", "application/json; charset=UTF-8")
 	cluster := gocql.NewCluster(os.Getenv("NOSQL_HOST"))
 	cluster.Keyspace = os.Getenv("NOSQL_KEYSPACE")
-	cluster.Timeout = 20 * time.Second
+	cluster.Timeout = 10 * time.Second
 	cluster.ConnectTimeout = 20 * time.Second
 	cluster.Consistency = gocql.One
 	session, err := cluster.CreateSession()
