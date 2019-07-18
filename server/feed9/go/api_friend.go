@@ -14,38 +14,37 @@ import (
 )
 
 func AddFriend(w http.ResponseWriter, r *http.Request) {
-	w.Header().Set("Content-Type", "application/json; charset=UTF-8")
    	decoder := json.NewDecoder(r.Body)
     	var f Friend
     	err := decoder.Decode(&f)
 	if err != nil {
-	   fmt.Fprintf(w, "friend body error: %s", err)
-	   log.Printf("friend body error: %s", err)
-	   w.WriteHeader(http.StatusBadRequest)
+	   msg := fmt.Sprintf("friend body error: %s", err)
+	   log.Println(msg)
+	   http.Error(w, msg, http.StatusBadRequest)
 	   return
 	}
 	dbhost := fmt.Sprintf("feed:feed1234@tcp(%s:3306)/feed", os.Getenv("MYSQL_HOST"))
 	db, err := sql.Open("mysql", dbhost)
 	if err != nil {
-	   fmt.Fprintf(w, "cannot open the database: %s", err)
-	   log.Printf("cannot open the database: %s", err)
-	   w.WriteHeader(http.StatusInternalServerError)
+	   msg := fmt.Sprintf("cannot open the database: %s", err)
+	   log.Println(msg)
+	   http.Error(w, msg, http.StatusInternalServerError)
 	   return
 	}
 	defer db.Close()
 	stmt, err := db.Prepare("call UpsertFriends(?, ?)")
 	if err != nil {
-	   fmt.Fprintf(w, "cannot prepare the upsert statement: %s", err)
-	   log.Printf("cannot prepare the upsert friend statement: %s", err)
-	   w.WriteHeader(http.StatusInternalServerError)
+	   msg := fmt.Sprintf("cannot prepare the friend upsert statement: %s", err)
+	   log.Println(msg)
+	   http.Error(w, msg, http.StatusInternalServerError)
 	   return
 	}
 	defer stmt.Close()
 	rows, err := stmt.Query(f.To, f.From)
 	if err != nil {
-	   fmt.Fprintf(w, "cannot insert friend: %s", err)
-	   log.Printf("cannot insert friend: %s", err)
-	   w.WriteHeader(http.StatusInternalServerError)
+	   msg := fmt.Sprintf("cannot insert friend: %s", err)
+	   log.Println(msg)
+	   http.Error(w, msg, http.StatusInternalServerError)
 	   return
 	}
 	defer rows.Close()
@@ -53,24 +52,24 @@ func AddFriend(w http.ResponseWriter, r *http.Request) {
 	for rows.Next() {
 	    err := rows.Scan(&id)
 	    if err != nil {
-	       fmt.Fprintf(w, "cannot fetch data: %s", err)
-	       log.Printf("cannot fetch friend pk: %s", err)
-	       w.WriteHeader(http.StatusInternalServerError)
+	       msg := fmt.Sprintf("cannot fetch friend data: %s", err)
+	       log.Println(msg)
+	       http.Error(w, msg, http.StatusInternalServerError)
 	       return
 	    }
 	    i, err := strconv.ParseInt(id, 0, 64)
 	    if err != nil {
-	       fmt.Fprintf(w, "id is not an integer: %s", err)
-	       log.Printf("id is not an integer: %s", err)
-	       w.WriteHeader(http.StatusInternalServerError)
+	       msg := fmt.Sprintf("id is not an integer: %s", err)
+	       log.Println(msg)
+	       http.Error(w, msg, http.StatusInternalServerError)
 	       return
 	    }
 	    f.Id = i
 	    result, err := json.Marshal(f)
 	    if err != nil {
-	       fmt.Fprintf(w, "cannot marshal data: %s", err)
-	       log.Printf("cannot marshal friend response: %s", err)
-	       w.WriteHeader(http.StatusInternalServerError)
+	       msg := fmt.Sprintf("cannot marshal friend response: %s", err)
+	       log.Println(msg)
+	       http.Error(w, msg, http.StatusInternalServerError)
 	       return
 	    }
 	    cacheHost := fmt.Sprintf("%s:6379", os.Getenv("CACHE_HOST"))
@@ -81,6 +80,7 @@ func AddFriend(w http.ResponseWriter, r *http.Request) {
 	    })
 	    cache.Del(fmt.Sprintf("Friends::%d", f.From)).Result()
 	    cache.Del(fmt.Sprintf("Friends::%d", f.To)).Result()
+	    w.Header().Set("Content-Type", "application/json; charset=UTF-8")
 	    fmt.Fprint(w, string(result))
 	    w.WriteHeader(http.StatusOK)
 	    return
@@ -172,14 +172,14 @@ func GetFriendsInner(id string) (string, []Friend, error) {
 }
 
 func GetFriend(w http.ResponseWriter, r *http.Request) {
-	w.Header().Set("Content-Type", "application/json; charset=UTF-8")
 	vars := mux.Vars(r)
 	result, _, err := GetFriendsInner(vars["id"])
 	if err != nil {
-	   fmt.Fprintf(w, "system error while getting friend %s", vars["id"])
-	   log.Printf("system error while getting friend %s", vars["id"])
-	   w.WriteHeader(http.StatusInternalServerError)
+	   msg := fmt.Sprintf("system error while getting friend %s", vars["id"])
+	   log.Println(msg)
+	   http.Error(w, msg, http.StatusInternalServerError)
 	} else {
+	   w.Header().Set("Content-Type", "application/json; charset=UTF-8")
 	   fmt.Fprint(w, result)
 	   w.WriteHeader(http.StatusOK)
 	}
