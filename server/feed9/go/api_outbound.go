@@ -62,9 +62,7 @@ func AddOutbound(w http.ResponseWriter, r *http.Request) {
     	var ob Outbound
     	err := decoder.Decode(&ob)
 	if err != nil {
-	    msg := fmt.Sprintf("outbound body error: %s", err)
-	    log.Println(msg)
-	    http.Error(w, msg, http.StatusBadRequest)
+	    LogError(w, err, "outbound body error: %s", http.StatusBadRequest)
 	    return
 	}
 	cluster := gocql.NewCluster(os.Getenv("NOSQL_HOST"))
@@ -74,25 +72,19 @@ func AddOutbound(w http.ResponseWriter, r *http.Request) {
 	cluster.Consistency = gocql.Any
 	session, err := cluster.CreateSession()
 	if err != nil {
-	    msg := fmt.Sprintf("cannot create cassandra session: %s", err)
-	    log.Println(msg)
-	    http.Error(w, msg, http.StatusInternalServerError)
+	    LogError(w, err, "cannot create cassandra session: %s", http.StatusInternalServerError)
 	    return
 	}
 	defer session.Close()
 	id := strconv.FormatInt(ob.From, 10)
 	_, friends, err := GetFriendsInner(id)
 	if err != nil {
-	   msg := fmt.Sprintf("system error while fetching friends for %s", id)
-	   log.Println(msg)
-	   http.Error(w, msg, http.StatusInternalServerError)
+	   LogError(w, err, "system error while fetching friends for %s", http.StatusInternalServerError)
 	   return
 	}
 	esidr, err := uuid.NewRandom()
 	if err != nil {
-	   msg := fmt.Sprintf("cannot generate a random id: %s", err)
-	   log.Println(msg)
-	   http.Error(w, msg, http.StatusInternalServerError)
+	   LogError(w, err, "cannot generate a random id: %s", http.StatusInternalServerError)
 	   return
 	}
 	esid := fmt.Sprintf("%s", esidr)
@@ -117,9 +109,7 @@ func AddOutbound(w http.ResponseWriter, r *http.Request) {
 	ElasticSearchIndexer <- osd
 	resultb, err := json.Marshal(ob)
 	if err != nil {
-	    msg := fmt.Sprintf("cannot marshal outbound response: %s", err)
-	    log.Println(msg)
-	    http.Error(w, msg, http.StatusInternalServerError)
+	    LogError(w, err, "cannot marshal outbound response: %s", http.StatusInternalServerError)
 	    return
 	}
 	w.Header().Set("Content-Type", "application/json; charset=UTF-8")
@@ -135,9 +125,7 @@ func GetOutbound(w http.ResponseWriter, r *http.Request) {
 	cluster.Consistency = gocql.One
 	session, err := cluster.CreateSession()
 	if err != nil {
-	    msg := fmt.Sprintf("cannot create cassandra session: %s", err)
-	    log.Println(msg)
-	    http.Error(w, msg, http.StatusInternalServerError)
+	    LogError(w, err, "cannot create cassandra session: %s", http.StatusInternalServerError)
 	    return
 	}
 	defer session.Close()
@@ -145,9 +133,7 @@ func GetOutbound(w http.ResponseWriter, r *http.Request) {
 	vars := mux.Vars(r)
 	from, err := strconv.ParseInt(vars["id"], 0, 64)
 	if err != nil {
-	    msg := fmt.Sprintf("id is not an integer: %s", err)
-	    log.Println(msg)
-	    http.Error(w, msg, http.StatusBadRequest)
+	    LogError(w, err, "id is not an integer: %s", http.StatusBadRequest)
 	    return
 	}
 	stmt := session.Query("select toTimestamp(occurred) as occurred, subject, story from Outbound where participantid = ? order by occurred desc", vars["id"])
@@ -169,9 +155,7 @@ func GetOutbound(w http.ResponseWriter, r *http.Request) {
 	}
 	resultb, err := json.Marshal(results)
 	if err != nil {
-	    msg := fmt.Sprintf("cannot marshal data: %s", err)
-	    log.Println(msg)
-	    http.Error(w, msg, http.StatusInternalServerError)
+	    LogError(w, err, "cannot marshal outbound response: %s", http.StatusInternalServerError)
 	    return
 	}
 	w.Header().Set("Content-Type", "application/json; charset=UTF-8")
@@ -194,9 +178,7 @@ func SearchOutbound(w http.ResponseWriter, r *http.Request) {
 		      Query(query).
 		      Do()
 	if err != nil {
-	   msg := fmt.Sprintf("cannot query elasticsearch: %s", err)
-	   log.Println(msg)
-	   http.Error(w, msg, http.StatusInternalServerError)
+	   LogError(w, err, "cannot query elasticsearch: %s", http.StatusInternalServerError)
 	   return
 	}
 	esPool.Put(esclient)
@@ -210,9 +192,7 @@ func SearchOutbound(w http.ResponseWriter, r *http.Request) {
 	}
 	resultb, err := json.Marshal(results)
 	if err != nil {
-	    msg := fmt.Sprintf("cannot marshal outbound results: %s", err)
-	    log.Println(msg)
-	    http.Error(w, msg, http.StatusInternalServerError)
+	    LogError(w, err, "cannot marshal outbound results: %s", http.StatusInternalServerError)
 	    return
 	}
 	w.Header().Set("Content-Type", "application/json; charset=UTF-8")

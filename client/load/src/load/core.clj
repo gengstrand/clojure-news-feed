@@ -46,7 +46,8 @@
         (:status response)
         200)
       {:results (json/read-str (:body response))
-       :duration (- (System/currentTimeMillis) before)})))
+       :duration (- (System/currentTimeMillis) before)}
+      (throw (Exception. (str "status " (:status response) " from call to " entity-name))))))
 
 (defn test-create-entity-service-call-without-results
   "call the service to create an entity and return results and timing"

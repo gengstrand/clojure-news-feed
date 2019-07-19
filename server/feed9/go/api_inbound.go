@@ -3,7 +3,6 @@ package newsfeedserver
 import (
         "os"
         "fmt"
-	"log"
 	"time"
 	"strconv"
 	"net/http"
@@ -26,9 +25,7 @@ func GetInbound(w http.ResponseWriter, r *http.Request) {
 	cluster.Consistency = gocql.One
 	session, err := cluster.CreateSession()
 	if err != nil {
-	    msg := fmt.Sprintf("cannot create cassandra session: %s", err)
-	    log.Println(msg)
-	    http.Error(w, msg, http.StatusInternalServerError)
+	    LogError(w, err, "cannot create cassandra session: %s", http.StatusInternalServerError)
 	    return
 	}
 	defer session.Close()
@@ -36,9 +33,7 @@ func GetInbound(w http.ResponseWriter, r *http.Request) {
 	vars := mux.Vars(r)
 	i, err := strconv.ParseInt(vars["id"], 0, 64)
 	if err != nil {
-	    msg := fmt.Sprintf("id is not an integer: %s", err)
-	    log.Println(msg)
-	    http.Error(w, msg, http.StatusInternalServerError)
+	    LogError(w, err, "id is not an integer: %s", http.StatusInternalServerError)
 	    return
 	}
 	stmt := session.Query("select toTimestamp(occurred) as occurred, fromparticipantid, subject, story from Inbound where participantid = ? order by occurred desc", vars["id"])
@@ -62,9 +57,7 @@ func GetInbound(w http.ResponseWriter, r *http.Request) {
 	}
 	resultb, err := json.Marshal(results)
 	if err != nil {
-	    msg := fmt.Sprintf("cannot marshal inbound result: %s", err)
-	    log.Println(msg)
-	    http.Error(w, msg, http.StatusInternalServerError)
+	    LogError(w, err, "cannot marshal inbound result: %s", http.StatusInternalServerError)
 	    return
 	}
 	w.Header().Set("Content-Type", "application/json; charset=UTF-8")

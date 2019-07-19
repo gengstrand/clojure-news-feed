@@ -18,33 +18,25 @@ func AddFriend(w http.ResponseWriter, r *http.Request) {
     	var f Friend
     	err := decoder.Decode(&f)
 	if err != nil {
-	   msg := fmt.Sprintf("friend body error: %s", err)
-	   log.Println(msg)
-	   http.Error(w, msg, http.StatusBadRequest)
+	   LogError(w, err, "friend body error: %s", http.StatusBadRequest)
 	   return
 	}
 	dbhost := fmt.Sprintf("feed:feed1234@tcp(%s:3306)/feed", os.Getenv("MYSQL_HOST"))
 	db, err := sql.Open("mysql", dbhost)
 	if err != nil {
-	   msg := fmt.Sprintf("cannot open the database: %s", err)
-	   log.Println(msg)
-	   http.Error(w, msg, http.StatusInternalServerError)
+	   LogError(w, err, "cannot open the database: %s", http.StatusInternalServerError)
 	   return
 	}
 	defer db.Close()
 	stmt, err := db.Prepare("call UpsertFriends(?, ?)")
 	if err != nil {
-	   msg := fmt.Sprintf("cannot prepare the friend upsert statement: %s", err)
-	   log.Println(msg)
-	   http.Error(w, msg, http.StatusInternalServerError)
+	   LogError(w, err, "cannot prepare the friend upsert statement: %s", http.StatusInternalServerError)
 	   return
 	}
 	defer stmt.Close()
 	rows, err := stmt.Query(f.To, f.From)
 	if err != nil {
-	   msg := fmt.Sprintf("cannot insert friend: %s", err)
-	   log.Println(msg)
-	   http.Error(w, msg, http.StatusInternalServerError)
+	   LogError(w, err, "cannot insert friend: %s", http.StatusInternalServerError)
 	   return
 	}
 	defer rows.Close()
@@ -52,24 +44,18 @@ func AddFriend(w http.ResponseWriter, r *http.Request) {
 	for rows.Next() {
 	    err := rows.Scan(&id)
 	    if err != nil {
-	       msg := fmt.Sprintf("cannot fetch friend data: %s", err)
-	       log.Println(msg)
-	       http.Error(w, msg, http.StatusInternalServerError)
+	       LogError(w, err, "cannot fetch friend data: %s", http.StatusInternalServerError)
 	       return
 	    }
 	    i, err := strconv.ParseInt(id, 0, 64)
 	    if err != nil {
-	       msg := fmt.Sprintf("id is not an integer: %s", err)
-	       log.Println(msg)
-	       http.Error(w, msg, http.StatusInternalServerError)
+	       LogError(w, err, "id is not an integer: %s", http.StatusInternalServerError)
 	       return
 	    }
 	    f.Id = i
 	    result, err := json.Marshal(f)
 	    if err != nil {
-	       msg := fmt.Sprintf("cannot marshal friend response: %s", err)
-	       log.Println(msg)
-	       http.Error(w, msg, http.StatusInternalServerError)
+	       LogError(w, err, "cannot marshal friend response: %s", http.StatusInternalServerError)
 	       return
 	    }
 	    cacheHost := fmt.Sprintf("%s:6379", os.Getenv("CACHE_HOST"))
@@ -175,7 +161,7 @@ func GetFriend(w http.ResponseWriter, r *http.Request) {
 	vars := mux.Vars(r)
 	result, _, err := GetFriendsInner(vars["id"])
 	if err != nil {
-	   msg := fmt.Sprintf("system error while getting friend %s", vars["id"])
+	   msg := fmt.Sprintf("system error while getting friend %s: %s", vars["id"], err)
 	   log.Println(msg)
 	   http.Error(w, msg, http.StatusInternalServerError)
 	} else {

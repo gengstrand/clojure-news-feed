@@ -18,33 +18,25 @@ func AddParticipant(w http.ResponseWriter, r *http.Request) {
     	var p Participant
     	err := decoder.Decode(&p)
 	if err != nil {
-	   msg := fmt.Sprintf("participant body error: %s", err)
-	   log.Println(msg)
-	   http.Error(w, msg, http.StatusBadRequest)
+	   LogError(w, err, "participant body error: %s", http.StatusBadRequest)
 	   return
 	}
 	dbhost := fmt.Sprintf("feed:feed1234@tcp(%s:3306)/feed", os.Getenv("MYSQL_HOST"))
 	db, err := sql.Open("mysql", dbhost)
 	if err != nil {
-	   msg := fmt.Sprintf("cannot open the database: %s", err)
-	   log.Println(msg)
-	   http.Error(w, msg, http.StatusInternalServerError)
+	   LogError(w, err, "cannot open the database: %s", http.StatusInternalServerError)
 	   return
 	}
 	defer db.Close()
 	stmt, err := db.Prepare("call UpsertParticipant(?)")
 	if err != nil {
-	   msg := fmt.Sprintf("cannot prepare the upsert statement: %s", err)
-	   log.Println(msg)
-	   http.Error(w, msg, http.StatusInternalServerError)
+	   LogError(w, err, "cannot prepare the upsert statement: %s", http.StatusInternalServerError)
 	   return
 	}
 	defer stmt.Close()
 	rows, err := stmt.Query(p.Name)
 	if err != nil {
-	   msg := fmt.Sprintf("cannot insert participant: %s", err)
-	   log.Println(msg)
-	   http.Error(w, msg, http.StatusInternalServerError)
+	   LogError(w, err, "cannot insert participant: %s", http.StatusInternalServerError)
 	   return
 	}
 	defer rows.Close()
@@ -52,24 +44,18 @@ func AddParticipant(w http.ResponseWriter, r *http.Request) {
 	for rows.Next() {
 	    err := rows.Scan(&id)
 	    if err != nil {
-	       msg := fmt.Sprintf("cannot fetch participant pk: %s", err)
-	       log.Println(msg)
-	       http.Error(w, msg, http.StatusInternalServerError)
+	       LogError(w, err, "cannot fetch participant pk: %s", http.StatusInternalServerError)
 	       return
 	    }
 	    i, err := strconv.ParseInt(id, 0, 64)
 	    if err != nil {
-	       msg := fmt.Sprintf("id is not an integer: %s", err)
-	       log.Println(msg)
-	       http.Error(w, msg, http.StatusInternalServerError)
+	       LogError(w, err, "id is not an integer: %s", http.StatusInternalServerError)
 	       return
 	    }
 	    p.Id = i
 	    result, err := json.Marshal(p)
 	    if err != nil {
-	       msg := fmt.Sprintf("cannot marshal data: %s", err)
-	       log.Println(msg)
-	       http.Error(w, msg, http.StatusInternalServerError)
+	       LogError(w, err, "cannot marshal participant response: %s", http.StatusInternalServerError)
 	       return
 	    }
 	    w.Header().Set("Content-Type", "application/json; charset=UTF-8")
@@ -85,32 +71,24 @@ func GetParticipantFromDB(id string, cache *redis.Client, w http.ResponseWriter)
 	dbhost := fmt.Sprintf("feed:feed1234@tcp(%s:3306)/feed", os.Getenv("MYSQL_HOST"))
 	db, err := sql.Open("mysql", dbhost)
 	if err != nil {
-	   msg := fmt.Sprintf("cannot open the database: %s", err)
-	   log.Println(msg)
-	   http.Error(w, msg, http.StatusInternalServerError)
+	   LogError(w, err, "cannot open the database: %s", http.StatusInternalServerError)
 	   return
 	}
 	defer db.Close()
 	stmt, err := db.Prepare("call FetchParticipant(?)")
 	if err != nil {
-	   msg := fmt.Sprintf("cannot prepare the participant fetch statement: %s", err)
-	   log.Println(msg)
-	   http.Error(w, msg, http.StatusInternalServerError)
+	   LogError(w, err, "cannot prepare the participant fetch statement: %s", http.StatusInternalServerError)
 	   return
 	}
 	defer stmt.Close()
 	i, err := strconv.ParseInt(id, 0, 64)
 	if err != nil {
-	    msg := fmt.Sprintf("id is not an integer: %s", err)
-	    log.Println(msg)
-	    http.Error(w, msg, http.StatusBadRequest)
+	    LogError(w, err, "id is not an integer: %s", http.StatusBadRequest)
 	    return
 	}
 	rows, err := stmt.Query(id)
 	if err != nil {
-	   msg := fmt.Sprintf("cannot query for participant: %s", err)
-	   log.Println(msg)
-	   http.Error(w, msg, http.StatusInternalServerError)
+	   LogError(w, err, "cannot query for participant: %s", http.StatusInternalServerError)
 	   return
 	}
 	defer rows.Close()
@@ -118,9 +96,7 @@ func GetParticipantFromDB(id string, cache *redis.Client, w http.ResponseWriter)
 	for rows.Next() {
 	    err := rows.Scan(&name)
   	    if err != nil {
-	       msg := fmt.Sprintf("cannot fetch participant data: %s", err)
-	       log.Println(msg)
-	       http.Error(w, msg, http.StatusInternalServerError)
+	       LogError(w, err, "cannot fetch participant data: %s", http.StatusInternalServerError)
 	       return
 	    }
 	    p := Participant{
@@ -129,9 +105,7 @@ func GetParticipantFromDB(id string, cache *redis.Client, w http.ResponseWriter)
 	    }
 	    resultb, err := json.Marshal(p)
 	    if err != nil {
-	       msg := fmt.Sprintf("cannot marshal participant response: %s", err)
-	       log.Println(msg)
-	       http.Error(w, msg, http.StatusInternalServerError)
+	       LogError(w, err, "cannot marshal participant response: %s", http.StatusInternalServerError)
 	       return
 	    }
 	    result := string(resultb)
@@ -158,9 +132,7 @@ func GetParticipant(w http.ResponseWriter, r *http.Request) {
 	if err == redis.Nil {
 	   GetParticipantFromDB(vars["id"], cache, w)
 	} else if err != nil {
-	   msg := fmt.Sprintf("cannot fetch participant from cache: %s", err)
-	   log.Println(msg)
-	   http.Error(w, msg, http.StatusInternalServerError)
+	   LogError(w, err, "cannot fetch participant from cache: %s", http.StatusInternalServerError)
 	   return
 	} else {
 	   w.Header().Set("Content-Type", "application/json; charset=UTF-8")
