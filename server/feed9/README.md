@@ -36,12 +36,7 @@ kubectl create -f feed9-deployment.yaml
 
 ## Load Testing
 
-We tested this microservice using our standard load test environment. For the first 10 minutes, it maintained a steady outbound post throughput of 5,000 RPM with an average duration of 25 ms and a 99th percentile of 111 ms. After that, performance became very sporatic. Throughput ranged from 13 to 3,000 RPM and average latency ranged from 2 to 91 seconds. There were very few messages in the application log indicating loss of connectivity to cassandra, mysql, and elasticsearch but not enough to account for the destabilization. Nothing in the data store metrics indicated any loss of capability.
-
-
-
-
-
+I tested this microservice using the standard load test environment for two hours (see the client/load folder in this repo). The average per minute throughput of output posts was 12,937 with an average duration of 8.7 ms, a median of 5 ms, and a 99th percentile of 23 ms. That means the golang version of the news feed service performs worse than the dropwizard and node.js versions but better than all the other versions.
 
 
 
