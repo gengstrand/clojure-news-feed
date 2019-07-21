@@ -55,6 +55,7 @@ func handleIndexRequest() {
 func init() {
         go handleIndexRequest()
         go handleIndexRequest()
+        go handleIndexRequest()
 }
 
 func AddOutbound(w http.ResponseWriter, r *http.Request) {

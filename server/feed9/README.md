@@ -11,7 +11,7 @@ I used the following projects.
 
 The go-server templates use [mux](https://github.com/gorilla/mux) as the request dispatcher.
 
-Access to the feed MySql DB was via the standard golan [SQL API](https://golang.org/pkg/database/sql/) to this [MySql driver](https://github.com/go-sql-driver/mysql/).
+Access to the feed MySql DB was via the standard golang [SQL API](https://golang.org/pkg/database/sql/) to this [MySql driver](https://github.com/go-sql-driver/mysql/).
 
 The Redis cache was used to front access to the MySql DB with this [Redis client library](https://github.com/go-redis/redis).
 
@@ -36,11 +36,4 @@ kubectl create -f feed9-deployment.yaml
 
 ## Load Testing
 
-I tested this microservice using the standard load test environment for two hours (see the client/load folder in this repo). The average per minute throughput of output posts was 12,937 with an average duration of 8.7 ms, a median of 5 ms, and a 99th percentile of 23 ms. That means the golang version of the news feed service performs worse than the dropwizard and node.js versions but better than all the other versions.
-
-
-
-
-
-
-
+I tested this microservice using the standard load test environment for two hours (see the client/load folder in this repo). The average per minute throughput of output posts was 12,937 with an average duration of 8.7 ms, a median of 5 ms, and a 99th percentile of 23 ms. That means the golang version of the news feed service performed worse than the java versions, was on par with the node.js version and performed better than the python, scala, and clojure versions.

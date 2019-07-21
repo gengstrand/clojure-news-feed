@@ -74,3 +74,6 @@ This technology is used in the unit tests.
 
 [mockery](https://github.com/mfncooper/mockery) is used to mock the repository code.
 
+## Load Testing
+
+I ran my standard load test (see client/load) in the Kubernetes test lab (see server/k8s) for two hours. The average per minute throughput of output posts was 12,629 with an average duration of 5 ms, a median of 5 ms, and a 99th percentile of 12 ms. 
