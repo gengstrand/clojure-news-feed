@@ -34,3 +34,8 @@ The best approach here is most likely using Kubernetes
 cd ../k8s
 kubectl create -f feed6-deployment.yaml
 ```
+
+## Load Test Results
+
+Average outbound post throughput was 9,813 RPM with an average latency of 7 ms and a 99th percentile of 14 ms.
+
