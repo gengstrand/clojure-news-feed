@@ -1,7 +1,6 @@
 package newsfeedserver
 
 import (
-        "os"
         "fmt"
 	"time"
 	"strconv"
@@ -11,32 +10,30 @@ import (
 	"github.com/gocql/gocql"
 )
 
-func AddInbound(i Inbound, session *gocql.Session) {
-	stmt := session.Query("insert into Inbound (ParticipantID, FromParticipantID, Occurred, Subject, Story) values (?, ?, now(), ?, ?) using ttl 7776000", i.To, i.From, i.Subject, i.Story)
+func (cw CassandraWrapper) AddInbound(i Inbound) {
+	stmt := cw.Session.Query("insert into Inbound (ParticipantID, FromParticipantID, Occurred, Subject, Story) values (?, ?, now(), ?, ?) using ttl 7776000", i.To, i.From, i.Subject, i.Story)
 	stmt.Consistency(gocql.Any)
 	stmt.Exec()
 }
 
 func GetInbound(w http.ResponseWriter, r *http.Request) {
-	cluster := gocql.NewCluster(os.Getenv("NOSQL_HOST"))
-	cluster.Keyspace = os.Getenv("NOSQL_KEYSPACE")
-	cluster.Timeout = 10 * time.Second
-	cluster.ConnectTimeout = 20 * time.Second
-	cluster.Consistency = gocql.One
-	session, err := cluster.CreateSession()
+        cw, err := connectCassandra()
+        ew := LogWrapper{
+	   Writer: w,
+	}
 	if err != nil {
-	    LogError(w, err, "cannot create cassandra session: %s", http.StatusInternalServerError)
+	    ew.LogError(err, "cannot create cassandra session: %s", http.StatusInternalServerError)
 	    return
 	}
-	defer session.Close()
+	defer cw.Session.Close()
 
 	vars := mux.Vars(r)
 	i, err := strconv.ParseInt(vars["id"], 0, 64)
 	if err != nil {
-	    LogError(w, err, "id is not an integer: %s", http.StatusInternalServerError)
+	    ew.LogError(err, "id is not an integer: %s", http.StatusInternalServerError)
 	    return
 	}
-	stmt := session.Query("select toTimestamp(occurred) as occurred, fromparticipantid, subject, story from Inbound where participantid = ? order by occurred desc", vars["id"])
+	stmt := cw.Session.Query("select toTimestamp(occurred) as occurred, fromparticipantid, subject, story from Inbound where participantid = ? order by occurred desc", vars["id"])
 	stmt.Consistency(gocql.One)
 	iter := stmt.Iter()
 	defer iter.Close()
@@ -57,7 +54,7 @@ func GetInbound(w http.ResponseWriter, r *http.Request) {
 	}
 	resultb, err := json.Marshal(results)
 	if err != nil {
-	    LogError(w, err, "cannot marshal inbound result: %s", http.StatusInternalServerError)
+	    ew.LogError(err, "cannot marshal inbound result: %s", http.StatusInternalServerError)
 	    return
 	}
 	w.Header().Set("Content-Type", "application/json; charset=UTF-8")
