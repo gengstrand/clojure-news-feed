@@ -53,4 +53,7 @@ kubectl create -f feed9-deployment.yaml
 
 ## Load Testing
 
-I tested this microservice using the standard load test environment for two hours (see the client/load folder in this repo). The average per minute throughput of output posts was 12,937 with an average duration of 8.7 ms, a median of 5 ms, and a 99th percentile of 23 ms. That means the golang version of the news feed service performed worse than the java versions, was on par with the node.js version and performed better than the python, scala, and clojure versions.
+This version of the golang news feed microservice was refactored to accommodate a mocked unit test for the add outbound function which introduced 7 structs. I tested this version with the standard load test for about an hour. The average per minute throughput of output posts was 3,611 with an average duration of 38 ms, a median of 36 ms, and a 99th percentile of 67 ms. The introduction of those 7 structs made this microservice perform at under a third of the throughput and 4 times slower.
+
+I will not be merging this feature branch to master but will keep it as an illustrative example.
+
