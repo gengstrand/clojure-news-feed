@@ -21,6 +21,23 @@ I used this non-standard [Elasticsearch client library](https://olivere.github.i
 
 ## Usage
 
+You will need to install the dependencies.
+
+```
+ go get -u github.com/gorilla/mux
+ go get -u github.com/go-sql-driver/mysql
+ go get -u github.com/go-redis/redis
+ go get -u github.com/gocql/gocql
+ go get -u github.com/google/uuid
+ go get -u gopkg.in/olivere/elastic.v3
+```
+
+Here is how to run the sample unit test
+
+```
+go test test/api_outbound_test.go
+```
+
 Here is how to build the docker image.
 
 ```

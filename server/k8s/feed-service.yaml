@@ -5,7 +5,7 @@ metadata:
     app: feed
   name: feed
 spec:
-  type: NodePort
+  type: LoadBalancer
   ports:
   - name: "8080"
     port: 8080

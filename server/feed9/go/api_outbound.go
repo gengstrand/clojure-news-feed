@@ -115,6 +115,7 @@ func AddOutbound(w http.ResponseWriter, r *http.Request) {
 	   return
 	}
 	esid := fmt.Sprintf("%s", esidr)
+	id := strconv.FormatInt(ob.From, 10)
 	osd := OutboundStoryDocument{
 	    Id: esid,
 	    Sender: id,

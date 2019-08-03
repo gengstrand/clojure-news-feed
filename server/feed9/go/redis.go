@@ -13,7 +13,7 @@ type RedisWrapper struct {
 
 type CacheWrapper interface {
      Get(key string) (string, error)
-     Set(key string, value string, ttl int64)
+     Set(key string, value string, ttl time.Duration)
      Close()
 }
 

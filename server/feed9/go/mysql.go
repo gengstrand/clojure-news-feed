@@ -59,14 +59,14 @@ func (dbw MySqlWrapper) FetchFriends(id string)([]Friend, error) {
 	return results, nil
 }
 
-func connectMysql() (MySqlWrapper, error) {
+func connectMysql() (*MySqlWrapper, error) {
 	dbhost := fmt.Sprintf("feed:feed1234@tcp(%s:3306)/feed", os.Getenv("MYSQL_HOST"))
 	db, err := sql.Open("mysql", dbhost)
 	if err != nil {
-	   return new(MySqlWrapper), err
+	   return nil, err
 	}
 	retVal := MySqlWrapper{
 	       db: db,
 	}
-	return retVal, nil
+	return &retVal, nil
 }
