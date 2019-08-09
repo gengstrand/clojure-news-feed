@@ -18,6 +18,8 @@ spec:
       - env:
         - name: KAFKA_ENABLED
           value: "false"
+        - name: GOGC
+          value: "11300"
         envFrom:
         - configMapRef:
             name: feed-config
