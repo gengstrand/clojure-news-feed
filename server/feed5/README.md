@@ -63,3 +63,8 @@ docker build -t swagger_server .
 # starting up a container
 docker run -p 8080:8080 swagger_server
 ```
+
+## Load Test Results
+
+I used the standard load test (see client/load). Average outbound post throughput was 4,796 RPM. Average duration was 18 ms with a mean of 17ms and a 99th percentile of 35 ms.
+
