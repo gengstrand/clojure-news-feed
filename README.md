@@ -74,6 +74,8 @@ http://glennengstrand.info/software/performance/springboot/dropwizard
 
 News feed microservice implemented in golang.
 
+http://glennengstrand.info/software/architecture/microservice/golang
+
 ### solr
 
 The supporting directory structure and configuration files needed to augment an instance of Solr to support keyword search capability for the news feed on outbound activity.
