@@ -6,10 +6,8 @@ import (
 	"log"
 	"strconv"
 	"net/http"
-	"database/sql"
 	"encoding/json"
 	"github.com/gorilla/mux"
-	_ "github.com/go-sql-driver/mysql"
 	"github.com/go-redis/redis"
 )
 
@@ -21,13 +19,11 @@ func AddFriend(w http.ResponseWriter, r *http.Request) {
 	   LogError(w, err, "friend body error: %s", http.StatusBadRequest)
 	   return
 	}
-	dbhost := fmt.Sprintf("feed:feed1234@tcp(%s:3306)/feed", os.Getenv("MYSQL_HOST"))
-	db, err := sql.Open("mysql", dbhost)
+	db, err := MySqlConnect()
 	if err != nil {
 	   LogError(w, err, "cannot open the database: %s", http.StatusInternalServerError)
 	   return
 	}
-	defer db.Close()
 	stmt, err := db.Prepare("call UpsertFriends(?, ?)")
 	if err != nil {
 	   LogError(w, err, "cannot prepare the friend upsert statement: %s", http.StatusInternalServerError)
@@ -41,6 +37,7 @@ func AddFriend(w http.ResponseWriter, r *http.Request) {
 	}
 	defer rows.Close()
 	var id string
+	defer MySqlDisconnect(db)
 	for rows.Next() {
 	    err := rows.Scan(&id)
 	    if err != nil {
@@ -76,13 +73,11 @@ func AddFriend(w http.ResponseWriter, r *http.Request) {
 }
 
 func GetFriendsFromDB(id string) ([]Friend, error) {
-	dbhost := fmt.Sprintf("feed:feed1234@tcp(%s:3306)/feed", os.Getenv("MYSQL_HOST"))
-	db, err := sql.Open("mysql", dbhost)
+	db, err := MySqlConnect()
 	if err != nil {
 	   log.Printf("cannot open the database: %s", err)
 	   return nil, err
 	}
-	defer db.Close()
 	stmt, err := db.Prepare("call FetchFriends(?)")
 	if err != nil {
 	   log.Printf("cannot prepare the fetch friends statement: %s", err)
@@ -103,6 +98,7 @@ func GetFriendsFromDB(id string) ([]Friend, error) {
 	var fid int64
 	var pid int64
 	var results []Friend
+	defer MySqlDisconnect(db)
 	for rows.Next() {
 	    err := rows.Scan(&fid, &pid)
   	    if err != nil {

@@ -9,7 +9,6 @@ import (
 	"database/sql"
 	"encoding/json"
 	"github.com/gorilla/mux"
-	_ "github.com/go-sql-driver/mysql"
 	"github.com/go-redis/redis"
 )
 
@@ -21,13 +20,11 @@ func AddParticipant(w http.ResponseWriter, r *http.Request) {
 	   LogError(w, err, "participant body error: %s", http.StatusBadRequest)
 	   return
 	}
-	dbhost := fmt.Sprintf("feed:feed1234@tcp(%s:3306)/feed", os.Getenv("MYSQL_HOST"))
-	db, err := sql.Open("mysql", dbhost)
+	db, err := MySqlConnect()
 	if err != nil {
 	   LogError(w, err, "cannot open the database: %s", http.StatusInternalServerError)
 	   return
 	}
-	defer db.Close()
 	stmt, err := db.Prepare("call UpsertParticipant(?)")
 	if err != nil {
 	   LogError(w, err, "cannot prepare the upsert statement: %s", http.StatusInternalServerError)
@@ -41,6 +38,7 @@ func AddParticipant(w http.ResponseWriter, r *http.Request) {
 	}
 	defer rows.Close()
 	var id string
+	defer MySqlDisconnect(db)
 	for rows.Next() {
 	    err := rows.Scan(&id)
 	    if err != nil {
