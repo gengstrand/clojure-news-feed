@@ -13,6 +13,17 @@ import (
 	"github.com/go-redis/redis"
 )
 
+func ConnectToDB()(*sql.DB) {
+     	dbhost := fmt.Sprintf("feed:feed1234@tcp(%s:3306)/feed", os.Getenv("MYSQL_HOST"))
+	retVal, err := sql.Open("mysql", dbhost)
+	if err != nil {
+	   log.Println(err)
+	}
+	return retVal
+}
+
+var db = ConnectToDB()
+
 func AddParticipant(w http.ResponseWriter, r *http.Request) {
    	decoder := json.NewDecoder(r.Body)
     	var p Participant
@@ -21,13 +32,6 @@ func AddParticipant(w http.ResponseWriter, r *http.Request) {
 	   LogError(w, err, "participant body error: %s", http.StatusBadRequest)
 	   return
 	}
-	dbhost := fmt.Sprintf("feed:feed1234@tcp(%s:3306)/feed", os.Getenv("MYSQL_HOST"))
-	db, err := sql.Open("mysql", dbhost)
-	if err != nil {
-	   LogError(w, err, "cannot open the database: %s", http.StatusInternalServerError)
-	   return
-	}
-	defer db.Close()
 	stmt, err := db.Prepare("call UpsertParticipant(?)")
 	if err != nil {
 	   LogError(w, err, "cannot prepare the upsert statement: %s", http.StatusInternalServerError)
@@ -68,13 +72,6 @@ func AddParticipant(w http.ResponseWriter, r *http.Request) {
 }
 
 func GetParticipantFromDB(id string, cache *redis.Client, w http.ResponseWriter) {
-	dbhost := fmt.Sprintf("feed:feed1234@tcp(%s:3306)/feed", os.Getenv("MYSQL_HOST"))
-	db, err := sql.Open("mysql", dbhost)
-	if err != nil {
-	   LogError(w, err, "cannot open the database: %s", http.StatusInternalServerError)
-	   return
-	}
-	defer db.Close()
 	stmt, err := db.Prepare("call FetchParticipant(?)")
 	if err != nil {
 	   LogError(w, err, "cannot prepare the participant fetch statement: %s", http.StatusInternalServerError)
