@@ -41,5 +41,5 @@ I tested this microservice using the standard load test environment for two hour
 
 Here is a CPU profile of the service when testing it locally with a scaled down version of the load test.
 
-<img src="pprof001.svg" />
+<img src="pprof001.png" width="1600" />
 
