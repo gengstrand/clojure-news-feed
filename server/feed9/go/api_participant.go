@@ -14,10 +14,13 @@ import (
 )
 
 func ConnectToDB()(*sql.DB) {
+        
      	dbhost := fmt.Sprintf("feed:feed1234@tcp(%s:3306)/feed", os.Getenv("MYSQL_HOST"))
 	retVal, err := sql.Open("mysql", dbhost)
 	if err != nil {
 	   log.Println(err)
+	} else {
+	   retVal.SetMaxOpenConns(18)
 	}
 	return retVal
 }
