@@ -1,7 +1,6 @@
 package newsfeedserver
 
 import (
-        "os"
         "fmt"
 	"time"
 	"strconv"
@@ -18,18 +17,6 @@ func AddInbound(i Inbound, session *gocql.Session) {
 }
 
 func GetInbound(w http.ResponseWriter, r *http.Request) {
-	cluster := gocql.NewCluster(os.Getenv("NOSQL_HOST"))
-	cluster.Keyspace = os.Getenv("NOSQL_KEYSPACE")
-	cluster.Timeout = 10 * time.Second
-	cluster.ConnectTimeout = 20 * time.Second
-	cluster.Consistency = gocql.One
-	session, err := cluster.CreateSession()
-	if err != nil {
-	    LogError(w, err, "cannot create cassandra session: %s", http.StatusInternalServerError)
-	    return
-	}
-	defer session.Close()
-
 	vars := mux.Vars(r)
 	i, err := strconv.ParseInt(vars["id"], 0, 64)
 	if err != nil {

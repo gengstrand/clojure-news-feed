@@ -119,13 +119,6 @@ func GetParticipantFromDB(id string, cache *redis.Client, w http.ResponseWriter)
 }
 
 func GetParticipant(w http.ResponseWriter, r *http.Request) {
-	cacheHost := fmt.Sprintf("%s:6379", os.Getenv("CACHE_HOST"))
-	cache := redis.NewClient(&redis.Options{
-	      Addr: cacheHost,
-	      Password: "",
-	      DB: 0,
-	})
-	defer cache.Close()
 	vars := mux.Vars(r)
 	key := "Participant::" + vars["id"]
 	val, err := cache.Get(key).Result()

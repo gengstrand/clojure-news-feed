@@ -16,6 +16,21 @@ import (
 	"gopkg.in/olivere/elastic.v3"
 )
 
+func CreateSession()(*gocql.Session) {
+	cluster := gocql.NewCluster(os.Getenv("NOSQL_HOST"))
+	cluster.Keyspace = os.Getenv("NOSQL_KEYSPACE")
+	cluster.Timeout = 10 * time.Second
+	cluster.ConnectTimeout = 20 * time.Second
+	cluster.Consistency = gocql.Any
+	retVal, err := cluster.CreateSession()
+	if err != nil {
+	   log.Println(err)
+	}
+	return retVal
+}
+
+var session = CreateSession()
+
 var esPool = &sync.Pool{
 	New: func() interface{} {
 		eshost := fmt.Sprintf("http://%s:9200", os.Getenv("SEARCH_HOST"))
@@ -66,17 +81,6 @@ func AddOutbound(w http.ResponseWriter, r *http.Request) {
 	    LogError(w, err, "outbound body error: %s", http.StatusBadRequest)
 	    return
 	}
-	cluster := gocql.NewCluster(os.Getenv("NOSQL_HOST"))
-	cluster.Keyspace = os.Getenv("NOSQL_KEYSPACE")
-	cluster.Timeout = 10 * time.Second
-	cluster.ConnectTimeout = 20 * time.Second
-	cluster.Consistency = gocql.Any
-	session, err := cluster.CreateSession()
-	if err != nil {
-	    LogError(w, err, "cannot create cassandra session: %s", http.StatusInternalServerError)
-	    return
-	}
-	defer session.Close()
 	id := strconv.FormatInt(ob.From, 10)
 	_, friends, err := GetFriendsInner(id)
 	if err != nil {
@@ -119,18 +123,6 @@ func AddOutbound(w http.ResponseWriter, r *http.Request) {
 }
 
 func GetOutbound(w http.ResponseWriter, r *http.Request) {
-	cluster := gocql.NewCluster(os.Getenv("NOSQL_HOST"))
-	cluster.Keyspace = os.Getenv("NOSQL_KEYSPACE")
-	cluster.Timeout = 10 * time.Second
-	cluster.ConnectTimeout = 20 * time.Second
-	cluster.Consistency = gocql.One
-	session, err := cluster.CreateSession()
-	if err != nil {
-	    LogError(w, err, "cannot create cassandra session: %s", http.StatusInternalServerError)
-	    return
-	}
-	defer session.Close()
-
 	vars := mux.Vars(r)
 	from, err := strconv.ParseInt(vars["id"], 0, 64)
 	if err != nil {

@@ -12,6 +12,18 @@ import (
 	"github.com/go-redis/redis"
 )
 
+func GetCache() (*redis.Client) {
+	cacheHost := fmt.Sprintf("%s:6379", os.Getenv("CACHE_HOST"))
+	retVal := redis.NewClient(&redis.Options{
+	     Addr: cacheHost,
+	     Password: "",
+	     DB: 0,
+	})
+	return retVal
+}
+
+var cache = GetCache()
+
 func AddFriend(w http.ResponseWriter, r *http.Request) {
    	decoder := json.NewDecoder(r.Body)
     	var f Friend
@@ -50,12 +62,7 @@ func AddFriend(w http.ResponseWriter, r *http.Request) {
 	       LogError(w, err, "cannot marshal friend response: %s", http.StatusInternalServerError)
 	       return
 	    }
-	    cacheHost := fmt.Sprintf("%s:6379", os.Getenv("CACHE_HOST"))
-	    cache := redis.NewClient(&redis.Options{
-	      	  Addr: cacheHost,
-	      	  Password: "",
-	      	  DB: 0,
-	    })
+	    // asdf
 	    cache.Del(fmt.Sprintf("Friends::%d", f.From)).Result()
 	    cache.Del(fmt.Sprintf("Friends::%d", f.To)).Result()
 	    w.Header().Set("Content-Type", "application/json; charset=UTF-8")
@@ -105,13 +112,6 @@ func GetFriendsFromDB(id string) ([]Friend, error) {
 }
 
 func GetFriendsInner(id string) (string, []Friend, error) {
-	cacheHost := fmt.Sprintf("%s:6379", os.Getenv("CACHE_HOST"))
-	cache := redis.NewClient(&redis.Options{
-	      Addr: cacheHost,
-	      Password: "",
-	      DB: 0,
-	})
-	defer cache.Close()
 	key := "Friends::" + id
 	val, err := cache.Get(key).Result()
 	if err == redis.Nil {
