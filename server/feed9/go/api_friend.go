@@ -22,13 +22,7 @@ func AddFriend(w http.ResponseWriter, r *http.Request) {
 	   ew.LogError(err, "friend body error: %s", http.StatusBadRequest)
 	   return
 	}
-	dbw, err := connectMysql()
-	if err != nil {
-	   ew.LogError(err, "cannot open the database: %s", http.StatusInternalServerError)
-	   return
-	}
-	defer dbw.db.Close()
-	stmt, err := dbw.db.Prepare("call UpsertFriends(?, ?)")
+	stmt, err := db.Prepare("call UpsertFriends(?, ?)")
 	if err != nil {
 	   ew.LogError(err, "cannot prepare the friend upsert statement: %s", http.StatusInternalServerError)
 	   return
@@ -58,9 +52,8 @@ func AddFriend(w http.ResponseWriter, r *http.Request) {
 	       ew.LogError(err, "cannot marshal friend response: %s", http.StatusInternalServerError)
 	       return
 	    }
-	    rw := connectRedis()
-	    rw.Cache.Del(fmt.Sprintf("Friends::%d", f.From)).Result()
-	    rw.Cache.Del(fmt.Sprintf("Friends::%d", f.To)).Result()
+	    cache.Del(fmt.Sprintf("Friends::%d", f.From)).Result()
+	    cache.Del(fmt.Sprintf("Friends::%d", f.To)).Result()
 	    w.Header().Set("Content-Type", "application/json; charset=UTF-8")
 	    fmt.Fprint(w, string(result))
 	    w.WriteHeader(http.StatusOK)
@@ -103,17 +96,8 @@ func GetFriendsInner(id string, cw CacheWrapper, gsw GetSqlWrapper) (string, []F
 
 func GetFriend(w http.ResponseWriter, r *http.Request) {
 	vars := mux.Vars(r)
-        ew := LogWrapper{
-	   Writer: w,
-	}
 	rw := connectRedis()
-	defer rw.Close()
-	dbw, err := connectMysql()
-	if err != nil {
-	   ew.LogError(err, "cannot open the database: %s", http.StatusInternalServerError)
-	   return
-	}
-	defer dbw.Close()
+	dbw := connectMysql()
 	result, _, err := GetFriendsInner(vars["id"], rw, dbw)
 	if err != nil {
 	   msg := fmt.Sprintf("system error while getting friend %s: %s", vars["id"], err)

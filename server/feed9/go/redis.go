@@ -7,6 +7,18 @@ import (
 	"github.com/go-redis/redis"
 )
 
+func GetCache() (*redis.Client) {
+	cacheHost := fmt.Sprintf("%s:6379", os.Getenv("CACHE_HOST"))
+	retVal := redis.NewClient(&redis.Options{
+	     Addr: cacheHost,
+	     Password: "",
+	     DB: 0,
+	})
+	return retVal
+}
+
+var cache = GetCache()
+
 type RedisWrapper struct {
      Cache *redis.Client
 }
@@ -30,12 +42,6 @@ func (rw RedisWrapper) Close() {
 }
 
 func connectRedis()(RedisWrapper) {
-     cacheHost := fmt.Sprintf("%s:6379", os.Getenv("CACHE_HOST"))
-     cache := redis.NewClient(&redis.Options{
-	    Addr: cacheHost,
-	    Password: "",
-	    DB: 0,
-     })
      retVal := RedisWrapper {
      	   Cache: cache, 
      }

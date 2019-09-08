@@ -58,12 +58,6 @@ func init() {
         go handleIndexRequest()
 }
 
-func (cw CassandraWrapper) AddOutbound(o Outbound) {
-	stmt := cw.Session.Query("insert into Outbound (ParticipantID, Occurred, Subject, Story) values (?, now(), ?, ?) using ttl 7776000", o.From, o.Subject, o.Story)
-	stmt.Consistency(gocql.One)
-	stmt.Exec()
-}
-
 func AddOutboundInner(ob Outbound, ew ErrorWrapper, aw AddCassandraWrapper, cw CacheWrapper, gsw GetSqlWrapper) {
 	id := strconv.FormatInt(ob.From, 10)
 	_, friends, err := GetFriendsInner(id, cw, gsw)
@@ -95,20 +89,9 @@ func AddOutbound(w http.ResponseWriter, r *http.Request) {
 	    ew.LogError(err, "outbound body error: %s", http.StatusBadRequest)
 	    return
 	}
-	cw, err := connectCassandra()
-	if err != nil {
-	    ew.LogError(err, "cannot create cassandra session: %s", http.StatusInternalServerError)
-	    return
-	}
-	defer cw.Session.Close()
+	cw := connectCassandra()
 	rw := connectRedis()
-	defer rw.Close()
-	dbw, err := connectMysql()
-	if err != nil {
-	   ew.LogError(err, "cannot open the database: %s", http.StatusInternalServerError)
-	   return
-	}
-	defer dbw.Close()
+	dbw := connectMysql()
 	esidr, err := uuid.NewRandom()
 	if err != nil {
 	   ew.LogError(err, "cannot generate a random id: %s", http.StatusInternalServerError)
@@ -137,12 +120,7 @@ func GetOutbound(w http.ResponseWriter, r *http.Request) {
         ew := LogWrapper{
 	   Writer: w,
 	}
-	cw, err := connectCassandra()
-	if err != nil {
-	    ew.LogError(err, "cannot create cassandra session: %s", http.StatusInternalServerError)
-	    return
-	}
-	defer cw.Session.Close()
+	cw := connectCassandra()
 	vars := mux.Vars(r)
 	from, err := strconv.ParseInt(vars["id"], 0, 64)
 	if err != nil {

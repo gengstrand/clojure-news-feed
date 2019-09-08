@@ -22,13 +22,7 @@ func AddParticipant(w http.ResponseWriter, r *http.Request) {
 	  ew. LogError(err, "participant body error: %s", http.StatusBadRequest)
 	   return
 	}
-	dbw, err := connectMysql()
-	if err != nil {
-	   ew.LogError(err, "cannot open the database: %s", http.StatusInternalServerError)
-	   return
-	}
-	defer dbw.Close()
-	stmt, err := dbw.db.Prepare("call UpsertParticipant(?)")
+	stmt, err := db.Prepare("call UpsertParticipant(?)")
 	if err != nil {
 	   ew.LogError(err, "cannot prepare the upsert statement: %s", http.StatusInternalServerError)
 	   return
@@ -71,13 +65,7 @@ func GetParticipantFromDB(id string, rw RedisWrapper, w http.ResponseWriter) {
         ew := LogWrapper{
 	   Writer: w,
 	}
-	dbw, err := connectMysql()
-	if err != nil {
-	   ew.LogError(err, "cannot open the database: %s", http.StatusInternalServerError)
-	   return
-	}
-	defer dbw.db.Close()
-	stmt, err := dbw.db.Prepare("call FetchParticipant(?)")
+	stmt, err := db.Prepare("call FetchParticipant(?)")
 	if err != nil {
 	   ew.LogError(err, "cannot prepare the participant fetch statement: %s", http.StatusInternalServerError)
 	   return
@@ -125,7 +113,6 @@ func GetParticipant(w http.ResponseWriter, r *http.Request) {
 	   Writer: w,
 	}
         rw := connectRedis()
-	defer rw.Cache.Close()
 	vars := mux.Vars(r)
 	key := "Participant::" + vars["id"]
 	val, err := rw.Get(key)

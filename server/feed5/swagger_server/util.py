@@ -1,7 +1,11 @@
-from typing import GenericMeta
 from datetime import datetime, date
 from six import integer_types, iteritems
 
+try:
+    from typing import GenericMeta  # python 3.6
+except ImportError:
+    # in 3.7, genericmeta doesn't exist but we don't need it
+    class GenericMeta(type): pass
 
 def _deserialize(data, klass):
     """

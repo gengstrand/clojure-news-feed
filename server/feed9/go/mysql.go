@@ -9,6 +9,20 @@ import (
 	_ "github.com/go-sql-driver/mysql"
 )
 
+func ConnectToDB()(*sql.DB) {
+        
+     	dbhost := fmt.Sprintf("feed:feed1234@tcp(%s:3306)/feed", os.Getenv("MYSQL_HOST"))
+	retVal, err := sql.Open("mysql", dbhost)
+	if err != nil {
+	   log.Println(err)
+	} else {
+	   retVal.SetMaxOpenConns(18)
+	}
+	return retVal
+}
+
+var db = ConnectToDB()
+
 type MySqlWrapper struct {
      db *sql.DB
 }
@@ -59,14 +73,9 @@ func (dbw MySqlWrapper) FetchFriends(id string)([]Friend, error) {
 	return results, nil
 }
 
-func connectMysql() (*MySqlWrapper, error) {
-	dbhost := fmt.Sprintf("feed:feed1234@tcp(%s:3306)/feed", os.Getenv("MYSQL_HOST"))
-	db, err := sql.Open("mysql", dbhost)
-	if err != nil {
-	   return nil, err
-	}
+func connectMysql() (*MySqlWrapper) {
 	retVal := MySqlWrapper{
 	       db: db,
 	}
-	return &retVal, nil
+	return &retVal
 }
