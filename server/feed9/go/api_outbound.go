@@ -16,21 +16,6 @@ import (
 	"gopkg.in/olivere/elastic.v3"
 )
 
-func CreateSession()(*gocql.Session) {
-	cluster := gocql.NewCluster(os.Getenv("NOSQL_HOST"))
-	cluster.Keyspace = os.Getenv("NOSQL_KEYSPACE")
-	cluster.Timeout = 10 * time.Second
-	cluster.ConnectTimeout = 20 * time.Second
-	cluster.Consistency = gocql.Any
-	retVal, err := cluster.CreateSession()
-	if err != nil {
-	   log.Println(err)
-	}
-	return retVal
-}
-
-var session = CreateSession()
-
 var esPool = &sync.Pool{
 	New: func() interface{} {
 		eshost := fmt.Sprintf("http://%s:9200", os.Getenv("SEARCH_HOST"))
@@ -73,26 +58,13 @@ func init() {
         go handleIndexRequest()
 }
 
-func AddOutbound(w http.ResponseWriter, r *http.Request) {
-   	decoder := json.NewDecoder(r.Body)
-    	var ob Outbound
-    	err := decoder.Decode(&ob)
-	if err != nil {
-	    LogError(w, err, "outbound body error: %s", http.StatusBadRequest)
-	    return
-	}
+func AddOutboundInner(ob Outbound, ew ErrorWrapper, aw AddCassandraWrapper, cw CacheWrapper, gsw GetSqlWrapper) {
 	id := strconv.FormatInt(ob.From, 10)
-	_, friends, err := GetFriendsInner(id)
+	_, friends, err := GetFriendsInner(id, cw, gsw)
 	if err != nil {
-	   LogError(w, err, "system error while fetching friends for %s", http.StatusInternalServerError)
+	   ew.LogError(err, "system error while fetching friends for %s", http.StatusInternalServerError)
 	   return
 	}
-	esidr, err := uuid.NewRandom()
-	if err != nil {
-	   LogError(w, err, "cannot generate a random id: %s", http.StatusInternalServerError)
-	   return
-	}
-	esid := fmt.Sprintf("%s", esidr)
 	for _, friend := range friends {
 	   inb := Inbound {
 	      From: ob.From,
@@ -101,20 +73,42 @@ func AddOutbound(w http.ResponseWriter, r *http.Request) {
 	      Subject: ob.Subject,
 	      Story: ob.Story,
 	   }
-	   AddInbound(inb, session)
+	   aw.AddInbound(inb)
 	}
-	stmt := session.Query("insert into Outbound (ParticipantID, Occurred, Subject, Story) values (?, now(), ?, ?) using ttl 7776000", ob.From, ob.Subject, ob.Story)
-	stmt.Consistency(gocql.One)
-	stmt.Exec()
+	aw.AddOutbound(ob)
+}
+
+func AddOutbound(w http.ResponseWriter, r *http.Request) {
+        ew := LogWrapper{
+	   Writer: w,
+	}
+   	decoder := json.NewDecoder(r.Body)
+    	var ob Outbound
+    	err := decoder.Decode(&ob)
+	if err != nil {
+	    ew.LogError(err, "outbound body error: %s", http.StatusBadRequest)
+	    return
+	}
+	cw := connectCassandra()
+	rw := connectRedis()
+	dbw := connectMysql()
+	esidr, err := uuid.NewRandom()
+	if err != nil {
+	   ew.LogError(err, "cannot generate a random id: %s", http.StatusInternalServerError)
+	   return
+	}
+	esid := fmt.Sprintf("%s", esidr)
+	id := strconv.FormatInt(ob.From, 10)
 	osd := OutboundStoryDocument{
 	    Id: esid,
 	    Sender: id,
 	    Story: ob.Story,
 	}
+	AddOutboundInner(ob, ew, cw, rw, dbw)
 	ElasticSearchIndexer <- osd
 	resultb, err := json.Marshal(ob)
 	if err != nil {
-	    LogError(w, err, "cannot marshal outbound response: %s", http.StatusInternalServerError)
+	    ew.LogError(err, "cannot marshal outbound response: %s", http.StatusInternalServerError)
 	    return
 	}
 	w.Header().Set("Content-Type", "application/json; charset=UTF-8")
@@ -123,13 +117,17 @@ func AddOutbound(w http.ResponseWriter, r *http.Request) {
 }
 
 func GetOutbound(w http.ResponseWriter, r *http.Request) {
+        ew := LogWrapper{
+	   Writer: w,
+	}
+	cw := connectCassandra()
 	vars := mux.Vars(r)
 	from, err := strconv.ParseInt(vars["id"], 0, 64)
 	if err != nil {
-	    LogError(w, err, "id is not an integer: %s", http.StatusBadRequest)
+	    ew.LogError(err, "id is not an integer: %s", http.StatusBadRequest)
 	    return
 	}
-	stmt := session.Query("select toTimestamp(occurred) as occurred, subject, story from Outbound where participantid = ? order by occurred desc", vars["id"])
+	stmt := cw.Session.Query("select toTimestamp(occurred) as occurred, subject, story from Outbound where participantid = ? order by occurred desc", vars["id"])
 	stmt.Consistency(gocql.One)
 	iter := stmt.Iter()
 	defer iter.Close()
@@ -148,7 +146,7 @@ func GetOutbound(w http.ResponseWriter, r *http.Request) {
 	}
 	resultb, err := json.Marshal(results)
 	if err != nil {
-	    LogError(w, err, "cannot marshal outbound response: %s", http.StatusInternalServerError)
+	   ew.LogError(err, "cannot marshal outbound response: %s", http.StatusInternalServerError)
 	    return
 	}
 	w.Header().Set("Content-Type", "application/json; charset=UTF-8")
@@ -157,6 +155,9 @@ func GetOutbound(w http.ResponseWriter, r *http.Request) {
 }
 
 func SearchOutbound(w http.ResponseWriter, r *http.Request) {
+        ew := LogWrapper{
+	   Writer: w,
+	}
 	keywords, ok := r.URL.Query()["keywords"]
 	if !ok || len(keywords[0]) < 1 {
 	   msg := fmt.Sprint("must specify keywords")
@@ -171,7 +172,7 @@ func SearchOutbound(w http.ResponseWriter, r *http.Request) {
 		      Query(query).
 		      Do()
 	if err != nil {
-	   LogError(w, err, "cannot query elasticsearch: %s", http.StatusInternalServerError)
+	   ew.LogError(err, "cannot query elasticsearch: %s", http.StatusInternalServerError)
 	   return
 	}
 	esPool.Put(esclient)
@@ -185,7 +186,7 @@ func SearchOutbound(w http.ResponseWriter, r *http.Request) {
 	}
 	resultb, err := json.Marshal(results)
 	if err != nil {
-	    LogError(w, err, "cannot marshal outbound results: %s", http.StatusInternalServerError)
+	    ew.LogError(err, "cannot marshal outbound results: %s", http.StatusInternalServerError)
 	    return
 	}
 	w.Header().Set("Content-Type", "application/json; charset=UTF-8")

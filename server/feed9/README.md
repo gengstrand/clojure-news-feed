@@ -22,6 +22,23 @@ I used this non-standard [Elasticsearch client library](https://olivere.github.i
 
 ## Usage
 
+You will need to install the dependencies.
+
+```
+ go get -u github.com/gorilla/mux
+ go get -u github.com/go-sql-driver/mysql
+ go get -u github.com/go-redis/redis
+ go get -u github.com/gocql/gocql
+ go get -u github.com/google/uuid
+ go get -u gopkg.in/olivere/elastic.v3
+```
+
+Here is how to run the sample unit test
+
+```
+go test test/api_outbound_test.go
+```
+
 Here is how to build the docker image.
 
 ```
@@ -37,7 +54,7 @@ kubectl create -f feed9-deployment.yaml
 
 ## Load Testing
 
-I tested this microservice using the standard load test environment for two hours (see the client/load folder in this repo). The average per minute throughput of output posts was 13,103 with an average duration of 5 ms, a median of 5 ms, and a 99th percentile of 11 ms. That means the golang version of the news feed service performed worse than the java versions, was on par with the node.js version and performed better than the python, scala, and clojure versions.
+I tested this microservice using the standard load test environment for two hours (see the client/load folder in this repo). The average per minute throughput of output posts was 18,425 with an average duration of 5 ms, a median of 4 ms, and a 99th percentile of 29 ms.
 
 Here is a CPU profile of the service when testing it locally with a scaled down version of the load test.
 

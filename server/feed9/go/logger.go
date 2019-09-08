@@ -7,10 +7,18 @@ import (
     "time"
 )
 
-func LogError(w http.ResponseWriter, err error, format string, status int) {
+type ErrorWrapper interface {
+     LogError(err error, format string, status int)
+}
+
+type LogWrapper struct {
+     Writer http.ResponseWriter
+}
+
+func (lw LogWrapper) LogError(err error, format string, status int) {
      msg := fmt.Sprintf(format, err)
      log.Println(msg)
-     http.Error(w, msg, status)
+     http.Error(lw.Writer, msg, status)
 }
 
 func Logger(inner http.Handler, name string) http.Handler {

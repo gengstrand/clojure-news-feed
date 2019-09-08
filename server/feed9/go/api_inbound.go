@@ -10,20 +10,18 @@ import (
 	"github.com/gocql/gocql"
 )
 
-func AddInbound(i Inbound, session *gocql.Session) {
-	stmt := session.Query("insert into Inbound (ParticipantID, FromParticipantID, Occurred, Subject, Story) values (?, ?, now(), ?, ?) using ttl 7776000", i.To, i.From, i.Subject, i.Story)
-	stmt.Consistency(gocql.Any)
-	stmt.Exec()
-}
-
 func GetInbound(w http.ResponseWriter, r *http.Request) {
+        cw := connectCassandra()
+        ew := LogWrapper{
+	   Writer: w,
+	}
 	vars := mux.Vars(r)
 	i, err := strconv.ParseInt(vars["id"], 0, 64)
 	if err != nil {
-	    LogError(w, err, "id is not an integer: %s", http.StatusInternalServerError)
+	    ew.LogError(err, "id is not an integer: %s", http.StatusInternalServerError)
 	    return
 	}
-	stmt := session.Query("select toTimestamp(occurred) as occurred, fromparticipantid, subject, story from Inbound where participantid = ? order by occurred desc", vars["id"])
+	stmt := cw.Session.Query("select toTimestamp(occurred) as occurred, fromparticipantid, subject, story from Inbound where participantid = ? order by occurred desc", vars["id"])
 	stmt.Consistency(gocql.One)
 	iter := stmt.Iter()
 	defer iter.Close()
@@ -44,7 +42,7 @@ func GetInbound(w http.ResponseWriter, r *http.Request) {
 	}
 	resultb, err := json.Marshal(results)
 	if err != nil {
-	    LogError(w, err, "cannot marshal inbound result: %s", http.StatusInternalServerError)
+	    ew.LogError(err, "cannot marshal inbound result: %s", http.StatusInternalServerError)
 	    return
 	}
 	w.Header().Set("Content-Type", "application/json; charset=UTF-8")
