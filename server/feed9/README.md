@@ -56,7 +56,7 @@ kubectl create -f feed9-deployment.yaml
 
 I tested this microservice using the standard load test environment for two hours (see the client/load folder in this repo). The average per minute throughput of output posts was 18,425 with an average duration of 5 ms, a median of 4 ms, and a 99th percentile of 29 ms.
 
-Here is a CPU profile of the service when testing it locally with a scaled down version of the load test.
+Here is a CPU profile of the service while running under the above mentioned load test.
 
 <img src="pprof001.png" width="1600" />
 
