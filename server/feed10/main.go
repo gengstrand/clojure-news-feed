@@ -75,6 +75,10 @@ func init() {
 // the connection attempt is retried after retryInterval.
 // If the retry attempts are exhausted and there still is no
 // connection to the MySQL database, the application will stop.
+//
+// Note that *sql.DB maintains it's own connection pool.
+// See https://golang.org/pkg/database/sql/#DB.SetMaxIdleConns
+// and https://golang.org/pkg/database/sql/#DB.SetMaxOpenConns
 func setupMySQL() *sql.DB {
 
 	var db *sql.DB
@@ -108,7 +112,8 @@ func setupMySQL() *sql.DB {
 		retry.AfterRetryLimit(func(e error) {
 			log.Fatalf("MySQL: Giving up after %d retries: %s", retries, e)
 		}))
-	log.Printf("Using MySQL host '%s'", mysqlHost)
+	s := db.Stats()
+	log.Printf("Using MySQL host '%s': max open: %d", mysqlHost, s.MaxOpenConnections)
 
 	return db
 }
@@ -273,6 +278,15 @@ func main() {
 	log.Println("Setting up MySQL")
 	db := setupMySQL()
 	defer db.Close()
+
+	go func() {
+		tick := time.NewTicker(10 * time.Second).C
+
+		for range tick {
+			s := db.Stats()
+			log.Printf("MySQL stats: open: %d, in use: %d,idle: %d, idle closed: %d", s.OpenConnections, s.InUse, s.Idle, s.MaxIdleClosed)
+		}
+	}()
 
 	log.Println("Setting up Redis")
 	cache := setupRedis()
