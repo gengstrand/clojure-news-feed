@@ -34,6 +34,9 @@ func (routes esRoutes) setup(router *mux.Router, pool *sync.Pool) {
 var esRoutesList = esRoutes{
 	esRoute{
 		basicRoute{"SearchOutbound",
+			// mwm: Note that as per convention, unless you actually SEND a document,
+			// this should be a GET operation.
+			// I left it this way in order to not to interfere with your requests.
 			http.MethodPost,
 			"/outbound/search"},
 		SearchOutbound,
