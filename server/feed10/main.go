@@ -27,10 +27,10 @@ import (
 
 var (
 	mysqlHost     string
-	cacheHost     string = "localhost"
-	nosqlHost     string = "localhost"
-	nosqlKeyspace string = "newsfeedserver"
-	searchHost    string = "localhost"
+	cacheHost     string
+	nosqlHost     string
+	nosqlKeyspace string
+	searchHost    string
 	retries       int
 	retryInterval time.Duration
 )
