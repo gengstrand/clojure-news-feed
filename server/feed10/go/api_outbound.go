@@ -78,7 +78,7 @@ func AddOutbound(session *gocql.Session, db *sql.DB, cache *redis.Client) http.H
 				Subject:  ob.Subject,
 				Story:    ob.Story,
 			}
-			log.Println("%#v", inb)
+
 			AddInbound(inb, session)
 		}
 		stmt := session.Query("insert into Outbound (ParticipantID, Occurred, Subject, Story) values (?, now(), ?, ?) using ttl 7776000", ob.From, ob.Subject, ob.Story)

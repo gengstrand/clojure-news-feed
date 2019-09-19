@@ -84,7 +84,7 @@ func GetParticipantFromDB(id string, db *sql.DB, cache *redis.Client, w http.Res
 		LogError(w, err, "id is not an integer: %s", http.StatusBadRequest)
 		return
 	}
-	log.Printf("id: %d", i)
+
 	rows, err := FetchParticipantStmt.Query(id)
 
 	if err != nil {
