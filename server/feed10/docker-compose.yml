@@ -1,0 +1,35 @@
+version: '3.1'
+
+services:
+
+  db:
+    image: mysql:5.7
+    command: --default-authentication-plugin=mysql_native_password
+    restart: always
+    environment:
+      MYSQL_ROOT_PASSWORD: example
+      MYSQL_DATABASE: feed
+      MYSQL_USER: feed
+      MYSQL_PASSWORD: feed123
+    volumes:
+      - "../feed/etc/schema.mysql.sql:/docker-entrypoint-initdb.d/schema.sql"
+  redis:
+    image: redis:3.2
+  elastic:
+    image: elasticsearch:2.4
+  cassandra:
+    image: cassandra:2.2
+    environment:
+      CASSANDRA_KEYSPACE: activity
+    volumes:
+      - "./cassandra-init.sh:/cassandra-init.sh"
+    command: "sh /cassandra-init.sh"
+  feed10:
+    # image: gengstrand/feed9:latest
+    build: .
+    environment:
+      MYSQL_HOST: db
+      CACHE_HOST: redis
+      NOSQL_HOST: cassandra
+      NOSQL_KEYSPACE: activity
+      SEARCH_HOST: elastic
