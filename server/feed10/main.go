@@ -69,9 +69,6 @@ func init() {
 		DurationVar(&retryInterval)
 }
 
-// We encapsulate each datasource in an own setup routine.
-// This way, we can parallelize the setup (see main for how).
-//
 // The MySQL setup tries to connect to the host and do an
 // actual db.Ping(). If either one is not successful,
 // it is assumed that the MySQL server is not reachable and
