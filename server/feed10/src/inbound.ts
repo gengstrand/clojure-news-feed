@@ -1,9 +1,10 @@
 import * as nosql from './nosqldb'
 import * as o from './outbound'
+import * as p from './participant'
 
 export class InboundModel extends o.OutboundModel{
-   readonly to: number
-   constructor(from: number, to: number, occurred: Date, subject: string, story: string) {
+   readonly to: p.ParticipantModel
+   constructor(from: p.ParticipantModel, to: p.ParticipantModel, occurred: Date, subject: string, story: string) {
       super(from, occurred, subject, story)
       this.to = to
    }
@@ -15,7 +16,9 @@ export class InboundService extends nosql.Repository {
    }
    public get(id: number): InboundModel[] {
       // TODO: query cassandra
-      const ib = new InboundModel(1, 2, new Date("2019-09-21"), "test subject", "test story")
+      const fp = new p.ParticipantModel(1, "test participant 1")
+      const tp = new p.ParticipantModel(2, "test participant 2")
+      const ib = new InboundModel(fp, tp, new Date("2019-09-21"), "test subject", "test story")
       return [ib]
    }
    public save(o: InboundModel): InboundModel {

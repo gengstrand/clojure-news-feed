@@ -63,7 +63,7 @@ let nosqlHost = process.env.NOSQL_HOST
 const participantService = new p.ParticipantService(dbHost, dbName, user, pwd, cacheHost)
 const friendService = new f.FriendService(dbHost, dbName, user, pwd, cacheHost)
 const inboundService = new i.InboundService(nosqlHost)
-const outboundService = new o.OutboundService(nosqlHost)
+const outboundService = new o.OutboundService(nosqlHost, friendService, inboundService)
 const resolvers = {
   Query: {
     participant: (_, { id }) => ({ id }),
