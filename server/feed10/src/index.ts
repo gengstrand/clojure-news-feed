@@ -1,6 +1,9 @@
 import { GraphQLServer } from 'graphql-yoga'
 import * as p from './participant'
 import * as f from './friend'
+import * as i from './inbound'
+import * as o from './outbound'
+
 const typeDefs = `
 type Inbound {
     from: Participant
@@ -55,9 +58,12 @@ let dbName = process.env.MYSQL_DB
 let user = process.env.MYSQL_USER
 let pwd = process.env.MYSQL_PASS
 let cacheHost = process.env.REDIS_HOST
+let nosqlHost = process.env.NOSQL_HOST
+
 const participantService = new p.ParticipantService(dbHost, dbName, user, pwd, cacheHost)
 const friendService = new f.FriendService(dbHost, dbName, user, pwd, cacheHost)
-
+const inboundService = new i.InboundService(nosqlHost)
+const outboundService = new o.OutboundService(nosqlHost)
 const resolvers = {
   Query: {
     participant: (_, { id }) => ({ id }),
@@ -74,12 +80,10 @@ const resolvers = {
       return friendService.get(id)
     },
     inbound: ({ id }) => {
-      const returnValue = `inbound news for participant $id`
-      return returnValue
+      return inboundService.get(id)
     },
     outbound: ({ id }) => {
-      const returnValue = `participant $id outbound news`
-      return returnValue
+      return outboundService.get(id)
     },
   },
   Mutation: {
@@ -88,10 +92,15 @@ const resolvers = {
        return participantService.save(np)
     },
     createFriend(_, args) {
-       const nf = new f.FriendModel(0, args.input.from_id, args.input.to_id)
+       const fp = new p.ParticipantModel(args.input.from_id, null)
+       const tp = new p.ParticipantModel(args.input.to_id, null)
+       const nf = new f.FriendModel(0, fp, tp)
        return friendService.save(nf)
     },
     createOutbound(_, args) {
+       const np = new p.ParticipantModel(args.input.from_id, null)
+       const no = new o.OutboundModel(np, args.input.occurred, args.input.subject, args.input.story)
+       return outboundService.save(no)
     }
   }
 }
