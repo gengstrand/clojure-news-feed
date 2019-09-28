@@ -1,5 +1,7 @@
 import * as p from './participant'
 import * as sql from './sqldb'
+import {Friends} from './entity/friend'
+import {Connection} from "typeorm";
 
 export class FriendModel {
    readonly id: number
@@ -13,19 +15,24 @@ export class FriendModel {
 }
 
 export class FriendService extends sql.Repository {
-   constructor(dbHost: string, dbName: string, user: string, password: string, cacheHost) {
-      super(dbHost, dbName, user, password, cacheHost)
+   constructor(connection: Connection, cacheHost) {
+      super(connection, cacheHost)
    }
-   public get(id: number): FriendModel[] {
-      // TODO: query mysql db
-      const fp = new p.ParticipantModel(id, 'from participant')
-      const tp = new p.ParticipantModel(2, 'to participant')
-      return [new FriendModel(1, fp, tp)]
+   public async get(id: number): Promise<FriendModel[]> {
+      let r = this.connection.getRepository(Friends);
+      let retVal = await r.find({ FromParticipantID: id })
+      const fp = new p.ParticipantModel(id, "")
+      return retVal.map((dbf) => {
+          const tp = new p.ParticipantModel(dbf.ToParticipantID, "")
+	  return new FriendModel(dbf.FriendsID, fp, tp)
+      })
    }
-   
-   public save(f: FriendModel): FriendModel {
-      // TODO: insert into mysql db and return id
-      const i = 0
-      return new FriendModel(i, f.from, f.to)
+   public async save(f: FriendModel): Promise<FriendModel> {
+      let r = this.connection.getRepository(Friends)
+      let dbf = new Friends()
+      dbf.FromParticipantID = f.from.id
+      dbf.ToParticipantID = f.to.id
+      let sf = await r.save(dbf)
+      return new FriendModel(sf.FriendsID, f.from, f.to)
    }
 }

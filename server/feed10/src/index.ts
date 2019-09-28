@@ -3,6 +3,7 @@ import * as p from './participant'
 import * as f from './friend'
 import * as i from './inbound'
 import * as o from './outbound'
+import {createConnection, Connection} from "typeorm";
 
 const typeDefs = `
 type Inbound {
@@ -53,61 +54,63 @@ type Mutation {
     createOutbound(input: CreateOutboundRequest): Outbound
 }
 `
-let dbHost = process.env.MYSQL_HOST
-let dbName = process.env.MYSQL_DB
-let user = process.env.MYSQL_USER
-let pwd = process.env.MYSQL_PASS
 let cacheHost = process.env.REDIS_HOST
 let nosqlHost = process.env.NOSQL_HOST
 
-const participantService = new p.ParticipantService(dbHost, dbName, user, pwd, cacheHost)
-const friendService = new f.FriendService(dbHost, dbName, user, pwd, cacheHost)
-const inboundService = new i.InboundService(nosqlHost)
-const outboundService = new o.OutboundService(nosqlHost, friendService, inboundService)
-const resolvers = {
-  Query: {
-    participant: (_, { id }) => ({ id }),
-    posters: (_, { keywords }) => {
-      const returnValue = `posters $keywords`
-      return returnValue
-    },
-  },
-  Participant: {
-    name: ({ id }) => {
-      return participantService.get(id).name
-    },
-    friends: ({ id }) => {
-      return friendService.get(id)
-    },
-    inbound: ({ id }) => {
-      return inboundService.get(id)
-    },
-    outbound: ({ id }) => {
-      return outboundService.get(id)
-    },
-  },
-  Mutation: {
-    createParticipant(_, args) {
-       const np = new p.ParticipantModel(0, args.input.name)
-       return participantService.save(np)
-    },
-    createFriend(_, args) {
-       const fp = new p.ParticipantModel(args.input.from_id, null)
-       const tp = new p.ParticipantModel(args.input.to_id, null)
-       const nf = new f.FriendModel(0, fp, tp)
-       return friendService.save(nf)
-    },
-    createOutbound(_, args) {
-       const np = new p.ParticipantModel(args.input.from_id, null)
-       const no = new o.OutboundModel(np, args.input.occurred, args.input.subject, args.input.story)
-       return outboundService.save(no)
+createConnection().then(async connection => {
+    const participantService = new p.ParticipantService(connection, cacheHost)
+    const friendService = new f.FriendService(connection, cacheHost)
+    const inboundService = new i.InboundService(nosqlHost)
+    const outboundService = new o.OutboundService(nosqlHost, friendService, inboundService)
+    const resolvers = {
+      Query: {
+        participant: (_, { id }) => ({ id }),
+        posters: (_, { keywords }) => {
+          const returnValue = `posters $keywords`
+          return returnValue
+        },
+      },
+      Participant: {
+        name: async ({ id }) => {
+          let retVal = await participantService.get(id)
+          return retVal.name
+        },
+        friends: async ({ id }) => {
+          return await friendService.get(id)
+        },
+        inbound: ({ id }) => {
+          return inboundService.get(id)
+        },
+        outbound: ({ id }) => {
+          return outboundService.get(id)
+        },
+      },
+      Mutation: {
+        createParticipant(_, args) {
+           const np = new p.ParticipantModel(0, args.input.name)
+           return participantService.save(np)
+        },
+        createFriend(_, args) {
+           const fp = new p.ParticipantModel(args.input.from_id, null)
+           const tp = new p.ParticipantModel(args.input.to_id, null)
+           const nf = new f.FriendModel(0, fp, tp)
+           return friendService.save(nf)
+        },
+        createOutbound(_, args) {
+           const np = new p.ParticipantModel(args.input.from_id, null)
+           const no = new o.OutboundModel(np, args.input.occurred, args.input.subject, args.input.story)
+           return outboundService.save(no)
+        }
+      }
     }
-  }
-}
 
-const server = new GraphQLServer({
-  typeDefs,
-  resolvers
+    const server = new GraphQLServer({
+      typeDefs,
+      resolvers
+    })
+
+    server.start(() => console.log('Server is running on http://localhost:4000'))
+}).catch(error => {
+    console.log(error)
 })
 
-server.start(() => console.log('Server is running on http://localhost:4000'))

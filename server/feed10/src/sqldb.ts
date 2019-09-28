@@ -1,14 +1,10 @@
+import {Connection} from "typeorm";
+
 export class Repository {
-   private dbHost: string
-   private dbName: string
-   private user: string
-   private password: string
+   protected connection: Connection
    private cacheHost: string
-   constructor(dbHost: string, dbName: string, user: string, password: string, cacheHost: string) {
-      this.dbHost = dbHost
-      this.dbName = dbName
-      this.user = user
-      this.password = password
+   constructor(connection: Connection, cacheHost: string) {
+      this.connection = connection
       this.cacheHost = cacheHost
    }
 

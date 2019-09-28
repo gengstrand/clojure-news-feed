@@ -1,4 +1,6 @@
 import * as sql from './sqldb'
+import {Participant} from './entity/participant'
+import {Connection} from "typeorm";
 
 export class ParticipantModel {
    readonly id: number
@@ -10,19 +12,21 @@ export class ParticipantModel {
 }
 
 export class ParticipantService extends sql.Repository {
-   constructor(dbHost: string, dbName: string, user: string, password: string, cacheHost: string) {
-      super(dbHost, dbName, user, password, cacheHost)
+   constructor(connection: Connection, cacheHost: string) {
+      super(connection, cacheHost)
    }
 
-   public get(id: number): ParticipantModel {
-      // TODO: query mysql db
-      const n = "test name"
-      return new ParticipantModel(id, n)
+   public async get(id: number): Promise<ParticipantModel> {
+       let r = this.connection.getRepository(Participant);
+       let dbp = await r.findOne(id)
+       return new ParticipantModel(id, dbp.Moniker)
    }
 
-   public save(p: ParticipantModel): ParticipantModel {
-      // TODO: insert into mysql db and return id
-      const i = 0
-      return new ParticipantModel(i, p.name)
+   public async save(p: ParticipantModel): Promise<ParticipantModel> {
+       let r = this.connection.getRepository(Participant)
+       let dbp = new Participant()
+       dbp.Moniker = p.name;
+       let sp = await r.save(dbp)
+       return new ParticipantModel(sp.ParticipantID, p.name)
    }
 }

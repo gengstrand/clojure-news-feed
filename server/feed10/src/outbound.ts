@@ -32,10 +32,12 @@ export class OutboundService extends nosql.Repository {
    }
    public save(o: OutboundModel): OutboundModel {
       // TODO: insert into cassandra outbound
+      /*
       this.friendService.get(o.from.id).forEach((friend) => {
          const nim = new i.InboundModel(o.from, friend.to, o.occurred, o.subject, o.story)
 	 this.inboundService.save(nim)
       })
+      */
       // TODO: insert into elasticsearch
       return o
    }

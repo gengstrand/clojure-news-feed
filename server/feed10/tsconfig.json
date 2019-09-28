@@ -6,8 +6,13 @@
     "sourceMap": true,
     "rootDir": "src",
     "outDir": "dist",
+    "emitDecoratorMetadata": true,
+    "experimentalDecorators": true,
     "lib": [
-      "esnext", "dom"
+	"esnext",
+	"dom",
+        "es5",
+        "es6"
     ]
   }
 }
