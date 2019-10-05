@@ -1,11 +1,12 @@
 import {Connection} from "typeorm";
+import {RedisClient} from 'redis'
 
 export class Repository {
    protected connection: Connection
-   private cacheHost: string
-   constructor(connection: Connection, cacheHost: string) {
+   protected cache: RedisClient
+   constructor(connection: Connection, cache: RedisClient) {
       this.connection = connection
-      this.cacheHost = cacheHost
+      this.cache = cache
    }
 
 }

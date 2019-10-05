@@ -4,6 +4,8 @@ import * as f from './friend'
 import * as i from './inbound'
 import * as o from './outbound'
 import {createConnection, Connection} from "typeorm";
+import {RedisClient} from 'redis'
+import {createClient} from 'then-redis'
 
 const typeDefs = `
 type Inbound {
@@ -58,8 +60,9 @@ let cacheHost = process.env.REDIS_HOST
 let nosqlHost = process.env.NOSQL_HOST
 
 createConnection().then(async connection => {
-    const participantService = new p.ParticipantService(connection, cacheHost)
-    const friendService = new f.FriendService(connection, cacheHost)
+    const redis = createClient({ host: cacheHost })
+    const participantService = new p.ParticipantService(connection, redis)
+    const friendService = new f.FriendService(connection, redis)
     const inboundService = new i.InboundService(nosqlHost)
     const outboundService = new o.OutboundService(nosqlHost, friendService, inboundService)
     const resolvers = {
@@ -109,7 +112,7 @@ createConnection().then(async connection => {
       resolvers
     })
 
-    server.start(() => console.log('Server is running on http://localhost:4000'))
+    server.start(() => console.log('Server is running on http://localhost:8080'))
 }).catch(error => {
     console.log(error)
 })

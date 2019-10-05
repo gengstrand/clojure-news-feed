@@ -1,6 +1,7 @@
-import * as sql from './sqldb'
+import {Repository} from './sqldb'
 import {Participant} from './entity/participant'
-import {Connection} from "typeorm";
+import {Connection} from 'typeorm';
+import {RedisClient} from 'redis'
 
 export class ParticipantModel {
    readonly id: number
@@ -11,15 +12,23 @@ export class ParticipantModel {
    }
 }
 
-export class ParticipantService extends sql.Repository {
-   constructor(connection: Connection, cacheHost: string) {
-      super(connection, cacheHost)
+export class ParticipantService extends Repository {
+   constructor(connection: Connection, cache: RedisClient) {
+      super(connection, cache)
    }
 
    public async get(id: number): Promise<ParticipantModel> {
-       let r = this.connection.getRepository(Participant);
-       let dbp = await r.findOne(id)
-       return new ParticipantModel(id, dbp.Moniker)
+       const key = 'Participant::'.concat(id.toString())
+       const reply = await this.cache.get(key)
+       if (reply == null) {
+       	   let r = this.connection.getRepository(Participant);
+       	   let dbp = await r.findOne(id)
+	   this.cache.set(key, JSON.stringify({ id: id, name: dbp.Moniker }))
+       	   return new ParticipantModel(id, dbp.Moniker)
+       } else {
+	   const p = JSON.parse(reply)
+	   return new ParticipantModel(p.id, p.name)
+       }
    }
 
    public async save(p: ParticipantModel): Promise<ParticipantModel> {
