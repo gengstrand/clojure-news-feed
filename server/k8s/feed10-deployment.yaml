@@ -1,0 +1,27 @@
+apiVersion: apps/v1beta2
+kind: Deployment
+metadata:
+  name: feed
+spec:
+  replicas: 1
+  strategy:
+    type: Recreate
+  selector:
+    matchLabels:
+      app: feed
+  template:
+    metadata:
+      labels:
+        app: feed
+    spec:
+      containers:
+      - name: feed
+        envFrom:
+        - configMapRef:
+            name: feed-config
+        image: feed10:1.0
+        ports:
+        - containerPort: 8080
+        imagePullPolicy: Never
+      restartPolicy: Always
+
