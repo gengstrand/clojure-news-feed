@@ -1,7 +1,7 @@
 import {ParticipantModel} from './participant'
 import {Repository} from './sqldb'
 import {Friends} from './entity/friend'
-import {Connection} from "typeorm";
+import {Connection} from 'typeorm'
 import {RedisClient} from 'redis'
 
 export class FriendModel {

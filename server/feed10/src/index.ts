@@ -3,9 +3,10 @@ import * as p from './participant'
 import * as f from './friend'
 import * as i from './inbound'
 import * as o from './outbound'
-import {createConnection, Connection} from "typeorm";
+import {createConnection, Connection} from 'typeorm'
 import {RedisClient} from 'redis'
 import {createClient} from 'then-redis'
+import { Client } from 'cassandra-driver'
 
 const typeDefs = `
 type Inbound {
@@ -56,15 +57,21 @@ type Mutation {
     createOutbound(input: CreateOutboundRequest): Outbound
 }
 `
-let cacheHost = process.env.REDIS_HOST
-let nosqlHost = process.env.NOSQL_HOST
+const cacheHost = process.env.REDIS_HOST
+const nosqlHost = process.env.NOSQL_HOST
 
 createConnection().then(async connection => {
     const redis = createClient({ host: cacheHost })
+    const cassandra = new Client({
+      contactPoints: [ nosqlHost ],
+      localDataCenter: 'datacenter1',
+      keyspace: 'activity'
+    })
+    await cassandra.connect()
     const participantService = new p.ParticipantService(connection, redis)
     const friendService = new f.FriendService(connection, redis)
-    const inboundService = new i.InboundService(nosqlHost)
-    const outboundService = new o.OutboundService(nosqlHost, friendService, inboundService)
+    const inboundService = new i.InboundService(cassandra)
+    const outboundService = new o.OutboundService(cassandra, friendService, inboundService)
     const resolvers = {
       Query: {
         participant: (_, { id }) => ({ id }),
@@ -81,8 +88,8 @@ createConnection().then(async connection => {
         friends: async ({ id }) => {
           return await friendService.get(id)
         },
-        inbound: ({ id }) => {
-          return inboundService.get(id)
+        inbound: async ({ id }) => {
+          return await inboundService.get(id)
         },
         outbound: ({ id }) => {
           return outboundService.get(id)

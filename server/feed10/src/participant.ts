@@ -1,6 +1,6 @@
 import {Repository} from './sqldb'
 import {Participant} from './entity/participant'
-import {Connection} from 'typeorm';
+import {Connection} from 'typeorm'
 import {RedisClient} from 'redis'
 
 export class ParticipantModel {

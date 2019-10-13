@@ -17,11 +17,59 @@ npm install
 ```bash
 npm run dev
 ```
+## Running the service
 
-## Running the service locally
+How to run the service for dev purposes.
+
+### Locally
+
+You will need to change the configuration to point to local data stores.
 
 ```bash
 npm run start
+```
+
+### Kubernetes
+
+```bash
+docker build -t feed10:1.0
+cd ../k8s
+kubectl create -f feed10-deployment.yaml
+```
+
+## Testing the service
+
+```bash
+curl \
+  -X POST \
+  -H "Content-Type: application/json" \
+  --data '{ "query": "mutation { createParticipant(input: {name: \"k8s\"}) { id } }"}' \
+  $FEED_URL
+
+curl \
+  -X POST \
+  -H "Content-Type: application/json" \
+  --data '{ "query": "mutation { createParticipant(input: {name: \"graphql\"}) { id } }"}' \
+  $FEED_URL
+
+curl \
+  -X POST \
+  -H "Content-Type: application/json" \
+  --data '{ "query": "mutation { createFriend(input: {from_id: 1, to_id: 2}) { to { id } } }"}' \
+  $FEED_URL
+
+curl \
+  -X POST \
+  -H "Content-Type: application/json" \
+  --data '{ "query": "mutation { createOutbound(input: {from_id: 1, occurred: \"2019-09-12\", subject: \"test subject\", story: \"test story\"}) { from { id } } }" }' \
+  $FEED_URL
+
+curl \
+  -X POST \
+  -H "Content-Type: application/json" \
+  --data '{ "query": "query { participant(id: 2) { inbound { subject } } }"}' \
+  $FEED_URL
+  
 ```
 
 ## Contributing

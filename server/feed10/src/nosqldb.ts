@@ -1,6 +1,8 @@
+import { Client } from 'cassandra-driver'
+
 export class Repository {
-   private nosqlHost: string
-   constructor(nosqlHost: string) {
-      this.nosqlHost = nosqlHost
+   protected nosqlClient: Client
+   constructor(nosqlClient: Client) {
+      this.nosqlClient = nosqlClient
    }
 }
