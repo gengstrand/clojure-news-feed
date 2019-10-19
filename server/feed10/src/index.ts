@@ -3,6 +3,7 @@ import * as p from './participant'
 import * as f from './friend'
 import * as i from './inbound'
 import * as o from './outbound'
+import { SearchService } from './elastic'
 import {createConnection, Connection} from 'typeorm'
 import {RedisClient} from 'redis'
 import {createClient} from 'then-redis'
@@ -59,6 +60,8 @@ type Mutation {
 `
 const cacheHost = process.env.REDIS_HOST
 const nosqlHost = process.env.NOSQL_HOST
+const searchHost = process.env.SEARCH_HOST
+const searchPath = process.env.SEARCH_PATH
 
 createConnection().then(async connection => {
     const redis = createClient({ host: cacheHost })
@@ -71,13 +74,13 @@ createConnection().then(async connection => {
     const participantService = new p.ParticipantService(connection, redis)
     const friendService = new f.FriendService(connection, redis)
     const inboundService = new i.InboundService(cassandra)
-    const outboundService = new o.OutboundService(cassandra, friendService, inboundService)
+    const searchService = new SearchService(searchHost, searchPath)
+    const outboundService = new o.OutboundService(cassandra, participantService, friendService, inboundService, searchService)
     const resolvers = {
       Query: {
         participant: (_, { id }) => ({ id }),
         posters: (_, { keywords }) => {
-          const returnValue = `posters $keywords`
-          return returnValue
+          return outboundService.search(keywords)
         },
       },
       Participant: {
@@ -85,11 +88,11 @@ createConnection().then(async connection => {
           let retVal = await participantService.get(id)
           return retVal.name
         },
-        friends: async ({ id }) => {
-          return await friendService.get(id)
+        friends: ({ id }) => {
+          return friendService.get(id)
         },
-        inbound: async ({ id }) => {
-          return await inboundService.get(id)
+        inbound: ({ id }) => {
+          return inboundService.get(id)
         },
         outbound: ({ id }) => {
           return outboundService.get(id)
