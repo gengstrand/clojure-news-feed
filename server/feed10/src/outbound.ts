@@ -53,8 +53,8 @@ export class OutboundService extends nosql.Repository {
 
    public async search(term: string): Promise<p.ParticipantModel[]> {
       const results = await this.searchService.search(term)
-      return results.map((id) => {
-         return this.participantService.get(id)
-      })
+      return Promise.all(results.map(async (id) => {
+         return await this.participantService.get(id)
+      }))
    }
 }

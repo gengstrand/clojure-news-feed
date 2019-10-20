@@ -69,6 +69,12 @@ curl \
   -H "Content-Type: application/json" \
   --data '{ "query": "query { participant(id: 2) { inbound { subject } } }"}' \
   $FEED_URL
+
+curl \
+  -X POST \
+  -H "Content-Type: application/json" \
+  --data '{ "query": "query { posters(keywords: \"test\") { name } }"}' \
+  $FEED_URL
   
 ```
 

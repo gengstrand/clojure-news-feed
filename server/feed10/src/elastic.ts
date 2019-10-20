@@ -7,23 +7,23 @@ export class SearchService {
        this.host = host
        this.path = path
    }
-   public async index(from: number, story: string): Promise<Any> {
+   public async index(from: number, story: string) {
      const entropy = Math.random() * 1000000
      const key = Date.now().toString().concat('-').concat(entropy.toString());
      const doc = JSON.stringify({ 'id': key, 'sender': from, 'story': story });
      const options = {
-	uri: this.host + ':9200' + this.path.concat('/').concat(from).concat('-').concat(key), 
+	uri: 'http://' + this.host + ':9200' + this.path.concat('/').concat(from.toString()).concat('-').concat(key), 
 	body: doc, 
 	headers: {
 	    'Content-type': 'application/json',
 	    'Content-Length': Buffer.byteLength(doc)
 	}
      }
-     return request.put(options)
+     request.put(options)
    }
    public async search(terms: string): Promise<number[]> {
-     const options = {     
-	uri: this.host + ':9200' + this.path.concat('/_search?q=').concat(terms), 
+     const options = {
+	uri: 'http://' + this.host + ':9200' + this.path.concat('/_search?q=').concat(terms), 
 	headers: {
 	    'Content-type': 'application/json',
 	    'accept': 'application/json'
