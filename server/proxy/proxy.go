@@ -3,11 +3,14 @@ package main
 import (
     "io"
     "log"
-    "net/http"
+    "fmt"
     "time"
     "bytes"
-    "encoding/json"
+    "regexp"
+    "strings"
+    "net/http"
     "io/ioutil"
+    "encoding/json"
 )
 
 type HttpLogRequest struct {
@@ -29,8 +32,27 @@ type HttpLog struct {
     Latencies HttpLogLatencies      `json:"latencies"`
 }
 
-func makePerfLogEntry(path string, method string, status int, duration int64) HttpLog {
-    req := HttpLogRequest{path, method}
+func isGraphQl(path string, method string) bool {
+    if &path == nil || strings.Compare("/", path) == 0 {
+       if &method == nil || strings.Compare(strings.ToUpper(method), "POST") == 0 {
+          return true
+       }
+    }
+    return false
+}
+
+var graphQlMatcher = regexp.MustCompile(`mutation.*create([A-Z][a-z]+)\(`)
+
+func makePerfLogEntry(path string, method string, body string, status int, duration int64) HttpLog {
+    var req HttpLogRequest
+    if isGraphQl(path, method) {
+       m := graphQlMatcher.FindStringSubmatch(body)
+       if &m != nil && len(m) > 1 {
+          req = HttpLogRequest{fmt.Sprintf("/%s/new", strings.ToLower(m[1])), method}
+       }
+    } else {
+       req = HttpLogRequest{path, method}
+    }
     resp := HttpLogResponse{status}
     lat := HttpLogLatencies{duration}
     return HttpLog{req, resp, lat}
@@ -65,6 +87,12 @@ func handlePerfLog() {
 }
 
 func handleHTTP(w http.ResponseWriter, req *http.Request) {
+    var body string 
+    if isGraphQl(req.URL.Path, req.Method) {
+       b, _ := ioutil.ReadAll(req.Body)
+       body = string(b)
+       req.Body = ioutil.NopCloser(bytes.NewBuffer(b))
+    }
     req.Host = "feed:8080"
     req.URL.Host = "feed:8080"
     req.URL.Scheme = "http"
@@ -75,7 +103,7 @@ func handleHTTP(w http.ResponseWriter, req *http.Request) {
         http.Error(w, err.Error(), http.StatusServiceUnavailable)
         return
     }
-    activity <- makePerfLogEntry(req.URL.Path, req.Method, resp.StatusCode, int64(after.Sub(before)) / 1000000)
+    activity <- makePerfLogEntry(req.URL.Path, req.Method, body, resp.StatusCode, int64(after.Sub(before)) / 1000000)
     defer resp.Body.Close()
     copyHeader(w.Header(), resp.Header)
     w.WriteHeader(resp.StatusCode)

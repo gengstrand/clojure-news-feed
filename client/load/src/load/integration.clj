@@ -83,6 +83,7 @@
   []
   (core/set-feed-host (System/getenv "FEED_HOST") (System/getenv "FEED_PORT"))
   (core/set-json-post (= (System/getenv "USE_JSON") "true"))
+  (core/set-graphql (= (System/getenv "USE_GRAPHQL") "true"))
   (log/info "about to create participants")
   (try 
     (let [from-id (core/test-create-participant from-name)

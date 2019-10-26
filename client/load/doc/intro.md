@@ -1,28 +1,69 @@
-# Introduction to load
+# Introduction to test automation
 
-This is the load test application used to gain performance insight into the Clojure news feed service.
+This is the test automation application used to both assure functional correctness and to gain performance insight into each news feed microservice.
 
 ## usage
 
-cd ~/git/clojure-news-feed/client/load
+The load test was designed to work both as a Kubernetes job or just from your local laptop while developing.
 
-edit the host and port variables in src/load/handler.clj
+### building for local run
 
-If you wish, then you can edit any or all of the global variables near the top of src/load/core.clj
-
+```bash
+cd ../load
 lein uberjar
+```
 
-java -jar target/load-0.1.0-SNAPSHOT-standalone.jar concurrent-users percent-searches
+### building for docker run
 
-where concurrent-users controls the number of threads running the load test simultaneously
+```bash
+docker build -t load:1.2 .
+```
 
-percent-searches controls what percentage of thse concurrent-user threads will be running the keyword search
+### running the load test locally
 
-For my load test run, I used 100 concurrent users running the search test 10 percent of the time
+```bash
+java -jar target/load-0.1.0-SNAPSHOT-standalone.jar host port concurrent-users percent-searches use-json use-graphql
+```
 
-In order to capture the performance metrics, you will need to collect the kafka topic messages into a file.
+Where host and port identifies how to connect to the feed service being tested.
 
-bin/kafka-console-consumer.sh --zookeeper localhost:2181 --topic feed --from-beginning >perf.log
+Concurrent-users controls the number of threads running the load test simultaneously.
 
+Percent-searches controls what percentage of thse concurrent-user threads will be running the keyword search.
 
+If use-json is present, then request bodies will be in application/json format.
+
+If use-graphql is present, then the graphql protocol will be used.
+
+### running the load test as a Kubernetes job
+
+```bash
+cd ../k8s
+kubectl create -f load_test.yaml
+```
+
+### running the integration test
+
+```bash
+kubectl get pods | awk '/cassandra/{ printf "kubectl port-forward %s 9042:9042 &\n", $1 }' | sh
+export CASSANDRA_HOST=127.0.0.1
+export CASSANDRA_PORT=9042
+kubectl get pods | awk '/mysql/{ printf "kubectl port-forward %s 3306:3306 &\n", $1 }' | sh
+export MYSQL_HOST=127.0.0.1
+export MYSQL_PORT=3306
+export MYSQL_USER=feed
+export MYSQL_PASSWORD=feed1234
+kubectl get pods | awk '/redis/{ printf "kubectl port-forward %s 6379:6379 &\n", $1 }' | sh
+export REDIS_HOST=127.0.0.1
+export REDIS_PORT=6379
+kubectl get pods | awk '/elasticsearch/{ printf "kubectl port-forward %s 9200:9200 &\n", $1 }' | sh
+export ELASTIC_HOST=127.0.0.1
+export ELASTIC_PORT=9200
+kubectl get pods | awk '/feed/{ printf "kubectl port-forward %s 8080:8080 &\n", $1 }' | sh
+export FEED_HOST=127.0.0.1
+export FEED_PORT=8080
+export USE_JSON=true
+export USE_GRAPHQL=false
+java -jar target/load-0.1.0-SNAPSHOT-standalone.jar --integration-test
+```
 
