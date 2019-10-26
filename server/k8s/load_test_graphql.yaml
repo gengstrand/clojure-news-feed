@@ -1,0 +1,51 @@
+apiVersion: v1
+kind: Service
+metadata:
+  name: load-test
+  labels:
+    app: load-test
+spec:
+  type: LoadBalancer
+  ports:
+  - name: "8080"
+    port: 8080
+    targetPort: 8080
+  selector:
+    app: load-test
+---
+apiVersion: apps/v1beta2
+kind: Deployment
+metadata:
+  name: load-test
+spec:
+  replicas: 1
+  strategy:
+    type: Recreate
+  selector:
+    matchLabels:
+      app: load-test
+  template:
+    metadata:
+      labels:
+        app: load-test
+    spec:
+      containers:
+      - name: load-test
+        image: gengstrand/load:1.2
+        env:
+          - name: FEED_HOST
+            value: "kong-proxy"
+          - name: FEED_PORT
+            value: "8000"
+          - name: CONCURRENT_USERS
+            value: "3"
+          - name: PERCENT_SEARCHES
+            value: "10"
+          - name: USE_GRAPHQL
+            value: "true"
+          - name: USE_JSON
+            value: "true"
+        ports:
+        - containerPort: 8080
+        imagePullPolicy: Always
+      restartPolicy: Always
