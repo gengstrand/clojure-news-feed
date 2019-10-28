@@ -1,3 +1,5 @@
+import * as os from 'os'
+import * as cluster from 'cluster'
 import { GraphQLServer } from 'graphql-yoga'
 import * as p from './participant'
 import * as f from './friend'
@@ -7,68 +9,81 @@ import { SearchService } from './elastic'
 import {createConnection, Connection} from 'typeorm'
 import {RedisClient} from 'redis'
 import {createClient} from 'then-redis'
-import { Client } from 'cassandra-driver'
+import { Client, types } from 'cassandra-driver'
 
-const typeDefs = `
-type Inbound {
+if (cluster.isMaster) {
+  console.log(`Master ${process.pid} started`)
+  const numberOfCores = os.cpus().length
+  for (let i = 0; i < numberOfCores; i++) {
+    cluster.fork();
+  }
+} else {
+  const typeDefs = `
+  type Inbound {
     from: Participant
     to: Participant
     occurred: String
     subject: String
     story: String
-}
-type Outbound {
+  }
+  type Outbound {
     from: Participant
     occurred: String
     subject: String
     story: String
-}
-type Friend {
+  }
+  type Friend {
     from: Participant
     to: Participant
-}
-type Participant {
+  }
+  type Participant {
     id: ID!
     name: String
     friends: [Friend]
     inbound: [Inbound]
     outbound: [Outbound]
-}
-type Query {
+  }
+  type Query {
     participant(id: ID!): Participant
     posters(keywords: String!): [Participant]
-}
-input CreateParticipantRequest {
+  }
+  input CreateParticipantRequest {
     name: String
-}
-input CreateFriendRequest {
+  }
+  input CreateFriendRequest {
     from_id: ID!
     to_id: ID!
-}
-input CreateOutboundRequest {
+  }
+  input CreateOutboundRequest {
     from_id: ID!
     occurred: String
     subject: String
     story: String
-
-}
-type Mutation {
+  }
+  type Mutation {
     createParticipant(input: CreateParticipantRequest): Participant
     createFriend(input: CreateFriendRequest): Friend
     createOutbound(input: CreateOutboundRequest): Outbound
-}
+  }
 `
-const cacheHost = process.env.REDIS_HOST
-const nosqlHost = process.env.NOSQL_HOST
-const searchHost = process.env.SEARCH_HOST
-const searchPath = process.env.SEARCH_PATH
+  const cacheHost = process.env.REDIS_HOST
+  const nosqlHost = process.env.NOSQL_HOST
+  const searchHost = process.env.SEARCH_HOST
+  const searchPath = process.env.SEARCH_PATH
+  const distance = types.distance
 
-createConnection().then(async connection => {
+  createConnection().then(async connection => {
     const redis = createClient({ host: cacheHost })
     const cassandra = new Client({
       contactPoints: [ nosqlHost ],
       localDataCenter: 'datacenter1',
-      keyspace: 'activity'
+      keyspace: 'activity',
+      pooling: {
+         coreConnectionsPerHost: {
+            [distance.local]: 4,
+            [distance.remote]: 2
+         } 
+      }
     })
     await cassandra.connect()
     const participantService = new p.ParticipantService(connection, redis)
@@ -123,7 +138,7 @@ createConnection().then(async connection => {
     })
 
     server.start(() => console.log('Server is running on http://localhost:8080'))
-}).catch(error => {
+  }).catch(error => {
     console.log(error)
-})
-
+  })
+}

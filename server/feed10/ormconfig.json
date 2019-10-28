@@ -5,8 +5,11 @@
    "username": "feed",
    "password": "feed1234",
    "database": "feed",
-   "synchronize": true,
+   "synchronize": false,
    "logging": false,
+   "extra": {
+      "connectionLimit": 18
+   }, 
    "entities": [
       "src/entity/**/*.ts"
    ],

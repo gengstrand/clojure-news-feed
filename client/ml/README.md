@@ -19,6 +19,8 @@ The etl folder contains scripts used to extract the performance data from elasti
 After running each load test, you can extract the performance data out of elasticsearch with this command.
 
 ```bash
+pip install python-dateutil
+pip install elasticsearch
 python extract.py feed cloud elasticsearch >rawdata.csv
 ```
 
