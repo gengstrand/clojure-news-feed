@@ -2,10 +2,6 @@
 
 This time, I am exploring [GraphQL](https://graphql.org/) by implementing the news feed on [graphql-yoga](https://github.com/prisma/graphql-yoga) which allows you to write your code in typescript which runs on node.js
 
-## Status
-
-This microservice is feature complete and passing the functional tests. The performance test is not so great. Average per minute throughput is 6698. Average latency is 6 ms. Mean latency is 3 ms, 95th percentile is 26 ms and 99th percentile is 44 ms. Basically, latency kept climbing and throughput kept falling lineraly throughout the entire 1.5 hour test run.
-
 ## Initial Setup
 
 ```bash
@@ -81,6 +77,28 @@ curl \
   --data '{ "query": "query { posters(keywords: \"test\") { name } }"}' \
   $FEED_URL
   
+```
+
+## Load Test Results
+
+Average per minute throughput of outbound posts is 9,817. Average latency is 5 ms. Mean latency is 4 ms, 95th percentile is 8 ms and 99th percentile is 15 ms. This excerpt from the profile suggests that the graphql components do have some overhead.
+
+```
+ [Bottom up (heavy) profile]:
+  Note: percentage shows a share of a particular caller in the total
+  amount of its parent calls.
+  Callers occupying less than 1.0% are not shown.
+
+   ticks parent  name
+  15943    3.0%  LoadIC: A load IC from the snapshot
+   1144    7.2%    LazyCompile: *leave /usr/app/node_modules/graphql/language/visitor.js:337:26
+    773   67.6%      LazyCompile: *leave /usr/app/node_modules/graphql/language/visitor.js:388:26
+    773  100.0%        LazyCompile: *visit /usr/app/node_modules/graphql/language/visitor.js:154:15
+    765   99.0%          LazyCompile: *validate /usr/app/node_modules/graphql/validation/validate.js:48:18
+    765  100.0%            LazyCompile: *doRunQuery /usr/app/node_modules/apollo-server-core/dist/runQuery.js:44:20
+      8    1.0%          LazyCompile: ~validate /usr/app/node_modules/graphql/validation/validate.js:48:18
+      7   87.5%            LazyCompile: *doRunQuery /usr/app/node_modules/apollo-server-core/dist/runQuery.js:44:20
+      1   12.5%            LazyCompile: ~doRunQuery /usr/app/node_modules/apollo-server-core/dist/runQuery.js:44:20
 ```
 
 ## Contributing

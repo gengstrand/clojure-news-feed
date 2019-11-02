@@ -3,12 +3,13 @@
   "version": "1.0.0",
   "description": "graphql news-feed in typescript",
   "main": "index.ts",
-  "scripts": {
-    "start": "ts-node src/index.ts",
-    "dev": "npm-run-all --parallel start playground",
-    "playground": "graphql playground",
-    "test": "ts-node node_modules/jasmine/bin/jasmine --config=jasmine.json",
-    "coverage": "nyc -r text -e .ts -x \"tests/*.test.ts\" npm run test"
+    "scripts": {
+	"profile": "node -r ts-node/register --prof src/index.ts",
+	"start": "ts-node src/index.ts",
+	"dev": "npm-run-all --parallel start playground",
+	"playground": "graphql playground",
+	"test": "ts-node node_modules/jasmine/bin/jasmine --config=jasmine.json",
+	"coverage": "nyc -r text -e .ts -x \"tests/*.test.ts\" npm run test"
   },
   "compilerOptions": {
     "types": [
