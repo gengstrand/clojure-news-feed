@@ -81,7 +81,7 @@ curl \
 
 ## Load Test Results
 
-Average per minute throughput of outbound posts is 9,817. Average latency is 5 ms. Mean latency is 4 ms, 95th percentile is 8 ms and 99th percentile is 15 ms. This excerpt from the profile suggests that the graphql components do have some overhead.
+Average per minute throughput of outbound posts is 9,817. Mean latency is 5 ms. Median latency is 4 ms, 95th percentile is 8 ms and 99th percentile is 15 ms. This excerpt from the profile suggests that the graphql components do have some overhead.
 
 ```
  [Bottom up (heavy) profile]:
