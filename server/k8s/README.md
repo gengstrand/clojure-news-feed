@@ -4,51 +4,9 @@ Introduction on how to run the news feed service in Kubernetes.
 
 <img src="components.png" />
 
-## minikube
+## running on local Kubernetes
 
-For developer purposes, I am using [minikube](https://github.com/kubernetes/minikube) on a Linux laptop. The commands to start up minikube may be different for you.
-
-```shell
-minikube start --vm-driver=kvm2
-eval $(minikube docker-env)
-```
-If you get an error like this...
-
-Requested operation is not valid: network 'minikube-net' is not active
-
-...then try this...
-
-```shell
-virsh
-net-start minikube-net
-```
-
-### setting up the dependencies
-
-I have written some scripts and configuration files to get the dependent services running. 
-
-#### starting up the cluster
-
-The setup script should work on any Kubernetes cluster. Alternatively, you can provide a use_cluster_ip parameter if you do not want to use the kube-dns cabality. You have to run this scipt only once (unless you delete services and deployments). 
-
-```shell
-cd clojure-news-feed/server/k8s
-./setup.sh
-```
-
-#### initializing the dependent services
-
-You have two alternatives here. You can either run a kubernetes job or a minikube specific script. Here is the kubernetes job. You need to perform this step every time you start up minikube.
-
-```shell
-kubectl create -f init-cluster.yaml
-```
-
-Here is the minikube specific script approach. You will need to have installed minikube, kubectl, mysql and cqlsh and that they are available in your $PATH environment. You may need to wait a few minutes after starting minikube before you run that initMinikube.sh script.
-
-```shell
-./initMinikube.sh
-```
+Learn how to run Kubernetes locally using either minikube, microk8s, or kind [here](https://github.com/gengstrand/clojure-news-feed/blob/master/server/k8s/doc/intro.md)
 
 ### building the service
 
@@ -61,7 +19,7 @@ docker build -t feed4:1.0 .
 
 ### running the service
 
-Note that the feed-deployment.yaml file gets overwritten by the setup.sh script and deploys what we just built. The feed-deployment.yaml file deploys feed4. There are other feed deployment manifests in this folder for deploying any version of the feed service that you are interested in but you have to edit them if you want to run what you built locally.
+There are other feed deployment manifests in this folder for deploying any version of the feed service that you are interested in but you have to edit them if you want to run what you built locally. See the kubectl commands near the bottom of this topic for launching and initializing Redis, MySql, Cassandra, and Elasticsearch.
 
 ```shell
 cd ../k8s
@@ -71,11 +29,9 @@ kubectl create -f feed-deployment.yaml
 ```
 ### testing the service
 
-This is also minikube specific.
+This shell script demonstrates how to call feeds 3 - 9 for a basic end-to-end test which includes creating two participants, friending them, posting a news feed item on one friend's outbound feed, querying the other friend's inbound feed, and keyword based search. See [here](https://github.com/gengstrand/clojure-news-feed/blob/master/server/feed/doc/intro.md) for how to test feeds 1 and 2 and [here](https://github.com/gengstrand/clojure-news-feed/blob/master/server/feed10/README.md) for how to test feed 10.
 
 ```shell
-FEED_URL=$(minikube service feed --url)
-
 curl -H "Content-Type: application/json" -d '{"name":"testing dropwizard"}' ${FEED_URL}/participant/new
 
 curl -H "Content-Type: application/json" -d '{"name":"testing minikube"}' ${FEED_URL}/participant/new
@@ -99,8 +55,7 @@ not easy to set up in Kubernetes. I switched to a different approach where the l
 makes all of its calls through a full reverse proxy which also sends performance data to another
 microservice which prepares it for ingestion into elasticsearch in a kibana friendly way.
 
-I don't recommend running the load test in minikube as it pretty much overwhelms it. You should most
-probably conduct load tests on a real Kubernetes cluster.
+I don't recommend running the load test in local Kubernetes as it will pretty much overwhelm your laptop. You should most probably conduct load tests on a real Kubernetes cluster.
 
 ### Optional Kong Integration
 
@@ -205,7 +160,7 @@ kubectl apply -f aws-auth-cm.yaml
 
 ### Spinning up the Services
 
-Once you have provisioned your cluster on the Public Cloud vendor of choice, you can proceed with the cloud vendor neutral Kubernetes commands. 
+Whether you have provisioned your cluster on the Public Cloud vendor of choice or running a local version of Kubernetes, you can proceed with the cloud vendor neutral Kubernetes commands. 
 
 ```
 kubectl create -f cassandra-service.yaml
