@@ -76,6 +76,12 @@ News feed microservice implemented in golang.
 
 http://glennengstrand.info/software/architecture/microservice/golang
 
+### feed 10
+
+News feed microservice implemented in TypeScript and GraphQL
+
+http://glennengstrand.info/software/architecture/microservice/graphql
+
 ### solr
 
 The supporting directory structure and configuration files needed to augment an instance of Solr to support keyword search capability for the news feed on outbound activity.
