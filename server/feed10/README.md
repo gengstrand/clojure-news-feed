@@ -1,8 +1,8 @@
 # graphql version of news feed 
 
-This time, I am exploring [GraphQL](https://graphql.org/) by implementing the news feed on [graphql-yoga](https://github.com/prisma/graphql-yoga) which allows you to write your code in typescript which runs on node.js
+This time, I am exploring [GraphQL](https://graphql.org/) by implementing the news feed on [graphql-yoga](https://github.com/prisma/graphql-yoga) which allows you to write your code in TypeScript which runs on Node.js
 
-I blogged about this here.
+I blogged about this implementation here.
 
 http://glennengstrand.info/software/architecture/microservice/graphql
 
