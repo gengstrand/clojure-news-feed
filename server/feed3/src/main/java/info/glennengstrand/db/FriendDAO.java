@@ -1,6 +1,8 @@
 package info.glennengstrand.db;
 
 import java.util.List;
+import java.util.stream.Collectors;
+
 import org.skife.jdbi.v2.DBI;
 
 import com.google.inject.Inject;
@@ -11,7 +13,8 @@ public class FriendDAO extends RelationalDAO<Friend> {
 
 	public List<Friend> fetchFriend(Long id) {
 		info.glennengstrand.db.FriendMapper mapper = new info.glennengstrand.db.FriendMapper(id);
-		return fetchMulti("call FetchFriends(:id)", mapper, q -> q.bind("id", id));
+		List<Friend> retVal = fetchMulti("call FetchFriends(:id)", mapper, q -> q.bind("id", id));
+		return retVal.stream().distinct().collect(Collectors.toList());
 	}
 	
 	public long upsertFriend(Long from, Long to) {

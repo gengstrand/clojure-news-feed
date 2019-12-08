@@ -130,8 +130,8 @@
 (defn load-friends-from-db 
   "fetch the friends for this participant from the db"
   [id]
-    (j/query (db/connection) [db/load-friends-from-db-command id]
-      :row-fn #(Friend. (:friendsid %) id (:participantid %))))
+    (distinct (j/query (db/connection) [db/load-friends-from-db-command id]
+                :row-fn #(Friend. (:friendsid %) id (:participantid %)))))
 
 (defn save-friend-to-db 
   "store this friend relationship to the db"

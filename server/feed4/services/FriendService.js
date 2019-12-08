@@ -67,11 +67,12 @@ exports.getFriend = function(args, callback) {
 			      'from':args.id.value,
 			      'to':row['ParticipantID']};
 		      });
-		      const retVal = JSON.stringify(result || {});
+		      const rv = Array.from(new Set(result));
+		      const retVal = JSON.stringify(rv || {});
 		      cache.set(key, retVal);
 		      conn.release();
 		      cache.quit();
-		      callback(null, result);
+		      callback(null, rv);
 		  });
 	      });
 	  } else {

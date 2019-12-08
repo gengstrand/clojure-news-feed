@@ -38,7 +38,7 @@ class FriendService(CachingService):
         retVal = self.get(k)
         if retVal is None:
             f = FriendDAO.fetch(fromFriend)
-            retVal = list(map(self.to_dict, f))
+            retVal = list(map(self.to_dict, set(f)))
             self.set(k, retVal)
             f.session.close()
         after = int(round(time.time() * 1000))

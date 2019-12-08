@@ -28,7 +28,12 @@ class OutboundService:
         o.save()
         friends = list(map(Friend.from_dict, friendService.search(outbound._from)))
         for friend in friends:
-            inboundService.insert(Inbound(friend._from, friend.to, outbound.occurred, outbound.subject, outbound.story)) 
+            f1 = friend._from
+            f2 = friend.to
+            if f2 == outbound._from:
+                f1 = friend.to
+                f2 = friend._from
+            inboundService.insert(Inbound(f1, f2, outbound.occurred, outbound.subject, outbound.story)) 
         elastic.create(outbound._from, outbound.story)
         after = int(round(time.time() * 1000))
         messages.log('outbound', 'post', after - before)

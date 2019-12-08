@@ -54,6 +54,7 @@ func (dbw MySqlWrapper) FetchFriends(id string)([]Friend, error) {
 	   return nil, err
 	}
 	defer rows.Close()
+	pids := make(map[int64]int64)
 	var fid int64
 	var pid int64
 	var results []Friend
@@ -63,12 +64,16 @@ func (dbw MySqlWrapper) FetchFriends(id string)([]Friend, error) {
 	       log.Printf("cannot fetch friend data: %s", err)
 	       return nil, err
 	    }
-	    f := Friend{
-	      Id: fid,
-	      From: i,
-	      To: pid,
+	    _, found := pids[pid]
+	    if !found {
+	      pids[pid] = pid
+	      f := Friend{
+	        Id: fid,
+	        From: i,
+	        To: pid,
+	      }
+	      results = append(results, f)
 	    }
-	    results = append(results, f)
 	}
 	return results, nil
 }

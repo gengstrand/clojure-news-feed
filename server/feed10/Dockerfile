@@ -10,4 +10,4 @@ COPY src /usr/app/src/
 ENV SEARCH_PATH /feed/stories
 ENV PORT 8080
 EXPOSE 8080
-CMD [ "npm", "run", "profile" ]
+CMD [ "npm", "run", "start" ]

@@ -20,7 +20,7 @@ class FriendService extends EntityService[Friend] {
     p match {
       case Some(v) => read[List[Friend]](v)
       case None => {
-        val retVal = dao.gets(id)
+        val retVal = dao.gets(id).distinct
         cache.set(k, write[List[Friend]](retVal))
         retVal
       }

@@ -1,4 +1,5 @@
 from flask_sqlalchemy import SQLAlchemy
+from sqlalchemy import or_
 
 db = SQLAlchemy()
 
@@ -10,7 +11,7 @@ class Friend(db.Model):
 
     @classmethod
     def fetch(cls, id):
-        return Friend.query.filter_by(FromParticipantID=id)
+        return Friend.query.filter(or_(Friend.FromParticipantID == id, Friend.ToParticipantID == id))
 
     def __init__(self, _from, to):
         self.FromParticipantID = _from

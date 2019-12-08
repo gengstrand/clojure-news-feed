@@ -25,12 +25,18 @@ export class FriendService extends Repository {
       const fp = new ParticipantModel(id, "")
       if (reply == null) {
       	 let r = this.connection.getRepository(Friends);
-      	 let dbr = await r.find({ FromParticipantID: id })
+      	 let dbr = await r.find({
+	    where: [
+	       { FromParticipantID: id },
+	       { ToParticipantID: id }
+	    ]
+	 })
       	 const fp = new ParticipantModel(id, "")
-      	 const retVal = dbr.map((dbf) => {
-            const tp = new ParticipantModel(dbf.ToParticipantID, "")
+      	 const rv = dbr.map((dbf) => {
+            const tp = dbf.FromParticipantID == id ? new ParticipantModel(dbf.ToParticipantID, "") : new ParticipantModel(dbf.FromParticipantID, "")
 	    return new FriendModel(dbf.FriendsID, fp, tp)
          })
+	 const retVal = Array.from(new Set(rv))
 	 this.cache.set(key, JSON.stringify(retVal))
 	 return retVal
       } else {

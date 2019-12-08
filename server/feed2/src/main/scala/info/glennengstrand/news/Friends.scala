@@ -104,10 +104,35 @@ class Friend(id: Int, fromParticipantID: Int, toParticipantID: Int) extends Frie
 /** collection representing all the friends of a particular participant */
 class Friends(id: Int, state: Iterable[Map[String, Any]]) extends Iterator[Friend] with MicroServiceSerializable {
   val i = state.iterator
-  def hasNext = i.hasNext
+  val s: scala.collection.mutable.Set[Long] = scala.collection.mutable.Set()
+  var prefetched: Option[Friend] = Option.empty
+  def hasNext = {
+    i.hasNext match {
+      case true => {
+        var keepGoing: Boolean = true
+        var retVal: Boolean = false
+        while (keepGoing) {
+          val kv = i.next()
+          var f = Friends.create(IO.convertToInt(kv("FriendsID")), id.toInt, IO.convertToInt(kv("ParticipantID")))
+          if (!s.contains(f.toParticipantID)) {
+            s.add(f.toParticipantID)
+            prefetched = Option(f)
+            retVal = true
+            keepGoing = false
+          } else {
+            keepGoing = i.hasNext
+          }
+        }
+        retVal
+      }
+      case _ => false
+    }
+  }
   def next() = {
-    val kv = i.next()
-    Friends.create(IO.convertToInt(kv("FriendsID")), id.toInt, IO.convertToInt(kv("ParticipantID")))
+    prefetched match {
+      case Some(f) => f
+      case _ => throw new IndexOutOfBoundsException()
+    }
   }
   override def toJson(factory: FactoryClass): String = {
     isEmpty match {

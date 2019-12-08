@@ -2,6 +2,7 @@ package info.glennengstrand.services;
 
 import java.util.List;
 import java.util.stream.Collectors;
+import java.util.stream.Stream;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -41,13 +42,18 @@ public class FriendsService implements FriendsApi {
 		if (template.hasKey(key)) {
 			return template.boundValueOps(key).get();
 		} else {
-			List<info.glennengstrand.dao.mysql.Friend> r = repository.findByFromParticipantId(id);
-			if (r.isEmpty()) {
+			List<info.glennengstrand.dao.mysql.Friend> r1 = repository.findByFromParticipantId(id);
+			List<info.glennengstrand.dao.mysql.Friend> r2 = repository.findByToParticipantId(id);
+			if (r1.isEmpty() && r2.isEmpty()) {
 				throw new NotFoundException(404, String.format("no friends for {}", id));
 			} else {
-				Friends retVal = r.stream().map(dbf -> {
+				Friends retVal1 = r1.stream().map(dbf -> {
 					return new Friend().id(dbf.getId()).from(dbf.getFromParticipantId()).to(dbf.getToParticipantId());
 				}).collect(Collectors.toCollection(() -> { return new Friends(); }));
+				Friends retVal2 = r2.stream().map(dbf -> {
+					return new Friend().id(dbf.getId()).from(dbf.getToParticipantId()).to(dbf.getFromParticipantId());
+				}).collect(Collectors.toCollection(() -> { return new Friends(); }));
+				Friends retVal = Stream.concat(retVal1.stream(), retVal2.stream()).distinct().collect(Collectors.toCollection(() -> { return new Friends(); }));
 				template.boundValueOps(key).set(retVal);
 				return retVal;
 			}
