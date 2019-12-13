@@ -36,7 +36,7 @@ assemblyMergeStrategy in assembly := {
   case PathList(ps @ _*) if ps.last endsWith ".html" => MergeStrategy.first
   case "application.conf" => MergeStrategy.concat
   case "unwanted.txt"     => MergeStrategy.discard
-  case x if x.contains("slf4j") || x.contains("log") => MergeStrategy.last
+  case x if x.contains("slf4j") || x.contains("log") || x.contains("codahale") => MergeStrategy.last
   case other => MergeStrategy.defaultMergeStrategy(other)
 }
 
@@ -54,6 +54,8 @@ libraryDependencies ++= Seq(
     "net.spy"	      		%	  "spymemcached"		    %	"2.12.1", 
   "com.twitter.finatra" %% "finatra-http" % versions.finatra,
   "com.twitter.finatra" %% "finatra-slf4j" % versions.finatra,
+  "com.fasterxml.jackson.module" %% "jackson-module-scala" % "2.9.8",
+  "com.fasterxml.jackson.core" % "jackson-databind" % "2.9.8", 
   "ch.qos.logback" % "logback-classic" % versions.logback,
   "ch.qos.logback" % "logback-classic" % versions.logback % "test",  
   "com.twitter.finatra" %% "finatra-http" % versions.finatra % "test",
