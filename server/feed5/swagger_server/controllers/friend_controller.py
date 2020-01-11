@@ -8,15 +8,18 @@ from ..util import deserialize_date, deserialize_datetime
 
 service = FriendService()
 
-def add_friend(body):
+def add_friend(id, body):
     """
     create a new friendship
     friends are those participants who receive news
+    :param id: uniquely identifies the participant
+    :type id: int
     :param body: friendship to be created
     :type body: dict | bytes
 
     :rtype: Friend
     """
+    body["_from"] = id
     return service.insert(Friend.from_dict(body))
     
 def get_friend(id):

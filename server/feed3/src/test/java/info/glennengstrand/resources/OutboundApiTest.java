@@ -27,6 +27,7 @@ import info.glennengstrand.resources.OutboundApi.OutboundApiService;
 import info.glennengstrand.core.MessageLogger;
 import info.glennengstrand.db.OutboundDAO;
 import info.glennengstrand.db.SearchDAO;
+import info.glennengstrand.util.Link;
 
 import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.when;
@@ -34,6 +35,7 @@ import static org.junit.Assert.*;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.stream.Collectors;
 
 import org.joda.time.DateTime;
 import org.junit.Before;
@@ -49,23 +51,23 @@ public class OutboundApiTest extends NewsFeedTestBase {
 	private Outbound outbound = null;
 	private SearchDAO esdao = new UnitTestSearchDAO();
 	private List<Outbound> outFeed = new ArrayList<Outbound>();
-	private List<Long> searchResults = new ArrayList<Long>();
+	private List<String> searchResults = new ArrayList<>();
 
 	@Before
 	public void setup() {
 		setupFriendSupport();
 		setupInboundSupport();
 		outbound = new Outbound.OutboundBuilder()
-				.withFrom(TEST_ID)
+				.withFrom(Link.toLink(TEST_FROM))
 				.withOccurred(new DateTime(System.currentTimeMillis()))
 				.withSubject(TEST_SUBJECT)
 				.withStory(TEST_STORY)
 				.build();
 		outFeed.add(outbound);
 		outDao = mock(OutboundDAO.class);
-		when(outDao.fetch(TEST_ID)).thenReturn(outFeed);
+		when(outDao.fetch(TEST_FROM)).thenReturn(outFeed);
 		api = new OutboundApiServiceImpl(outDao, inDao, friendApi, esdao, new MessageLogger.DoNothingMessageLogger());
-		searchResults.add(TEST_ID);
+		searchResults.add(Link.toLink(TEST_FROM));
 	}
 
 	/**
@@ -76,7 +78,7 @@ public class OutboundApiTest extends NewsFeedTestBase {
 	 */
 	@Test
 	public void addOutboundTest() {
-		assertTrue("Expected add outbound to return the input object but it did not.", api.addOutbound(outbound).equals(outbound));
+		assertTrue("Expected add outbound to return the input object but it did not.", api.addOutbound(TEST_FROM, outbound).equals(outbound));
 	}
 
 	/**
@@ -105,7 +107,7 @@ public class OutboundApiTest extends NewsFeedTestBase {
 
 		@Override
 		public List<Long> find(String keywords) {
-			return searchResults;
+			return searchResults.stream().map(p -> Link.extractId(p)).collect(Collectors.toList());
 		}
 
 		@Override

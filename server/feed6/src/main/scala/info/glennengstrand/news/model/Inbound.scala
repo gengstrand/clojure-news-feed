@@ -13,8 +13,8 @@ package info.glennengstrand.news.model
 import java.util.Date
 
 case class Inbound(
-  from: Option[Long],
-  to: Option[Long],
+  from: Option[String],
+  to: Option[String],
   occurred: Option[Date],
   subject: Option[String],
   story: Option[String])

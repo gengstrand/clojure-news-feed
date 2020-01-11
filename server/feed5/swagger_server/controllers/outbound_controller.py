@@ -8,16 +8,19 @@ from ..util import deserialize_date, deserialize_datetime
 
 service = OutboundService()
 
-def add_outbound(body):
+def add_outbound(id, body):
     """
     create a participant news item
     socially broadcast participant news
+    :param id: uniquely identifies the participant
+    :type id: int
     :param body: outbound news item
     :type body: dict | bytes
 
     :rtype: Outbound
     """
-    return service.insert(Outbound.from_dict(body))
+    body["_from"] = id
+    return service.insert(Outbound.from_dict(id, body))
     
 def get_outbound(id):
     """
@@ -32,12 +35,12 @@ def get_outbound(id):
     
 def search_outbound(keywords):
     """
-    create a participant news item
+    search outbound feed items for terms
     keyword search of participant news
     :param keywords: keywords to search for
     :type keywords: str
 
-    :rtype: List[int]
+    :rtype: List[str]
     """
     return service.search(keywords)
     

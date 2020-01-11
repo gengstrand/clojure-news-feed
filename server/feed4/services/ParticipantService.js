@@ -19,7 +19,7 @@ exports.addParticipant = function(args, callback) {
 	      return;
 	  }
 	  var result = rows[0].map(function(row) {
-	      return {'id':row['id'],'name':args.body.value.name};
+	      return {'id':row['id'],'name':args.body.value.name,'link':'/participant/'+row['id']};
 	  });
 	  conn.release();
 	  callback(null, result);
@@ -59,7 +59,7 @@ exports.getParticipant = function(args, callback) {
 			  return;
 		      }
 		      var result = rows[0].map(function(row) {
-			  return {'id':args.id.value,'name':row['Moniker']};
+			  return {'id':args.id.value,'name':row['Moniker'],'link':'/participant/'+args.id.value};
 		      });
 		      const retVal = JSON.stringify(result || {});
 		      cache.set(key, retVal);

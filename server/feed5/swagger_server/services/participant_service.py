@@ -15,10 +15,11 @@ class ParticipantService(CachingService):
         retVal = {}
         retVal['id'] = p.id()
         retVal['name'] = p.name()
+        retVal['link'] = '/participant/' + str(p.id())
         return retVal
 
     def to_participant(self, p: ParticipantDAO) -> Participant:
-        return Participant(p.id(), p.name())
+        return Participant(p.id(), p.name(), '/participant/' + str(p.id()))
         
     def fetch(self, id: int) -> Participant:
         before = int(round(time.time() * 1000))

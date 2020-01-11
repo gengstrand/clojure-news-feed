@@ -11,8 +11,7 @@
 
 package info.glennengstrand.news.api
 
-import info.glennengstrand.news.model.Participant
-
+import info.glennengstrand.news.model.{Participant, Friend, Inbound, Outbound}
 import java.io.File
 
 import org.scalatra.ScalatraServlet
@@ -42,11 +41,11 @@ class ParticipantApi(implicit val swagger: Swagger) extends ScalatraServlet
     summary "create a new participant"
     parameters (bodyParam[Participant]("body").description("")))
 
-  post("/new", operation(addParticipantOperation)) {
+  post("/", operation(addParticipantOperation)) {
 
     val body = parsedBody.extract[Participant]
 
-    participantService.add(body)
+    participantService.add(0, body)
   }
 
   val getParticipantOperation = (apiOperation[Participant]("getParticipant")
@@ -59,5 +58,60 @@ class ParticipantApi(implicit val swagger: Swagger) extends ScalatraServlet
 
     participantService.get(id.toLong)
   }
+  
+    val addFriendOperation = (apiOperation[Friend]("addFriend")
+    summary "create a new friendship"
+    parameters (pathParam[Long]("id").description(""), bodyParam[Friend]("body").description("")))
 
+  post("/:id/friends", operation(addFriendOperation)) {
+      val id = params.getOrElse("id", halt(400))
+
+    val body = parsedBody.extract[Friend]
+
+    friendService.add(id.toLong, body)
+  }
+
+  val getFriendOperation = (apiOperation[List[Friend]]("getFriend")
+    summary "retrieve the list of friends for an individual participant"
+    parameters (pathParam[Long]("id").description("")))
+
+  get("/:id/friends", operation(getFriendOperation)) {
+
+    val id = params.getOrElse("id", halt(400))
+
+    friendService.gets(id.toLong)
+  }
+  
+  val getInboundOperation = (apiOperation[List[Inbound]]("getInbound")
+    summary "retrieve the inbound feed for an individual participant"
+    parameters (pathParam[Long]("id").description("")))
+
+  get("/:id/inbound", operation(getInboundOperation)) {
+
+    val id = params.getOrElse("id", halt(400))
+
+    inboundService.gets(id.toLong)
+  }
+  
+  val addOutboundOperation = (apiOperation[Outbound]("addOutbound")
+    summary "create a participant news item"
+    parameters (pathParam[Long]("id").description(""), bodyParam[Outbound]("body").description("")))
+
+  post("/:id/outbound", operation(addOutboundOperation)) {
+    val id = params.getOrElse("id", halt(400))
+    val body = parsedBody.extract[Outbound]
+
+    outboundService.add(id.toLong, body)
+  }
+
+  val getOutboundOperation = (apiOperation[List[Outbound]]("getOutbound")
+    summary "retrieve the news posted by an individual participant"
+    parameters (pathParam[Long]("id").description("")))
+
+  get("/:id/outbound", operation(getOutboundOperation)) {
+
+    val id = params.getOrElse("id", halt(400))
+
+    outboundService.gets(id.toLong)
+  }
 }

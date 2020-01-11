@@ -14,13 +14,13 @@ import info.glennengstrand.NewsFeedConfiguration;
 import info.glennengstrand.NewsFeedModule.FriendCache;
 import info.glennengstrand.api.Friend;
 import info.glennengstrand.api.Inbound;
-import info.glennengstrand.api.Outbound;
 import info.glennengstrand.core.FriendApiServiceImpl;
 import info.glennengstrand.core.MessageLogger;
 import info.glennengstrand.db.FriendDAO;
 import info.glennengstrand.db.InboundDAO;
-import info.glennengstrand.db.RedisCache;
 import info.glennengstrand.resources.FriendApi.FriendApiService;
+import info.glennengstrand.util.Link;
+
 import redis.clients.jedis.JedisPool;
 
 public abstract class NewsFeedTestBase {
@@ -45,8 +45,8 @@ public abstract class NewsFeedTestBase {
 	protected void setupFriendSupport() {
     	friend = new Friend.FriendBuilder()
     			.withId(TEST_ID)
-    			.withFrom(TEST_FROM)
-    			.withTo(TEST_TO)
+    			.withFrom(Link.toLink(TEST_FROM))
+    			.withTo(Link.toLink(TEST_TO))
     			.build();
     	friends.add(friend);
     	pool = mock(JedisPool.class);
@@ -60,10 +60,10 @@ public abstract class NewsFeedTestBase {
 	
 	protected void setupInboundSupport() {
     	inbound = new Inbound.InboundBuilder()
-    			.withFrom(TEST_FROM)
+    			.withFrom(Link.toLink(TEST_FROM))
     			.withOccurred(new DateTime(System.currentTimeMillis()))
     			.withSubject(TEST_SUBJECT)
-    			.withTo(TEST_TO)
+    			.withTo(Link.toLink(TEST_TO))
     			.withStory(TEST_STORY)
     			.build();
 		inFeed.add(inbound);

@@ -25,6 +25,7 @@ package info.glennengstrand.api;
 import java.util.Objects;
 import com.fasterxml.jackson.annotation.JsonProperty;
 import com.fasterxml.jackson.annotation.JsonCreator;
+import com.fasterxml.jackson.annotation.JsonValue;
 import io.swagger.annotations.ApiModel;
 import io.swagger.annotations.ApiModelProperty;
 
@@ -38,22 +39,27 @@ public class Participant   {
 
   private String name = null;
 
+  private String link = null;
+
   private Participant() {}
   public Participant ( 
     @JsonProperty("id")
     Long id,
     @JsonProperty("name")
-    String name
+    String name,
+    @JsonProperty("link")
+    String link
     ) {
       this.id = id;
       this.name = name;
+      this.link = link;
     }
     /**
     * Get id
     * @return id
     **/
     @JsonProperty("id")
-    @ApiModelProperty(example = "null", value = "")
+    @ApiModelProperty(value = "")
     public Long getId() {
       return id;
     }
@@ -62,9 +68,18 @@ public class Participant   {
     * @return name
     **/
     @JsonProperty("name")
-    @ApiModelProperty(example = "null", value = "")
+    @ApiModelProperty(value = "")
     public String getName() {
       return name;
+    }
+    /**
+    * Get link
+    * @return link
+    **/
+    @JsonProperty("link")
+    @ApiModelProperty(value = "")
+    public String getLink() {
+      return link;
     }
 
     @Override
@@ -77,12 +92,13 @@ public class Participant   {
       }
       Participant participant = (Participant) o;
       return Objects.equals(this.id, participant.id) &&
-        Objects.equals(this.name, participant.name);
+        Objects.equals(this.name, participant.name) &&
+        Objects.equals(this.link, participant.link);
     }
 
     @Override
     public int hashCode() {
-      return Objects.hash(id, name);
+      return Objects.hash(id, name, link);
     }
 
     @Override
@@ -92,6 +108,7 @@ public class Participant   {
       
       sb.append("    id: ").append(toIndentedString(id)).append("\n");
       sb.append("    name: ").append(toIndentedString(name)).append("\n");
+      sb.append("    link: ").append(toIndentedString(link)).append("\n");
       sb.append("}");
       return sb.toString();
     }
@@ -110,6 +127,7 @@ public class Participant   {
   public static class ParticipantBuilder {
     private Long id = null;
     private String name = null;
+    private String link = null;
     public ParticipantBuilder withId(Long id) {
       this.id = id;
       return this;
@@ -118,10 +136,15 @@ public class Participant   {
       this.name = name;
       return this;
     }
+    public ParticipantBuilder withLink(String link) {
+      this.link = link;
+      return this;
+    }
     public Participant build() {
       return new Participant (
         id, 
-        name 
+        name, 
+        link 
       );
     }
   }

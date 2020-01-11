@@ -1,5 +1,15 @@
 'use strict';
 
+function linkify(response) {
+    return response.map(function(f) {
+	return {
+	    'id': f.id,
+	    'from': '/participant/' + f.from,
+	    'to': '/participant/' + f.to
+	});
+    });
+}
+
 exports.addFriend = function(args, res, next) {
   /**
    * parameters expected in the args:
@@ -11,7 +21,7 @@ exports.addFriend = function(args, res, next) {
         return next(err.message);
       }
       res.setHeader('Content-Type', 'application/json');
-      res.end(JSON.stringify(response));
+      res.end(JSON.stringify(linkify(response)));
     });
   
 }
@@ -27,7 +37,7 @@ exports.getFriend = function(args, res, next) {
         return next(err.message);
       }
       res.setHeader('Content-Type', 'application/json');
-      res.end(JSON.stringify(response));
+      res.end(JSON.stringify(linkify(response)));
     });
   
 }

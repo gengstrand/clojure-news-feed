@@ -35,7 +35,7 @@ import io.dropwizard.jersey.params.LongParam;
 
 import info.glennengstrand.api.Outbound;
 
-@Path("/outbound")
+
 public class OutboundApi {
 
    private final OutboundApiService outboundService;
@@ -45,20 +45,21 @@ public class OutboundApi {
       this.outboundService = outboundService;
    }
    @POST
-   @Path("/new")
+   @Path("/participant/{id}/outbound")
    @Consumes("application/json")
    @Produces("application/json")
   /**
    * create a participant news item
    * socially broadcast participant news
+   * @param id uniquely identifies the participant (required)
    * @param body outbound news item (required)
    * @return Outbound
    */
-   public Outbound addOutbound(Outbound body) {
-      return outboundService.addOutbound(body);
+   public Outbound addOutbound(@PathParam("id") LongParam id,  Outbound body) {
+      return outboundService.addOutbound(id.get(), body);
    }
    @GET
-   @Path("/{id}")
+   @Path("/participant/{id}/outbound")
    @Produces("application/json")
   /**
    * retrieve the news posted by an individual participant
@@ -69,21 +70,21 @@ public class OutboundApi {
    public List<Outbound> getOutbound(@PathParam("id") LongParam id) {
       return outboundService.getOutbound(id.get());
    }
-   @POST
-   @Path("/search")
+   @GET
+   @Path("/outbound")
    @Produces("application/json")
   /**
-   * create a participant news item
+   * search outbound feed items for terms
    * keyword search of participant news
    * @param keywords keywords to search for (required)
-   * @return List<Long>
+   * @return List<String>
    */
-   public List<Long> searchOutbound(String keywords) {
+   public List<String> searchOutbound(@QueryParam("keywords") String keywords) {
       return outboundService.searchOutbound(keywords);
    }
    public static interface OutboundApiService {
-      Outbound addOutbound(Outbound body);
+      Outbound addOutbound(Long id, Outbound body);
       List<Outbound> getOutbound(Long id);
-      List<Long> searchOutbound(String keywords);
+      List<String> searchOutbound(String keywords);
    }
 }

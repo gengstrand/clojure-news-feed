@@ -28,14 +28,12 @@ import javax.ws.rs.PathParam;
 import javax.ws.rs.Path;
 import javax.ws.rs.Produces;
 import javax.ws.rs.Consumes;
-import javax.ws.rs.core.MediaType;
 import java.util.List;
 import io.dropwizard.jersey.params.LongParam;
 
 import info.glennengstrand.api.Friend;
 
 
-@Path("/friends")
 public class FriendApi {
 
    private final FriendApiService friendService;
@@ -45,20 +43,21 @@ public class FriendApi {
       this.friendService = friendService;
    }
    @POST
-   @Path("/new")
+   @Path("/participant/{id}/friends")
    @Consumes("application/json")
    @Produces("application/json")
   /**
    * create a new friendship
    * friends are those participants who receive news
+   * @param id uniquely identifies the participant (required)
    * @param body friendship to be created (required)
    * @return Friend
    */
-   public Friend addFriend(Friend body) {
-      return friendService.addFriend(body);
+   public Friend addFriend(@PathParam("id") LongParam id,  Friend body) {
+      return friendService.addFriend(id.get(), body);
    }
    @GET
-   @Path("/{id}")
+   @Path("/participant/{id}/friends")
    @Produces("application/json")
   /**
    * retrieve the list of friends for an individual participant
@@ -70,7 +69,7 @@ public class FriendApi {
       return friendService.getFriend(id.get());
    }
    public static interface FriendApiService {
-      Friend addFriend(Friend body);
+      Friend addFriend(Long id, Friend body);
       List<Friend> getFriend(Long id);
    }
 }

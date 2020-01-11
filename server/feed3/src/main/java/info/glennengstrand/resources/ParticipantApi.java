@@ -25,6 +25,7 @@ import com.google.inject.Inject;
 import javax.ws.rs.GET;  
 import javax.ws.rs.POST;  
 import javax.ws.rs.PathParam;
+import javax.ws.rs.QueryParam;
 import javax.ws.rs.Path;
 import javax.ws.rs.Produces;
 import javax.ws.rs.Consumes;
@@ -35,7 +36,6 @@ import io.dropwizard.jersey.params.LongParam;
 import info.glennengstrand.api.Participant;
 
 
-@Path("/participant")
 public class ParticipantApi {
 
    private final ParticipantApiService participantService;
@@ -45,7 +45,7 @@ public class ParticipantApi {
       this.participantService = participantService;
    }
    @POST
-   @Path("/new")
+   @Path("/participant")
    @Consumes("application/json")
    @Produces("application/json")
   /**
@@ -54,11 +54,11 @@ public class ParticipantApi {
    * @param body participant to be created (required)
    * @return Participant
    */
-   public Participant addParticipant(Participant body) {
+   public Participant addParticipant( Participant body) {
       return participantService.addParticipant(body);
    }
    @GET
-   @Path("/{id}")
+   @Path("/participant/{id}")
    @Produces("application/json")
   /**
    * retrieve an individual participant

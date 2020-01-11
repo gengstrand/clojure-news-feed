@@ -12,7 +12,7 @@ exports.addFriend = function(args, callback) {
 	  callback(err, null);
 	  return;
       }
-      conn.query(mysql.format("call UpsertFriends(?, ?)", [args.body.value.from, args.body.value.to]), function (err, rows) {
+      conn.query(mysql.format("call UpsertFriends(?, ?)", [args.id.value, args.body.value.to]), function (err, rows) {
 	  if (err) {
 	      conn.release();
 	      callback(err, null);
@@ -21,7 +21,7 @@ exports.addFriend = function(args, callback) {
 	  var result = rows[0].map(function(row) {
 	      return {
 		  'id':row['id'],
-		  'from':args.body.value.from, 
+		  'from': args.id.value, 
 	          'to': args.body.value.to };
 	  });
 	  conn.release();

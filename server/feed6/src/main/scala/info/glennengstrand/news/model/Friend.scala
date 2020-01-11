@@ -13,5 +13,5 @@ package info.glennengstrand.news.model
 
 case class Friend(
   id: Option[Long],
-  from: Option[Long],
-  to: Option[Long])
+  from: Option[String],
+  to: Option[String])

@@ -1,6 +1,7 @@
 package info.glennengstrand.core;
 
 import java.util.List;
+import java.util.stream.Collectors;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -15,6 +16,7 @@ import info.glennengstrand.db.InboundDAO;
 import info.glennengstrand.db.OutboundDAO;
 import info.glennengstrand.resources.FriendApi.FriendApiService;
 import info.glennengstrand.resources.OutboundApi.OutboundApiService;
+import info.glennengstrand.util.Link;
 
 public class OutboundApiServiceImpl implements OutboundApiService {
 
@@ -28,9 +30,9 @@ public class OutboundApiServiceImpl implements OutboundApiService {
 	private final MessageLogger<Long> logger;
 	
 	@Override
-	public Outbound addOutbound(Outbound body) {
+	public Outbound addOutbound(Long id, Outbound body) {
 		long before = System.currentTimeMillis();
-		friendService.getFriend(body.getFrom()).forEach(friend -> {
+		friendService.getFriend(Link.extractId(body.getFrom())).forEach(friend -> {
 			Inbound in = new Inbound.InboundBuilder()
 					.withFrom(body.getFrom())
 					.withTo(friend.getTo())
@@ -42,7 +44,7 @@ public class OutboundApiServiceImpl implements OutboundApiService {
 		});
 		outdao.create(body);
 		SearchDAO.UpsertRequest doc = esdao.getBuilder()
-				.withSender(body.getFrom())
+				.withSender(Link.extractId(body.getFrom()))
 				.withStory(body.getStory())
 				.build();
 		esdao.upsert(doc);
@@ -59,9 +61,10 @@ public class OutboundApiServiceImpl implements OutboundApiService {
 	}
 
 	@Override
-	public List<Long> searchOutbound(String keywords) {
+	public List<String> searchOutbound(String keywords) {
 		long before = System.currentTimeMillis();
-		List<Long> retVal = esdao.find(keywords);
+		List<Long> rv = esdao.find(keywords);
+		List<String> retVal = rv.stream().map(p -> Link.toLink(p)).collect(Collectors.toList());
 		logger.log(ENTITY, MessageLogger.LogOperation.SEARCH, System.currentTimeMillis() - before);
 		return retVal;
 	}

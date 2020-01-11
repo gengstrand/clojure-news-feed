@@ -2,6 +2,7 @@ package info.glennengstrand.news.db
 
 import info.glennengstrand.news.core.{ ItemDAO, DocumentDAO, DocumentIdentity }
 import info.glennengstrand.news.model.Inbound
+import info.glennengstrand.news.Link
 import com.datastax.driver.core.{ Session, PreparedStatement, BoundStatement }
 import scala.collection.JavaConverters._
 
@@ -22,7 +23,7 @@ class InboundDAO(select: PreparedStatement, upsert: PreparedStatement) extends I
       val from = r.getInt(1)
       val subject = r.getString(2)
       val story = r.getString(3)
-    } yield Inbound(Option(from.toLong), Option(id), Option(occurred), Option(subject), Option(story))
+    } yield Inbound(Option(Link.toLink(from.toLong)), Option(Link.toLink(id)), Option(occurred), Option(subject), Option(story))
     retVal.toList
   }
   def add(item: Inbound)(implicit db: Session): Inbound = {

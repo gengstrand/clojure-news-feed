@@ -7,6 +7,20 @@ except ImportError:
     # in 3.7, genericmeta doesn't exist but we don't need it
     class GenericMeta(type): pass
 
+import re
+
+path = re.compile('/participant/([0-9]+)')
+
+def extract_id(data: str) -> int:
+    """
+    extract number from possible link or path
+    """
+    m = path.match(data)
+    if m:
+        return int(m.group(1))
+    else:
+        return int(data)
+
 def _deserialize(data, klass):
     """
     Deserializes dict, list, str into an object.
