@@ -17,7 +17,7 @@ import javax.validation.constraints.*;
 
 public class Outbound   {
   @JsonProperty("from")
-  private Long from = null;
+  private String from = null;
 
   @JsonProperty("occurred")
   private OffsetDateTime occurred = null;
@@ -28,7 +28,7 @@ public class Outbound   {
   @JsonProperty("story")
   private String story = null;
 
-  public Outbound from(Long from) {
+  public Outbound from(String from) {
     this.from = from;
     return this;
   }
@@ -40,11 +40,11 @@ public class Outbound   {
   @ApiModelProperty(value = "")
 
 
-  public Long getFrom() {
+  public String getFrom() {
     return from;
   }
 
-  public void setFrom(Long from) {
+  public void setFrom(String from) {
     this.from = from;
   }
 

@@ -21,6 +21,9 @@ public class Participant   {
   @JsonProperty("name")
   private String name = null;
 
+  @JsonProperty("link")
+  private String link = null;
+
   public Participant id(Long id) {
     this.id = id;
     return this;
@@ -61,6 +64,26 @@ public class Participant   {
     this.name = name;
   }
 
+  public Participant link(String link) {
+    this.link = link;
+    return this;
+  }
+
+  /**
+   * Get link
+   * @return link
+  **/
+  @ApiModelProperty(value = "")
+
+
+  public String getLink() {
+    return link;
+  }
+
+  public void setLink(String link) {
+    this.link = link;
+  }
+
 
   @Override
   public boolean equals(java.lang.Object o) {
@@ -72,12 +95,13 @@ public class Participant   {
     }
     Participant participant = (Participant) o;
     return Objects.equals(this.id, participant.id) &&
-        Objects.equals(this.name, participant.name);
+        Objects.equals(this.name, participant.name) &&
+        Objects.equals(this.link, participant.link);
   }
 
   @Override
   public int hashCode() {
-    return Objects.hash(id, name);
+    return Objects.hash(id, name, link);
   }
 
   @Override
@@ -87,6 +111,7 @@ public class Participant   {
     
     sb.append("    id: ").append(toIndentedString(id)).append("\n");
     sb.append("    name: ").append(toIndentedString(name)).append("\n");
+    sb.append("    link: ").append(toIndentedString(link)).append("\n");
     sb.append("}");
     return sb.toString();
   }
