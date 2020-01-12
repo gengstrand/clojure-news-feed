@@ -56,8 +56,8 @@ func (mw MockMySqlWrapper) FetchFriends(id string)([]sw.Friend, error) {
 func AddFriend(results []sw.Friend, id int64, from int64, to int64) ([]sw.Friend) {
      f := sw.Friend{
 	 Id: id,
-	 From: from,
-	 To: to,
+	 From: sw.ToLink(from),
+	 To: sw.ToLink(to),
      }
      results = append(results, f)
      return results
@@ -73,7 +73,7 @@ func TestAddOutboundInner(t *testing.T) {
      	SetCounter: 0,
      }
      ob := sw.Outbound {
-     	From: 1,
+     	From: sw.ToLink(1),
 	Occurred: time.Now(),
 	Subject: "test subject",
 	Story: "test story",

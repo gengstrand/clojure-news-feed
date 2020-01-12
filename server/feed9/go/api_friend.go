@@ -15,6 +15,7 @@ func AddFriend(w http.ResponseWriter, r *http.Request) {
         ew := LogWrapper{
 	   Writer: w,
 	}
+	vars := mux.Vars(r)
    	decoder := json.NewDecoder(r.Body)
     	var f Friend
     	err := decoder.Decode(&f)
@@ -28,7 +29,17 @@ func AddFriend(w http.ResponseWriter, r *http.Request) {
 	   return
 	}
 	defer stmt.Close()
-	rows, err := stmt.Query(f.To, f.From)
+	from, err := strconv.ParseInt(vars["id"], 0, 64)
+	if err != nil {
+	   ew.LogError(err, "cannot extract id out of from friend: %s", http.StatusInternalServerError)
+	   return
+	}
+	to, err := ExtractId(f.To)
+	if err != nil {
+	   ew.LogError(err, "cannot extract id out of to friend: %s", http.StatusInternalServerError)
+	   return
+	}
+	rows, err := stmt.Query(to, from)
 	if err != nil {
 	   ew.LogError(err, "cannot insert friend: %s", http.StatusInternalServerError)
 	   return
@@ -52,8 +63,8 @@ func AddFriend(w http.ResponseWriter, r *http.Request) {
 	       ew.LogError(err, "cannot marshal friend response: %s", http.StatusInternalServerError)
 	       return
 	    }
-	    cache.Del(fmt.Sprintf("Friends::%d", f.From)).Result()
-	    cache.Del(fmt.Sprintf("Friends::%d", f.To)).Result()
+	    cache.Del(fmt.Sprintf("Friends::%d", from)).Result()
+	    cache.Del(fmt.Sprintf("Friends::%d", to)).Result()
 	    w.Header().Set("Content-Type", "application/json; charset=UTF-8")
 	    fmt.Fprint(w, string(result))
 	    w.WriteHeader(http.StatusOK)

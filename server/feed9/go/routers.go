@@ -57,49 +57,49 @@ var routes = Routes{
 	Route{
 		"AddFriend",
 		strings.ToUpper("Post"),
-		"/friends/new",
+		"/participant/{id}/friends",
 		AddFriend,
 	},
 
 	Route{
 		"GetFriend",
 		strings.ToUpper("Get"),
-		"/friends/{id}",
+		"/participant/{id}/friends",
 		GetFriend,
 	},
 
 	Route{
 		"GetInbound",
 		strings.ToUpper("Get"),
-		"/inbound/{id}",
+		"/participant/{id}/inbound",
 		GetInbound,
 	},
 
 	Route{
 		"AddOutbound",
 		strings.ToUpper("Post"),
-		"/outbound/new",
+		"/participant/{id}/outbound",
 		AddOutbound,
 	},
 
 	Route{
 		"GetOutbound",
 		strings.ToUpper("Get"),
-		"/outbound/{id}",
+		"/participant/{id}/outbound",
 		GetOutbound,
 	},
 
 	Route{
 		"SearchOutbound",
-		strings.ToUpper("Post"),
-		"/outbound/search",
+		strings.ToUpper("Get"),
+		"/outbound",
 		SearchOutbound,
 	},
 
 	Route{
 		"AddParticipant",
 		strings.ToUpper("Post"),
-		"/participant/new",
+		"/participant",
 		AddParticipant,
 	},
 
