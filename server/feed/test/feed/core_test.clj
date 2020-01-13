@@ -4,7 +4,7 @@
 
 (deftest participant-test
   (testing "testing participant"
-    (is (= (to-client (feed.core.Participant. 1 "test")) "{\"id\": 1, \"name\": \"test\" }"))))
+    (is (= (to-client (feed.core.Participant. 1 "test")) "{\"id\": 1, \"name\": \"test\", \"link\": \"/participant/1\" }"))))
 
 (deftest friend-test
   (testing "testing friend"
@@ -12,8 +12,8 @@
 
 (deftest inbound-test
   (testing "testing inbound"
-    (is (= (to-cache (feed.core.Inbound. 1 2 "2015-05-01" "test" "test")) "(feed.core.Inbound. 1 2 \"2015-05-01\" \"test\" \"test\")"))))
+    (is (= (to-cache (feed.core.Inbound. 1 2 "2015-05-01" "test" "test")) "(feed.core.Inbound. /participant/1 /participant/2 \"2015-05-01\" \"test\" \"test\")"))))
 
 (deftest outbound-test
   (testing "testing outbound"
-    (is (= (to-client (feed.core.Outbound. 1 "2015-05-01" "test" "test")) "{\"from\": 1, \"occurred\": \"2015-05-01\", \"subject\": \"test\", \"story\": \"test\" }"))))
+    (is (= (to-client (feed.core.Outbound. 1 "2015-05-01" "test" "test")) "{\"from\": \"/participant/1\", \"occurred\": \"2015-05-01\", \"subject\": \"test\", \"story\": \"test\" }"))))

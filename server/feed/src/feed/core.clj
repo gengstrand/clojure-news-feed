@@ -31,6 +31,11 @@
         result-from-db)
       (load-string (str "[" result-from-cache "]")))))
 
+(defn to-link
+  "convert an id to a link"
+  [id]
+  (str "/participant/" id))
+
 (defprotocol ValueObject
   "serialize out object state for various purposes"
   (to-client [this])
@@ -44,6 +49,8 @@
          (:id this)
          ", \"name\": \""
          (:moniker this)
+         "\", \"link\": \""
+         (to-link (:id this))
          "\" }"))
   (to-db [this]
     (s/replace-first 
@@ -142,8 +149,8 @@
 (defrecord Inbound [to from occurred subject story]
   ValueObject
   (to-client [this]
-    (str "{\"to\": "
-         (:to this)
+    (str "{\"to\": \""
+         (to-link (:to this)) "\""
          (if
            (number? (:from this))
            (str 
@@ -164,9 +171,9 @@
       (s/replace-first "?" (str "'" (:story this) "'"))))
   (to-cache [this]
     (str "(feed.core.Inbound. "
-         (:to this)
+         (to-link (:to this))
          " "
-         (:from this)
+         (to-link (:from this))
          " \""
          (format-possible-date (:occurred this))
          "\" \""
@@ -210,9 +217,9 @@
 (defrecord Outbound [from occurred subject story]
   ValueObject
   (to-client [this]
-    (str "{\"from\": "
-         (:from this)
-         ", \"occurred\": \""
+    (str "{\"from\": \""
+         (to-link (:from this))
+         "\", \"occurred\": \""
          (format-possible-date (:occurred this))
          "\", \"subject\": \""
          (:subject this)
