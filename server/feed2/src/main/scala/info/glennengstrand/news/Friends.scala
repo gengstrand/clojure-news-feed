@@ -29,8 +29,8 @@ object Friends {
   val bindings = new FriendsBindings
   def create(id: Int, from: Int, to: Int): Friend = {
     IO.settings.getProperty(IO.jdbcVendor) match {
-      case "mysql" => new Friend(id, from, to) with MySqlWriter with JedisCacheAware
-      case _ => new Friend(id, from, to) with PostgreSqlWriter with JedisCacheAware
+      case "mysql" => new Friend(id, Link.toLink(from.longValue), Link.toLink(to.longValue)) with MySqlWriter with JedisCacheAware
+      case _ => new Friend(id, Link.toLink(from.longValue), Link.toLink(to.longValue)) with PostgreSqlWriter with JedisCacheAware
     }
   }
   def apply(id: Int) : Friends = {
@@ -47,17 +47,17 @@ object Friends {
   }
 }
 
-case class FriendState(id: Int, fromParticipantID: Long, toParticipantID: Long)
+case class FriendState(id: Int, fromParticipantID: String, toParticipantID: String)
 
 /** represents the friend relationship between two participants */
-class Friend(id: Int, fromParticipantID: Int, toParticipantID: Int) extends FriendState(id, fromParticipantID, toParticipantID) with MicroServiceSerializable {
+class Friend(id: Int, fromParticipantID: String, toParticipantID: String) extends FriendState(id, fromParticipantID, toParticipantID) with MicroServiceSerializable {
   this: TransientRelationalDataStoreWriter with CacheAware =>
 
   /** save to the database and return a new friend object with the newly created primary key */
   def save: Friend = {
     val state: Map[String, Any] = Map(
-      "fromParticipantID" -> fromParticipantID,
-      "toParticipantID" -> toParticipantID
+      "fromParticipantID" -> Link.extractId(fromParticipantID).intValue,
+      "toParticipantID" -> Link.extractId(toParticipantID).intValue
     )
     val criteria: Map[String, Any] = Map(
       "FriendsID" -> id
@@ -65,7 +65,7 @@ class Friend(id: Int, fromParticipantID: Int, toParticipantID: Int) extends Frie
     val result = write(Friends.bindings, state, criteria)
     invalidate(Friends.bindings, criteria)
     val newId = result.getOrElse("id", 0).asInstanceOf[Int]
-    Friends.create(newId, fromParticipantID, toParticipantID)
+    Friends.create(newId, Link.extractId(fromParticipantID).intValue, Link.extractId(toParticipantID).intValue)
   }
 
   override def toJson(factory: FactoryClass): String = {
@@ -114,8 +114,9 @@ class Friends(id: Int, state: Iterable[Map[String, Any]]) extends Iterator[Frien
         while (keepGoing) {
           val kv = i.next()
           var f = Friends.create(IO.convertToInt(kv("FriendsID")), id.toInt, IO.convertToInt(kv("ParticipantID")))
-          if (!s.contains(f.toParticipantID)) {
-            s.add(f.toParticipantID)
+          val to = Link.extractId(f.toParticipantID)
+          if (!s.contains(to)) {
+            s.add(to)
             prefetched = Option(f)
             retVal = true
             keepGoing = false

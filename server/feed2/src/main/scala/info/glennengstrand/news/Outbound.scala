@@ -38,10 +38,10 @@ object Outbound extends ElasticSearchSearcher {
   }
   def apply(state: String): Outbound = {
     val s = IO.fromFormPost(state)
-    val id = s("from").asInstanceOf[String].toInt
+    val id = s("from").asInstanceOf[String].toLong
     val story = s("story").asInstanceOf[String]
     index(id, story)
-    new Outbound(id, IO.convertToDate(s("occurred").asInstanceOf[String]), s("subject").asInstanceOf[String], story) with CassandraWriter with MockCacheAware
+    new Outbound(Link.toLink(id), IO.convertToDate(s("occurred").asInstanceOf[String]), s("subject").asInstanceOf[String], story) with CassandraWriter with MockCacheAware
   }
   def lookup(state: String): Iterable[Long] = {
     val s = IO.fromFormPost(state)
@@ -50,15 +50,15 @@ object Outbound extends ElasticSearchSearcher {
   }
 }
 
-case class OutboundState(participantID: Int, occurred: Date, subject: String, story: String)
+case class OutboundState(participantID: String, occurred: Date, subject: String, story: String)
 
 /** represents a news feed item in the outbound feed */
-class Outbound(participantID: Int, occurred: Date, subject: String, story: String) extends OutboundState(participantID, occurred, subject, story) with MicroServiceSerializable {
+class Outbound(participantID: String, occurred: Date, subject: String, story: String) extends OutboundState(participantID, occurred, subject, story) with MicroServiceSerializable {
   this: PersistentDataStoreWriter with CacheAware =>
 
   def getState: Map[String, Any] = {
     Map(
-      "participantID" -> participantID,
+      "participantID" -> Link.extractId(participantID).intValue,
       "occurred" -> occurred,
       "subject" -> subject,
       "story" -> story
@@ -72,9 +72,9 @@ class Outbound(participantID: Int, occurred: Date, subject: String, story: Strin
     )
     write(Outbound.bindings, getState, criteria)
     invalidate(Outbound.bindings, criteria)
-    val broadcast = Friends(participantID)
+    val broadcast = Friends(Link.extractId(participantID).intValue)
     broadcast.foreach( f => {
-      val inbound =  new Inbound(f.toParticipantID.toInt, occurred, participantID, subject, story) with CassandraWriter with MockCacheAware
+      val inbound =  new Inbound(Link.toLink(f.toParticipantID.toLong), occurred, participantID, subject, story) with CassandraWriter with MockCacheAware
       inbound.save
     })
   }
@@ -91,7 +91,7 @@ class OutboundFeed(id: Int, state: Iterable[Map[String, Any]]) extends Iterator[
   def next() = {
     val kv = i.next()
     Outbound.log.debug("kv = " + kv)
-    new Outbound(id, IO.convertToDate(kv("occurred")), kv("subject").toString, kv("story").toString) with CassandraWriter with MockCacheAware with ElasticSearchSearcher
+    new Outbound(Link.toLink(id.longValue), IO.convertToDate(kv("occurred")), kv("subject").toString, kv("story").toString) with CassandraWriter with MockCacheAware with ElasticSearchSearcher
   }
   override def toJson: String = {
     val r = map(f => f.toJson).toList

@@ -38,21 +38,21 @@ object Inbound {
   }
   def apply(state: String): Inbound = {
     val s = IO.fromFormPost(state)
-    new Inbound(s("participantID").asInstanceOf[String].toInt, IO.df.parse(s("occurred").asInstanceOf[String]), s("fromParticipantID").asInstanceOf[String].toInt, s("subject").asInstanceOf[String], s("story").asInstanceOf[String]) with CassandraWriter with MockCacheAware
+    new Inbound(Link.toLink(s("participantID").asInstanceOf[String].toLong), IO.df.parse(s("occurred").asInstanceOf[String]), Link.toLink(s("fromParticipantID").asInstanceOf[String].toLong), s("subject").asInstanceOf[String], s("story").asInstanceOf[String]) with CassandraWriter with MockCacheAware
   }
 }
 
-case class InboundState(participantID: Int, occurred: Date, fromParticipantID: Int, subject: String, story: String)
+case class InboundState(participantID: String, occurred: Date, fromParticipantID: String, subject: String, story: String)
 
 /** represents a news item as it appears in your inbound feed */
-class Inbound(participantID: Int, occurred: Date, fromParticipantID: Int, subject: String, story: String) extends InboundState(participantID, occurred, fromParticipantID, subject, story) with MicroServiceSerializable {
+class Inbound(participantID: String, occurred: Date, fromParticipantID: String, subject: String, story: String) extends InboundState(participantID, occurred, fromParticipantID, subject, story) with MicroServiceSerializable {
   this: PersistentDataStoreWriter with CacheAware =>
 
   def getState: Map[String, Any] = {
     Map(
-      "participantID" -> participantID,
+      "participantID" -> Link.extractId(participantID).intValue,
       "occurred" -> occurred,
-      "fromParticipantID" -> fromParticipantID,
+      "fromParticipantID" -> Link.extractId(fromParticipantID).intValue, 
       "subject" -> subject,
       "story" -> story
     )
@@ -61,7 +61,7 @@ class Inbound(participantID: Int, occurred: Date, fromParticipantID: Int, subjec
   /** save item to db */
   def save: Unit = {
     val criteria: Map[String, Any] = Map(
-      "participantID" -> participantID
+      "participantID" -> Link.extractId(participantID).intValue
     )
     write(Inbound.bindings, getState, criteria)
     invalidate(Inbound.bindings, criteria)
@@ -82,7 +82,7 @@ class InboundFeed(id: Int, state: Iterable[Map[String, Any]]) extends Iterator[I
   def next() = {
     val kv = i.next()
     Inbound.log.debug("kv = " + kv)
-    new Inbound(id, IO.convertToDate(kv("occurred")), IO.convertToInt(kv("fromParticipantID")), kv("subject").toString, kv("story").toString) with CassandraWriter with MockCacheAware
+    new Inbound(Link.toLink(id.longValue), IO.convertToDate(kv("occurred")), Link.toLink(IO.convertToInt(kv("fromParticipantID")).longValue), kv("subject").toString, kv("story").toString) with CassandraWriter with MockCacheAware
   }
   override def toJson: String = {
     "[" +  map(f => f.toJson).reduce(_ + "," + _) + "]"

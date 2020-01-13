@@ -28,9 +28,10 @@ object Participant {
   }
   val bindings = new ParticipantBindings
   def create(id: Int, name: String): Participant = {
+    val link = Link.toLink(id.longValue());
     IO.settings.getProperty(IO.jdbcVendor) match {
-      case "mysql" => new Participant(id, name) with MySqlWriter with JedisCacheAware
-      case _ => new Participant(id, name) with PostgreSqlWriter with JedisCacheAware
+      case "mysql" => new Participant(id, name, link) with MySqlWriter with JedisCacheAware
+      case _ => new Participant(id, name, link) with PostgreSqlWriter with JedisCacheAware
     }
   }
   def apply(id: Int) : Participant = {
@@ -53,10 +54,10 @@ object Participant {
   }
 }
 
-case class ParticipantState(id: Int, name: String)
+case class ParticipantState(id: Int, name: String, link: String)
 
 /** represents a participant who may have friends and news feed */
-class Participant(id: Int, name: String) extends ParticipantState(id, name) with MicroServiceSerializable {
+class Participant(id: Int, name: String, link: String) extends ParticipantState(id, name, link) with MicroServiceSerializable {
   this: TransientRelationalDataStoreWriter with CacheAware =>
 
   /** save participant state to db */

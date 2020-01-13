@@ -43,7 +43,7 @@ class Feed extends Controller {
       }
     }
   }}
-  post("/participant/new") { request: Request => {
+  post("/participant") { request: Request => {
     val before = System.currentTimeMillis()
     val r = Try {
       val body = request.contentString
@@ -65,7 +65,7 @@ class Feed extends Controller {
       }
     }
   }}
-  get("/friends/:id") { request: Request => {
+  get("/participant/:id/friends") { request: Request => {
     val r = Try {
       val f = IO.workerPool {
         val before = System.currentTimeMillis()
@@ -84,7 +84,7 @@ class Feed extends Controller {
       }
     }
   }}
-  post("/friends/new") { request: Request => {
+  post("/participant/:id/friends") { request: Request => {
     val r = Try {
       val body = request.contentString
       val f = IO.workerPool {
@@ -107,7 +107,7 @@ class Feed extends Controller {
       }
     }
   }}
-  get("/inbound/:id") { request: Request => {
+  get("/participant/:id/inbound") { request: Request => {
     val r = Try {
       val f = IO.workerPool {
         val before = System.currentTimeMillis()
@@ -126,7 +126,7 @@ class Feed extends Controller {
       }
     }
   }}
-  get("/outbound/:id") { request: Request => {
+  get("/participant/:id/outbound") { request: Request => {
     val r = Try {
       val f = IO.workerPool {
         val before = System.currentTimeMillis()
@@ -145,7 +145,7 @@ class Feed extends Controller {
       }
     }
   }}
-  post("/outbound/new") { request: Request => {
+  post("/participant/:id/outbound") { request: Request => {
     val r = Try {
       val body = request.contentString
       val f = IO.workerPool {
@@ -166,7 +166,7 @@ class Feed extends Controller {
       }
     }
   }}
-  post("/outbound/search") { request: Request => {
+  get("/outbound") { request: Request => {
     val before = System.currentTimeMillis()
     val r = Try {
       val body = request.contentString
