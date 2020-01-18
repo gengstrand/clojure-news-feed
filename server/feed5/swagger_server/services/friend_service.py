@@ -3,7 +3,7 @@ from .caching_service import CachingService
 from ..daos.friend_dao import Friend as FriendDAO
 from ..models.friend import Friend
 from .messaging_service import MessagingService
-from ..models.util import extract_id
+from ..util import extract_id, to_link
 
 messages = MessagingService()
 
@@ -15,12 +15,12 @@ class FriendService(CachingService):
     def to_dict(self, f: FriendDAO) -> dict:
         retVal = {}
         retVal['id'] = f.id()
-        retVal['from'] = '/participant/' + str(f._from())
-        retVal['to'] = '/participant/' + str(f.to())
+        retVal['from'] = to_link(f._from())
+        retVal['to'] = to_link(f.to())
         return retVal
 
     def to_friend(self, f: FriendDAO) -> Friend:
-        return Friend(f.id(), '/participant/' + str(f._from()), '/participant/' + str(f.to()))
+        return Friend(f.id(), to_link(f._from()), to_link(f.to()))
         
     def insert(self, friend: Friend) -> Friend:
         before = int(round(time.time() * 1000))

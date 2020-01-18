@@ -3,6 +3,7 @@ from .caching_service import CachingService
 from ..daos.participant_dao import Participant as ParticipantDAO
 from ..models.participant import Participant
 from .messaging_service import MessagingService
+from ..util import to_link
 
 messages = MessagingService()
 
@@ -15,11 +16,11 @@ class ParticipantService(CachingService):
         retVal = {}
         retVal['id'] = p.id()
         retVal['name'] = p.name()
-        retVal['link'] = '/participant/' + str(p.id())
+        retVal['link'] = to_link(p.id())
         return retVal
 
     def to_participant(self, p: ParticipantDAO) -> Participant:
-        return Participant(p.id(), p.name(), '/participant/' + str(p.id()))
+        return Participant(p.id(), p.name(), to_link(p.id()))
         
     def fetch(self, id: int) -> Participant:
         before = int(round(time.time() * 1000))

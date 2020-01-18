@@ -9,13 +9,20 @@ except ImportError:
 
 import re
 
-path = re.compile('/participant/([0-9]+)')
+path = '/participant/'
+path_extractor = re.compile(path + '([0-9]+)')
+
+def to_link(id: int) -> str:
+    """
+    generate link from id
+    """
+    return path + str(id)
 
 def extract_id(data: str) -> int:
     """
     extract number from possible link or path
     """
-    m = path.match(data)
+    m = path_extractor.match(data)
     if m:
         return int(m.group(1))
     else:

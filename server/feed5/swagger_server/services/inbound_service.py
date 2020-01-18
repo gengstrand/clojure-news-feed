@@ -1,7 +1,7 @@
 import logging, time
 from ..daos.inbound_dao import Inbound as InboundDAO
 from ..models.inbound import Inbound
-from ..models.util import extract_id
+from ..util import extract_id
 from .messaging_service import MessagingService
 
 messages = MessagingService()

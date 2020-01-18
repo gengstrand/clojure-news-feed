@@ -4,7 +4,7 @@ from ..services.friend_service import FriendService
 from datetime import date, datetime
 from typing import List, Dict
 from six import iteritems
-from ..util import deserialize_date, deserialize_datetime
+from ..util import to_link, deserialize_date, deserialize_datetime
 
 service = FriendService()
 
@@ -19,7 +19,7 @@ def add_friend(id, body):
 
     :rtype: Friend
     """
-    body["_from"] = id
+    body["_from"] = to_link(id)
     return service.insert(Friend.from_dict(body))
     
 def get_friend(id):

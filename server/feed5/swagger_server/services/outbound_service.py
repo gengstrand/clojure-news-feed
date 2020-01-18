@@ -5,7 +5,7 @@ from ..daos.outbound_dao import Outbound as OutboundDAO
 from ..models.outbound import Outbound
 from ..models.friend import Friend
 from ..models.inbound import Inbound
-from ..models.util import extract_id
+from ..util import extract_id
 from .messaging_service import MessagingService
 from .search_service import SearchService
 
