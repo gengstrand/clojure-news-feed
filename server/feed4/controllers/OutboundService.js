@@ -1,9 +1,11 @@
 'use strict';
 
+var Link = require('./util');
+
 function linkify(response) {
     return response.map(function(o) {
 	  return {
-	      "from": '/participant/' + o.from,
+	      "from": Link.to_link(o.from),
 	      "occurred": o.occurred, 
 	      "subject": o.subject, 
 	      "story": o.story
@@ -55,7 +57,7 @@ exports.searchOutbound = function(args, res, next) {
       }
 	res.setHeader('Content-Type', 'application/json');
 	var retVal = response.map(function(p) {
-	    return '/participant/' + p;
+	    return Link.to_link(p);
 	});
       res.end(JSON.stringify(retVal));
     });

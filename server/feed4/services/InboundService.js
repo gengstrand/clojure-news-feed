@@ -1,5 +1,7 @@
 'use strict';
 
+var Link = require('../controllers/util');
+
 exports.addInbound = function(feedItem, callback) {
   /**
    * parameters expected in the args:
@@ -7,7 +9,9 @@ exports.addInbound = function(feedItem, callback) {
   **/
   const cassandra = require('../repositories/cassandra').client;
   const cql = 'insert into Inbound (ParticipantID, FromParticipantID, Occurred, Subject, Story) values (?, ?, now(), ?, ?)';
-  cassandra.execute(cql, [feedItem.to, feedItem.from, feedItem.subject, feedItem.story], {prepare: true}, function(err, rows) {
+  const from = Link.extract_id(feedItem.from);  
+  const to = Link.extract_id(feedItem.to);  
+  cassandra.execute(cql, [to, from, feedItem.subject, feedItem.story], {prepare: true}, function(err, rows) {
       if (err) {
 	  callback(err, null);
       }

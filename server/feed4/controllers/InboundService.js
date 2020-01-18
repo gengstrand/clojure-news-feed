@@ -1,10 +1,12 @@
 'use strict';
 
+var Link = require('./util');
+
 function linkify(response) {
     return response.map(function(i) {
 	  return {
-	      "from": '/participant/' + i.from,
-	      "to": '/participant/' + i.to,
+	      "from": Link.to_link(i.from),
+	      "to": Link.to_link(i.to),
 	      "occurred": i.occurred, 
 	      "subject": i.subject, 
 	      "story": i.story

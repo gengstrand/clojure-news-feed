@@ -1,14 +1,16 @@
 'use strict';
 
+var Link = require('../controllers/util');
+
 exports.addOutbound = function(args, callback) {
   /**
-   * parameters expected in the args:
+  * parameters expected in the args:
   * body (Outbound)
   **/
   const cassandra = require('../repositories/cassandra').client;
   const elastic = require('../repositories/elastic');
   const cql = 'insert into Outbound (ParticipantID, Occurred, Subject, Story) values (?, now(), ?, ?)';
-  const from = parseInt(args.body.value.from);
+  const from = Link.extract_id(args.body.value.from);
   cassandra.execute(cql, [from, args.body.value.subject, args.body.value.story], {prepare: true}, function(err, rows) {
       if (err) {
 	  callback(err, null);
