@@ -32,17 +32,17 @@ kubectl create -f feed-deployment.yaml
 This shell script demonstrates how to call feeds 3 - 9 for a basic end-to-end test which includes creating two participants, friending them, posting a news feed item on one friend's outbound feed, querying the other friend's inbound feed, and keyword based search. See [here](https://github.com/gengstrand/clojure-news-feed/blob/master/server/feed/doc/intro.md) for how to test feeds 1 and 2 and [here](https://github.com/gengstrand/clojure-news-feed/blob/master/server/feed10/README.md) for how to test feed 10.
 
 ```shell
-curl -H "Content-Type: application/json" -d '{"name":"testing dropwizard"}' ${FEED_URL}/participant/new
+curl -H "Content-Type: application/json" -d '{"name":"testing dropwizard"}' ${FEED_URL}/participant
 
-curl -H "Content-Type: application/json" -d '{"name":"testing minikube"}' ${FEED_URL}/participant/new
+curl -H "Content-Type: application/json" -d '{"name":"testing minikube"}' ${FEED_URL}/participant
 
-curl -H "Content-Type: application/json" -d '{"from":1,"to":2}' ${FEED_URL}/friends/new
+curl -H "Content-Type: application/json" -d '{"from":"/participant/1","to":"/participant/2"}' ${FEED_URL}/participant/1/friends
 
-curl -H "Content-Type: application/json" -d '{"from":1,"subject":"testing for dropwizard","story":"Kubernetes rocks!"}' ${FEED_URL}/outbound/new
+curl -H "Content-Type: application/json" -d '{"from":"/participant/1","subject":"testing for dropwizard","story":"Kubernetes rocks!"}' ${FEED_URL}/participant/1/outbound
 
-curl ${FEED_URL}/inbound/2
+curl ${FEED_URL}/participant/2/inbound
 
-curl -X POST -g "${FEED_URL}/outbound/search?keywords=kubernetes"
+curl -g "${FEED_URL}/outbound?keywords=kubernetes"
 ```
 
 Alternatively, you can also run the testMinikube.sh to perform the automated version of this test. This script runs the load test app in integration test mode so you will need to have built what is in the client/load project.

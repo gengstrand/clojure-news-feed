@@ -10,7 +10,7 @@ exports.to_link = function(id) {
 exports.extract_id = function(value) {
     const m = re.exec(value);
     if (m) {
-	return parseInt(m[0]);
+	return parseInt(m[1]);
     }
     return parseInt(value);
 }

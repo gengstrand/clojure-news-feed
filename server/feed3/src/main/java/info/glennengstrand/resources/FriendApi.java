@@ -33,7 +33,7 @@ import io.dropwizard.jersey.params.LongParam;
 
 import info.glennengstrand.api.Friend;
 
-
+@Path("/participant/{id}")
 public class FriendApi {
 
    private final FriendApiService friendService;
@@ -43,7 +43,7 @@ public class FriendApi {
       this.friendService = friendService;
    }
    @POST
-   @Path("/participant/{id}/friends")
+   @Path("/friends")
    @Consumes("application/json")
    @Produces("application/json")
   /**
@@ -57,7 +57,7 @@ public class FriendApi {
       return friendService.addFriend(id.get(), body);
    }
    @GET
-   @Path("/participant/{id}/friends")
+   @Path("/friends")
    @Produces("application/json")
   /**
    * retrieve the list of friends for an individual participant

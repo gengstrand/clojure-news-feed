@@ -17,8 +17,7 @@ exports.addOutbound = function(args, callback) {
       }
       var Inbound = require('./InboundService');
       var Friend = require('./FriendService');
-      const friendArgs = {'id': {'value': args.body.value.from}};
-      Friend.getFriend(friendArgs, function (err, response) {
+      Friend.getFriend(args, function (err, response) {
 	  if (err) {
               callback(err, null);
 	  }
@@ -51,7 +50,7 @@ exports.addOutbound = function(args, callback) {
 
 exports.getOutbound = function(args, callback) {
   /**
-   * parameters expected in the args:
+  * parameters expected in the args:
   * id (Long)
   **/
   const cassandra = require('../repositories/cassandra').client;

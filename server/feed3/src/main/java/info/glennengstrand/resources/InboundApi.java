@@ -35,7 +35,7 @@ import io.dropwizard.jersey.params.LongParam;
 
 import info.glennengstrand.api.Inbound;
 
-
+@Path("/participant/{id}")
 public class InboundApi {
 
    private final InboundApiService inboundService;
@@ -45,7 +45,7 @@ public class InboundApi {
       this.inboundService = inboundService;
    }
    @GET
-   @Path("/participant/{id}/inbound")
+   @Path("/inbound")
    @Produces("application/json")
   /**
    * retrieve the inbound feed for an individual participant

@@ -8,7 +8,7 @@ function linkify(response) {
 	    'id': f.id,
 	    'from': Link.to_link(f.from),
 	    'to': Link.to_link(f.to)
-	});
+	};
     });
 }
 

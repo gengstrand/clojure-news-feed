@@ -25,17 +25,15 @@ import com.google.inject.Inject;
 import javax.ws.rs.GET;  
 import javax.ws.rs.POST;  
 import javax.ws.rs.PathParam;
-import javax.ws.rs.QueryParam;
 import javax.ws.rs.Path;
 import javax.ws.rs.Produces;
 import javax.ws.rs.Consumes;
-import javax.ws.rs.core.MediaType;
 import java.util.List;
 import io.dropwizard.jersey.params.LongParam;
 
 import info.glennengstrand.api.Outbound;
 
-
+@Path("/participant/{id}")
 public class OutboundApi {
 
    private final OutboundApiService outboundService;
@@ -45,7 +43,7 @@ public class OutboundApi {
       this.outboundService = outboundService;
    }
    @POST
-   @Path("/participant/{id}/outbound")
+   @Path("/outbound")
    @Consumes("application/json")
    @Produces("application/json")
   /**
@@ -59,7 +57,7 @@ public class OutboundApi {
       return outboundService.addOutbound(id.get(), body);
    }
    @GET
-   @Path("/participant/{id}/outbound")
+   @Path("/outbound")
    @Produces("application/json")
   /**
    * retrieve the news posted by an individual participant
@@ -70,21 +68,9 @@ public class OutboundApi {
    public List<Outbound> getOutbound(@PathParam("id") LongParam id) {
       return outboundService.getOutbound(id.get());
    }
-   @GET
-   @Path("/outbound")
-   @Produces("application/json")
-  /**
-   * search outbound feed items for terms
-   * keyword search of participant news
-   * @param keywords keywords to search for (required)
-   * @return List<String>
-   */
-   public List<String> searchOutbound(@QueryParam("keywords") String keywords) {
-      return outboundService.searchOutbound(keywords);
-   }
    public static interface OutboundApiService {
-      Outbound addOutbound(Long id, Outbound body);
-      List<Outbound> getOutbound(Long id);
-      List<String> searchOutbound(String keywords);
-   }
+	      Outbound addOutbound(Long id, Outbound body);
+	      List<Outbound> getOutbound(Long id);
+	      List<String> searchOutbound(String keywords);
+	   }
 }

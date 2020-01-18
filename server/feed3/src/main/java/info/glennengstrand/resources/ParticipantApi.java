@@ -36,6 +36,7 @@ import io.dropwizard.jersey.params.LongParam;
 import info.glennengstrand.api.Participant;
 
 
+@Path("/participant")
 public class ParticipantApi {
 
    private final ParticipantApiService participantService;
@@ -45,7 +46,6 @@ public class ParticipantApi {
       this.participantService = participantService;
    }
    @POST
-   @Path("/participant")
    @Consumes("application/json")
    @Produces("application/json")
   /**
@@ -58,7 +58,7 @@ public class ParticipantApi {
       return participantService.addParticipant(body);
    }
    @GET
-   @Path("/participant/{id}")
+   @Path("/{id}")
    @Produces("application/json")
   /**
    * retrieve an individual participant

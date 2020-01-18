@@ -25,8 +25,8 @@ exports.addFriend = function(args, callback) {
 	  var result = rows[0].map(function(row) {
 	      return {
 		  'id':row['id'],
-		  'from': args.id.value, 
-	          'to': args.body.value.to };
+		  'from': from, 
+	          'to': to };
 	  });
 	  conn.release();
 	  callback(null, result);
