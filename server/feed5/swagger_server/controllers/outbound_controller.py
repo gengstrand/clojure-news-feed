@@ -4,7 +4,7 @@ from ..services.outbound_service import OutboundService
 from datetime import date, datetime
 from typing import List, Dict
 from six import iteritems
-from ..util import deserialize_date, deserialize_datetime
+from ..util import to_link, deserialize_date, deserialize_datetime
 
 service = OutboundService()
 
@@ -19,8 +19,8 @@ def add_outbound(id, body):
 
     :rtype: Outbound
     """
-    body["_from"] = id
-    return service.insert(Outbound.from_dict(id, body))
+    body["_from"] = to_link(id)
+    return service.insert(Outbound.from_dict(body))
     
 def get_outbound(id):
     """

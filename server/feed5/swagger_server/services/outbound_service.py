@@ -5,7 +5,7 @@ from ..daos.outbound_dao import Outbound as OutboundDAO
 from ..models.outbound import Outbound
 from ..models.friend import Friend
 from ..models.inbound import Inbound
-from ..util import extract_id
+from ..util import extract_id, to_link
 from .messaging_service import MessagingService
 from .search_service import SearchService
 
@@ -25,9 +25,9 @@ class OutboundService:
 
     def insert(self, outbound: Outbound) -> Outbound:
         before = int(round(time.time() * 1000))
-        o = OutboundDAO(outbound._from, outbound.subject, outbound.story)
-        o.save()
         fid = extract_id(outbound._from)
+        o = OutboundDAO(fid, outbound.subject, outbound.story)
+        o.save()
         friends = list(map(Friend.from_dict, friendService.search(fid)))
         for friend in friends:
             f1 = extract_id(friend._from)
@@ -43,4 +43,4 @@ class OutboundService:
         return outbound
 
     def search(self, keywords: str):
-        return list(elastic.search(keywords))
+        return list(map(to_link, elastic.search(keywords)))
