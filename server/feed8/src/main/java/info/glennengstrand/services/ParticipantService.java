@@ -2,7 +2,6 @@ package info.glennengstrand.services;
 
 import java.util.Optional;
 import java.util.UUID;
-import java.util.Collections;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -94,7 +93,7 @@ public class ParticipantService implements ParticipantApi {
 		info.glennengstrand.dao.mysql.Participant p = new info.glennengstrand.dao.mysql.Participant();
 		p.setMoniker(body.getName());
 		info.glennengstrand.dao.mysql.Participant retVal = participantRepository.save(p);
-		return body.id(retVal.getId());
+		return body.link(Link.toLink(retVal.getId())).id(retVal.getId());
 	}
 
 	@Override
@@ -189,7 +188,7 @@ public class ParticipantService implements ParticipantApi {
 					.story(body.getStory());
 			addInbound(Link.extractId(f.getTo()), i);
 		});
-		indexStory(body.getFrom().toString(), body.getStory());
+		indexStory(Link.extractId(body.getFrom()).toString(), body.getStory());
 		return body.occurred(convert(UUIDs.unixTimestamp(o.getOccured())));
 	}
 

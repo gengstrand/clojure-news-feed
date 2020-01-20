@@ -35,8 +35,8 @@ class InboundDAO(select: PreparedStatement, upsert: PreparedStatement) extends I
       story <- item.story
     } yield (to, from, subject, story)
     data.foreach(d => {
-      bs.setInt(0, d._1.toInt)
-      bs.setInt(1, d._2.toInt)
+      bs.setInt(0, Link.extractId(d._1).toInt)
+      bs.setInt(1, Link.extractId(d._2).toInt)
       bs.setString(2, d._3)
       bs.setString(3, d._4)
     })

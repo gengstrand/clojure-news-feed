@@ -40,7 +40,7 @@ class OutboundItemDAO(select: PreparedStatement, upsert: PreparedStatement) exte
       story <- item.story
     } yield (from, subject, story)
     data.foreach(d => {
-      bs.setInt(0, d._1.toInt)
+      bs.setInt(0, Link.extractId(d._1).toInt)
       bs.setString(1, d._2)
       bs.setString(2, d._3)
     })
