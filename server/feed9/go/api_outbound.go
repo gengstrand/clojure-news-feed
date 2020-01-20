@@ -188,7 +188,7 @@ func SearchOutbound(w http.ResponseWriter, r *http.Request) {
 	for _, result := range searchResult.Each(reflect.TypeOf(osd)) {
 	    doc, ok := result.(OutboundStoryDocument)
 	    if ok {
-	       results = append(results, doc.Sender)
+	       	results = append(results, Linkify(doc.Sender))
 	    }
 	}
 	resultb, err := json.Marshal(results)
