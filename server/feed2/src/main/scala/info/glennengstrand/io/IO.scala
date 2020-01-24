@@ -17,6 +17,7 @@ import com.twitter.util.{FuturePool, Future}
 object IO {
   val settings = new Properties
   val df = new SimpleDateFormat("EEE MMM d HH:mm:ss z yyyy")
+  val df2 = new SimpleDateFormat("EEE MMM d")
   val log = LoggerFactory.getLogger("info.glennengstrand.io.IO")
   val r = new Random(Platform.currentTime)
   val jdbcVendor = "jdbc_vendor"
@@ -64,8 +65,14 @@ object IO {
     retVal match {
       case Success(d) => d
       case Failure(e) => {
-        log.warn(s"error ${e.getLocalizedMessage()} when attempting to parse $value as date")
-        new Date()
+        val rv2 = Try(df2.parse(value))
+        rv2 match {
+          case Success(d) => d
+          case Failure(e) => {
+            log.warn(s"error ${e.getLocalizedMessage()} when attempting to parse $value as date")
+            new Date()
+          }
+        }
       }
     }
   }

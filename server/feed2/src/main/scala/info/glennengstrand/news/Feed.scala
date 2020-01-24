@@ -70,6 +70,7 @@ class Feed extends Controller {
       val f = IO.workerPool {
         val before = System.currentTimeMillis()
         val retVal = Feed.factory.getObject("friends", request.params("id").toInt).get.asInstanceOf[MicroServiceSerializable].toJson(Feed.factory)
+        IO.log.warn("returning " + retVal.size.toString + " friends")
         val after = System.currentTimeMillis()
         Feed.factory.getObject("logger").get.asInstanceOf[PerformanceLogger].log(Feed.messageTopic, Feed.friendEntity, Feed.getOperation, after - before)
         retVal
@@ -169,12 +170,12 @@ class Feed extends Controller {
   get("/outbound") { request: Request => {
     val before = System.currentTimeMillis()
     val r = Try {
-      val body = request.contentString
+      val terms = request.params("keywords")
       val f = IO.workerPool {
-      val results = Outbound.lookup(body)
+      val results = Outbound.lookup(terms)
       val retVal = results.isEmpty match {
         case true => "[]"
-        case _ => "[" + results.map(s => s.toString()).reduce(_ + "," + _) + "]"
+        case _ => "[" + results.map(s => Link.toLink(s.toString().toLong)).reduce(_ + "," + _) + "]"
       }
       val after = System.currentTimeMillis()
       Feed.factory.getObject("logger").get.asInstanceOf[PerformanceLogger].log(Feed.messageTopic, Feed.outboundEntity, Feed.searchOperation, after - before)

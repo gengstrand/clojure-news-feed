@@ -79,7 +79,8 @@ class Participant(id: Int, name: String, link: String) extends ParticipantState(
   override def toJson: String = {
     val state: Map[String, Any] = Map(
       "name" -> name,
-      "id" -> id
+      "id" -> id,
+      "link" -> Link.toLink(id)
     )
     IO.toJson(state)
   }

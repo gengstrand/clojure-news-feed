@@ -49,15 +49,19 @@ class Inbound(participantID: String, occurred: Date, fromParticipantID: String, 
   this: PersistentDataStoreWriter with CacheAware =>
 
   def getState: Map[String, Any] = {
+    getState((s) => Link.extractId(participantID).intValue)
+  }
+
+  def getState(l:String => Any): Map[String, Any] = {
     Map(
-      "participantID" -> Link.extractId(participantID).intValue,
+      "participantID" -> l(participantID),
       "occurred" -> occurred,
-      "fromParticipantID" -> Link.extractId(fromParticipantID).intValue, 
+      "fromParticipantID" -> l(fromParticipantID), 
       "subject" -> subject,
       "story" -> story
     )
   }
-
+    
   /** save item to db */
   def save: Unit = {
     val criteria: Map[String, Any] = Map(
@@ -68,7 +72,7 @@ class Inbound(participantID: String, occurred: Date, fromParticipantID: String, 
   }
 
   override def toJson: String = {
-    IO.toJson(getState)
+    IO.toJson(getState((s) => s))
   }
 
   override def toJson(factory: FactoryClass): String = toJson

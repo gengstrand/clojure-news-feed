@@ -38,15 +38,13 @@ object Outbound extends ElasticSearchSearcher {
   }
   def apply(state: String): Outbound = {
     val s = IO.fromFormPost(state)
-    val id = s("from").asInstanceOf[String].toLong
+    val id = Link.extractId(s("from").asInstanceOf[String])
     val story = s("story").asInstanceOf[String]
     index(id, story)
     new Outbound(Link.toLink(id), IO.convertToDate(s("occurred").asInstanceOf[String]), s("subject").asInstanceOf[String], story) with CassandraWriter with MockCacheAware
   }
   def lookup(state: String): Iterable[Long] = {
-    val s = IO.fromFormPost(state)
-    val terms = s("keywords").asInstanceOf[String]
-    search(terms)
+    search(state)
   }
 }
 
@@ -56,30 +54,35 @@ case class OutboundState(participantID: String, occurred: Date, subject: String,
 class Outbound(participantID: String, occurred: Date, subject: String, story: String) extends OutboundState(participantID, occurred, subject, story) with MicroServiceSerializable {
   this: PersistentDataStoreWriter with CacheAware =>
 
-  def getState: Map[String, Any] = {
+  def getState(l: String => Any): Map[String, Any] = {
     Map(
-      "participantID" -> Link.extractId(participantID).intValue,
+      "participantID" -> l(participantID),
       "occurred" -> occurred,
       "subject" -> subject,
       "story" -> story
     )
   }
-
+  
+  def getState: Map[String, Any] = {
+    getState((s) => Link.extractId(s).intValue)
+  }
+  
   /** save item to db and perform social broadcast of item to inbound feed of friends */
   def save: Unit = {
+    val pid = Link.extractId(participantID).intValue
     val criteria: Map[String, Any] = Map(
-      "participantID" -> participantID
+      "participantID" -> pid
     )
     write(Outbound.bindings, getState, criteria)
     invalidate(Outbound.bindings, criteria)
-    val broadcast = Friends(Link.extractId(participantID).intValue)
+    val broadcast = Friends(pid)
     broadcast.foreach( f => {
-      val inbound =  new Inbound(Link.toLink(f.toParticipantID.toLong), occurred, participantID, subject, story) with CassandraWriter with MockCacheAware
+      val inbound =  new Inbound(f.toParticipantID, occurred, participantID, subject, story) with CassandraWriter with MockCacheAware
       inbound.save
     })
   }
   override def toJson: String = {
-    IO.toJson(getState)
+    IO.toJson(getState((s) => s))
   }
   override def toJson(factory: FactoryClass): String = toJson
 }
