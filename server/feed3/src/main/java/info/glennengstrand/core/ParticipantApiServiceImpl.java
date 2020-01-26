@@ -46,7 +46,11 @@ public class ParticipantApiServiceImpl implements ParticipantApiService {
 		long before = System.currentTimeMillis();
 		Participant retVal =  cache.get(id, () -> dao.fetchParticipant(id));
 		logger.log(ENTITY, MessageLogger.LogOperation.GET, System.currentTimeMillis() - before);
-		return retVal;
+		return new Participant.ParticipantBuilder()
+		    .withId(retVal.getId())
+		    .withName(retVal.getName())
+		    .withLink(Link.toLink(retVal.getId()))
+		    .build();
 	}
 
 }

@@ -32,16 +32,32 @@ import java.util.List;
 import io.dropwizard.jersey.params.LongParam;
 
 import info.glennengstrand.api.Friend;
+import info.glennengstrand.api.Participant;
 
 @Path("/participant/{id}")
 public class FriendApi {
 
    private final FriendApiService friendService;
+   private final ParticipantApi.ParticipantApiService participantService;
 	
    @Inject
-   public FriendApi(FriendApiService friendService) {
+   public FriendApi(FriendApiService friendService, ParticipantApi.ParticipantApiService participantService) {
       this.friendService = friendService;
+      this.participantService = participantService;
    }
+    
+   @GET
+   @Produces("application/json")
+  /**
+   * retrieve an individual participant
+   * fetch a participant by id
+   * @param id uniquely identifies the participant (required)
+   * @return Participant
+   */
+   public Participant getParticipant(@PathParam("id") LongParam id) {
+      return participantService.getParticipant(id.get());
+   }
+    
    @POST
    @Path("/friends")
    @Consumes("application/json")

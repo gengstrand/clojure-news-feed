@@ -4,7 +4,8 @@ import info.glennengstrand.io.{IO, MicroServiceSerializable, EmptyFactoryClass, 
 import com.twitter.finagle.http.Request
 import com.twitter.finatra.http.Controller
 import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
+import org.slf4j.LoggerFactory
+import java.net.URLDecoder
 import scala.util.{Try, Success, Failure}
 import com.twitter.util.{Await, Future}
 
@@ -46,7 +47,7 @@ class Feed extends Controller {
   post("/participant") { request: Request => {
     val before = System.currentTimeMillis()
     val r = Try {
-      val body = request.contentString
+      val body = URLDecoder.decode(request.contentString, "UTF-8")
       val f = IO.workerPool {
         val p = Feed.factory.getObject("participant", body).get.asInstanceOf[Participant]
         val retVal = "[" + p.save.toJson + "]"
@@ -87,7 +88,7 @@ class Feed extends Controller {
   }}
   post("/participant/:id/friends") { request: Request => {
     val r = Try {
-      val body = request.contentString
+      val body = URLDecoder.decode(request.contentString, "UTF-8")
       val f = IO.workerPool {
         val before = System.currentTimeMillis()
         val friend = Feed.factory.getObject("friend", body).get.asInstanceOf[Friend]
@@ -148,7 +149,7 @@ class Feed extends Controller {
   }}
   post("/participant/:id/outbound") { request: Request => {
     val r = Try {
-      val body = request.contentString
+      val body = URLDecoder.decode(request.contentString, "UTF-8")
       val f = IO.workerPool {
         val before = System.currentTimeMillis()
         val retVal = Feed.factory.getObject("outbound", body).get.asInstanceOf[Outbound]

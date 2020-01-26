@@ -52,6 +52,16 @@ class Inbound(participantID: String, occurred: Date, fromParticipantID: String, 
     getState((s) => Link.extractId(participantID).intValue)
   }
 
+  def getApiState(l:String => Any): Map[String, Any] = {
+    Map(
+      "to" -> l(participantID),
+      "occurred" -> occurred,
+      "from" -> l(fromParticipantID), 
+      "subject" -> subject,
+      "story" -> story
+    )
+  }
+    
   def getState(l:String => Any): Map[String, Any] = {
     Map(
       "participantID" -> l(participantID),
@@ -72,7 +82,7 @@ class Inbound(participantID: String, occurred: Date, fromParticipantID: String, 
   }
 
   override def toJson: String = {
-    IO.toJson(getState((s) => s))
+    IO.toJson(getApiState((s) => s))
   }
 
   override def toJson(factory: FactoryClass): String = toJson

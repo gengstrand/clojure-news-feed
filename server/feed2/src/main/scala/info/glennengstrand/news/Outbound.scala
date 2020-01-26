@@ -67,6 +67,15 @@ class Outbound(participantID: String, occurred: Date, subject: String, story: St
     getState((s) => Link.extractId(s).intValue)
   }
   
+  def getApiState(l: String => Any): Map[String, Any] = {
+    Map(
+      "from" -> l(participantID),
+      "occurred" -> occurred,
+      "subject" -> subject,
+      "story" -> story
+    )
+  }
+    
   /** save item to db and perform social broadcast of item to inbound feed of friends */
   def save: Unit = {
     val pid = Link.extractId(participantID).intValue
@@ -82,7 +91,7 @@ class Outbound(participantID: String, occurred: Date, subject: String, story: St
     })
   }
   override def toJson: String = {
-    IO.toJson(getState((s) => s))
+    IO.toJson(getApiState((s) => s))
   }
   override def toJson(factory: FactoryClass): String = toJson
 }

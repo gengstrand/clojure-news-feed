@@ -90,19 +90,26 @@
             "{ inbound { occurred, subject, story } }"
             "{ outbound { occurred, subject, story } }")))
       "}")})
-        
+
+(defn to-link
+  "convert id to link"
+  [participant-id]
+  (str "/participant/" participant-id))
+
 (defn service-url
   "generate the proper RESTful service url"
-  [entity-name operation]
+  [entity-name entity-id]
   (str
     (base-url)
-    entity-name
-    "/"
-    operation))
+      (if (= entity-name "participant")
+        (if (nil? entity-id)
+          "participant"
+          (str "participant/" entity-id))
+        (str "participant/" entity-id "/" entity-name))))
 
 (defn test-create-entity-service-call
   "call the service to create an entity and return results and timing"
-  [entity-name entity-params]
+  [entity-name entity-id entity-params]
   (let [before (System/currentTimeMillis)
         response 
         (if graphql
@@ -110,9 +117,9 @@
             (base-url) {:body (json/write-str (graphql-create entity-name entity-params)) :content-type :json :accept :json})
           (if json-post
             (client/post 
-              (service-url entity-name "new") {:body (json/write-str entity-params) :content-type :json :accept :json})
+              (service-url entity-name entity-id) {:body (json/write-str entity-params) :content-type :json :accept :json})
             (client/post 
-              (service-url entity-name "new") {:form-params entity-params})))]
+              (service-url entity-name entity-id) {:form-params entity-params})))]
     (if 
       (=
         (:status response)
@@ -123,7 +130,7 @@
 
 (defn test-create-entity-service-call-without-results
   "call the service to create an entity and return results and timing"
-  [entity-name entity-params]
+  [entity-name entity-id entity-params]
   (let [before (System/currentTimeMillis)
         response 
         (if graphql
@@ -131,9 +138,9 @@
             (base-url) {:body (json/write-str (graphql-create entity-name entity-params)) :content-type :json :accept :json})
           (if json-post
             (client/post 
-              (service-url entity-name "new") {:body (json/write-str entity-params) :content-type :json :accept :json})
+              (service-url entity-name entity-id) {:body (json/write-str entity-params) :content-type :json :accept :json})
             (client/post 
-              (service-url entity-name "new") {:form-params entity-params})))]
+              (service-url entity-name entity-id) {:form-params entity-params})))]
     (if 
       (=
         (:status response)
@@ -152,8 +159,8 @@
                         (json/write-str 
                           (graphql-search entity-params))
                         :content-type :json :accept :json})
-          (client/post 
-            (service-url entity-name "search") {:query-params entity-params :form-params entity-params}))]
+          (client/get 
+            (str (base-url) "outbound") {:query-params entity-params}))]
     (if 
       (=
         (:status response)
@@ -187,6 +194,7 @@
   (let [r (:results
 		(test-create-entity-service-call
           	"participant"
+            	nil
           	{:name name}))]
     (if 
       (vector? r)
@@ -210,9 +218,10 @@
     (if graphql
       "friend"
       "friends")
+    from
     (if graphql
       {:from_id from :to_id to}
-      {:from from :to to})))
+      {:from (to-link from) :to (to-link to)})))
 
 (defn test-fetch-friends
   "fetch the friends of a participant"
@@ -224,9 +233,10 @@
   [from occurred subject story]
   (test-create-entity-service-call-without-results
     "outbound"
+    from
     (if graphql
       {:from_id from :occurred occurred :subject subject :story story}
-      {:from from :occurred occurred :subject subject :story story})))
+      {:from (to-link from) :occurred occurred :subject subject :story story})))
 
 (defn test-fetch-inbound
   "fetch the activity feed of a participant"

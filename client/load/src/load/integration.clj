@@ -37,7 +37,6 @@
       (if (not (and (= extracted-from-name from-name)
                     (= extracted-to-name to-name)))
         (report-error "error saving participants"))
-      (log/info "about to fetch participants")
       (let [from-participant (:results (core/test-fetch-participant from-id))
             from-participant-name-via-service (get from-participant "name")
             to-participant (:results (core/test-fetch-participant to-id))
