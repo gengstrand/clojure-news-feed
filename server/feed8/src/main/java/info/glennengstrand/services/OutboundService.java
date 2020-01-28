@@ -33,6 +33,7 @@ public class OutboundService implements OutboundApi {
     private static Logger LOGGER = LoggerFactory.getLogger(OutboundService.class.getCanonicalName());
     public static final String DOCUMENT_INDEX = "feed";
     public static final String DOCUMENT_TYPE = "stories";
+    public static final int MAX_SEARCH_RESULTS = 1000;
     public static final String DOCUMENT_SEARCH_FIELD = "story";
     public static final String DOCUMENT_RESULT_FIELD = "sender";
     
@@ -41,7 +42,7 @@ public class OutboundService implements OutboundApi {
     
     private List<Long> searchStories(String keywords) {
     	SearchRequest req = new SearchRequest(DOCUMENT_INDEX).types(DOCUMENT_TYPE);
-    	SearchSourceBuilder builder = new SearchSourceBuilder();
+    	SearchSourceBuilder builder = new SearchSourceBuilder().size(MAX_SEARCH_RESULTS);
     	builder.query(QueryBuilders.termQuery(DOCUMENT_SEARCH_FIELD, keywords));
     	req.source(builder);
 		try {

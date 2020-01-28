@@ -165,7 +165,7 @@
       (=
         (:status response)
         200)
-      { :results (:body response) 
+      { :results (json/read-str (:body response) )
         :duration (- (System/currentTimeMillis) before)})))
 
 (defn test-fetch-entity-service-call

@@ -31,7 +31,7 @@ var esPool = &sync.Pool{
 
 type OutboundStoryDocument struct {
      	Id string `json:"id"`
-	Sender string `json:"sender"`
+	Sender int64 `json:"sender"`
 	Story string `json:"story"`
 }
 
@@ -106,9 +106,14 @@ func AddOutbound(w http.ResponseWriter, r *http.Request) {
 	   return
 	}
 	esid := fmt.Sprintf("%s", esidr)
+	from, err := strconv.ParseInt(vars["id"], 0, 64)
+	if err != nil {
+	    ew.LogError(err, "id is not an integer: %s", http.StatusBadRequest)
+	    return
+	}
 	osd := OutboundStoryDocument{
 	    Id: esid,
-	    Sender: vars["id"],
+	    Sender: from,
 	    Story: ob.Story,
 	}
 	AddOutboundInner(ob, ew, cw, rw, dbw)
@@ -176,6 +181,7 @@ func SearchOutbound(w http.ResponseWriter, r *http.Request) {
 	query := elastic.NewMatchQuery("story", string(keywords[0]))
 	searchResult, err := esclient.Search().
 		      Index("feed").
+		      Size(1000).
 		      Query(query).
 		      Do()
 	if err != nil {
@@ -188,7 +194,7 @@ func SearchOutbound(w http.ResponseWriter, r *http.Request) {
 	for _, result := range searchResult.Each(reflect.TypeOf(osd)) {
 	    doc, ok := result.(OutboundStoryDocument)
 	    if ok {
-	       	results = append(results, Linkify(doc.Sender))
+	       	results = append(results, ToLink(doc.Sender))
 	    }
 	}
 	resultb, err := json.Marshal(results)

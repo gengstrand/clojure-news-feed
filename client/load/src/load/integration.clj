@@ -14,6 +14,9 @@
 (def test-subject "test subject")
 (def test-story "test story")
 
+(defn parse-int [s]
+   (Integer. (re-find  #"\d+" s )))
+
 (defn starts-with? 
   "determines whether or not a string value begins with another value"
   [look-in look-for]
@@ -75,7 +78,11 @@
       (report-error "error in social broadcast logic")))
   (Thread/sleep 10000)
   (if (not (>= (count (doall (filter (fn [sender] (= sender from-id)) (elastic/search "test")))) 1))
-    (report-error (str "Error in keyword search. Cannot find sender " from-id " in " (json/write-str (elastic/search "test"))))))
+    (report-error (str "Error in keyword search. Cannot find sender " from-id " in " (json/write-str (elastic/search "test")))))
+  (let [from-sender (str "/participant/" (.toString from-id))
+       search-results (:results (core/test-search "test"))]
+    (if (not (>= (count (doall (filter (fn [sender] (= from-sender sender)) search-results))) 1))
+      (report-error (str "Error in keyword search. Cannot find sender " from-sender " in " search-results)))))
 
 (defn perform-integration-test
   "perform basic use case and verify with underlying data stores"

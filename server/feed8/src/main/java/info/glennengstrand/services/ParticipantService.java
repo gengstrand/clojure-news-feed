@@ -64,8 +64,8 @@ public class ParticipantService implements ParticipantApi {
 
     private static Logger LOGGER = LoggerFactory.getLogger(ParticipantService.class.getCanonicalName());
 
-    private void indexStory(String sender, String story) {
-	    Map<String, String> doc = new HashMap<>();
+    private void indexStory(Long sender, String story) {
+	    Map<String, Object> doc = new HashMap<>();
 	    doc.put(OutboundService.DOCUMENT_RESULT_FIELD, sender);
 	    doc.put(OutboundService.DOCUMENT_SEARCH_FIELD, story);
 	    IndexRequest req = new IndexRequest(OutboundService.DOCUMENT_INDEX, OutboundService.DOCUMENT_TYPE, UUID.randomUUID().toString()).source(doc);
@@ -188,7 +188,7 @@ public class ParticipantService implements ParticipantApi {
 					.story(body.getStory());
 			addInbound(Link.extractId(f.getTo()), i);
 		});
-		indexStory(Link.extractId(body.getFrom()).toString(), body.getStory());
+		indexStory(id, body.getStory());
 		return body.occurred(convert(UUIDs.unixTimestamp(o.getOccured())));
 	}
 
