@@ -52,15 +52,19 @@ func makePerfLogEntry(path string, method string, body string, status int, durat
           req = HttpLogRequest{fmt.Sprintf("/%s/new", strings.ToLower(m[1])), method}
        }
     } else {
-       m := restMatcher.FindStringSubmatch(path)
-       if &m != nil && len(m) > 2 {
-         if strings.Compare("post", strings.ToLower(method)) == 0 {
-       	   req = HttpLogRequest{fmt.Sprintf("/%s/new", strings.ToLower(m[2])), method}
-	 } else {
-       	   req = HttpLogRequest{fmt.Sprintf("/%s/%s", strings.ToLower(m[2]), m[1]), method}
-	 }
+       if strings.Compare("get", strings.ToLower(method)) == 0 && strings.Compare("/outbound", strings.ToLower(path)) == 0 {
+         req = HttpLogRequest{"/outbound/search", "POST"}
        } else {
-       	 req = HttpLogRequest{path, method}
+         m := restMatcher.FindStringSubmatch(path)
+         if &m != nil && len(m) > 2 {
+           if strings.Compare("post", strings.ToLower(method)) == 0 {
+       	     req = HttpLogRequest{fmt.Sprintf("/%s/new", strings.ToLower(m[2])), method}
+	   } else {
+       	     req = HttpLogRequest{fmt.Sprintf("/%s/%s", strings.ToLower(m[2]), m[1]), method}
+	   }
+         } else {
+       	   req = HttpLogRequest{path, method}
+         }
        }
     }
     resp := HttpLogResponse{status}
