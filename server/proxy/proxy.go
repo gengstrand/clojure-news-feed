@@ -42,6 +42,7 @@ func isGraphQl(path string, method string) bool {
 }
 
 var graphQlMatcher = regexp.MustCompile(`mutation.*create([A-Z][a-z]+)\(`)
+var restMatcher = regexp.MustCompile(`/participant/([0-9]+)/([a-z]+)`)
 
 func makePerfLogEntry(path string, method string, body string, status int, duration int64) HttpLog {
     var req HttpLogRequest
@@ -51,7 +52,16 @@ func makePerfLogEntry(path string, method string, body string, status int, durat
           req = HttpLogRequest{fmt.Sprintf("/%s/new", strings.ToLower(m[1])), method}
        }
     } else {
-       req = HttpLogRequest{path, method}
+       m := restMatcher.FindStringSubmatch(path)
+       if &m != nil && len(m) > 2 {
+         if strings.Compare("post", strings.ToLower(method)) == 0 {
+       	   req = HttpLogRequest{fmt.Sprintf("/%s/new", strings.ToLower(m[2])), method}
+	 } else {
+       	   req = HttpLogRequest{fmt.Sprintf("/%s/%s", strings.ToLower(m[2]), m[1]), method}
+	 }
+       } else {
+       	 req = HttpLogRequest{path, method}
+       }
     }
     resp := HttpLogResponse{status}
     lat := HttpLogLatencies{duration}
