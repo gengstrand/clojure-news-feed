@@ -71,7 +71,6 @@ class Feed extends Controller {
       val f = IO.workerPool {
         val before = System.currentTimeMillis()
         val retVal = Feed.factory.getObject("friends", request.params("id").toInt).get.asInstanceOf[MicroServiceSerializable].toJson(Feed.factory)
-        IO.log.warn("returning " + retVal.size.toString + " friends")
         val after = System.currentTimeMillis()
         Feed.factory.getObject("logger").get.asInstanceOf[PerformanceLogger].log(Feed.messageTopic, Feed.friendEntity, Feed.getOperation, after - before)
         retVal
