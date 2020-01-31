@@ -2,6 +2,7 @@ package info.glennengstrand.services;
 
 import java.io.IOException;
 import java.util.ArrayList;
+import java.util.Collections;
 import java.util.List;
 
 import org.elasticsearch.client.RestHighLevelClient;
@@ -18,37 +19,32 @@ import org.springframework.test.context.junit4.SpringRunner;
 import org.threeten.bp.OffsetDateTime;
 
 import info.glennengstrand.api.Outbound;
+import info.glennengstrand.util.Link;
 import info.glennengstrand.dao.cassandra.InboundRepository;
 import info.glennengstrand.dao.cassandra.NewsFeedItemKey;
 import info.glennengstrand.dao.cassandra.OutboundRepository;
 import info.glennengstrand.dao.mysql.Friend;
 import info.glennengstrand.dao.mysql.FriendRepository;
-import info.glennengstrand.resources.FriendsApi;
-import info.glennengstrand.resources.InboundApi;
+import info.glennengstrand.dao.mysql.ParticipantRepository;
+import info.glennengstrand.resources.ParticipantApi;
 import info.glennengstrand.resources.OutboundApi;
 import io.swagger.configuration.RedisConfiguration.FriendRedisTemplate;
+import io.swagger.configuration.RedisConfiguration.ParticipantRedisTemplate;
 
 @RunWith(SpringRunner.class)
-public class OutboundServiceTest {
+public class ParticipantServiceTest {
 
 	@TestConfiguration
-	static class OutboundServiceImplTestContextConfiguration {
+	static class ParticipantServiceImplTestContextConfiguration {
 		@Bean
-		public OutboundApi outboundService() {
-			return new OutboundService();
+		public ParticipantApi participantService() {
+			return new ParticipantService();
 		}
-		@Bean
-		public FriendsApi friendsService() {
-			return new FriendsService();
-		}
-		@Bean
-		public InboundApi inboundService() {
-			return new InboundService();
-		}
+
 	}
-	
+		
 	@Autowired
-	private OutboundApi outboundService;
+	private ParticipantApi participantService;
 	
 	@MockBean
 	private OutboundRepository outboundRepository;
@@ -61,6 +57,12 @@ public class OutboundServiceTest {
 
 	@MockBean
 	private FriendRedisTemplate friendRedisTemplate;
+	
+	@MockBean
+	private ParticipantRepository participantRepository;
+	
+	@MockBean
+	private ParticipantRedisTemplate participantRedisTemplate;
 	
 	@MockBean
 	private RestHighLevelClient esClient;
@@ -80,6 +82,7 @@ public class OutboundServiceTest {
 		NewsFeedItemKey k = new NewsFeedItemKey();
 		o.setOccured(k.getOccurred());
 		Mockito.when(friendRepository.findByFromParticipantId(fromParticipantId)).thenReturn(friends);
+		Mockito.when(friendRepository.findByToParticipantId(fromParticipantId)).thenReturn(Collections.emptyList());
 		Mockito.when(friendRedisTemplate.hasKey(Mockito.anyString())).thenReturn(false);
 		Mockito.when(friendRedisTemplate.boundValueOps(Mockito.anyString())).thenReturn(new FriendRedisOperation());
 		Mockito.when(outboundRepository.save(Mockito.any())).thenReturn(o);
@@ -87,8 +90,8 @@ public class OutboundServiceTest {
 
 	@Test
 	public void testAddOutbound() throws IOException {
-		Outbound t = new Outbound().from(fromParticipantId).story("test story").subject("test subject").occurred(OffsetDateTime.now());
-		outboundService.addOutbound(t);
+		Outbound t = new Outbound().from(Link.toLink(fromParticipantId)).story("test story").subject("test subject").occurred(OffsetDateTime.now());
+		participantService.addOutbound(fromParticipantId, t);
 		Mockito.verify(inboundRepository).save(Mockito.any());
 	}
 

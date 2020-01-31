@@ -24,37 +24,13 @@ tags:
 schemes:
 - "http"
 paths:
-  /friends/new:
-    post:
-      tags:
-      - "friend"
-      summary: "create a new friendship"
-      description: "friends are those participants who receive news"
-      operationId: "addFriend"
-      consumes:
-      - "application/json"
-      produces:
-      - "application/json"
-      parameters:
-      - in: "body"
-        name: "body"
-        description: "friendship to be created"
-        required: true
-        schema:
-          $ref: "#/definitions/friend"
-      responses:
-        200:
-          description: "successful operation"
-          schema:
-            $ref: "#/definitions/friend"
-      x-swagger-router-controller: "Friend"
-  /friends/{id}:
+  /participant/{id}:
     get:
       tags:
-      - "friend"
-      summary: "retrieve the list of friends for an individual participant"
-      description: "fetch participant friends"
-      operationId: "getFriend"
+      - "participant"
+      summary: "retrieve an individual participant"
+      description: "fetch a participant by id"
+      operationId: "getParticipant"
       produces:
       - "application/json"
       parameters:
@@ -68,107 +44,9 @@ paths:
         200:
           description: "successful operation"
           schema:
-            type: "array"
-            items:
-              $ref: "#/definitions/friend"
-      x-swagger-router-controller: "Friend"
-  /inbound/{id}:
-    get:
-      tags:
-      - "inbound"
-      summary: "retrieve the inbound feed for an individual participant"
-      description: "fetch inbound feed by id"
-      operationId: "getInbound"
-      produces:
-      - "application/json"
-      parameters:
-      - name: "id"
-        in: "path"
-        description: "uniquely identifies the participant"
-        required: true
-        type: "integer"
-        format: "int64"
-      responses:
-        200:
-          description: "successful operation"
-          schema:
-            type: "array"
-            items:
-              $ref: "#/definitions/inbound"
-      x-swagger-router-controller: "Inbound"
-  /outbound/new:
-    post:
-      tags:
-      - "outbound"
-      summary: "create a participant news item"
-      description: "socially broadcast participant news"
-      operationId: "addOutbound"
-      consumes:
-      - "application/json"
-      produces:
-      - "application/json"
-      parameters:
-      - in: "body"
-        name: "body"
-        description: "outbound news item"
-        required: true
-        schema:
-          $ref: "#/definitions/outbound"
-      responses:
-        200:
-          description: "successful operation"
-          schema:
-            $ref: "#/definitions/outbound"
-      x-swagger-router-controller: "Outbound"
-  /outbound/search:
-    post:
-      tags:
-      - "outbound"
-      summary: "create a participant news item"
-      description: "keyword search of participant news"
-      operationId: "searchOutbound"
-      produces:
-      - "application/json"
-      parameters:
-      - name: "keywords"
-        in: "query"
-        description: "keywords to search for"
-        required: true
-        type: "string"
-      responses:
-        200:
-          description: "successful operation"
-          schema:
-            type: "array"
-            items:
-              type: "integer"
-              format: "int64"
-      x-swagger-router-controller: "Outbound"
-  /outbound/{id}:
-    get:
-      tags:
-      - "outbound"
-      summary: "retrieve the news posted by an individual participant"
-      description: "fetch a participant news"
-      operationId: "getOutbound"
-      produces:
-      - "application/json"
-      parameters:
-      - name: "id"
-        in: "path"
-        description: "uniquely identifies the participant"
-        required: true
-        type: "integer"
-        format: "int64"
-      responses:
-        200:
-          description: "successful operation"
-          schema:
-            type: "array"
-            items:
-              $ref: "#/definitions/outbound"
-      x-swagger-router-controller: "Outbound"
-  /participant/new:
+            $ref: "#/definitions/participant"
+      x-swagger-router-controller: "Participant"
+  /participant:
     post:
       tags:
       - "participant"
@@ -192,13 +70,13 @@ paths:
           schema:
             $ref: "#/definitions/participant"
       x-swagger-router-controller: "Participant"
-  /participant/{id}:
+  /participant/{id}/friends:
     get:
       tags:
-      - "participant"
-      summary: "retrieve an individual participant"
-      description: "fetch a participant by id"
-      operationId: "getParticipant"
+      - "friend"
+      summary: "retrieve the list of friends for an individual participant"
+      description: "fetch participant friends"
+      operationId: "getFriend"
       produces:
       - "application/json"
       parameters:
@@ -212,8 +90,139 @@ paths:
         200:
           description: "successful operation"
           schema:
-            $ref: "#/definitions/participant"
-      x-swagger-router-controller: "Participant"
+            type: "array"
+            items:
+              $ref: "#/definitions/friend"
+      x-swagger-router-controller: "Friend"
+    post:
+      tags:
+      - "friend"
+      summary: "create a new friendship"
+      description: "friends are those participants who receive news"
+      operationId: "addFriend"
+      consumes:
+      - "application/json"
+      produces:
+      - "application/json"
+      parameters:
+      - name: "id"
+        in: "path"
+        description: "uniquely identifies the participant"
+        required: true
+        type: "integer"
+        format: "int64"
+      - in: "body"
+        name: "body"
+        description: "friendship to be created"
+        required: true
+        schema:
+          $ref: "#/definitions/friend"
+      responses:
+        200:
+          description: "successful operation"
+          schema:
+            $ref: "#/definitions/friend"
+      x-swagger-router-controller: "Friend"
+  /participant/{id}/inbound:
+    get:
+      tags:
+      - "inbound"
+      summary: "retrieve the inbound feed for an individual participant"
+      description: "fetch inbound feed by id"
+      operationId: "getInbound"
+      produces:
+      - "application/json"
+      parameters:
+      - name: "id"
+        in: "path"
+        description: "uniquely identifies the participant"
+        required: true
+        type: "integer"
+        format: "int64"
+      responses:
+        200:
+          description: "successful operation"
+          schema:
+            type: "array"
+            items:
+              $ref: "#/definitions/inbound"
+      x-swagger-router-controller: "Inbound"
+  /participant/{id}/outbound:
+    get:
+      tags:
+      - "outbound"
+      summary: "retrieve the news posted by an individual participant"
+      description: "fetch a participant news"
+      operationId: "getOutbound"
+      produces:
+      - "application/json"
+      parameters:
+      - name: "id"
+        in: "path"
+        description: "uniquely identifies the participant"
+        required: true
+        type: "integer"
+        format: "int64"
+      responses:
+        200:
+          description: "successful operation"
+          schema:
+            type: "array"
+            items:
+              $ref: "#/definitions/outbound"
+      x-swagger-router-controller: "Outbound"
+    post:
+      tags:
+      - "outbound"
+      summary: "create a participant news item"
+      description: "socially broadcast participant news"
+      operationId: "addOutbound"
+      consumes:
+      - "application/json"
+      produces:
+      - "application/json"
+      parameters:
+      - name: "id"
+        in: "path"
+        description: "uniquely identifies the participant"
+        required: true
+        type: "integer"
+        format: "int64"
+      - in: "body"
+        name: "body"
+        description: "outbound news item"
+        required: true
+        schema:
+          $ref: "#/definitions/outbound"
+      responses:
+        200:
+          description: "successful operation"
+          schema:
+            $ref: "#/definitions/outbound"
+      x-swagger-router-controller: "Outbound"
+  /outbound:
+    get:
+      tags:
+      - "outbound"
+      summary: "search outbound feed items for terms"
+      description: "keyword search of participant news"
+      operationId: "searchOutbound"
+      produces:
+      - "application/json"
+      parameters:
+      - name: "keywords"
+        in: "query"
+        description: "keywords to search for"
+        required: true
+        type: "string"
+      responses:
+        200:
+          description: "successful operation"
+          schema:
+            type: "array"
+            items:
+              type: "string"
+      x-swagger-router-controller: "Outbound"
 definitions:
   participant:
     type: "object"
@@ -223,6 +232,12 @@ definitions:
         format: "int64"
       name:
         type: "string"
+      link:
+        type: "string"
+    example:
+      name: "name"
+      link: "link"
+      id: 0
   friend:
     type: "object"
     properties:
@@ -230,20 +245,20 @@ definitions:
         type: "integer"
         format: "int64"
       from:
-        type: "integer"
-        format: "int64"
+        type: "string"
       to:
-        type: "integer"
-        format: "int64"
+        type: "string"
+    example:
+      from: "from"
+      id: 0
+      to: "to"
   inbound:
     type: "object"
     properties:
       from:
-        type: "integer"
-        format: "int64"
+        type: "string"
       to:
-        type: "integer"
-        format: "int64"
+        type: "string"
       occurred:
         type: "string"
         format: "date-time"
@@ -251,12 +266,17 @@ definitions:
         type: "string"
       story:
         type: "string"
+    example:
+      occurred: "2000-01-23T04:56:07.000+00:00"
+      subject: "subject"
+      from: "from"
+      to: "to"
+      story: "story"
   outbound:
     type: "object"
     properties:
       from:
-        type: "integer"
-        format: "int64"
+        type: "string"
       occurred:
         type: "string"
         format: "date-time"
@@ -264,3 +284,8 @@ definitions:
         type: "string"
       story:
         type: "string"
+    example:
+      occurred: "2000-01-23T04:56:07.000+00:00"
+      subject: "subject"
+      from: "from"
+      story: "story"

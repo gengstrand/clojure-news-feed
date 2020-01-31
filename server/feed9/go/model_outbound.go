@@ -16,7 +16,7 @@ import (
 
 type Outbound struct {
 
-	From int64 `json:"from,omitempty"`
+	From string `json:"from,omitempty"`
 
 	Occurred time.Time `json:"occurred,omitempty"`
 

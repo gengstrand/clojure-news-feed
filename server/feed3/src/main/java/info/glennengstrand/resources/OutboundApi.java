@@ -25,17 +25,15 @@ import com.google.inject.Inject;
 import javax.ws.rs.GET;  
 import javax.ws.rs.POST;  
 import javax.ws.rs.PathParam;
-import javax.ws.rs.QueryParam;
 import javax.ws.rs.Path;
 import javax.ws.rs.Produces;
 import javax.ws.rs.Consumes;
-import javax.ws.rs.core.MediaType;
 import java.util.List;
 import io.dropwizard.jersey.params.LongParam;
 
 import info.glennengstrand.api.Outbound;
 
-@Path("/outbound")
+@Path("/participant/{id}")
 public class OutboundApi {
 
    private final OutboundApiService outboundService;
@@ -45,20 +43,21 @@ public class OutboundApi {
       this.outboundService = outboundService;
    }
    @POST
-   @Path("/new")
+   @Path("/outbound")
    @Consumes("application/json")
    @Produces("application/json")
   /**
    * create a participant news item
    * socially broadcast participant news
+   * @param id uniquely identifies the participant (required)
    * @param body outbound news item (required)
    * @return Outbound
    */
-   public Outbound addOutbound(Outbound body) {
-      return outboundService.addOutbound(body);
+   public Outbound addOutbound(@PathParam("id") LongParam id,  Outbound body) {
+      return outboundService.addOutbound(id.get(), body);
    }
    @GET
-   @Path("/{id}")
+   @Path("/outbound")
    @Produces("application/json")
   /**
    * retrieve the news posted by an individual participant
@@ -69,21 +68,9 @@ public class OutboundApi {
    public List<Outbound> getOutbound(@PathParam("id") LongParam id) {
       return outboundService.getOutbound(id.get());
    }
-   @POST
-   @Path("/search")
-   @Produces("application/json")
-  /**
-   * create a participant news item
-   * keyword search of participant news
-   * @param keywords keywords to search for (required)
-   * @return List<Long>
-   */
-   public List<Long> searchOutbound(String keywords) {
-      return outboundService.searchOutbound(keywords);
-   }
    public static interface OutboundApiService {
-      Outbound addOutbound(Outbound body);
-      List<Outbound> getOutbound(Long id);
-      List<Long> searchOutbound(String keywords);
-   }
+	      Outbound addOutbound(Long id, Outbound body);
+	      List<Outbound> getOutbound(Long id);
+	      List<String> searchOutbound(String keywords);
+	   }
 }

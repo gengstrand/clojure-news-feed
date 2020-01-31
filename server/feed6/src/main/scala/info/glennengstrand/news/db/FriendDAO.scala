@@ -8,6 +8,7 @@ import cats.data._
 import cats.implicits._
 import info.glennengstrand.news.model.Friend
 import info.glennengstrand.news.core.EntityDAO
+import info.glennengstrand.news.Link
 
 class FriendDAO extends EntityDAO[Friend] {
   def get(id: Long)(implicit db: Transactor[IO]): Option[Friend] = {
@@ -19,13 +20,13 @@ class FriendDAO extends EntityDAO[Friend] {
       .to[List]
       .transact(db)
       .unsafeRunSync
-      .map(f => Friend(Option(id), Option(f._1), Option(f._2)))
+      .map(f => Friend(Option(id), Option(Link.toLink(f._1)), Option(Link.toLink(f._2))))
   }
   def add(friend: Friend)(implicit db: Transactor[IO]): Friend = {
     val retVal = for {
       from <- friend.from
       to <- friend.to
-      val result = sql"call UpsertFriends(${from}, ${to})"
+      val result = sql"call UpsertFriends(${Link.extractId(from)}, ${Link.extractId(to)})"
         .query[Long]
         .to[List]
         .transact(db)
@@ -43,7 +44,7 @@ class MockFriendDAO extends EntityDAO[Friend] {
     None
   }
   def gets(id: Long)(implicit db: Transactor[IO]): List[Friend] = {
-    List(Friend(Option(1L), Option(1L), Option(2L)))
+    List(Friend(Option(1L), Option(Link.toLink(1L)), Option(Link.toLink(2L))))
   }
   def add(friend: Friend)(implicit db: Transactor[IO]): Friend = {
     friend

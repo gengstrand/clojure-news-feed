@@ -17,7 +17,7 @@ class TestParticipantController(BaseTestCase):
         create a new participant
         """
         body = Participant(1, 'test')
-        response = self.client.open('/participant/new',
+        response = self.client.open('/participant',
                                     method='POST',
                                     data=json.dumps(body),
                                     content_type='application/json')

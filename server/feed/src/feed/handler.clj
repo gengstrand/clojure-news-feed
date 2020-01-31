@@ -33,51 +33,51 @@
          (log-performance m/participant-mbean participant-entity get-operation (- (System/currentTimeMillis) before))
          (c/prepare-response-for-client result)))
   (route/resources "/participant/:id")
-  (POST "/participant/new" [name] 
+  (POST "/participant" [name] 
        (let [before (System/currentTimeMillis)
              result (c/logging-save (feed.core.Participant. 0 name) c/save-participant-to-cache)]
          (log-performance m/participant-mbean participant-entity post-operation (- (System/currentTimeMillis) before))
          (c/prepare-response-for-client result)))
-  (route/resources "/participant/new")
-  (GET "/friends/:id" [id]
+  (route/resources "/participant")
+  (GET "/participant/:id/friends" [id]
        (let [before (System/currentTimeMillis)
              result (c/logging-load (parse-int id) "class feed.core.Friend" c/load-friends-from-cache c/save-friend-to-cache c/load-friends-from-db)]
          (log-performance m/friends-mbean friends-entity get-operation (- (System/currentTimeMillis) before))
          (c/prepare-response-for-client result)))
-  (route/resources "/friends/:id")
-  (POST "/friends/new" [from to] 
+  (route/resources "/participant/:id/friends")
+  (POST "/participant/:id/friends" [id to] 
        (let [before (System/currentTimeMillis)
-             result (c/logging-save (feed.core.Friend. 0 (parse-int from) (parse-int to)) c/save-friend-to-cache)]
+             result (c/logging-save (feed.core.Friend. 0 (parse-int id) (parse-int to)) c/save-friend-to-cache)]
          (log-performance m/friends-mbean friends-entity post-operation (- (System/currentTimeMillis) before))
          (c/prepare-response-for-client result)))
-  (route/resources "/friends/new")
-  (GET "/inbound/:id" [id]
+  (route/resources "/participant/:id/friends")
+  (GET "/participant/:id/inbound" [id]
        (let [before (System/currentTimeMillis)
              result (c/logging-load (parse-int id) "class feed.core.Inbound" c/load-inbound-from-cache c/save-inbound-to-cache c/load-inbound-from-db)]
          (log-performance m/inbound-mbean inbound-entity get-operation (- (System/currentTimeMillis) before))
          (c/prepare-response-for-client result)))
-  (route/resources "/inbound/:id")
-  (GET "/outbound/:id" [id]
+  (route/resources "/participant/:id/inbound")
+  (GET "/participant/:id/outbound" [id]
        (let [before (System/currentTimeMillis)
              result (c/logging-load (parse-int id) "class feed.core.Outbound" c/load-outbound-from-cache c/save-outbound-to-cache c/load-outbound-from-db)]
          (log-performance m/outbound-mbean outbound-entity get-operation (- (System/currentTimeMillis) before))
          (c/prepare-response-for-client result)))
-  (route/resources "/outbound/:id")
-  (POST "/outbound/new" [from occurred subject story] 
+  (route/resources "/participant/:id/outbound")
+  (POST "/participant/:id/outbound" [id occurred subject story] 
        (let [before (System/currentTimeMillis)
-             fromid (parse-int from)
+             fromid (parse-int id)
              result (c/logging-save (feed.core.Outbound. fromid occurred subject story) c/save-outbound-to-cache)]
          (doseq [friend (c/logging-load fromid "class feed.core.Friend" c/load-friends-from-cache c/save-friend-to-cache c/load-friends-from-db)]
            (c/logging-save (feed.core.Inbound. (:to friend) fromid occurred subject story) c/save-inbound-to-cache))
          (log-performance m/outbound-mbean outbound-entity post-operation (- (System/currentTimeMillis) before))
          (c/prepare-response-for-client result)))
-  (route/resources "/outbound/new")
-  (POST "/outbound/search" [terms]
+  (route/resources "/participant/:id/outbound")
+  (GET "/outbound" [terms]
        (let [before (System/currentTimeMillis)
              results (search/search terms)]
          (log-performance m/outbound-mbean outbound-entity search-operation (- (System/currentTimeMillis) before))
          (str results)))
-  (route/resources "/outbound/search")
+  (route/resources "/outbound")
         
   (route/not-found "Not Found"))
 

@@ -19,8 +19,6 @@ class ScalatraBootstrap extends LifeCycle {
 
   override def init(context: ServletContext) {
     try {
-      context mount (new FriendApi, "/friends/*")
-      context mount (new InboundApi, "/inbound/*")
       context mount (new OutboundApi, "/outbound/*")
       context mount (new ParticipantApi, "/participant/*")
 

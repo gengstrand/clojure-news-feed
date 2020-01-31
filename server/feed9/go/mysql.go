@@ -69,8 +69,8 @@ func (dbw MySqlWrapper) FetchFriends(id string)([]Friend, error) {
 	      pids[pid] = pid
 	      f := Friend{
 	        Id: fid,
-	        From: i,
-	        To: pid,
+	        From: ToLink(i),
+	        To: ToLink(pid),
 	      }
 	      results = append(results, f)
 	    }

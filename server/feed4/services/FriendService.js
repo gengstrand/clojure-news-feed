@@ -1,8 +1,10 @@
 'use strict';
 
+var Link = require('../controllers/util');
+
 exports.addFriend = function(args, callback) {
   /**
-   * parameters expected in the args:
+  * parameters expected in the args:
   * body (Friend)
   **/
   const pool = require('../repositories/mysql').pool;
@@ -12,7 +14,9 @@ exports.addFriend = function(args, callback) {
 	  callback(err, null);
 	  return;
       }
-      conn.query(mysql.format("call UpsertFriends(?, ?)", [args.body.value.from, args.body.value.to]), function (err, rows) {
+      var from = Link.extract_id(args.id.value);
+      var to = Link.extract_id(args.body.value.to);
+      conn.query(mysql.format("call UpsertFriends(?, ?)", [from, to]), function (err, rows) {
 	  if (err) {
 	      conn.release();
 	      callback(err, null);
@@ -21,8 +25,8 @@ exports.addFriend = function(args, callback) {
 	  var result = rows[0].map(function(row) {
 	      return {
 		  'id':row['id'],
-		  'from':args.body.value.from, 
-	          'to': args.body.value.to };
+		  'from': from, 
+	          'to': to };
 	  });
 	  conn.release();
 	  callback(null, result);

@@ -9,7 +9,7 @@ class Inbound(CassandraDAO):
     insert = 'insert_inbound'
     query = 'select_inbound'
 
-    def __init__(self, to: str, _from: str = None, subject: str = None, story: str = None):
+    def __init__(self, to: int, _from: int = None, subject: str = None, story: str = None):
         self._from = _from
         self.to = to
         self.subject = subject

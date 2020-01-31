@@ -4,7 +4,8 @@ import info.glennengstrand.io.{IO, MicroServiceSerializable, EmptyFactoryClass, 
 import com.twitter.finagle.http.Request
 import com.twitter.finatra.http.Controller
 import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
+import org.slf4j.LoggerFactory
+import java.net.URLDecoder
 import scala.util.{Try, Success, Failure}
 import com.twitter.util.{Await, Future}
 
@@ -43,10 +44,10 @@ class Feed extends Controller {
       }
     }
   }}
-  post("/participant/new") { request: Request => {
+  post("/participant") { request: Request => {
     val before = System.currentTimeMillis()
     val r = Try {
-      val body = request.contentString
+      val body = URLDecoder.decode(request.contentString, "UTF-8")
       val f = IO.workerPool {
         val p = Feed.factory.getObject("participant", body).get.asInstanceOf[Participant]
         val retVal = "[" + p.save.toJson + "]"
@@ -65,7 +66,7 @@ class Feed extends Controller {
       }
     }
   }}
-  get("/friends/:id") { request: Request => {
+  get("/participant/:id/friends") { request: Request => {
     val r = Try {
       val f = IO.workerPool {
         val before = System.currentTimeMillis()
@@ -84,9 +85,9 @@ class Feed extends Controller {
       }
     }
   }}
-  post("/friends/new") { request: Request => {
+  post("/participant/:id/friends") { request: Request => {
     val r = Try {
-      val body = request.contentString
+      val body = URLDecoder.decode(request.contentString, "UTF-8")
       val f = IO.workerPool {
         val before = System.currentTimeMillis()
         val friend = Feed.factory.getObject("friend", body).get.asInstanceOf[Friend]
@@ -107,7 +108,7 @@ class Feed extends Controller {
       }
     }
   }}
-  get("/inbound/:id") { request: Request => {
+  get("/participant/:id/inbound") { request: Request => {
     val r = Try {
       val f = IO.workerPool {
         val before = System.currentTimeMillis()
@@ -126,7 +127,7 @@ class Feed extends Controller {
       }
     }
   }}
-  get("/outbound/:id") { request: Request => {
+  get("/participant/:id/outbound") { request: Request => {
     val r = Try {
       val f = IO.workerPool {
         val before = System.currentTimeMillis()
@@ -145,9 +146,9 @@ class Feed extends Controller {
       }
     }
   }}
-  post("/outbound/new") { request: Request => {
+  post("/participant/:id/outbound") { request: Request => {
     val r = Try {
-      val body = request.contentString
+      val body = URLDecoder.decode(request.contentString, "UTF-8")
       val f = IO.workerPool {
         val before = System.currentTimeMillis()
         val retVal = Feed.factory.getObject("outbound", body).get.asInstanceOf[Outbound]
@@ -166,15 +167,15 @@ class Feed extends Controller {
       }
     }
   }}
-  post("/outbound/search") { request: Request => {
+  get("/outbound") { request: Request => {
     val before = System.currentTimeMillis()
     val r = Try {
-      val body = request.contentString
+      val terms = request.params("keywords")
       val f = IO.workerPool {
-      val results = Outbound.lookup(body)
+      val results = Outbound.lookup(terms)
       val retVal = results.isEmpty match {
         case true => "[]"
-        case _ => "[" + results.map(s => s.toString()).reduce(_ + "," + _) + "]"
+        case _ => "[" + results.map(s => Link.toLink(s.toString().toLong)).reduce(_ + "," + _) + "]"
       }
       val after = System.currentTimeMillis()
       Feed.factory.getObject("logger").get.asInstanceOf[PerformanceLogger].log(Feed.messageTopic, Feed.outboundEntity, Feed.searchOperation, after - before)

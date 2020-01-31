@@ -32,8 +32,8 @@ func GetInbound(w http.ResponseWriter, r *http.Request) {
 	var results []Inbound
 	for iter.Scan(&occurred, &from, &subject, &story) {
 	    inb := Inbound {
-	      From: from,
-	      To: i,
+	      From: ToLink(from),
+	      To: ToLink(i),
 	      Occurred: occurred,
 	      Subject: subject,
 	      Story: story,

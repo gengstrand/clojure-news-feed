@@ -6,6 +6,8 @@ import (
 	"log"
 	"time"
 	"sync"
+	"errors"
+	"strings"
 	"reflect"
 	"strconv"
 	"net/http"
@@ -29,7 +31,7 @@ var esPool = &sync.Pool{
 
 type OutboundStoryDocument struct {
      	Id string `json:"id"`
-	Sender string `json:"sender"`
+	Sender int64 `json:"sender"`
 	Story string `json:"story"`
 }
 
@@ -59,7 +61,11 @@ func init() {
 }
 
 func AddOutboundInner(ob Outbound, ew ErrorWrapper, aw AddCassandraWrapper, cw CacheWrapper, gsw GetSqlWrapper) {
-	id := strconv.FormatInt(ob.From, 10)
+	id := ObtainId(ob.From)
+	if strings.Compare("", id) == 0 {
+	   ew.LogError(errors.New("from is not a link"), "cannot extract id out of from: %s", http.StatusBadRequest)
+	   return
+	}
 	_, friends, err := GetFriendsInner(id, cw, gsw)
 	if err != nil {
 	   ew.LogError(err, "system error while fetching friends for %s", http.StatusInternalServerError)
@@ -82,6 +88,7 @@ func AddOutbound(w http.ResponseWriter, r *http.Request) {
         ew := LogWrapper{
 	   Writer: w,
 	}
+	vars := mux.Vars(r)
    	decoder := json.NewDecoder(r.Body)
     	var ob Outbound
     	err := decoder.Decode(&ob)
@@ -89,6 +96,7 @@ func AddOutbound(w http.ResponseWriter, r *http.Request) {
 	    ew.LogError(err, "outbound body error: %s", http.StatusBadRequest)
 	    return
 	}
+	ob.From = Linkify(vars["id"])
 	cw := connectCassandra()
 	rw := connectRedis()
 	dbw := connectMysql()
@@ -98,10 +106,14 @@ func AddOutbound(w http.ResponseWriter, r *http.Request) {
 	   return
 	}
 	esid := fmt.Sprintf("%s", esidr)
-	id := strconv.FormatInt(ob.From, 10)
+	from, err := strconv.ParseInt(vars["id"], 0, 64)
+	if err != nil {
+	    ew.LogError(err, "id is not an integer: %s", http.StatusBadRequest)
+	    return
+	}
 	osd := OutboundStoryDocument{
 	    Id: esid,
-	    Sender: id,
+	    Sender: from,
 	    Story: ob.Story,
 	}
 	AddOutboundInner(ob, ew, cw, rw, dbw)
@@ -137,7 +149,7 @@ func GetOutbound(w http.ResponseWriter, r *http.Request) {
 	var results []Outbound
 	for iter.Scan(&occurred, &subject, &story) {
 	    ob := Outbound {
-	      From: from,
+	      From: ToLink(from),
 	      Occurred: occurred,
 	      Subject: subject,
 	      Story: story,
@@ -169,6 +181,7 @@ func SearchOutbound(w http.ResponseWriter, r *http.Request) {
 	query := elastic.NewMatchQuery("story", string(keywords[0]))
 	searchResult, err := esclient.Search().
 		      Index("feed").
+		      Size(1000).
 		      Query(query).
 		      Do()
 	if err != nil {
@@ -181,7 +194,7 @@ func SearchOutbound(w http.ResponseWriter, r *http.Request) {
 	for _, result := range searchResult.Each(reflect.TypeOf(osd)) {
 	    doc, ok := result.(OutboundStoryDocument)
 	    if ok {
-	       results = append(results, doc.Sender)
+	       	results = append(results, ToLink(doc.Sender))
 	    }
 	}
 	resultb, err := json.Marshal(results)

@@ -15,7 +15,8 @@
     ":"
     (if (nil? elastic-port) "9200" elastic-port)
     "/_search?q="
-    keywords))
+    keywords
+    "&size=1000"))
 
 (defn extract-sender 
   "extract the sender from this hit"

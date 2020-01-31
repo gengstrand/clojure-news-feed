@@ -17,7 +17,7 @@ class TestOutboundController(BaseTestCase):
         create a participant news item
         """
         body = Outbound()
-        response = self.client.open('/outbound/new',
+        response = self.client.open('/participant/1/outbound',
                                     method='POST',
                                     data=json.dumps(body),
                                     content_type='application/json')
@@ -29,7 +29,7 @@ class TestOutboundController(BaseTestCase):
 
         retrieve the news posted by an individual participant
         """
-        response = self.client.open('/outbound/{id}'.format(id=789),
+        response = self.client.open('/participant/{id}/outbound'.format(id=789),
                                     method='GET')
         self.assert200(response, "Response body is : " + response.data.decode('utf-8'))
 
@@ -40,8 +40,8 @@ class TestOutboundController(BaseTestCase):
         create a participant news item
         """
         query_string = [('keywords', 'keywords_example')]
-        response = self.client.open('/outbound/search',
-                                    method='POST',
+        response = self.client.open('/outbound',
+                                    method='GET',
                                     query_string=query_string)
         self.assert200(response, "Response body is : " + response.data.decode('utf-8'))
 

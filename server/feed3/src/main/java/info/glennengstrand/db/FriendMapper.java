@@ -7,6 +7,7 @@ import org.skife.jdbi.v2.StatementContext;
 import org.skife.jdbi.v2.tweak.ResultSetMapper;
 
 import info.glennengstrand.api.Friend;
+import info.glennengstrand.util.Link;
 
 public class FriendMapper implements ResultSetMapper<Friend> {
 
@@ -16,8 +17,8 @@ public class FriendMapper implements ResultSetMapper<Friend> {
 	public Friend map(int index, ResultSet r, StatementContext ctx) throws SQLException {
 		return new Friend.FriendBuilder()
 				.withId(r.getLong("FriendsID"))
-				.withFrom(id)
-				.withTo(r.getLong("ParticipantID"))
+				.withFrom(Link.toLink(id))
+				.withTo(Link.toLink(r.getLong("ParticipantID")))
 				.build();
 	}
 	

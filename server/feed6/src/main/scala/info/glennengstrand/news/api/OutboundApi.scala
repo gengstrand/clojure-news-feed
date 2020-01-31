@@ -38,33 +38,11 @@ class OutboundApi(implicit val swagger: Swagger) extends ScalatraServlet
     response.headers += ("Access-Control-Allow-Origin" -> "*")
   }
 
-  val addOutboundOperation = (apiOperation[Outbound]("addOutbound")
-    summary "create a participant news item"
-    parameters (bodyParam[Outbound]("body").description("")))
-
-  post("/new", operation(addOutboundOperation)) {
-
-    val body = parsedBody.extract[Outbound]
-
-    outboundService.add(body)
-  }
-
-  val getOutboundOperation = (apiOperation[List[Outbound]]("getOutbound")
-    summary "retrieve the news posted by an individual participant"
-    parameters (pathParam[Long]("id").description("")))
-
-  get("/:id", operation(getOutboundOperation)) {
-
-    val id = params.getOrElse("id", halt(400))
-
-    outboundService.gets(id.toLong)
-  }
-
   val searchOutboundOperation = (apiOperation[List[Long]]("searchOutbound")
-    summary "create a participant news item"
+    summary "search outbound feed items for terms"
     parameters (queryParam[String]("keywords").description("")))
 
-  post("/search", operation(searchOutboundOperation)) {
+  get("/", operation(searchOutboundOperation)) {
 
     val keywords = params.getAs[String]("keywords")
 

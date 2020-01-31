@@ -1,5 +1,19 @@
 'use strict';
 
+var Link = require('./util');
+
+function linkify(response) {
+    return response.map(function(i) {
+	  return {
+	      "from": Link.to_link(i.from),
+	      "to": Link.to_link(i.to),
+	      "occurred": i.occurred, 
+	      "subject": i.subject, 
+	      "story": i.story
+	  };
+    });
+}
+
 exports.getInbound = function(args, res, next) {
   /**
    * parameters expected in the args:
@@ -11,7 +25,7 @@ exports.getInbound = function(args, res, next) {
         return next(err.message);
       }
       res.setHeader('Content-Type', 'application/json');
-      res.end(JSON.stringify(response));
+      res.end(JSON.stringify(linkify(response)));
     });
   
 }

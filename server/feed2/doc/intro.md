@@ -27,16 +27,20 @@ export APP_CONFIG=etc/settings.properties
 java -DLOG_DIR=/tmp -DLOG_LEVEL=ALL -jar target/scala-2.11/news-feed-assembly-0.1.0-SNAPSHOT.jar
 ```
 
-### some sample test curl calls
+### testing the service
 
-```bash
-curl http://127.0.0.1:8080/participant/3
-curl http://127.0.0.1:8080/friends/19
-curl http://127.0.0.1:8080/inbound/3
-curl -d 'terms=27309' http://127.0.0.1:8080/outbound/search
-curl -d name=Griff http://localhost:8080/participant/new
-curl -d from=368 -d to=371 http://localhost:8080/friends/new
-curl -d from=19 -d occurred=2015-04-18 -d subject=test -d story=test http://localhost:8080/outbound/new
+```shell
+curl -d name=scala ${FEED_URL}/participant
+
+curl -d name=finatra ${FEED_URL}/participant
+
+curl -X POST -d 'from=/participant/1&to=/participant/2' ${FEED_URL}/participant/1/friends
+
+curl -d 'from=/participant/1&occurred=2015-04-18&subject=test&story=test' ${FEED_URL}/participant/1/outbound
+
+curl ${FEED_URL}/participant/2/inbound
+
+curl -g "${FEED_URL}/outbound?keywords=kubernetes"
 ```
 
 ### how to truncate solr

@@ -2,6 +2,7 @@ package info.glennengstrand.news.db
 
 import info.glennengstrand.news.core.{ ItemDAO, DocumentIdentity }
 import info.glennengstrand.news.model.Outbound
+import info.glennengstrand.news.Link
 import com.datastax.driver.core.{ Session, PreparedStatement, BoundStatement }
 import scala.collection.JavaConverters._
 import org.elasticsearch.client.RestHighLevelClient
@@ -28,7 +29,7 @@ class OutboundItemDAO(select: PreparedStatement, upsert: PreparedStatement) exte
       val from = r.getInt(1)
       val subject = r.getString(2)
       val story = r.getString(3)
-    } yield Outbound(Option(from.toLong), Option(occurred), Option(subject), Option(story))
+    } yield Outbound(Option(Link.toLink(from.toLong)), Option(occurred), Option(subject), Option(story))
     retVal.toList
   }
   def add(item: Outbound)(implicit db: Session): Outbound = {
@@ -39,7 +40,7 @@ class OutboundItemDAO(select: PreparedStatement, upsert: PreparedStatement) exte
       story <- item.story
     } yield (from, subject, story)
     data.foreach(d => {
-      bs.setInt(0, d._1.toInt)
+      bs.setInt(0, Link.extractId(d._1).toInt)
       bs.setString(1, d._2)
       bs.setString(2, d._3)
     })

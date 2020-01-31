@@ -44,7 +44,7 @@ paths:
           description: successful operation
           schema:
             $ref: '#/definitions/participant'
-  /participant/new:
+  /participant:
     post:
       tags:
         - participant
@@ -67,7 +67,7 @@ paths:
           description: successful operation
           schema:
             $ref: '#/definitions/participant'
-  '/friends/{id}':
+  '/participant/{id}/friends':
     get:
       tags:
         - friend
@@ -90,7 +90,6 @@ paths:
             type: array
             items:
               $ref: '#/definitions/friend'
-  /friends/new:
     post:
       tags:
         - friend
@@ -102,6 +101,12 @@ paths:
       produces:
         - application/json
       parameters:
+        - name: id
+          in: path
+          description: uniquely identifies the participant
+          required: true
+          type: integer
+          format: int64
         - name: body
           in: body
           description: friendship to be created
@@ -113,7 +118,7 @@ paths:
           description: successful operation
           schema:
             $ref: '#/definitions/friend'
-  '/inbound/{id}':
+  '/participant/{id}/inbound':
     get:
       tags:
         - inbound
@@ -136,7 +141,7 @@ paths:
             type: array
             items:
               $ref: '#/definitions/inbound'
-  '/outbound/{id}':
+  '/participant/{id}/outbound':
     get:
       tags:
         - outbound
@@ -159,7 +164,6 @@ paths:
             type: array
             items:
               $ref: '#/definitions/outbound'
-  /outbound/new:
     post:
       tags:
         - outbound
@@ -171,6 +175,12 @@ paths:
       produces:
         - application/json
       parameters:
+        - name: id
+          in: path
+          description: uniquely identifies the participant
+          required: true
+          type: integer
+          format: int64
         - name: body
           in: body
           description: outbound news item
@@ -182,11 +192,11 @@ paths:
           description: successful operation
           schema:
             $ref: '#/definitions/outbound'
-  /outbound/search:
-    post:
+  /outbound:
+    get:
       tags:
         - outbound
-      summary: create a participant news item
+      summary: search outbound feed items for terms
       description: keyword search of participant news
       operationId: searchOutbound
       produces:
@@ -203,8 +213,7 @@ paths:
           schema:
             type: array
             items:
-              type: integer
-              format: int64
+              type: string
 definitions:
   participant:
     type: object
@@ -214,6 +223,8 @@ definitions:
         format: int64
       name:
         type: string
+      link:
+        type: string
   friend:
     type: object
     properties:
@@ -221,20 +232,16 @@ definitions:
         type: integer
         format: int64
       from:
-        type: integer
-        format: int64
+        type: string
       to:
-        type: integer
-        format: int64
+        type: string
   inbound:
     type: object
     properties:
       from:
-        type: integer
-        format: int64
+        type: string
       to:
-        type: integer
-        format: int64
+        type: string
       occurred:
         type: string
         format: date-time
@@ -246,8 +253,7 @@ definitions:
     type: object
     properties:
       from:
-        type: integer
-        format: int64
+        type: string
       occurred:
         type: string
         format: date-time

@@ -15,4 +15,6 @@ type Participant struct {
 	Id int64 `json:"id,omitempty"`
 
 	Name string `json:"name,omitempty"`
+	
+	Link string `json:"link,omitempty"`
 }

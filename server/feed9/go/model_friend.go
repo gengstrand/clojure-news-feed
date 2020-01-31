@@ -14,7 +14,7 @@ type Friend struct {
 
 	Id int64 `json:"id,omitempty"`
 
-	From int64 `json:"from,omitempty"`
+	From string `json:"from,omitempty"`
 
-	To int64 `json:"to,omitempty"`
+	To string `json:"to,omitempty"`
 }

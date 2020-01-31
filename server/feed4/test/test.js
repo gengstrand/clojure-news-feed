@@ -141,14 +141,14 @@ describe('outbound service', function() {
 	const postArgs = {
 	    'body': {
 		'value': {
-		    'from':'1', 
+		    'from':'/participant/1', 
 		    'subject':'test', 
 		    'story':'testing'
 		}}};
 	const outboundService = require('../services/OutboundService');
 	outboundService.addOutbound(postArgs, function(err, feed) {
 	    expect(err).to.equal(null);
-	    expect(feed.from).to.equal(1);
+	    expect(feed.from).to.equal('/participant/1');
 	    expect(feed.occurred).to.equal(Date.now());
 	    expect(feed.subject).to.equal('test');
 	});

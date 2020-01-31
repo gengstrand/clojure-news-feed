@@ -5,11 +5,11 @@ import java.util.List;
 
 import com.google.inject.Inject;
 
-import info.glennengstrand.NewsFeedConfiguration;
 import info.glennengstrand.NewsFeedModule.FriendCache;
 import info.glennengstrand.api.Friend;
 import info.glennengstrand.db.FriendDAO;
 import info.glennengstrand.resources.FriendApi.FriendApiService;
+import info.glennengstrand.util.Link;
 
 public class FriendApiServiceImpl implements FriendApiService {
 
@@ -26,15 +26,15 @@ public class FriendApiServiceImpl implements FriendApiService {
 	}
 	
 	@Override
-	public Friend addFriend(Friend body) {
+	public Friend addFriend(Long id, Friend body) {
 		long before = System.currentTimeMillis();
 		Friend retVal = new Friend.FriendBuilder()
-				.withId(dao.upsertFriend(body.getFrom(),  body.getTo()))
+				.withId(dao.upsertFriend(id, Link.extractId(body.getTo())))
 				.withFrom(body.getFrom())
 				.withTo(body.getTo())
 				.build();
-		cache.invalidate(body.getFrom());
-		cache.invalidate(body.getTo());
+		cache.invalidate(id);
+		cache.invalidate(Link.extractId(body.getTo()));
 		logger.log(ENTITY, MessageLogger.LogOperation.POST, System.currentTimeMillis() - before);
 		return retVal;
 	}

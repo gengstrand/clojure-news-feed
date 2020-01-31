@@ -47,6 +47,7 @@ func AddParticipant(w http.ResponseWriter, r *http.Request) {
 	       return
 	    }
 	    p.Id = i
+	    p.Link = ToLink(i)
 	    result, err := json.Marshal(p)
 	    if err != nil {
 	       ew.LogError(err, "cannot marshal participant response: %s", http.StatusInternalServerError)

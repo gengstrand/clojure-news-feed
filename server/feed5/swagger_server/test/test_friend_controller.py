@@ -18,7 +18,7 @@ class TestFriendController(BaseTestCase):
         create a new friendship
         """
         body = Friend(1, 1, 2)
-        response = self.client.open('/friends/new',
+        response = self.client.open('/participant/1/friends',
                                     method='POST',
                                     data=json.dumps(body),
                                     content_type='application/json')

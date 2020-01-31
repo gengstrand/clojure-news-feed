@@ -25,6 +25,7 @@ import com.google.inject.Inject;
 import javax.ws.rs.GET;  
 import javax.ws.rs.POST;  
 import javax.ws.rs.PathParam;
+import javax.ws.rs.QueryParam;
 import javax.ws.rs.Path;
 import javax.ws.rs.Produces;
 import javax.ws.rs.Consumes;
@@ -34,8 +35,7 @@ import io.dropwizard.jersey.params.LongParam;
 
 import info.glennengstrand.api.Inbound;
 
-
-@Path("/inbound")
+@Path("/participant/{id}")
 public class InboundApi {
 
    private final InboundApiService inboundService;
@@ -45,7 +45,7 @@ public class InboundApi {
       this.inboundService = inboundService;
    }
    @GET
-   @Path("/{id}")
+   @Path("/inbound")
    @Produces("application/json")
   /**
    * retrieve the inbound feed for an individual participant

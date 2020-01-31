@@ -8,7 +8,7 @@ class Outbound(CassandraDAO):
     insert = 'insert_outbound'
     query = 'select_outbound'
 
-    def __init__(self, _from: str = None, subject: str = None, story: str = None):
+    def __init__(self, _from: int = None, subject: str = None, story: str = None):
         self._from = _from
         self.subject = subject
         self.story = story

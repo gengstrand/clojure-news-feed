@@ -25,6 +25,7 @@ import com.google.inject.Inject;
 import javax.ws.rs.GET;  
 import javax.ws.rs.POST;  
 import javax.ws.rs.PathParam;
+import javax.ws.rs.QueryParam;
 import javax.ws.rs.Path;
 import javax.ws.rs.Produces;
 import javax.ws.rs.Consumes;
@@ -34,10 +35,13 @@ import io.dropwizard.jersey.params.LongParam;
 
 import info.glennengstrand.api.Participant;
 
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 @Path("/participant")
 public class ParticipantApi {
 
+   private static final Logger LOGGER = LoggerFactory.getLogger(ParticipantApi.class);
    private final ParticipantApiService participantService;
 	
    @Inject
@@ -45,7 +49,6 @@ public class ParticipantApi {
       this.participantService = participantService;
    }
    @POST
-   @Path("/new")
    @Consumes("application/json")
    @Produces("application/json")
   /**
@@ -54,21 +57,10 @@ public class ParticipantApi {
    * @param body participant to be created (required)
    * @return Participant
    */
-   public Participant addParticipant(Participant body) {
+   public Participant addParticipant( Participant body) {
       return participantService.addParticipant(body);
    }
-   @GET
-   @Path("/{id}")
-   @Produces("application/json")
-  /**
-   * retrieve an individual participant
-   * fetch a participant by id
-   * @param id uniquely identifies the participant (required)
-   * @return Participant
-   */
-   public Participant getParticipant(@PathParam("id") LongParam id) {
-      return participantService.getParticipant(id.get());
-   }
+
    public static interface ParticipantApiService {
       Participant addParticipant(Participant body);
       Participant getParticipant(Long id);

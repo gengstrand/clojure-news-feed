@@ -8,6 +8,7 @@ import org.elasticsearch.index.query.QueryBuilders
 import org.elasticsearch.action.search.SearchRequest
 import org.elasticsearch.search.builder.SearchSourceBuilder
 import org.elasticsearch.rest.RestStatus
+import info.glennengstrand.news.Link
 import org.slf4j.{Logger, LoggerFactory}
 import collection.JavaConversions._
 
@@ -49,7 +50,7 @@ trait ElasticSearchDAO[D <: AnyRef] extends DocumentDAO[D] {
           case RestStatus.OK => {
             val hits = response.getHits
             if (hits.getTotalHits > 0l) {
-              hits.getHits.map(sh => sh.getSourceAsMap().get(docResult).asInstanceOf[Int]).toList
+              hits.getHits.map(sh => Link.extractId(sh.getSourceAsMap().get(docResult).asInstanceOf[String]).toInt).toList
             } else {
               List()
             }

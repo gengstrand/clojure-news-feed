@@ -11,6 +11,7 @@ import info.glennengstrand.db.ParticipantDAO;
 import info.glennengstrand.db.RedisCache;
 import info.glennengstrand.resources.ParticipantApi.ParticipantApiService;
 import redis.clients.jedis.JedisPool;
+import info.glennengstrand.util.Link;
 
 public class ParticipantApiServiceImpl implements ParticipantApiService {
 	
@@ -30,9 +31,11 @@ public class ParticipantApiServiceImpl implements ParticipantApiService {
 	@Override
 	public Participant addParticipant(Participant body) {
 		long before = System.currentTimeMillis();
+		long id = dao.upsertParticipant(body.getName());
 		Participant retVal = new Participant.ParticipantBuilder()
-				.withId(dao.upsertParticipant(body.getName()))
+				.withId(id)
 				.withName(body.getName())
+				.withLink(Link.toLink(id))
 				.build();
 		logger.log(ENTITY, MessageLogger.LogOperation.POST, System.currentTimeMillis() - before);
 		return retVal;
@@ -43,7 +46,11 @@ public class ParticipantApiServiceImpl implements ParticipantApiService {
 		long before = System.currentTimeMillis();
 		Participant retVal =  cache.get(id, () -> dao.fetchParticipant(id));
 		logger.log(ENTITY, MessageLogger.LogOperation.GET, System.currentTimeMillis() - before);
-		return retVal;
+		return new Participant.ParticipantBuilder()
+		    .withId(retVal.getId())
+		    .withName(retVal.getName())
+		    .withLink(Link.toLink(retVal.getId()))
+		    .build();
 	}
 
 }

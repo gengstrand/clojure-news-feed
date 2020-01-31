@@ -8,6 +8,7 @@ import cats.data._
 import cats.implicits._
 import info.glennengstrand.news.model.Participant
 import info.glennengstrand.news.core.EntityDAO
+import info.glennengstrand.news.Link
 
 class ParticipantDAO extends EntityDAO[Participant] {
   def get(id: Long)(implicit db: Transactor[IO]): Option[Participant] = {
@@ -18,7 +19,7 @@ class ParticipantDAO extends EntityDAO[Participant] {
       .unsafeRunSync
       .take(1)
     if (result.size > 0) {
-      Option(Participant(Option(id), Option(result.head)))
+      Option(Participant(Option(id), Option(result.head), Option(Link.toLink(id))))
     } else {
       None
     }
@@ -35,7 +36,8 @@ class ParticipantDAO extends EntityDAO[Participant] {
           .transact(db)
           .unsafeRunSync
           .take(1)
-        Participant(Option(result.head), participant.name)
+        val id = result.head
+        Participant(Option(id), participant.name, Option(Link.toLink(id)))
       }
       case None => participant
     }
@@ -43,7 +45,7 @@ class ParticipantDAO extends EntityDAO[Participant] {
 }
 class MockParticipantDAO extends EntityDAO[Participant] {
   def get(id: Long)(implicit db: Transactor[IO]): Option[Participant] = {
-    Option(Participant(Option(id), Option("test")))
+    Option(Participant(Option(id), Option("test"), Option(Link.toLink(id))))
   }
   def gets(id: Long)(implicit db: Transactor[IO]): List[Participant] = {
     List()

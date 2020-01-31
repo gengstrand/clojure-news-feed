@@ -35,9 +35,9 @@ import org.joda.time.DateTime;
  */
 
 public class Inbound   {
-  private Long from = null;
+  private String from = null;
 
-  private Long to = null;
+  private String to = null;
 
   private DateTime occurred = null;
 
@@ -48,9 +48,9 @@ public class Inbound   {
   private Inbound() {}
   public Inbound ( 
     @JsonProperty("from")
-    Long from,
+    String from,
     @JsonProperty("to")
-    Long to,
+    String to,
     @JsonProperty("occurred")
     DateTime occurred,
     @JsonProperty("subject")
@@ -69,8 +69,8 @@ public class Inbound   {
     * @return from
     **/
     @JsonProperty("from")
-    @ApiModelProperty(example = "null", value = "")
-    public Long getFrom() {
+    @ApiModelProperty(value = "")
+    public String getFrom() {
       return from;
     }
     /**
@@ -78,8 +78,8 @@ public class Inbound   {
     * @return to
     **/
     @JsonProperty("to")
-    @ApiModelProperty(example = "null", value = "")
-    public Long getTo() {
+    @ApiModelProperty(value = "")
+    public String getTo() {
       return to;
     }
     /**
@@ -96,7 +96,7 @@ public class Inbound   {
     * @return subject
     **/
     @JsonProperty("subject")
-    @ApiModelProperty(example = "null", value = "")
+    @ApiModelProperty(value = "")
     public String getSubject() {
       return subject;
     }
@@ -105,7 +105,7 @@ public class Inbound   {
     * @return story
     **/
     @JsonProperty("story")
-    @ApiModelProperty(example = "null", value = "")
+    @ApiModelProperty(value = "")
     public String getStory() {
       return story;
     }
@@ -157,16 +157,16 @@ public class Inbound   {
     }
 
   public static class InboundBuilder {
-    private Long from = null;
-    private Long to = null;
+    private String from = null;
+    private String to = null;
     private DateTime occurred = null;
     private String subject = null;
     private String story = null;
-    public InboundBuilder withFrom(Long from) {
+    public InboundBuilder withFrom(String from) {
       this.from = from;
       return this;
     }
-    public InboundBuilder withTo(Long to) {
+    public InboundBuilder withTo(String to) {
       this.to = to;
       return this;
     }

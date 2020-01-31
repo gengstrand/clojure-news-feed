@@ -19,10 +19,10 @@ public class Friend   {
   private Long id = null;
 
   @JsonProperty("from")
-  private Long from = null;
+  private String from = null;
 
   @JsonProperty("to")
-  private Long to = null;
+  private String to = null;
 
   public Friend id(Long id) {
     this.id = id;
@@ -44,7 +44,7 @@ public class Friend   {
     this.id = id;
   }
 
-  public Friend from(Long from) {
+  public Friend from(String from) {
     this.from = from;
     return this;
   }
@@ -56,15 +56,15 @@ public class Friend   {
   @ApiModelProperty(value = "")
 
 
-  public Long getFrom() {
+  public String getFrom() {
     return from;
   }
 
-  public void setFrom(Long from) {
+  public void setFrom(String from) {
     this.from = from;
   }
 
-  public Friend to(Long to) {
+  public Friend to(String to) {
     this.to = to;
     return this;
   }
@@ -76,11 +76,11 @@ public class Friend   {
   @ApiModelProperty(value = "")
 
 
-  public Long getTo() {
+  public String getTo() {
     return to;
   }
 
-  public void setTo(Long to) {
+  public void setTo(String to) {
     this.to = to;
   }
 

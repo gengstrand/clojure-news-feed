@@ -9,6 +9,7 @@ import com.google.inject.Inject;
 
 import info.glennengstrand.NewsFeedConfiguration;
 import info.glennengstrand.api.Inbound;
+import info.glennengstrand.util.Link;
 
 public class InboundDAO extends CassandraDAO<Inbound> {
 	
@@ -33,8 +34,8 @@ public class InboundDAO extends CassandraDAO<Inbound> {
 	
 	public void create(Inbound value) {
 		upsert(b -> {
-			b.setInt(0, value.getTo().intValue());
-			b.setInt(1,  value.getFrom().intValue());
+			b.setInt(0, Link.extractId(value.getTo()).intValue());
+			b.setInt(1,  Link.extractId(value.getFrom()).intValue());
 			b.setString(2, value.getSubject());
 			b.setString(3,  value.getStory());
 		});
@@ -45,8 +46,8 @@ public class InboundDAO extends CassandraDAO<Inbound> {
 			b.setInt(0, new Long(id).intValue());
 		}, r -> {
 			return new Inbound.InboundBuilder()
-					.withFrom(new Integer(r.getInt(FROM_PARTICIPANT_ID_COLUMN)).longValue())
-					.withTo(id)
+					.withFrom(Link.toLink(new Integer(r.getInt(FROM_PARTICIPANT_ID_COLUMN)).longValue()))
+					.withTo(Link.toLink(id))
 					.withOccurred(new DateTime(r.getDate(OCCURRED_COLUMN)))
 					.withSubject(r.getString(SUBJECT_COLUMN))
 					.withStory(r.getString(STORY_COLUMN))

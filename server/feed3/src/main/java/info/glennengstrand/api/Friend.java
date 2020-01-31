@@ -25,6 +25,7 @@ package info.glennengstrand.api;
 import java.util.Objects;
 import com.fasterxml.jackson.annotation.JsonProperty;
 import com.fasterxml.jackson.annotation.JsonCreator;
+import com.fasterxml.jackson.annotation.JsonValue;
 import io.swagger.annotations.ApiModel;
 import io.swagger.annotations.ApiModelProperty;
 
@@ -36,18 +37,18 @@ import io.swagger.annotations.ApiModelProperty;
 public class Friend   {
   private Long id = null;
 
-  private Long from = null;
+  private String from = null;
 
-  private Long to = null;
+  private String to = null;
 
   private Friend() {}
   public Friend ( 
     @JsonProperty("id")
     Long id,
     @JsonProperty("from")
-    Long from,
+    String from,
     @JsonProperty("to")
-    Long to
+    String to
     ) {
       this.id = id;
       this.from = from;
@@ -58,7 +59,7 @@ public class Friend   {
     * @return id
     **/
     @JsonProperty("id")
-    @ApiModelProperty(example = "null", value = "")
+    @ApiModelProperty(value = "")
     public Long getId() {
       return id;
     }
@@ -67,8 +68,8 @@ public class Friend   {
     * @return from
     **/
     @JsonProperty("from")
-    @ApiModelProperty(example = "null", value = "")
-    public Long getFrom() {
+    @ApiModelProperty(value = "")
+    public String getFrom() {
       return from;
     }
     /**
@@ -76,8 +77,8 @@ public class Friend   {
     * @return to
     **/
     @JsonProperty("to")
-    @ApiModelProperty(example = "null", value = "")
-    public Long getTo() {
+    @ApiModelProperty(value = "")
+    public String getTo() {
       return to;
     }
 
@@ -125,17 +126,17 @@ public class Friend   {
 
   public static class FriendBuilder {
     private Long id = null;
-    private Long from = null;
-    private Long to = null;
+    private String from = null;
+    private String to = null;
     public FriendBuilder withId(Long id) {
       this.id = id;
       return this;
     }
-    public FriendBuilder withFrom(Long from) {
+    public FriendBuilder withFrom(String from) {
       this.from = from;
       return this;
     }
-    public FriendBuilder withTo(Long to) {
+    public FriendBuilder withTo(String to) {
       this.to = to;
       return this;
     }

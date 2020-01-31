@@ -17,10 +17,10 @@ import javax.validation.constraints.*;
 
 public class Inbound   {
   @JsonProperty("from")
-  private Long from = null;
+  private String from = null;
 
   @JsonProperty("to")
-  private Long to = null;
+  private String to = null;
 
   @JsonProperty("occurred")
   private OffsetDateTime occurred = null;
@@ -31,7 +31,7 @@ public class Inbound   {
   @JsonProperty("story")
   private String story = null;
 
-  public Inbound from(Long from) {
+  public Inbound from(String from) {
     this.from = from;
     return this;
   }
@@ -43,15 +43,15 @@ public class Inbound   {
   @ApiModelProperty(value = "")
 
 
-  public Long getFrom() {
+  public String getFrom() {
     return from;
   }
 
-  public void setFrom(Long from) {
+  public void setFrom(String from) {
     this.from = from;
   }
 
-  public Inbound to(Long to) {
+  public Inbound to(String to) {
     this.to = to;
     return this;
   }
@@ -63,11 +63,11 @@ public class Inbound   {
   @ApiModelProperty(value = "")
 
 
-  public Long getTo() {
+  public String getTo() {
     return to;
   }
 
-  public void setTo(Long to) {
+  public void setTo(String to) {
     this.to = to;
   }
 

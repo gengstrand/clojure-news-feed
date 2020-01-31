@@ -6,9 +6,9 @@ import (
 
 type Inbound struct {
 
-	From int64 `json:"from,omitempty"`
+	From string `json:"from,omitempty"`
 
-	To int64 `json:"to,omitempty"`
+	To string `json:"to,omitempty"`
 
 	Occurred time.Time `json:"occurred,omitempty"`
 
