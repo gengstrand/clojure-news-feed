@@ -104,6 +104,53 @@ This folder contains assets for standing up the service, and its dependencies, i
 
 http://glennengstrand.info/software/performance/eks/gke
 
+### miscellaneous
+
+There is a [jupyter notebook](https://github.com/gengstrand/clojure-news-feed/blob/master/server/fc.ipynb) which explores an attempt to quantify code complexity in the various implementations. It is quite inconclusive.
+
+There is an Apache Druid [injection spec](https://github.com/gengstrand/clojure-news-feed/blob/master/server/feedDruidSpec.json) in which you can explore the performance data that I have collected from the various implementations. This example assumes that you have installed Druid locally.
+
+```
+cd path/to/local/druid
+./bin/start-micro-quickstart
+# wait a bit then open a new bash session
+cd path/to/this/repo
+curl -X 'POST' -H 'Content-Type:application/json' -d @server/feedDruidSpec.json http://localhost:8081/druid/indexer/v1/task
+# wait a bit
+cd path/to/local/druid
+./bin/dsql
+select cloud, feed, avg(rpm) as rpm, sum(sum_duration) / sum(rpm) as avg_duration, 
+APPROX_QUANTILE_DS(quantile_duration, 0.50) as p50,
+APPROX_QUANTILE_DS(quantile_duration, 0.95) as p95,
+APPROX_QUANTILE_DS(quantile_duration, 0.99) as p99,
+avg(max_duration) as max_duration
+from feed
+where entity = 'outbound' and operation = 'POST'
+group by cloud, feed
+order by feed, cloud;
+
+┌───────┬──────┬───────┬──────────────┬──────┬──────┬──────┬──────────────┐
+│ cloud │ feed │ rpm   │ avg_duration │ p50  │ p95  │ p99  │ max_duration │
+├───────┼──────┼───────┼──────────────┼──────┼──────┼──────┼──────────────┤
+│ EKS   │ 1    │  4822 │           26 │ 25.0 │ 37.0 │ 41.0 │          322 │
+│ GKE   │ 1    │  6316 │           19 │ 17.0 │ 33.0 │ 57.0 │          266 │
+│ GKE   │ 10   │  9702 │            5 │  4.0 │  8.0 │ 12.0 │          241 │
+│ EKS   │ 2    │  8030 │           13 │ 13.0 │ 18.0 │ 33.0 │          167 │
+│ GKE   │ 2    │  6983 │           18 │ 13.0 │ 41.0 │ 48.0 │          292 │
+│ EKS   │ 3    │ 14193 │            5 │  5.0 │  8.0 │ 10.0 │          257 │
+│ GKE   │ 3    │ 18436 │            4 │  4.0 │  7.0 │ 10.0 │          213 │
+│ EKS   │ 4    │ 18770 │            6 │  6.0 │  8.0 │ 12.0 │          700 │
+│ GKE   │ 4    │ 13806 │            4 │  4.0 │  7.0 │ 12.0 │          152 │
+│ EKS   │ 5    │  6065 │           13 │ 13.0 │ 20.0 │ 29.0 │          144 │
+│ GKE   │ 5    │  6046 │           14 │ 14.0 │ 24.0 │ 30.0 │          176 │
+│ EKS   │ 6    │  9643 │           10 │  9.0 │ 15.0 │ 18.0 │          205 │
+│ GKE   │ 6    │  9580 │            9 │  9.0 │ 14.0 │ 19.0 │          231 │
+│ GKE   │ 8    │  6482 │            3 │  3.0 │  5.0 │  9.0 │           98 │
+│ GKE   │ 9    │ 14296 │            7 │  4.0 │ 20.0 │ 29.0 │          303 │
+└───────┴──────┴───────┴──────────────┴──────┴──────┴──────┴──────────────┘
+Retrieved 15 rows in 0.41s.
+```
+
 ## client
 
 These applications are expected to be run on the client(s).
