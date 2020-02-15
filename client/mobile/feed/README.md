@@ -28,7 +28,7 @@ One of the big advances in Ionic was moving from a rigid route-based navigation 
 
 ## <a name="getting-started"></a>Getting Started
 
-You will need to set up all the dependencies and run one of the micro-services. May I suggest using [minikube](https://github.com/gengstrand/clojure-news-feed/tree/master/server/k8s) for this? That is most probably the easiest route. Be sure to run those curl commands at the bottom of the README in order to load some data.
+Be advised that this project no longer can be built with modern versions of node due to a [node-sass incompatibility](https://stackoverflow.com/questions/48298361/npm-install-failed-at-the-node-sass4-5-0-postinstall-script).
 
 ```bash
 npm install -g cordova ionic
