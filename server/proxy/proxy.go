@@ -11,6 +11,8 @@ import (
     "net/http"
     "io/ioutil"
     "encoding/json"
+    "github.com/prometheus/client_golang/prometheus"
+    "github.com/prometheus/client_golang/prometheus/promhttp"
 )
 
 type HttpLogRequest struct {
@@ -43,26 +45,45 @@ func isGraphQl(path string, method string) bool {
 
 var graphQlMatcher = regexp.MustCompile(`mutation.*create([A-Z][a-z]+)\(`)
 var restMatcher = regexp.MustCompile(`/participant/([0-9]+)/([a-z]+)`)
+var metricsHandler = promhttp.Handler()
+var metrics = make(map[string]prometheus.Histogram)
+var myBuckets = prometheus.LinearBuckets(0.0, 50.0, 6)
+func logToPrometheus(entity string, operation string, status int, duration int64) {
+    name := fmt.Sprintf("%s_%s_%d", entity, operation, status)
+    _, found := metrics[name]
+    if !found {
+       metrics[name] = prometheus.NewHistogram(prometheus.HistogramOpts{Name: name, Buckets: myBuckets})
+       prometheus.MustRegister(metrics[name])
+    }
+    metric := metrics[name]
+    metric.Observe(float64(duration))
+}
 
 func makePerfLogEntry(path string, method string, body string, status int, duration int64) HttpLog {
     var req HttpLogRequest
     if isGraphQl(path, method) {
        m := graphQlMatcher.FindStringSubmatch(body)
        if &m != nil && len(m) > 1 {
-          req = HttpLogRequest{fmt.Sprintf("/%s/new", strings.ToLower(m[1])), method}
+          o := strings.ToLower(m[1])
+          logToPrometheus(o, method, status, duration)
+          req = HttpLogRequest{fmt.Sprintf("/%s/new", o), method}
        }
     } else {
        if strings.Compare("get", strings.ToLower(method)) == 0 && strings.Compare("/outbound", strings.ToLower(path)) == 0 {
+         logToPrometheus("search", "POST", status, duration)
          req = HttpLogRequest{"/outbound/search", "POST"}
        } else {
          m := restMatcher.FindStringSubmatch(path)
          if &m != nil && len(m) > 2 {
+	   o := strings.ToLower(m[2])
            if strings.Compare("post", strings.ToLower(method)) == 0 {
-       	     req = HttpLogRequest{fmt.Sprintf("/%s/new", strings.ToLower(m[2])), method}
+       	     req = HttpLogRequest{fmt.Sprintf("/%s/new", o), method}
 	   } else {
-       	     req = HttpLogRequest{fmt.Sprintf("/%s/%s", strings.ToLower(m[2]), m[1]), method}
+       	     req = HttpLogRequest{fmt.Sprintf("/%s/%s", o, m[1]), method}
 	   }
+	   logToPrometheus(o, method, status, duration)
          } else {
+	   logToPrometheus("participant", method, status, duration)
        	   req = HttpLogRequest{path, method}
          }
        }
@@ -145,7 +166,11 @@ func main() {
     server := &http.Server{
         Addr: ":8000",
         Handler: http.HandlerFunc(func(w http.ResponseWriter, r *http.Request) {
-            handleHTTP(w, r)
+	    if strings.Compare("/metrics", strings.ToLower(r.URL.Path)) == 0 {
+	       metricsHandler.ServeHTTP(w, r)
+	    } else {
+               handleHTTP(w, r)
+	    }
         }),
     }
     for i:=0;i<3;i++ {
