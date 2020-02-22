@@ -44,22 +44,26 @@ kubectl create -f load_test.yaml
 
 ### running the integration test
 
+The USE_JSON environment variable should be false for feeds 1 and 2. Otherwise, true.
+
+The USE_GRAPHQL environment variable should be true for feed 10 only.
+
 ```bash
-kubectl get pods | awk '/cassandra/{ printf "kubectl port-forward %s 9042:9042 &\n", $1 }' | sh
+kubectl port-forward deployment/cassandra 9042:9042 &
 export CASSANDRA_HOST=127.0.0.1
 export CASSANDRA_PORT=9042
-kubectl get pods | awk '/mysql/{ printf "kubectl port-forward %s 3306:3306 &\n", $1 }' | sh
+kubectl port-forward deployment/mysql 3306:3306 &
 export MYSQL_HOST=127.0.0.1
 export MYSQL_PORT=3306
 export MYSQL_USER=feed
 export MYSQL_PASSWORD=feed1234
-kubectl get pods | awk '/redis/{ printf "kubectl port-forward %s 6379:6379 &\n", $1 }' | sh
+kubectl port-forward deployment/redis 6379:6379 &
 export REDIS_HOST=127.0.0.1
 export REDIS_PORT=6379
-kubectl get pods | awk '/elasticsearch/{ printf "kubectl port-forward %s 9200:9200 &\n", $1 }' | sh
+kubectl port-forward deployment/elasticsearch 9200:9200 & 
 export ELASTIC_HOST=127.0.0.1
 export ELASTIC_PORT=9200
-kubectl get pods | awk '/feed/{ printf "kubectl port-forward %s 8080:8080 &\n", $1 }' | sh
+kubectl port-forward deployment/feed 8080:8080 &
 export FEED_HOST=127.0.0.1
 export FEED_PORT=8080
 export USE_JSON=true

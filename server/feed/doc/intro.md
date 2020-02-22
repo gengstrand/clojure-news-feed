@@ -90,14 +90,14 @@ bin/kafka-console-consumer.sh --zookeeper localhost:2181 --topic feed --from-beg
 I also run the load test application when testing the service locally. I usually use 3 threads and query Solr 10% of the time.
 
 ```bash
-curl -d name=Moe http://localhost:3000/participant/new
-curl -d name=Larry http://localhost:3000/participant/new
-curl -d name=Curly http://localhost:3000/participant/new
-curl -d from=1 -d to=2 http://localhost:3000/friends/new
-curl -d from=1 -d to=3 http://localhost:3000/friends/new
-curl -d from=1 -d occurred="2014-01-03" -d subject="testing service" -d story="full end to end testing of the service" http://localhost:3000/outbound/new
-curl http://localhost:3000/inbound/2
-curl -d terms=testing http://localhost:3000/outbound/search
+curl -d name=Moe http://localhost:3000/participant
+curl -d name=Larry http://localhost:3000/participant
+curl -d name=Curly http://localhost:3000/participant
+curl -d from=1 -d to=2 http://localhost:3000/participant/1/friends
+curl -d from=1 -d to=3 http://localhost:3000/participant/1/friends
+curl -d from=/participant/1 -d occurred="2014-01-03" -d subject="testing service" -d story="full end to end testing of the service" http://localhost:3000/outbound/new
+curl http://localhost:3000/participant/2/inbound
+curl http://localhost:3000/outbound?keywords=testing
 ```
 
 ### standing up the service in EC2
