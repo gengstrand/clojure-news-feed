@@ -47,7 +47,8 @@ var graphQlMatcher = regexp.MustCompile(`mutation.*create([A-Z][a-z]+)\(`)
 var restMatcher = regexp.MustCompile(`/participant/([0-9]+)/([a-z]+)`)
 var metricsHandler = promhttp.Handler()
 var metrics = make(map[string]prometheus.Histogram)
-var myBuckets = prometheus.LinearBuckets(0.0, 50.0, 6)
+var myBuckets = prometheus.LinearBuckets(10.0, 10.0, 35)
+
 func logToPrometheus(entity string, operation string, status int, duration int64) {
     name := fmt.Sprintf("%s_%s_%d", entity, operation, status)
     _, found := metrics[name]
@@ -75,16 +76,16 @@ func makePerfLogEntry(path string, method string, body string, status int, durat
        } else {
          m := restMatcher.FindStringSubmatch(path)
          if &m != nil && len(m) > 2 {
-	   o := strings.ToLower(m[2])
+           o := strings.ToLower(m[2])
            if strings.Compare("post", strings.ToLower(method)) == 0 {
-       	     req = HttpLogRequest{fmt.Sprintf("/%s/new", o), method}
-	   } else {
-       	     req = HttpLogRequest{fmt.Sprintf("/%s/%s", o, m[1]), method}
-	   }
-	   logToPrometheus(o, method, status, duration)
+             req = HttpLogRequest{fmt.Sprintf("/%s/new", o), method}
+           } else {
+             req = HttpLogRequest{fmt.Sprintf("/%s/%s", o, m[1]), method}
+           }
+           logToPrometheus(o, method, status, duration)
          } else {
-	   logToPrometheus("participant", method, status, duration)
-       	   req = HttpLogRequest{path, method}
+           logToPrometheus("participant", method, status, duration)
+           req = HttpLogRequest{path, method}
          }
        }
     }
@@ -107,7 +108,7 @@ func handlePerfLog() {
             if err == nil {
                 resp, err := client.Do(req)
                 if err == nil {
-		    io.Copy(ioutil.Discard, resp.Body)
+                    io.Copy(ioutil.Discard, resp.Body)
                     resp.Body.Close()
                 } else {
                     log.Fatalf("encountered error when calling kong logger", err)
@@ -158,19 +159,19 @@ func main() {
     defaultTransportPointer, ok := defaultRoundTripper.(*http.Transport)
     if ok {
         defaultTransport := *defaultTransportPointer 
-    	defaultTransport.MaxIdleConns = 100
-    	defaultTransport.MaxIdleConnsPerHost = 50
+        defaultTransport.MaxIdleConns = 100
+        defaultTransport.MaxIdleConnsPerHost = 50
     } else {
         log.Fatalf("defaultRoundTripper not an *http.Transport")
     }
     server := &http.Server{
         Addr: ":8000",
         Handler: http.HandlerFunc(func(w http.ResponseWriter, r *http.Request) {
-	    if strings.Compare("/metrics", strings.ToLower(r.URL.Path)) == 0 {
-	       metricsHandler.ServeHTTP(w, r)
-	    } else {
+            if strings.Compare("/metrics", strings.ToLower(r.URL.Path)) == 0 {
+               metricsHandler.ServeHTTP(w, r)
+            } else {
                handleHTTP(w, r)
-	    }
+            }
         }),
     }
     for i:=0;i<3;i++ {
