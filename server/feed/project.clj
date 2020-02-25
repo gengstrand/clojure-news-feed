@@ -35,6 +35,7 @@
   :jvm-opts ["-server"
              "-Xms32M"
              "-Xmx256M"
+	     "-Dlog4j2.level=INFO"
              "-XX:NewRatio=5"
              "-XX:+UseConcMarkSweepGC"
              "-XX:+UseParNewGC"
