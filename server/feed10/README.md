@@ -4,7 +4,7 @@ This time, I am exploring [GraphQL](https://graphql.org/) by implementing the ne
 
 I blogged about this implementation here.
 
-http://glennengstrand.info/software/architecture/microservice/graphql
+https://glennengstrand.info/software/architecture/microservice/graphql
 
 ## Initial Setup
 

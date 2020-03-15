@@ -14,49 +14,49 @@ These components are expected to be run on the server(s).
 
 When I started this repo, a big trend had started in Java to use new programming languages, designed to run in the Java Virtual Machine, that support Functional Programming concepts. Clojure is a variant of Lisp that is one of the leaders in this trend. The question that I wanted to answer was this. Is Clojure ready for delivering services at web scale? This folder contains a basic news feed web service written in Clojure that I blogged about there.
 
-http://glennengstrand.info/software/architecture/oss/clojure
+https://glennengstrand.info/software/architecture/oss/clojure
 
 ### feed2
 
 Scala originally gained recognition with the big data community through the Apache Spark project which is basically perceived as a faster form of map reduce. Its creator, Martin Odersky, advocated that Scala demonstrates that you can have object orientation on equal footing with functional programming. I covered the Scala implementation and how it was different from the Clojure version in terms of code.
 
-http://glennengstrand.info/software/architecture/oss/scala
+https://glennengstrand.info/software/architecture/oss/scala
 
 I blogged about the performance differences.
 
-http://glennengstrand.info/software/performance/scala/clojure
+https://glennengstrand.info/software/performance/scala/clojure
 
 I blogged about how this microservice performs when running with MySql, with PostGreSql, and with Docker.
 
-http://glennengstrand.info/software/performance/mysql/postgres/docker
+https://glennengstrand.info/software/performance/mysql/postgres/docker
 
 I documented my research into how this microservice performed when integrated with ElasticSearch and with Solr for keyword based search.
 
-http://glennengstrand.info/software/performance/elasticsearch/solr
+https://glennengstrand.info/software/performance/elasticsearch/solr
 
 ### feed3
 
 I returned back to Java and blogged about how the DropWizard version compared to the Clojure version of the news feed.
 
-http://glennengstrand.info/software/performance/clojure/dropwizard
+https://glennengstrand.info/software/performance/clojure/dropwizard
 
 ### feed4
 
 For something completely different, I blogged about a news feed microservice implementation in Node.js and how it compared with the DropWizard version.
 
-http://glennengstrand.info/software/performance/nodejs/dropwizard
+https://glennengstrand.info/software/performance/nodejs/dropwizard
 
 ### feed5
 
 This time, the news feed microservice is implemented in Python running on Flask.
 
-http://glennengstrand.info/software/performance/nodejs/python
+https://glennengstrand.info/software/performance/nodejs/python
 
 ### feed6
 
 This time, the scala microservice was rewritten in an attempt to lower complexity and improve performance.
 
-http://glennengstrand.info/software/architecture/scala/rewrite
+https://glennengstrand.info/software/architecture/scala/rewrite
 
 ### feed7
 
@@ -68,19 +68,19 @@ https://www.infoq.com/articles/evaluating-hyperledger-composer
 
 News feed microservice implemented in Java with Spring Boot
 
-http://glennengstrand.info/software/performance/springboot/dropwizard
+https://glennengstrand.info/software/performance/springboot/dropwizard
 
 ### feed9
 
 News feed microservice implemented in golang.
 
-http://glennengstrand.info/software/architecture/microservice/golang
+https://glennengstrand.info/software/architecture/microservice/golang
 
 ### feed 10
 
 News feed microservice implemented in TypeScript and GraphQL
 
-http://glennengstrand.info/software/architecture/microservice/graphql
+https://glennengstrand.info/software/architecture/microservice/graphql
 
 ### solr
 
@@ -102,7 +102,7 @@ This folder contains assets for standing up the service, and its dependencies, o
 
 This folder contains assets for standing up the service, and its dependencies, in Kubernetes.
 
-http://glennengstrand.info/software/performance/eks/gke
+https://glennengstrand.info/software/performance/eks/gke
 
 ### miscellaneous
 
@@ -199,9 +199,9 @@ A cross mobile platform GUI for the news feed microservice that uses the Ionic F
 
 Scripts used to analyze microservice performance data with machine learning algo.
 
-http://glennengstrand.info/software/architecture/msa/ml
+https://glennengstrand.info/software/architecture/msa/ml
 
-http://glennengstrand.info/software/architecture/ml/oss
+https://glennengstrand.info/software/architecture/ml/oss
 
 ## License
 

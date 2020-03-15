@@ -4,7 +4,7 @@
 
 This is yet another implementation of the rudimentary news feed microservice only this time implemented in Node.js
 
-You can learn more about this project by reading the following blogs; [Node.js vs DropWizard](http://glennengstrand.info/software/performance/nodejs/dropwizard) and [Python Flask vs Node.js](http://glennengstrand.info/software/performance/nodejs/python), and [GraphQL vs REST](http://glennengstrand.info/software/architecture/microservice/graphql).
+You can learn more about this project by reading the following blogs; [Node.js vs DropWizard](https://glennengstrand.info/software/performance/nodejs/dropwizard) and [Python Flask vs Node.js](https://glennengstrand.info/software/performance/nodejs/python), and [GraphQL vs REST](https://glennengstrand.info/software/architecture/microservice/graphql).
 
 ### Running the unit tests
 

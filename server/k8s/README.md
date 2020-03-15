@@ -114,7 +114,7 @@ If you call the news feed APIs with the kong-proxy URL, then you will be able to
 
 Once you have everything working the way you want on your personal computer, you will most likely want to see how to deploy it to the cloud. Here is a blog on the differences between running Kubernetes on Amazon's and on Google's cloud.
 
-http://glennengstrand.info/software/performance/eks/gke
+https://glennengstrand.info/software/performance/eks/gke
 
 Here are some tips on how to do that on both GKE and EKS.
 

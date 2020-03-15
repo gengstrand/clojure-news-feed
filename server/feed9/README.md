@@ -2,7 +2,7 @@
 
 ## Overview
 
-This folder contains a golang implementation of the news feed microservice. I used this code as the basis for my evaluation of Go as documented in this blog about [Writing Microservices in Go](http://glennengstrand.info/software/architecture/microservice/golang).
+This folder contains a golang implementation of the news feed microservice. I used this code as the basis for my evaluation of Go as documented in this blog about [Writing Microservices in Go](https://glennengstrand.info/software/architecture/microservice/golang).
 
 I started by using the [go-server template](https://github.com/swagger-api/swagger-codegen/tree/master/modules/swagger-codegen/src/main/resources/go-server) from the [swagger-codegen](https://github.com/swagger-api/swagger-codegen) project.
 

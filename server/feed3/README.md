@@ -2,9 +2,9 @@
 
 This Java project implements a rudimentary news feed micro-service using [Swagger](http://swagger.io/) and [DropWizard](http://www.dropwizard.io/1.0.5/docs/).
 
-This [article](http://glennengstrand.info/media/dropwizard.pdf) goes into detail about what was discovered while developing this micro-service.
+This [article](https://glennengstrand.info/media/dropwizard.pdf) goes into detail about what was discovered while developing this micro-service.
 
-http://glennengstrand.info/software/performance/clojure/dropwizard
+https://glennengstrand.info/software/performance/clojure/dropwizard
 
 ## Performance Under Load
 

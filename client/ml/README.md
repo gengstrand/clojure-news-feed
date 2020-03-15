@@ -2,13 +2,13 @@
 
 Here are some assets used to collect and analyze the performance data that went into researching this blog.
 
-http://glennengstrand.info/software/performance/eks/gke
+https://glennengstrand.info/software/performance/eks/gke
 
 You can learn more about how these scripts were used here.
 
-http://glennengstrand.info/software/architecture/msa/ml
+https://glennengstrand.info/software/architecture/msa/ml
 
-http://glennengstrand.info/software/architecture/ml/oss
+https://glennengstrand.info/software/architecture/ml/oss
 
 The ml.ipynb file is a Jupyter notebook for the scikit-learn programs.
 
