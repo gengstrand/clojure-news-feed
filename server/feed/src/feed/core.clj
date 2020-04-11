@@ -170,17 +170,7 @@
       (s/replace-first "?" (str "'" (:subject this) "'"))
       (s/replace-first "?" (str "'" (:story this) "'"))))
   (to-cache [this]
-    (str "(feed.core.Inbound. "
-         (to-link (:to this))
-         " "
-         (to-link (:from this))
-         " \""
-         (format-possible-date (:occurred this))
-         "\" \""
-         (:subject this)
-         "\" \""
-         (:story this)
-         "\")")))
+    nil))
 
 (defn generate-inbound-cache-key
   "generate the key used for caching a users inbound activity"
@@ -232,15 +222,7 @@
       (s/replace-first "?" (str "'" (:subject this) "'"))
       (s/replace-first "?" (str "'" (:story this) "'"))))
   (to-cache [this]
-    (str "(feed.core.Outbound. "
-         (:from this)
-         " \""
-         (format-possible-date (:occurred this))
-         "\" \""
-         (:subject this)
-         "\" \""
-         (:story this)
-         "\")")))
+    nil))
 
 (defn generate-outbound-cache-key
   "generate the key used for caching a users outbound activity"

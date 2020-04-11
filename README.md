@@ -104,6 +104,14 @@ This folder contains assets for standing up the service, and its dependencies, i
 
 https://glennengstrand.info/software/performance/eks/gke
 
+### proxy
+
+An API gateway, written in golang, that proxies requests from the load test app to the news feed service under test and sends performance data to the perf4 service.
+
+### prometheus
+
+The proxy service has been enhanced to be able to make performance data available to prometheus.
+
 ### miscellaneous
 
 There is a [jupyter notebook](https://github.com/gengstrand/clojure-news-feed/blob/master/server/fc.ipynb) which explores an attempt to quantify code complexity in the various implementations. It is quite inconclusive.
