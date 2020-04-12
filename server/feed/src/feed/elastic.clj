@@ -36,7 +36,7 @@
   (if (contains? hit "_source")
     (let [s (get hit "_source")]
       (if (contains? s "sender")
-        (get s "sender")))))
+        (str "/participant/" (get s "sender"))))))
 
 (defn extract-search-results
   "extract the sender participant ids from the search response body"

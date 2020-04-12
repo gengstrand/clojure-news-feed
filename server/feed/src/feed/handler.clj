@@ -72,9 +72,9 @@
          (log-performance m/outbound-mbean outbound-entity post-operation (- (System/currentTimeMillis) before))
          (c/prepare-response-for-client result)))
   (route/resources "/participant/:id/outbound")
-  (GET "/outbound" [terms]
+  (GET "/outbound" {params :query-params}
        (let [before (System/currentTimeMillis)
-             results (search/search terms)]
+             results (search/search (get params "keywords"))]
          (log-performance m/outbound-mbean outbound-entity search-operation (- (System/currentTimeMillis) before))
          (str results)))
   (route/resources "/outbound")
