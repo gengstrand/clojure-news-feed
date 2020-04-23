@@ -15,7 +15,7 @@ class CreateFriendEvent extends ScalaVerticle with NewsFeedEvent {
       .eventBus()
       .consumer[String](Topics.CreateFriend.name)
       .handler(msg => {
-          body(msg).foreach(nfr => {
+          idbody(msg).foreach(nfr => {
              decode[Friend](nfr.body) match {
                 case Left(d) => {
                   LOGGER.error(d.getLocalizedMessage)

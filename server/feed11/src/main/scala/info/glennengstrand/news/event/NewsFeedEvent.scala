@@ -37,7 +37,7 @@ trait NewsFeedEvent {
         }
       }
       case None => {
-        LOGGER.error("cache key missing")
+        LOGGER.error("cache key %s missing".format(k))
         null
       }
     }
