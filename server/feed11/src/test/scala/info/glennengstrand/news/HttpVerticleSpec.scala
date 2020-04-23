@@ -97,4 +97,17 @@ class HttpVerticleSpec extends VerticleTesting[HttpVerticle] with Matchers {
 
     promise.future.map(res => res should equal("{\"from\":\"/participant/1\",\"occurred\":null,\"subject\":\"test subject\",\"story\":\"test story\"}"))
   }
+  
+  "HttpVerticle" should "serve search outbound endpoint" in {
+    val promise = Promise[String]
+
+    vertx.createHttpClient()
+      .getNow(8080, "127.0.0.1", "/outbound?keywords=test",
+        r => {
+          r.exceptionHandler(promise.failure)
+          r.bodyHandler(b => promise.success(b.toString))
+        })
+
+    promise.future.map(res => res should equal("[\"/participant/1\"]"))
+  }
 }

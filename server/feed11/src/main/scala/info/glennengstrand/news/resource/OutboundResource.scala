@@ -21,6 +21,16 @@ object OutboundResource extends NewsFeedResource {
         publish(Topics.GetOutbound.name, k, vertx)
       })
   }
+  private def searchOutbound(router: Router, vertx: Vertx): Unit = {
+    vertx.deployVerticle(ScalaVerticle.nameForVerticle[SearchOutboundEvent], genDeployOptions(Topics.SearchOutbound))
+    router
+      .get("/outbound")
+      .handler(rc => {
+        val k = key(ns)
+        CacheWrapper.put(k, rc)
+        publish(Topics.SearchOutbound.name, k, vertx)
+      })
+  }
   private def createOutbound(router: Router, vertx: Vertx): Unit = {
     vertx.deployVerticle(ScalaVerticle.nameForVerticle[CreateOutboundEvent], genDeployOptions(Topics.CreateOutbound))
     router.post().handler(BodyHandler.create)
@@ -35,5 +45,6 @@ object OutboundResource extends NewsFeedResource {
   def route(router: Router, vertx: Vertx): Unit = {
     createOutbound(router, vertx)
     getOutbound(router, vertx)
+    searchOutbound(router, vertx)
   }
 }

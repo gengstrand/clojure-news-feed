@@ -15,6 +15,7 @@ object Topics extends Enumeration {
   val GetInbound = new TopicValue(5, "GetInbound", 3)
   val CreateOutbound = new TopicValue(6, "CreateOutbound", 3) 
   val GetOutbound = new TopicValue(7, "GetOutbound", 3)
+  val SearchOutbound = new TopicValue(8, "SearchOutbound", 3)
 }
 
 trait NewsFeedResource {
