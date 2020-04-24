@@ -35,4 +35,7 @@ object CacheWrapper {
   def del(key: String): Unit = {
     cache.remove(key)
   }
+  def shutdown: Unit = {
+    cm.shutdown()
+  }
 }

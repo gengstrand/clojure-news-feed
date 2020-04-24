@@ -13,6 +13,8 @@ class HttpVerticle extends ScalaVerticle {
       vertx.deploymentIDs().foreach(id => {
         vertx.undeploy(id)
       })
+      info.glennengstrand.news.dao.MySqlDao.db.close()
+      info.glennengstrand.news.service.CacheWrapper.shutdown
     }
     val router = Router.router(vertx)
     ParticipantResource.route(router, vertx)
@@ -23,11 +25,5 @@ class HttpVerticle extends ScalaVerticle {
       .createHttpServer()
       .requestHandler(router.accept _)
       .listenFuture(8080, "0.0.0.0")
-  }
-  override def stopFuture(): Future[Unit] = {
-    vertx.deploymentIDs().foreach(id => {
-      vertx.undeploy(id)
-    })
-    Future.successful(())
   }
 }

@@ -1,14 +1,12 @@
 package info.glennengstrand.news.service
 
-import io.vertx.lang.scala.ScalaLogger
 import scala.concurrent.Future
 import scala.util.{Try, Success, Failure}
 import info.glennengstrand.news.model.Outbound
 import scala.concurrent._
 import ExecutionContext.Implicits.global
 
-object OutboundService {
-  val LOGGER = ScalaLogger.getLogger("OutboundService")
+object OutboundService extends NewsFeedService {
   def create(p: Outbound, f: Try[Outbound] => Unit): Unit = {
     f(Success(p))
   }

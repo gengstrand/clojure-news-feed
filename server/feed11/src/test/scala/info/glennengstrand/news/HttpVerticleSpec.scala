@@ -1,12 +1,41 @@
 package info.glennengstrand.news
 
 import org.scalatest.Matchers
-
-import scala.concurrent.Promise
+import info.glennengstrand.news.dao._
+import info.glennengstrand.news.model._
+import info.glennengstrand.news.service._
+import scala.concurrent.{Future, Promise}
 
 class HttpVerticleSpec extends VerticleTesting[HttpVerticle] with Matchers {
 
-  "HttpVerticle" should "serve get participant endpoint" in {
+  class ParticipantDaoMock extends ParticipantDao {
+    override def fetchSingle(id: Int): Future[Participant] = {
+      Future {
+        Participant(Option(1), Option("test"), Option("/participant/%d".format(1)))
+      }
+    }
+    override def insert(p: Participant): Future[Participant] = {
+      Future {
+        Participant(None, Option("test"), None)
+      }
+    }
+  }
+  
+  class FriendDaoMock extends FriendDao {
+    override def fetchMulti(id: Int): Future[Seq[Friend]] = {
+      Future {
+        Seq(Friend(Option(1), Option("/participant/%d".format(id)), Option("/participant/2")))
+      }
+    }
+    override def insert(f: Friend): Future[Friend] = {
+      Future {
+        f
+      }
+    }
+  }
+  
+  "Participant Get" should "serve get participant endpoint" in {
+    ParticipantService.dao = new ParticipantDaoMock
     val promise = Promise[String]
 
     vertx.createHttpClient()
@@ -19,7 +48,8 @@ class HttpVerticleSpec extends VerticleTesting[HttpVerticle] with Matchers {
     promise.future.map(res => res should equal("{\"id\":1,\"name\":\"test\",\"link\":\"/participant/1\"}"))
   }
   
-  "HttpVerticle" should "serve create participant endpoint" in {
+  "Participant Create" should "serve create participant endpoint" in {
+    ParticipantService.dao = new ParticipantDaoMock
     val promise = Promise[String]
 
     vertx.createHttpClient().post(8080, "127.0.0.1", "/participant")
@@ -32,7 +62,8 @@ class HttpVerticleSpec extends VerticleTesting[HttpVerticle] with Matchers {
     promise.future.map(res => res should equal("{\"id\":null,\"name\":\"test\",\"link\":null}"))
   }
 
-  "HttpVerticle" should "serve get friends endpoint" in {
+  "Friends Get" should "serve get friends endpoint" in {
+    FriendService.dao = new FriendDaoMock
     val promise = Promise[String]
 
     vertx.createHttpClient()
@@ -45,9 +76,9 @@ class HttpVerticleSpec extends VerticleTesting[HttpVerticle] with Matchers {
     promise.future.map(res => res should equal("[{\"id\":1,\"from\":\"/participant/1\",\"to\":\"/participant/2\"}]"))
   }
   
-  "HttpVerticle" should "serve create friend endpoint" in {
+  "Friends Create" should "serve create friend endpoint" in {
+    FriendService.dao = new FriendDaoMock
     val promise = Promise[String]
-
     
     vertx.createHttpClient().post(8080, "127.0.0.1", "/participant/1/friends")
       .handler(r => {
@@ -59,7 +90,7 @@ class HttpVerticleSpec extends VerticleTesting[HttpVerticle] with Matchers {
     promise.future.map(res => res should equal("{\"id\":null,\"from\":\"/participant/1\",\"to\":\"/participant/2\"}"))
   }
   
-  "HttpVerticle" should "serve get inbound endpoint" in {
+  "Inbound Get" should "serve get inbound endpoint" in {
     val promise = Promise[String]
 
     vertx.createHttpClient()
@@ -72,7 +103,7 @@ class HttpVerticleSpec extends VerticleTesting[HttpVerticle] with Matchers {
     promise.future.map(res => res should equal("[{\"from\":\"/participant/1\",\"to\":\"/participant/2\",\"occurred\":null,\"subject\":\"test subject\",\"story\":\"test story\"}]"))
   }
   
-  "HttpVerticle" should "serve get outbound endpoint" in {
+  "Outbound Get" should "serve get outbound endpoint" in {
     val promise = Promise[String]
 
     vertx.createHttpClient()
@@ -85,7 +116,7 @@ class HttpVerticleSpec extends VerticleTesting[HttpVerticle] with Matchers {
     promise.future.map(res => res should equal("[{\"from\":\"/participant/1\",\"occurred\":null,\"subject\":\"test subject\",\"story\":\"test story\"}]"))
   }
   
-  "HttpVerticle" should "serve create outbound endpoint" in {
+  "Outbound Create" should "serve create outbound endpoint" in {
     val promise = Promise[String]
 
     vertx.createHttpClient().post(8080, "127.0.0.1", "/participant/1/outbound")
@@ -98,7 +129,7 @@ class HttpVerticleSpec extends VerticleTesting[HttpVerticle] with Matchers {
     promise.future.map(res => res should equal("{\"from\":\"/participant/1\",\"occurred\":null,\"subject\":\"test subject\",\"story\":\"test story\"}"))
   }
   
-  "HttpVerticle" should "serve search outbound endpoint" in {
+  "Outbound Search" should "serve search outbound endpoint" in {
     val promise = Promise[String]
 
     vertx.createHttpClient()
