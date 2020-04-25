@@ -6,7 +6,7 @@ import io.vertx.scala.ext.web.handler.BodyHandler
 import io.vertx.lang.scala.ScalaLogger
 import scala.concurrent.Future
 import io.vertx.scala.core.Vertx
-import info.glennengstrand.news.service.CacheWrapper
+import info.glennengstrand.news.service.InMemoryCache
 import info.glennengstrand.news.event._
 
 object InboundResource extends NewsFeedResource {
@@ -17,7 +17,7 @@ object InboundResource extends NewsFeedResource {
       .get("/participant/:id/inbound")
       .handler(rc => {
         val k = key(ns)
-        CacheWrapper.put(k, rc)
+        InMemoryCache.put(k, rc)
         publish(Topics.GetInbound.name, k, vertx)
       })
   }

@@ -22,17 +22,24 @@ class CreateFriendEvent extends ScalaVerticle with NewsFeedEvent {
                   end(nfr.rc, 400, "text/plain", d.getLocalizedMessage)
                 }
                 case Right(p) => {
-                  FriendService.create(p, ep => {
-                    ep match {
-                      case Success(op) => {
-                        end(nfr.rc, 200, "application/json", op.asJson.noSpaces)
-                      }
-                      case Failure(e) => {
-                        LOGGER.error(e.getLocalizedMessage)
-                        end(nfr.rc, 500, "text/plain", e.getLocalizedMessage)
-                      }
+                  p.isValid match {
+                    case true => {
+                      FriendService.create(p, ep => {
+                        ep match {
+                          case Success(op) => {
+                            end(nfr.rc, 200, "application/json", op.asJson.noSpaces)
+                          }
+                          case Failure(e) => {
+                            LOGGER.error(e.getLocalizedMessage)
+                            end(nfr.rc, 500, "text/plain", e.getLocalizedMessage)
+                          }
+                        }
+                      })
                     }
-                  })
+                    case false => {
+                      end(nfr.rc, 400, "text/plain", "specify both from and to when creating a friend")
+                    }
+                  }
                 }
              }
           })

@@ -14,7 +14,8 @@ class HttpVerticle extends ScalaVerticle {
         vertx.undeploy(id)
       })
       info.glennengstrand.news.dao.MySqlDao.db.close()
-      info.glennengstrand.news.service.CacheWrapper.shutdown
+      info.glennengstrand.news.service.InMemoryCache.close
+      info.glennengstrand.news.service.RedisCache.close
     }
     val router = Router.router(vertx)
     ParticipantResource.route(router, vertx)

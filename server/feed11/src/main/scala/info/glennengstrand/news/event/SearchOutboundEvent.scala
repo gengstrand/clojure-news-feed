@@ -7,7 +7,7 @@ import scala.util.{Success, Failure}
 import io.circe._, io.circe.generic.auto._, io.circe.parser._, io.circe.syntax._
 import info.glennengstrand.news.model.Outbound
 import info.glennengstrand.news.resource.Topics
-import info.glennengstrand.news.service.{CacheWrapper, OutboundService}
+import info.glennengstrand.news.service.{InMemoryCache, OutboundService}
 
 class SearchOutboundEvent extends ScalaVerticle with NewsFeedEvent {
   override def startFuture(): Future[_] = {
@@ -16,9 +16,9 @@ class SearchOutboundEvent extends ScalaVerticle with NewsFeedEvent {
         .consumer[String](Topics.SearchOutbound.name)
         .handler(msg => {
           val k = msg.body()
-          CacheWrapper.get(k) match {
+          InMemoryCache.get(k) match {
             case Some(orc) => {
-              CacheWrapper.del(k)
+              InMemoryCache.del(k)
               val rc = orc.asInstanceOf[RoutingContext]
               val ok = rc.request.getParam("keywords")
               ok match {

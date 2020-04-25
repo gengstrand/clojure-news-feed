@@ -5,11 +5,8 @@ import Docker.autoImport.exposedPorts
 scalaVersion := "2.12.6"
 
 assemblyMergeStrategy in assembly := {
-  case PathList(ps @ _*) if ps.contains("netty") => MergeStrategy.first
-  case PathList(ps @ _*) if ps.contains("ow2") => MergeStrategy.first
-  case PathList(ps @ _*) if ps.contains("commons-logging") => MergeStrategy.first
-  case PathList(ps @ _*) if ps.contains("slf4j") => MergeStrategy.first
-  case other => MergeStrategy.defaultMergeStrategy(other)
+  case "META-INF/MANIFEST.MF" => MergeStrategy.discard
+  case _ => MergeStrategy.first
 }
 
 enablePlugins(DockerPlugin)

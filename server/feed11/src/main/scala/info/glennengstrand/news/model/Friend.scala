@@ -14,4 +14,16 @@ package info.glennengstrand.news.model
 case class Friend(
   id: Option[Long],
   from: Option[String],
-  to: Option[String])
+  to: Option[String]) {
+  def isValid: Boolean = {
+    from match {
+      case Some(_) => {
+        to match {
+          case Some(_) => true
+          case None => false
+        }
+      }
+      case None => false
+    }
+  }
+}

@@ -22,17 +22,24 @@ class CreateParticipantEvent extends ScalaVerticle with NewsFeedEvent {
                   end(nfr.rc, 400, "text/plain", d.getLocalizedMessage)
                 }
                 case Right(p) => {
-                  ParticipantService.create(p, ep => {
-                    ep match {
-                      case Success(op) => {
-                        end(nfr.rc, 200, "application/json", op.asJson.noSpaces)
-                      }
-                      case Failure(e) => {
-                        LOGGER.error(e.getLocalizedMessage)
-                        end(nfr.rc, 500, "text/plain", e.getLocalizedMessage)
-                      }
+                  p.isValid match {
+                    case true => {
+                      ParticipantService.create(p, ep => {
+                        ep match {
+                          case Success(op) => {
+                            end(nfr.rc, 200, "application/json", op.asJson.noSpaces)
+                          }
+                          case Failure(e) => {
+                            LOGGER.error(e.getLocalizedMessage)
+                            end(nfr.rc, 500, "text/plain", e.getLocalizedMessage)
+                          }
+                        }
+                      })
                     }
-                  })
+                    case false => {
+                      end(nfr.rc, 400, "text/plain", "participant name is required")
+                    }
+                  }
                 }
              }
           })

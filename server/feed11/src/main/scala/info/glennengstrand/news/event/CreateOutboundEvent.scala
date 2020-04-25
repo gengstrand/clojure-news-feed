@@ -21,36 +21,43 @@ class CreateOutboundEvent extends ScalaVerticle with NewsFeedEvent {
                   end(nfr.rc, 400, "text/plain", d.getLocalizedMessage)
                 }
                 case Right(p) => {
-                  OutboundService.create(p, eo => {
-                    eo match {
-                      case Success(o) => {
-                        end(nfr.rc, 200, "application/json", o.asJson.noSpaces)
-                        FriendService.get(nfr.id, ef => {
-                          ef match {
-                            case Success(friends) => {
-                              friends.foreach(f => {
-                                val i = Inbound(
-                                    from = o.from,
-                                    to = f.to,
-                                    occurred = o.occurred,
-                                    subject = o.subject,
-                                    story = o.story
-                                    )
-                                bus.send(Topics.CreateInbound.name, i.asJson.noSpaces)
-                              })
-                            }
-                            case Failure(e) => {
-                              LOGGER.error("cannot fetch friends: ".concat(e.getLocalizedMessage))
-                            }
+                  p.isValid match {
+                    case true => {
+                      OutboundService.create(p, eo => {
+                        eo match {
+                          case Success(o) => {
+                            end(nfr.rc, 200, "application/json", o.asJson.noSpaces)
+                            FriendService.get(nfr.id, ef => {
+                              ef match {
+                                case Success(friends) => {
+                                  friends.foreach(f => {
+                                    val i = Inbound(
+                                        from = o.from,
+                                        to = f.to,
+                                        occurred = o.occurred,
+                                        subject = o.subject,
+                                        story = o.story
+                                        )
+                                    bus.send(Topics.CreateInbound.name, i.asJson.noSpaces)
+                                  })
+                                }
+                                case Failure(e) => {
+                                  LOGGER.error("cannot fetch friends: ".concat(e.getLocalizedMessage))
+                                }
+                              }
+                            })  
                           }
-                        })  
-                      }
-                      case Failure(e) => {
-                        LOGGER.error(e.getLocalizedMessage)
-                        end(nfr.rc, 500, "text/plain", e.getLocalizedMessage)
-                      }
+                          case Failure(e) => {
+                            LOGGER.error(e.getLocalizedMessage)
+                            end(nfr.rc, 500, "text/plain", e.getLocalizedMessage)
+                          }
+                        }
+                      })
                     }
-                  })
+                    case false => {
+                      end(nfr.rc, 400, "text/plain", "required fields for outbound are from, subject and story")
+                    }
+                  }
                 }
              }
           })

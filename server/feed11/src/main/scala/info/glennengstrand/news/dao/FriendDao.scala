@@ -20,7 +20,7 @@ class FriendDao extends DataAccess[Friend] {
     }))
   }
   override def insert(f: Friend): Future[Friend] = {
-    val s = sql"call UpsertFriends(${f.from.get}, ${f.to.get})".as[Int]
+    val s = sql"call UpsertFriends(${extractId(f.from.get)}, ${extractId(f.to.get)})".as[Int]
     MySqlDao.db.run(s.map(r => Friend(Option(r(0)), f.from, f.to)))
   }
 }

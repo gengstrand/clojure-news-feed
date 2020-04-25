@@ -3,7 +3,7 @@ package info.glennengstrand.news.event
 import io.vertx.lang.scala.ScalaLogger
 import io.vertx.scala.ext.web.RoutingContext
 import io.vertx.scala.core.eventbus.Message
-import info.glennengstrand.news.service.CacheWrapper
+import info.glennengstrand.news.service.InMemoryCache
 import info.glennengstrand.news.resource.Topics
 
 case class NewsFeedRequest(id: Int, body: String, rc: RoutingContext)
@@ -22,9 +22,9 @@ trait NewsFeedEvent {
   }
   private def request(msg: Message[String]): NewsFeedRequest = {
     val k = msg.body()
-    CacheWrapper.get(k) match {
+    InMemoryCache.get(k) match {
       case Some(orc) => {
-        CacheWrapper.del(k)
+        InMemoryCache.del(k)
         val rc = orc.asInstanceOf[RoutingContext]
         val oid = rc.request.getParam("id")
         oid match {

@@ -20,16 +20,23 @@ class CreateInboundEvent extends ScalaVerticle with NewsFeedEvent {
               LOGGER.error("cannot decode inbound: ".concat(d.getLocalizedMessage))
             }
             case Right(i) => {
-              InboundService.create(i, ep => {
-                ep match {
-                  case Success(op) => {
-                    LOGGER.debug("inbound successfully created")
-                  }
-                  case Failure(e) => {
-                    LOGGER.error("cannot save inbound: ".concat(e.getLocalizedMessage))
-                  }
+              i.isValid match {
+                case true => {
+                  InboundService.create(i, ep => {
+                    ep match {
+                      case Success(op) => {
+                        LOGGER.debug("inbound successfully created")
+                      }
+                      case Failure(e) => {
+                        LOGGER.error("cannot save inbound: ".concat(e.getLocalizedMessage))
+                      }
+                    }
+                  })
                 }
-              })
+                case false => {
+                  LOGGER.error("cannot create inbound on incomplete data")
+                }
+              }
             }
          }
       })

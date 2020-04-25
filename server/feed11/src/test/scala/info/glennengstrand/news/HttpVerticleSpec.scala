@@ -34,8 +34,24 @@ class HttpVerticleSpec extends VerticleTesting[HttpVerticle] with Matchers {
     }
   }
   
+  class CacheMock extends CacheWrapper {
+    def get(key: String): Option[Object] = {
+      None
+    }
+    def put(key: String, value: Object): Unit = {
+      
+    }
+    def del(key: String): Unit = {
+      
+    }
+    def close: Unit = {
+      
+    }
+  }
+  
   "Participant Get" should "serve get participant endpoint" in {
     ParticipantService.dao = new ParticipantDaoMock
+    ParticipantService.cache = new CacheMock
     val promise = Promise[String]
 
     vertx.createHttpClient()
@@ -50,6 +66,7 @@ class HttpVerticleSpec extends VerticleTesting[HttpVerticle] with Matchers {
   
   "Participant Create" should "serve create participant endpoint" in {
     ParticipantService.dao = new ParticipantDaoMock
+    ParticipantService.cache = new CacheMock
     val promise = Promise[String]
 
     vertx.createHttpClient().post(8080, "127.0.0.1", "/participant")
@@ -64,6 +81,7 @@ class HttpVerticleSpec extends VerticleTesting[HttpVerticle] with Matchers {
 
   "Friends Get" should "serve get friends endpoint" in {
     FriendService.dao = new FriendDaoMock
+    FriendService.cache = new CacheMock
     val promise = Promise[String]
 
     vertx.createHttpClient()
@@ -78,6 +96,7 @@ class HttpVerticleSpec extends VerticleTesting[HttpVerticle] with Matchers {
   
   "Friends Create" should "serve create friend endpoint" in {
     FriendService.dao = new FriendDaoMock
+    FriendService.cache = new CacheMock
     val promise = Promise[String]
     
     vertx.createHttpClient().post(8080, "127.0.0.1", "/participant/1/friends")
