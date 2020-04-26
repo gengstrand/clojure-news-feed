@@ -3,15 +3,17 @@ package info.glennengstrand.news.service
 import scala.concurrent.Future
 import scala.util.{Try, Success, Failure}
 import info.glennengstrand.news.model.Outbound
-import info.glennengstrand.news.dao.OutboundDao
+import info.glennengstrand.news.dao.{OutboundDao, ElasticSearchDao}
 import scala.concurrent._
 import ExecutionContext.Implicits.global
 
 object OutboundService extends NewsFeedService {
   var dao = new OutboundDao
+  var search = new ElasticSearchDao
   def create(ob: Outbound, f: Try[Outbound] => Unit): Unit = {
     dao.insert(ob) onComplete {
       case Success(rv) => {
+        search.index(Map("sender" -> ob.from.get, "story" -> ob.story.get))
         f(Success(rv))
       }
       case Failure(e) => {
@@ -30,13 +32,6 @@ object OutboundService extends NewsFeedService {
     }
   }
   def search(keywords: String, f: Try[Seq[String]] => Unit): Unit = {
-    dao.search(keywords) onComplete {
-      case Success(rv) => {
-        f(Success(rv))
-      }
-      case Failure(e) => {
-        LOGGER.error("cannot search outbound: ", e.getLocalizedMessage)
-      }
-    }
+    f(Success(search.search(keywords)))
   }
 }

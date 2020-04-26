@@ -21,9 +21,4 @@ trait DataAccess[T] {
       Seq()
     }
   }
-  def search(k: String): Future[Seq[String]] = {
-    Future {
-      Seq()
-    }
-  }
 }

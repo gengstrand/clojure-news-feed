@@ -13,4 +13,15 @@ case class Outbound(
     } yield (f, sb, st)
     !rv.isEmpty
   }
+  def source: Map[String, Object] = {
+    val retVal = for {
+      from <- from
+      story <- story
+    } yield Map("sender" -> from, "story" -> story)
+    if (retVal.isEmpty) {
+      Map()
+    } else {
+      retVal.head.asInstanceOf[Map[String, Object]]
+    }
+  }
 }

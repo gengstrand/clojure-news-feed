@@ -13,6 +13,7 @@ object InboundResource extends NewsFeedResource {
   private val ns = "Inbound::"
   private def getInbound(router: Router, vertx: Vertx): Unit = {
     vertx.deployVerticle(ScalaVerticle.nameForVerticle[GetInboundEvent], genDeployOptions(Topics.GetInbound))
+    vertx.deployVerticle(ScalaVerticle.nameForVerticle[CreateInboundEvent], genDeployOptions(Topics.CreateInbound))
     router
       .get("/participant/:id/inbound")
       .handler(rc => {

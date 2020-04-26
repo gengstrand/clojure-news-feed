@@ -26,11 +26,7 @@ class InboundDao extends DataAccess[Inbound] {
     val bs = selectStmt.bind(id.asInstanceOf[Object])
     val retVal = for {
       r <- CassandraDao.session.execute(bs).iterator().asScala
-      val occurred = r.getLocalTime(0)
-      val from = r.getInt(1)
-      val subject = r.getString(2)
-      val story = r.getString(3)
-    } yield Inbound(Option(toLink(from.toLong)), Option(toLink(id)), Option(occurred.toString()), Option(subject), Option(story))
+    } yield Inbound(Option(toLink(r.getInt(1).toLong)), Option(toLink(id)), Option(r.getLocalTime(0).toString()), Option(r.getString(2)), Option(r.getString(3)))
     Future(retVal.toSeq)
   }
 }

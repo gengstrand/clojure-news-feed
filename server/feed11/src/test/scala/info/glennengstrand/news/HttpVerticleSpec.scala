@@ -69,11 +69,13 @@ class HttpVerticleSpec extends VerticleTesting[HttpVerticle] with Matchers {
         Seq(Outbound(Option("/participant/%d".format(id)), None, Option("test subject"), Option("test story")))
       }
     }
-    override def search(k: String): Future[Seq[String]] = {
-      Future {
-        Seq("/participant/1")
-      }
-    }
+  }
+  
+  class ElasticSearchDaoMock extends ElasticSearchDao {
+    override def index(doc: Map[String, Object]): Unit = {}
+    override def search(k: String): Seq[String] = {
+      Seq("/participant/1")
+    }    
   }
 
   "Participant Get" should "serve get participant endpoint" in {
@@ -152,6 +154,7 @@ class HttpVerticleSpec extends VerticleTesting[HttpVerticle] with Matchers {
   
   "Outbound Get" should "serve get outbound endpoint" in {
     OutboundService.dao = new OutboundDaoMock
+    OutboundService.search = new ElasticSearchDaoMock
     val promise = Promise[String]
 
     vertx.createHttpClient()
@@ -166,23 +169,23 @@ class HttpVerticleSpec extends VerticleTesting[HttpVerticle] with Matchers {
   
   "Outbound Create" should "serve create outbound endpoint" in {
     OutboundService.dao = new OutboundDaoMock
+    OutboundService.search = new ElasticSearchDaoMock
     InboundService.dao = new InboundDaoMock
     FriendService.dao = new FriendDaoMock
     FriendService.cache = new CacheMock
     val promise = Promise[String]
-
     vertx.createHttpClient().post(8080, "127.0.0.1", "/participant/1/outbound")
       .handler(r => {
           r.exceptionHandler(promise.failure)
           r.bodyHandler(b => promise.success(b.toString))
       })
       .end("{\"from\":\"/participant/1\",\"occurred\":null,\"subject\":\"test subject\",\"story\":\"test story\"}")
-
     promise.future.map(res => res should equal("{\"from\":\"/participant/1\",\"occurred\":null,\"subject\":\"test subject\",\"story\":\"test story\"}"))
   }
   
   "Outbound Search" should "serve search outbound endpoint" in {
     OutboundService.dao = new OutboundDaoMock
+    OutboundService.search = new ElasticSearchDaoMock
     val promise = Promise[String]
 
     vertx.createHttpClient()
