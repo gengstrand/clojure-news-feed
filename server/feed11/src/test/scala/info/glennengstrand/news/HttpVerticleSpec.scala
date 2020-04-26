@@ -49,6 +49,33 @@ class HttpVerticleSpec extends VerticleTesting[HttpVerticle] with Matchers {
     }
   }
   
+  class InboundDaoMock extends InboundDao {
+    override def insert(ib: Inbound): Future[Inbound] = {
+      Future(ib)
+    }
+    override def fetchMulti(id: Int): Future[Seq[Inbound]] = {
+      Future {
+        Seq(Inbound(Option("/participant/1"), Option("/participant/%d".format(id)), None, Option("test subject"), Option("test story")))
+      }
+    }
+  }
+
+  class OutboundDaoMock extends OutboundDao {
+    override def insert(ob: Outbound): Future[Outbound] = {
+      Future(ob)
+    }
+    override def fetchMulti(id: Int): Future[Seq[Outbound]] = {
+      Future {
+        Seq(Outbound(Option("/participant/%d".format(id)), None, Option("test subject"), Option("test story")))
+      }
+    }
+    override def search(k: String): Future[Seq[String]] = {
+      Future {
+        Seq("/participant/1")
+      }
+    }
+  }
+
   "Participant Get" should "serve get participant endpoint" in {
     ParticipantService.dao = new ParticipantDaoMock
     ParticipantService.cache = new CacheMock
@@ -110,6 +137,7 @@ class HttpVerticleSpec extends VerticleTesting[HttpVerticle] with Matchers {
   }
   
   "Inbound Get" should "serve get inbound endpoint" in {
+    InboundService.dao = new InboundDaoMock
     val promise = Promise[String]
 
     vertx.createHttpClient()
@@ -123,6 +151,7 @@ class HttpVerticleSpec extends VerticleTesting[HttpVerticle] with Matchers {
   }
   
   "Outbound Get" should "serve get outbound endpoint" in {
+    OutboundService.dao = new OutboundDaoMock
     val promise = Promise[String]
 
     vertx.createHttpClient()
@@ -136,6 +165,10 @@ class HttpVerticleSpec extends VerticleTesting[HttpVerticle] with Matchers {
   }
   
   "Outbound Create" should "serve create outbound endpoint" in {
+    OutboundService.dao = new OutboundDaoMock
+    InboundService.dao = new InboundDaoMock
+    FriendService.dao = new FriendDaoMock
+    FriendService.cache = new CacheMock
     val promise = Promise[String]
 
     vertx.createHttpClient().post(8080, "127.0.0.1", "/participant/1/outbound")
@@ -149,6 +182,7 @@ class HttpVerticleSpec extends VerticleTesting[HttpVerticle] with Matchers {
   }
   
   "Outbound Search" should "serve search outbound endpoint" in {
+    OutboundService.dao = new OutboundDaoMock
     val promise = Promise[String]
 
     vertx.createHttpClient()

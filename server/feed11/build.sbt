@@ -38,6 +38,8 @@ libraryDependencies ++= Seq(
   "mysql" % "mysql-connector-java" % "8.0.19",
   "redis.clients" % "jedis" % "3.2.0", 
   "com.datastax.oss" % "java-driver-core" % "4.5.1",
+  "com.datastax.oss" % "java-driver-query-builder" % "4.5.1",
+  "com.datastax.oss" % "java-driver-mapper-runtime" % "4.5.1",
   "org.elasticsearch.client" % "elasticsearch-rest-high-level-client" % "7.6.2", 
   "net.sf.ehcache" % "ehcache" % "2.10.6",
 )
