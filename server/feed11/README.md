@@ -52,4 +52,6 @@ docker tag default/feed11:latest feed11:1.0
 
 The k8s/feed11-deployment.yaml contains the manifest for running this image. You will need to edit this file in order to run what you just built.
 
+## Load Test Results
 
+Average per minute throughput of outbound posts is 13,789. Mean latency is 5.8 ms. Median latency is 5 ms, 95th percentile is 12 ms and 99th percentile is 17 ms.
