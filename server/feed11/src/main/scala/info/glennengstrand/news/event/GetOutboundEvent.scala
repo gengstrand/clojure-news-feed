@@ -22,7 +22,7 @@ class GetOutboundEvent extends ScalaVerticle with NewsFeedEvent {
                   end(nfr.rc, 200, "application/json", op.asJson.noSpaces)
                 }
                 case Failure(e) => {
-                  LOGGER.error(e.getLocalizedMessage)
+                  LOGGER.error("error while attempting to access cassandra: ", e)
                   end(nfr.rc, 500, "text/plain", e.getLocalizedMessage)
                 }
               }

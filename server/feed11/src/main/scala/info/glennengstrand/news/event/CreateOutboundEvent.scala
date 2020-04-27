@@ -14,7 +14,6 @@ class CreateOutboundEvent extends ScalaVerticle with NewsFeedEvent {
     val bus = vertx.eventBus
     bus.consumer[String](Topics.CreateOutbound.name)
       .handler(msg => {
-        LOGGER.warn("processing the create outbound event")
           idbody(msg).foreach(nfr => {
              decode[Outbound](nfr.body) match {
                 case Left(d) => {
@@ -49,7 +48,7 @@ class CreateOutboundEvent extends ScalaVerticle with NewsFeedEvent {
                             })  
                           }
                           case Failure(e) => {
-                            LOGGER.error(e.getLocalizedMessage)
+                            LOGGER.error("error while attempting to access cassandra: ", e)
                           }
                         }
                       })

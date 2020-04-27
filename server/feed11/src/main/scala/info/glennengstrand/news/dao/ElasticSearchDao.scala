@@ -28,7 +28,6 @@ class ElasticSearchDao {
     es.indexAsync(request, RequestOptions.DEFAULT, listener)
   }
   def search(keywords: String): Seq[String] = {
-    LOGGER.warn("real elastic search dao search")
     val request = new SearchRequest(docIndex).types(docType)
     val builder = new SearchSourceBuilder()
     builder.query(QueryBuilders.termQuery("story", keywords))

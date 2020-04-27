@@ -18,7 +18,7 @@ class InboundDao extends DataAccess[Inbound] {
     Future(Inbound(None, None, None, None, None))
   }
   override def insert(ib: Inbound): Future[Inbound] = {
-    val bs = insertStmt.bind(ib.to.get, ib.from.get, ib.subject.get, ib.story.get)
+    val bs = insertStmt.bind(new java.lang.Integer(extractId(ib.to.get.toString.asInstanceOf[String]).toInt), new java.lang.Integer(extractId(ib.from.get.toString.asInstanceOf[String]).toInt), ib.subject.get.toString.asInstanceOf[String], ib.story.get.toString.asInstanceOf[String])
     CassandraDao.session.execute(bs)
     Future(ib)
   }
@@ -26,7 +26,7 @@ class InboundDao extends DataAccess[Inbound] {
     val bs = selectStmt.bind(id.asInstanceOf[Object])
     val retVal = for {
       r <- CassandraDao.session.execute(bs).iterator().asScala
-    } yield Inbound(Option(toLink(r.getInt(1).toLong)), Option(toLink(id)), Option(r.getLocalTime(0).toString()), Option(r.getString(2)), Option(r.getString(3)))
+    } yield Inbound(Option(toLink(r.getInt(1).toLong)), Option(toLink(id)), Option(r.getInstant(0).toString()), Option(r.getString(2)), Option(r.getString(3)))
     Future(retVal.toSeq)
   }
 }

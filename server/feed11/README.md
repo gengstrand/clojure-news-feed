@@ -1,47 +1,55 @@
-This is a quickstart for a Vert.x Scala project. It provides a few examples for doing 
-unit-tests.
+# News feed microservice in Scala on Vert.x
 
-It comes with `vertx-core` and `vertx-web` so you are good to go for a little REST-project.
-Take your time and take a look.
+This version of the news feed service is written in Scala using the [Vert.x framework](https://vertx.io/blog/scala-is-here/). Another big difference between this implementation and the previous implementations is that this is designed in a style known as reactive programming.
 
-# Scala console
+## Building
 
-After launching `sbt` you can switch to the _scala-console_. There we took care that you
-get an already initialized Vert.x-instance and the necessary imports to start playing around.
+This is a typical scala project using the scala built tool.
 
+```bash
+sbt
+compile
+test
 ```
+
+## Deving
+
+You can run this locally but be sure to set the environment variables to indicate
+where the dependent data stores are. You will also need to edit the src/main/resources/application.conf file to use 127.0.0.1 instead of mysql for the mysql host.
+
+```bash
+kubectl port-forward deployment/cassandra 9042:9042 &
+export NOSQL_HOST=127.0.0.1
+kubectl port-forward deployment/mysql 3306:3306 &
+export MYSQL_HOST=127.0.0.1
+kubectl port-forward deployment/redis 6379:6379 &
+export CACHE_HOST=127.0.0.1
+kubectl port-forward deployment/elasticsearch 9200:9200 & 
+export SEARCH_HOST=127.0.0.1
 sbt
 > console
 scala> vertx.deployVerticle(nameForVerticle[info.glennengstrand.news.HttpVerticle])
-scala> vertx.deploymentIDs.foreach(id => { vertx.undeploy(id) })
 ```
 
-From here you can freely interact with the Vert.x API inside the sbt-scala-shell.
+From here you can freely interact with the Vert.x API inside the sbt-scala-shell. You can also curl http://127.0.0.1:8080 for testing the service itself.
 
+## Building the Uber Jar
 
-# Fat-jar
+To create the runnable uber jar use:
 
-Take a look at the _build.sbt_ and search for the entry _packageOptions_. Enter the fully qualified class name 
-of your primary verticle. This will be used as entry point for a generated fat-jar.
-
-To create the runnable fat-jar use:
-```
+```bash
 sbt assembly
 ```
 
+## Building the Docker Image
 
-# Dockerize
+The project also contains everything you need to build the Docker container. Simply run the following commands to package your uber jar inside a Docker container
 
-The project also contains everything you need to create a Docker-container. Simply run the following command to package your fat-jar inside a Docker-container
-
-```
+```bash
 sbt docker
+docker tag default/feed11:latest feed11:1.0
 ```
 
-To run use
+The k8s/feed11-deployment.yaml contains the manifest for running this image. You will need to edit this file in order to run what you just built.
 
-```
-docker run -p 8666:8666 default/vertx-scala-sbt
-```
 
-Point your browser to [http://127.0.0.1:8666/hello](http://127.0.0.1:8666/hello) and enjoy :)

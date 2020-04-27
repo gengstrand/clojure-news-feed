@@ -16,6 +16,7 @@ object InboundService extends NewsFeedService {
       }
       case Failure(e) => {
         LOGGER.error("cannot create inbound: ", e.getLocalizedMessage)
+        f(Failure(e))
       }
     }
   }
@@ -26,6 +27,7 @@ object InboundService extends NewsFeedService {
       }
       case Failure(e) => {
         LOGGER.error("cannot fetch inbound: ", e.getLocalizedMessage)
+        f(Failure(e))
       }
     }
   }

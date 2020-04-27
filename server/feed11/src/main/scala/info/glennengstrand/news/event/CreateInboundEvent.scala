@@ -28,7 +28,7 @@ class CreateInboundEvent extends ScalaVerticle with NewsFeedEvent {
                         LOGGER.debug("inbound successfully created")
                       }
                       case Failure(e) => {
-                        LOGGER.error("cannot save inbound: ".concat(e.getLocalizedMessage))
+                        LOGGER.error("error while attempting to access cassandra: ", e)
                       }
                     }
                   })
