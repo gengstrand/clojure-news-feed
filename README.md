@@ -82,6 +82,10 @@ News feed microservice implemented in TypeScript and GraphQL
 
 https://glennengstrand.info/software/architecture/microservice/graphql
 
+### feed 11
+
+news feed microservice in Scala on Vert.x
+
 ### solr
 
 The supporting directory structure and configuration files needed to augment an instance of Solr to support keyword search capability for the news feed on outbound activity.
@@ -143,6 +147,7 @@ order by feed, cloud;
 │ EKS   │ 1    │  4822 │           26 │ 25.0 │ 37.0 │ 41.0 │          322 │
 │ GKE   │ 1    │  6316 │           19 │ 17.0 │ 33.0 │ 57.0 │          266 │
 │ GKE   │ 10   │  9702 │            5 │  4.0 │  8.0 │ 12.0 │          241 │
+│ GKE   │ 11   │ 13622 │            5 │  5.0 │ 12.0 │ 16.0 │          253 │
 │ EKS   │ 2    │  8030 │           13 │ 13.0 │ 18.0 │ 33.0 │          167 │
 │ GKE   │ 2    │  6983 │           18 │ 13.0 │ 41.0 │ 48.0 │          292 │
 │ EKS   │ 3    │ 14193 │            5 │  5.0 │  8.0 │ 10.0 │          257 │
@@ -156,7 +161,7 @@ order by feed, cloud;
 │ GKE   │ 8    │  6482 │            3 │  3.0 │  5.0 │  9.0 │           98 │
 │ GKE   │ 9    │ 14296 │            7 │  4.0 │ 20.0 │ 29.0 │          303 │
 └───────┴──────┴───────┴──────────────┴──────┴──────┴──────┴──────────────┘
-Retrieved 15 rows in 0.41s.
+Retrieved 16 rows in 5.15s.
 ```
 
 ## client
