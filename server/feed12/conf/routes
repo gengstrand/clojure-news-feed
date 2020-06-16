@@ -1,0 +1,2 @@
+->         /participant               info.glennengstrand.news.resource.ParticipantRouter
+->         /outbound                  info.glennengstrand.news.resource.OutboundRouter
