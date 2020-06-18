@@ -13,7 +13,7 @@ class OutboundExecutionContext @Inject()(actorSystem: ActorSystem)
     extends CustomExecutionContext(actorSystem, "repository.dispatcher")
 
 trait OutboundDao {
-  def create(data: Outbound)(implicit mc: MarkerContext): Future[Outbound]
+  def create(id: Int, data: Outbound)(implicit mc: MarkerContext): Future[Outbound]
 
   def get(id: Int)(implicit mc: MarkerContext): Future[Seq[Outbound]]
   
@@ -22,7 +22,7 @@ trait OutboundDao {
 }
 
 @Singleton
-class OutboundDaoImpl @Inject()()(implicit ec: OutboundExecutionContext)
+class OutboundDaoImpl @Inject()(searchDao: SearchDao)(implicit ec: OutboundExecutionContext)
     extends OutboundDao {
 
   private val logger = Logger(this.getClass)
@@ -35,17 +35,16 @@ class OutboundDaoImpl @Inject()()(implicit ec: OutboundExecutionContext)
     }
   }
 
-  override def create(data: Outbound)(implicit mc: MarkerContext): Future[Outbound] = {
+  override def create(id: Int, data: Outbound)(implicit mc: MarkerContext): Future[Outbound] = {
     Future {
       logger.trace(s"create: data = $data")
+      searchDao.index(data.source)
       data
     }
   }
   
   override def search(keywords: String)(implicit mc: MarkerContext): Future[Seq[String]] = {
-    Future {
-      Seq()
-    }
+    searchDao.search(keywords)
   }
 
 }
@@ -73,7 +72,7 @@ class MockOutboundDaoImpl @Inject()()(implicit ec: OutboundExecutionContext)
     }
   }
 
-  override def create(data: Outbound)(implicit mc: MarkerContext): Future[Outbound] = {
+  override def create(id: Int, data: Outbound)(implicit mc: MarkerContext): Future[Outbound] = {
     Future {
       logger.trace(s"create: data = $data")
       data

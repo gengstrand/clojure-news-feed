@@ -22,14 +22,14 @@ class FriendController @Inject()(cc: NewsControllerComponents)(
 
   private val logger = Logger(getClass)
 
-  def create: Action[AnyContent] = NewsAction.async { implicit request =>
+  def create(id: Int): Action[AnyContent] = NewsAction.async { implicit request =>
     logger.trace("process: ")
     decode[Friend](request.body.toString) match {
       case Left(d) => {
         logger.trace("invalid")
         Future {play.api.mvc.Results.Status(400)}
       }
-      case Right(p) => friendService.create(p) map {
+      case Right(p) => friendService.create(id, p) map {
         rv => Ok(rv.asJson.noSpaces)
       }
     }

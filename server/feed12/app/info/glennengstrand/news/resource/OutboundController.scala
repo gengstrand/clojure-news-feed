@@ -22,14 +22,14 @@ class OutboundController @Inject()(cc: NewsControllerComponents)(
 
   private val logger = Logger(getClass)
 
-  def create: Action[AnyContent] = NewsAction.async { implicit request =>
+  def create(id: Int): Action[AnyContent] = NewsAction.async { implicit request =>
     logger.trace("process: ")
     decode[Outbound](request.body.toString) match {
       case Left(d) => {
         logger.trace("invalid")
         Future {play.api.mvc.Results.Status(400)}
       }
-      case Right(p) => outboundService.create(p) map {
+      case Right(p) => outboundService.create(id, p) map {
         rv => Ok(rv.asJson.noSpaces)
       }
     }

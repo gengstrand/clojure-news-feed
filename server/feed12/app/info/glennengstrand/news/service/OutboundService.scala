@@ -13,11 +13,26 @@ import info.glennengstrand.news.resource._
 
 class OutboundService @Inject()(
     routerProvider: Provider[ParticipantRouter],
-    outboundDao: OutboundDao)(implicit ec: ExecutionContext) {
+    outboundDao: OutboundDao,
+    friendService: FriendService,
+    inboundService: InboundService)(implicit ec: ExecutionContext) {
 
-  def create(postInput: Outbound)(
+  def create(id: Int, postInput: Outbound)(
       implicit mc: MarkerContext): Future[Outbound] = {
-    outboundDao.create(postInput)
+    val rv = outboundDao.create(id, postInput)
+    friendService.lookup(id).map (friends => {
+      friends.foreach(f => {
+        val i = Inbound(
+            from = postInput.from,
+            to = f.to,
+            occurred = postInput.occurred,
+            subject = postInput.subject,
+            story = postInput.story
+        )
+        inboundService.create(id, i)
+      })
+    })
+    rv
   }
 
   def lookup(id: Int)(

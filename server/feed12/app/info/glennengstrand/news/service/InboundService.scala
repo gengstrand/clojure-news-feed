@@ -15,9 +15,9 @@ class InboundService @Inject()(
     routerProvider: Provider[ParticipantRouter],
     inboundDao: InboundDao)(implicit ec: ExecutionContext) {
 
-  def create(postInput: Inbound)(
+  def create(id: Int, postInput: Inbound)(
       implicit mc: MarkerContext): Future[Inbound] = {
-    inboundDao.create(postInput)
+    inboundDao.create(id, postInput)
   }
 
   def lookup(id: Int)(

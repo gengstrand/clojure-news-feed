@@ -22,12 +22,14 @@ class Module(environment: Environment, configuration: Configuration)
         bind[FriendDao].to[MockFriendDaoImpl].in[Singleton]
         bind[InboundDao].to[MockInboundDaoImpl].in[Singleton]
         bind[OutboundDao].to[MockOutboundDaoImpl].in[Singleton]
+        bind[SearchDao].to[MockSearchDaoImpl].in[Singleton]
       }
       case _ => {
         bind[ParticipantDao].to[ParticipantDaoImpl].in[Singleton]
         bind[FriendDao].to[FriendDaoImpl].in[Singleton]
         bind[InboundDao].to[InboundDaoImpl].in[Singleton]
         bind[OutboundDao].to[OutboundDaoImpl].in[Singleton]
+        bind[SearchDao].to[SearchDaoImpl].in[Singleton]
       }
     }
   }

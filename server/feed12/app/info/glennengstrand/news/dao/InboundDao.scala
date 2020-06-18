@@ -13,7 +13,7 @@ class InboundExecutionContext @Inject()(actorSystem: ActorSystem)
     extends CustomExecutionContext(actorSystem, "repository.dispatcher")
 
 trait InboundDao {
-  def create(data: Inbound)(implicit mc: MarkerContext): Future[Inbound]
+  def create(id: Int, data: Inbound)(implicit mc: MarkerContext): Future[Inbound]
 
   def get(id: Int)(implicit mc: MarkerContext): Future[Seq[Inbound]]
 }
@@ -32,7 +32,7 @@ class InboundDaoImpl @Inject()()(implicit ec: InboundExecutionContext)
     }
   }
 
-  def create(data: Inbound)(implicit mc: MarkerContext): Future[Inbound] = {
+  def create(id: Int, data: Inbound)(implicit mc: MarkerContext): Future[Inbound] = {
     Future {
       logger.trace(s"create: data = $data")
       data
@@ -65,7 +65,7 @@ class MockInboundDaoImpl @Inject()()(implicit ec: InboundExecutionContext)
     }
   }
 
-  override def create(data: Inbound)(implicit mc: MarkerContext): Future[Inbound] = {
+  override def create(id: Int, data: Inbound)(implicit mc: MarkerContext): Future[Inbound] = {
     Future {
       logger.trace(s"create: data = $data")
       data

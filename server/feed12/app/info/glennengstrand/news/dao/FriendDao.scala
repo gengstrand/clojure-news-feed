@@ -13,7 +13,7 @@ class FriendExecutionContext @Inject()(actorSystem: ActorSystem)
     extends CustomExecutionContext(actorSystem, "repository.dispatcher")
 
 trait FriendDao {
-  def create(data: Friend)(implicit mc: MarkerContext): Future[Friend]
+  def create(id: Int, data: Friend)(implicit mc: MarkerContext): Future[Friend]
 
   def get(id: Int)(implicit mc: MarkerContext): Future[Seq[Friend]]
 }
@@ -32,7 +32,7 @@ class FriendDaoImpl @Inject()()(implicit ec: FriendExecutionContext)
     }
   }
 
-  override def create(data: Friend)(implicit mc: MarkerContext): Future[Friend] = {
+  override def create(id: Int, data: Friend)(implicit mc: MarkerContext): Future[Friend] = {
     Future {
       logger.trace(s"create: data = $data")
       data
@@ -59,7 +59,7 @@ class MockFriendDaoImpl @Inject()()(implicit ec: FriendExecutionContext)
     }
   }
 
-  def create(data: Friend)(implicit mc: MarkerContext): Future[Friend] = {
+  def create(id: Int, data: Friend)(implicit mc: MarkerContext): Future[Friend] = {
     Future {
       logger.trace(s"create: data = $data")
       data

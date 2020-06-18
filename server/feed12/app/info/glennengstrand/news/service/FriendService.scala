@@ -15,9 +15,9 @@ class FriendService @Inject()(
     routerProvider: Provider[ParticipantRouter],
     friendDao: FriendDao)(implicit ec: ExecutionContext) {
 
-  def create(postInput: Friend)(
+  def create(id: Int, postInput: Friend)(
       implicit mc: MarkerContext): Future[Friend] = {
-    friendDao.create(postInput)
+    friendDao.create(id, postInput)
   }
 
   def lookup(id: Int)(

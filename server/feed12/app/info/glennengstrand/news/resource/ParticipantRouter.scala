@@ -24,9 +24,9 @@ class ParticipantRouter @Inject()(pc: ParticipantController, fc: FriendControlle
     
     case POST(p"/") => pc.create
 
-    case POST(p"/$id/friends") => fc.create
+    case POST(p"/$id/friends") => fc.create(id.toInt)
 
-    case POST(p"/$id/outbound") => oc.create
+    case POST(p"/$id/outbound") => oc.create(id.toInt)
 
     case GET(p"/$id") => pc.get(id.toInt)
 
