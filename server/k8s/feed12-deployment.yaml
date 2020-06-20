@@ -17,8 +17,8 @@ spec:
       containers:
       - name: feed
         env:
-	- name: APPLICATION_SECRET
-	  value: LGG7q:ZHimG613xJXWL50cwgJ:nx6soU:XcPj2MhJ;GR[F0]ag:90cqpJ_
+        - name: APPLICATION_SECRET
+          value: LGG7q:ZHimG613xJXWL50cwgJ:nx6soU:XcPj2MhJ;GR[F0]ag:90cqpJ_
         envFrom:
         - configMapRef:
             name: feed-config

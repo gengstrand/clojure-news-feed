@@ -23,15 +23,23 @@ class ParticipantController @Inject()(cc: NewsControllerComponents)(
   private val logger = Logger(getClass)
 
   def create: Action[AnyContent] = NewsAction.async { implicit request =>
-    logger.trace("process: ")
-    decode[Participant](request.body.toString) match {
-      case Left(d) => {
-        logger.trace("invalid")
-        Future {play.api.mvc.Results.Status(400)}
+    request.body.asJson match {
+      case Some(rbj) => {
+        (rbj \ "name").asOpt[String] match {
+            case Some(n) => {
+              val p = Participant(
+                  id = None,
+                  name = Some(n),
+                  link = None
+              )
+              participantService.create(p) map ( rv =>  {
+                Ok(rv.asJson.noSpaces)          
+              })
+            }
+            case None => Future(BadRequest("participant name is mandatory"))
+        }
       }
-      case Right(p) => participantService.create(p) map {
-        rv => Ok(rv.asJson.noSpaces)
-      }
+      case None => Future(BadRequest("empty request body"))
     }
   }
 

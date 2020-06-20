@@ -15,6 +15,13 @@ lazy val root = (project in file("."))
       "io.circe" %% "circe-core" % "0.12.3",
       "io.circe" %% "circe-generic" % "0.12.3",
       "io.circe" %% "circe-parser" % "0.12.3", 
+      "com.typesafe.play" %% "play-slick" % "5.0.0", 
+      "mysql" % "mysql-connector-java" % "8.0.19",
+      "redis.clients" % "jedis" % "3.2.0", 
+      "com.datastax.oss" % "java-driver-core" % "4.5.1",
+      "com.datastax.oss" % "java-driver-query-builder" % "4.5.1",
+      "com.datastax.oss" % "java-driver-mapper-runtime" % "4.5.1",
+      "org.elasticsearch.client" % "elasticsearch-rest-high-level-client" % "7.6.2", 
       "org.scalatestplus.play" %% "scalatestplus-play" % "5.0.0" % Test
     ),
     scalacOptions ++= Seq(
