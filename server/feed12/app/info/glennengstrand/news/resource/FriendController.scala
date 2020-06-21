@@ -23,15 +23,20 @@ class FriendController @Inject()(cc: NewsControllerComponents)(
   private val logger = Logger(getClass)
 
   def create(id: Int): Action[AnyContent] = NewsAction.async { implicit request =>
-    logger.trace("process: ")
-    decode[Friend](request.body.toString) match {
-      case Left(d) => {
-        logger.trace("invalid")
-        Future {play.api.mvc.Results.Status(400)}
+    request.body.asJson match {
+      case Some(rbj) => {
+        val f = for {
+          from <- (rbj \ "from").asOpt[String]
+          to <- (rbj \ "to").asOpt[String]
+        } yield Friend(None, Option(from), Option(to))
+        f.isEmpty match {
+          case false => friendService.create(id, f.head) map {
+            rv => Ok(rv.asJson.noSpaces)
+          }
+          case true => Future(BadRequest("from and to attributes are mandatory"))
+        }
       }
-      case Right(p) => friendService.create(id, p) map {
-        rv => Ok(rv.asJson.noSpaces)
-      }
+      case None => Future(BadRequest("empty request body"))
     }
   }
 
