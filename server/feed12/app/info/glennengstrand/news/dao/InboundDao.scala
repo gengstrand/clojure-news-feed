@@ -5,6 +5,10 @@ import javax.inject.{Inject, Singleton}
 import akka.actor.ActorSystem
 import play.api.libs.concurrent.CustomExecutionContext
 import play.api.{Logger, MarkerContext}
+import scala.jdk.CollectionConverters._
+
+import com.datastax.oss.driver.api.core.cql.{BoundStatement, PreparedStatement}
+import com.datastax.oss.driver.api.core.CqlSession
 
 import scala.concurrent.Future
 import info.glennengstrand.news.model._
@@ -19,22 +23,40 @@ trait InboundDao {
 }
 
 @Singleton
-class InboundDaoImpl @Inject()()(implicit ec: InboundExecutionContext)
-    extends InboundDao {
+class InboundDaoImpl @Inject()(nosql: NoSqlDao)(implicit ec: InboundExecutionContext)
+    extends InboundDao with Link {
 
   private val logger = Logger(this.getClass)
+  private val selectCql = "select toTimestamp(occurred) as occurred, fromparticipantid, subject, story from Inbound where participantid = ? order by occurred desc"
+  private val insertCql = "insert into Inbound (ParticipantID, FromParticipantID, Occurred, Subject, Story) values (?, ?, now(), ?, ?)"
+  private lazy val session: CqlSession = connect
+  private lazy val insertStmt = session.prepare(insertCql)
+  private lazy val selectStmt = session.prepare(selectCql)
 
+  private def connect: CqlSession = {
+    var rv: CqlSession = null
+    nosql.connect(s => rv = s)
+    rv
+  }
+  
   override def get(id: Int)(
       implicit mc: MarkerContext): Future[Seq[Inbound]] = {
     Future {
-      logger.trace(s"get: id = $id")
-      Seq(Inbound(None, None, None, None, None))
+      val bs = selectStmt.bind(id.asInstanceOf[Object])
+      val retVal = for {
+        r <- session.execute(bs).iterator().asScala
+      } yield Inbound(Option(toLink(r.getInt(1).toLong)), Option(toLink(id.toLong)), Option(r.getInstant(0).toString()), Option(r.getString(2)), Option(r.getString(3)))
+      retVal.toSeq
     }
   }
 
   def create(id: Int, data: Inbound)(implicit mc: MarkerContext): Future[Inbound] = {
     Future {
-      logger.trace(s"create: data = $data")
+      val bs = insertStmt.bind(new java.lang.Integer(extractId(data.to.get.toString.asInstanceOf[String]).toInt), 
+          new java.lang.Integer(extractId(data.from.get.toString.asInstanceOf[String]).toInt), 
+          data.subject.get.toString.asInstanceOf[String], 
+          data.story.get.toString.asInstanceOf[String])
+      session.execute(bs)
       data
     }
   }
@@ -55,19 +77,15 @@ object MockInboundDaoImpl {
 class MockInboundDaoImpl @Inject()()(implicit ec: InboundExecutionContext)
     extends InboundDao {
 
-  private val logger = Logger(this.getClass)
-
   override def get(id: Int)(
       implicit mc: MarkerContext): Future[Seq[Inbound]] = {
     Future {
-      logger.trace(s"get: id = $id")
       Seq(MockInboundDaoImpl.test)
     }
   }
 
   override def create(id: Int, data: Inbound)(implicit mc: MarkerContext): Future[Inbound] = {
     Future {
-      logger.trace(s"create: data = $data")
       data
     }
   }

@@ -25,6 +25,7 @@ class Module(environment: Environment, configuration: Configuration)
         bind[OutboundDao].to[MockOutboundDaoImpl].in[Singleton]
         bind[SearchDao].to[MockSearchDaoImpl].in[Singleton]
         bind[CacheWrapper].to[MockCache].in[Singleton]
+        bind[NoSqlDao].to[MockNoSqlDaoImpl].in[Singleton]
       }
       case _ => {
         bind[ParticipantDao].to[ParticipantDaoImpl].in[Singleton]
@@ -33,6 +34,7 @@ class Module(environment: Environment, configuration: Configuration)
         bind[OutboundDao].to[OutboundDaoImpl].in[Singleton]
         bind[SearchDao].to[SearchDaoImpl].in[Singleton]
         bind[CacheWrapper].to[RedisCache].in[Singleton]
+        bind[NoSqlDao].to[NoSqlDaoImpl].in[Singleton]
      }
     }
   }

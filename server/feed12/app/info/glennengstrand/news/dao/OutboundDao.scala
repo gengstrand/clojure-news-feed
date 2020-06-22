@@ -5,6 +5,10 @@ import javax.inject.{Inject, Singleton}
 import akka.actor.ActorSystem
 import play.api.libs.concurrent.CustomExecutionContext
 import play.api.{Logger, MarkerContext}
+import scala.jdk.CollectionConverters._
+
+import com.datastax.oss.driver.api.core.cql.{BoundStatement, PreparedStatement}
+import com.datastax.oss.driver.api.core.CqlSession
 
 import scala.concurrent.Future
 import info.glennengstrand.news.model._
@@ -22,22 +26,39 @@ trait OutboundDao {
 }
 
 @Singleton
-class OutboundDaoImpl @Inject()(searchDao: SearchDao)(implicit ec: OutboundExecutionContext)
-    extends OutboundDao {
+class OutboundDaoImpl @Inject()(searchDao: SearchDao, nosql: NoSqlDao)(implicit ec: OutboundExecutionContext)
+    extends OutboundDao with Link {
 
   private val logger = Logger(this.getClass)
+  private lazy val session: CqlSession = connect
+  private val selectCql = "select toTimestamp(occurred) as occurred, subject, story from Outbound where participantid = ? order by occurred desc"
+  private val insertCql = "insert into Outbound (ParticipantID, Occurred, Subject, Story) values (?, now(), ?, ?)"
+  private lazy val insertStmt = session.prepare(insertCql)
+  private lazy val selectStmt = session.prepare(selectCql)
 
+  private def connect: CqlSession = {
+    var rv: CqlSession = null
+    nosql.connect(s => rv = s)
+    rv
+  }
+  
   override def get(id: Int)(
       implicit mc: MarkerContext): Future[Seq[Outbound]] = {
     Future {
-      logger.trace(s"get: id = $id")
-      Seq(Outbound(None, None, None, None))
+      val bs = selectStmt.bind(id.asInstanceOf[Object])
+      val retVal = for {
+        r <- session.execute(bs).iterator().asScala
+      } yield Outbound(Option(toLink(id.toLong)), Option(r.getInstant(0).toString()), Option(r.getString(1)), Option(r.getString(2)))
+      retVal.toSeq
     }
   }
 
   override def create(id: Int, data: Outbound)(implicit mc: MarkerContext): Future[Outbound] = {
     Future {
-      logger.trace(s"create: data = $data")
+      val bs = insertStmt.bind(new java.lang.Integer(extractId(data.from.get.toString.asInstanceOf[String]).toInt), 
+          data.subject.get.toString.asInstanceOf[String], 
+          data.story.get.toString.asInstanceOf[String])
+      session.execute(bs)
       searchDao.index(data.source)
       data
     }
