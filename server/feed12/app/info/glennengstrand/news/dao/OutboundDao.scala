@@ -58,7 +58,7 @@ class OutboundDaoImpl @Inject()(searchDao: SearchDao, nosql: NoSqlDao)(implicit 
       val bs = insertStmt.bind(new java.lang.Integer(extractId(data.from.get.toString.asInstanceOf[String]).toInt), 
           data.subject.get.toString.asInstanceOf[String], 
           data.story.get.toString.asInstanceOf[String])
-      session.execute(bs)
+      session.executeAsync(bs)
       searchDao.index(data.source)
       data
     }

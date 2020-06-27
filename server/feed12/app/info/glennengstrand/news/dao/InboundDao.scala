@@ -56,7 +56,7 @@ class InboundDaoImpl @Inject()(nosql: NoSqlDao)(implicit ec: InboundExecutionCon
           new java.lang.Integer(extractId(data.from.get.toString.asInstanceOf[String]).toInt), 
           data.subject.get.toString.asInstanceOf[String], 
           data.story.get.toString.asInstanceOf[String])
-      session.execute(bs)
+      session.executeAsync(bs)
       data
     }
   }

@@ -35,6 +35,7 @@ class SearchDaoImpl @Inject()()(implicit ec: SearchExecutionContext)
 
   private val logger = Logger(this.getClass)
   private val searchHost = sys.env.get("SEARCH_HOST").getOrElse("localhost")
+  private val docType = "stories"
   private val docIndex = "feed"
   private val listener = new MyActionListener
   private def connect: RestHighLevelClient = {
@@ -63,13 +64,13 @@ class SearchDaoImpl @Inject()()(implicit ec: SearchExecutionContext)
   
   override def index(doc: Map[String, Object]) (implicit mc: MarkerContext): Unit = {
     val docId = UUID.randomUUID().toString()
-    val request = new IndexRequest(docIndex).source((doc + ("id" -> docId)).asJava.asInstanceOf[java.util.Map[java.lang.String, java.lang.Object]]).id(docId)
+    val request = new IndexRequest(docIndex, docType, docId).source((doc + ("id" -> docId)).asJava.asInstanceOf[java.util.Map[java.lang.String, java.lang.Object]])
     es.indexAsync(request, RequestOptions.DEFAULT, listener)
   }
 
   override def search(keywords: String)(implicit mc: MarkerContext): Future[Seq[String]] = {
     Future {
-      val request = new SearchRequest(docIndex)
+      val request = new SearchRequest(docIndex).types(docType)
       val builder = new SearchSourceBuilder()
       builder.query(QueryBuilders.termQuery("story", keywords))
       request.source(builder)

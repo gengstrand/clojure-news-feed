@@ -25,9 +25,7 @@ lazy val root = (project in file("."))
       "org.scalatestplus.play" %% "scalatestplus-play" % "5.0.0" % Test
     ),
     scalacOptions ++= Seq(
-      "-feature",
-      "-deprecation",
-      "-Xfatal-warnings"
+      "-feature"
     )
   )
 

@@ -23,21 +23,27 @@ class OutboundController @Inject()(cc: NewsControllerComponents)(
   private val logger = Logger(getClass)
 
   def create(id: Int): Action[AnyContent] = NewsAction.async { implicit request =>
-    logger.trace("process: ")
-    decode[Outbound](request.body.toString) match {
-      case Left(d) => {
-        logger.trace("invalid")
-        Future {play.api.mvc.Results.Status(400)}
+    request.body.asJson match {
+      case Some(rbj) => {
+        val occurred = (rbj \ "occurred").asOpt[String]
+        val ob = for {
+          from <- (rbj \ "from").asOpt[String]
+          subject <- (rbj \ "subject").asOpt[String]
+          story <- (rbj \ "story").asOpt[String]
+        } yield Outbound(Option(from), occurred, Option(subject), Option(story))
+        ob.isEmpty match {
+          case false => outboundService.create(id, ob.head) map {
+            rv => Ok(rv.asJson.noSpaces)
+          }
+          case true => Future(BadRequest("from, subject, and story attributes are mandatory"))
+        }
       }
-      case Right(p) => outboundService.create(id, p) map {
-        rv => Ok(rv.asJson.noSpaces)
-      }
+      case None => Future(BadRequest("empty request body"))
     }
   }
 
   def get(id: Int): Action[AnyContent] = NewsAction.async {
     implicit request =>
-      logger.trace(s"show: id = $id")
       outboundService.lookup(id).map { p =>
         Ok(p.asJson.noSpaces)
       }
