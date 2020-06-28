@@ -22,9 +22,9 @@ spec:
         envFrom:
         - configMapRef:
             name: feed-config
-        image: feed12:1.0
+        image: gengstrand/feed12:1.0
         ports:
         - containerPort: 8080
-        imagePullPolicy: Never
+        imagePullPolicy: Always
       restartPolicy: Always
 
