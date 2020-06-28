@@ -57,4 +57,10 @@ cd ../..
 docker build -t feed12:1.0 .
 ```
 
+## Static Code Analysis
 
+Average per file lines of code is 55.48 with a median of 51 and a standard deviation of 32.92. The outbound DAO scala file is the largest with 123 lines of code. Total McCabe cyclomatic complexity is 1,764.
+
+## Load Test Results
+
+Average per minute throughput of outbound posts is 14,255. Mean latency is 3.3 ms. Median latency is 3 ms, 95th percentile is 6 ms and 99th percentile is 9 ms. Resource utilization leveled at about 600 MB RAM and a little under a 1 CPU utilization.

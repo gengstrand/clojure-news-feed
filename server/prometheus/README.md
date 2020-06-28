@@ -10,13 +10,19 @@ cd ../k8s
 kubectl create -f prometheus.yaml
 ```
 
-The k8s/prometheus.yaml deployment manifest currently points to my local dockerhib repo.
+The k8s/prometheus.yaml deployment manifest currently points to the image on my dockerhib repo.
 
 ## querying
 
 Here are some sample queries to get you started.
 
-average latency for outbound post
+throughput in requests per second
+
+```
+sum(rate(outbound_POST_200_count[5m]))
+```
+
+mean latency for outbound post
 
 ```
 rate(outbound_POST_200_sum[5m]) / rate(outbound_POST_200_count[5m])
@@ -25,17 +31,17 @@ rate(outbound_POST_200_sum[5m]) / rate(outbound_POST_200_count[5m])
 median latency for outbound post
 
 ```
-histogram_quantile(0.50, rate(outbound_POST_200_bucket[5m]))
-```
-
-90th percentile for outbound post
-
-```
-histogram_quantile(0.90, rate(outbound_POST_200_bucket[5m]))
+histogram_quantile(0.90, sum(rate(outbound_POST_200_bucket[5m])) by (le))
 ```
 
 95th percentile for outbound post
 
 ```
-histogram_quantile(0.95, rate(outbound_POST_200_bucket[5m]))
+histogram_quantile(0.95, sum(rate(outbound_POST_200_bucket[5m])) by (le))
+```
+
+99th percentile for outbound post
+
+```
+histogram_quantile(0.99, sum(rate(outbound_POST_200_bucket[5m])) by (le))
 ```
