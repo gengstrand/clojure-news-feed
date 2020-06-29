@@ -59,7 +59,7 @@ docker build -t feed12:1.0 .
 
 ## Static Code Analysis
 
-Average per file lines of code is 55.48 with a median of 51 and a standard deviation of 32.92. The outbound DAO scala file is the largest with 123 lines of code. Total McCabe cyclomatic complexity is 1,764.
+Average per file Lines of Code is 55.48 with a median of 51 and a standard deviation of 32.92. The news action builder scala file (mostly boilerplate) is the largest with 123 LoC but the unit tests file is a close second at 122 LoC. Total McCabe cyclomatic complexity is 1,764.
 
 ## Load Test Results
 
