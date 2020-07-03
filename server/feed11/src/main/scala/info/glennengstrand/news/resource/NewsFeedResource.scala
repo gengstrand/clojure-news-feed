@@ -7,15 +7,15 @@ import scala.util.Random
 object Topics extends Enumeration {
   class TopicValue(val i: Int, val name: String, val instances: Int) extends Val(i: Int, name: String)
 
-  val CreateParticipant = new TopicValue(0, "CreateParticipant", 3) 
+  val CreateParticipant = new TopicValue(0, "CreateParticipant", 5) 
   val GetParticipant = new TopicValue(1, "GetParticipant", 3)
-  val CreateFriend = new TopicValue(2, "CreateFriend", 3) 
-  val GetFriend = new TopicValue(3, "GetFriend", 3)
-  val CreateInbound = new TopicValue(4, "CreateInbound", 3) 
+  val CreateFriend = new TopicValue(2, "CreateFriend", 5) 
+  val GetFriend = new TopicValue(3, "GetFriend", 5)
+  val CreateInbound = new TopicValue(4, "CreateInbound", 5) 
   val GetInbound = new TopicValue(5, "GetInbound", 3)
-  val CreateOutbound = new TopicValue(6, "CreateOutbound", 3) 
+  val CreateOutbound = new TopicValue(6, "CreateOutbound", 5) 
   val GetOutbound = new TopicValue(7, "GetOutbound", 3)
-  val SearchOutbound = new TopicValue(8, "SearchOutbound", 3)
+  val SearchOutbound = new TopicValue(8, "SearchOutbound", 5)
 }
 
 trait NewsFeedResource {

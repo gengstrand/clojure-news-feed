@@ -1,8 +1,11 @@
 import sbt.Keys._
 import play.sbt.PlaySettings
 
+PlayKeys.devSettings += "play.server.provider" -> "play.core.server.NettyServerProvider"
 lazy val root = (project in file("."))
   .enablePlugins(PlayService, PlayLayoutPlugin, Common)
+  .enablePlugins(PlayScala, PlayNettyServer)
+  .disablePlugins(PlayAkkaHttpServer)
   .settings(
     name := "news-feed-play",
     scalaVersion := "2.13.1",
