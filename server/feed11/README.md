@@ -56,4 +56,4 @@ Average per file lines of code is 42.33 with a median of 33 and a standard devia
 
 ## Load Test Results
 
-Average per minute throughput of outbound posts is 13,789. Mean latency is 5.8 ms. Median latency is 5 ms, 95th percentile is 12 ms and 99th percentile is 17 ms. Resource utilization leveled at about 400 MB RAM and a little under a half CPU utilization.
+Average per minute throughput of outbound posts is 14,136. Mean latency is 5.3 ms. Median latency is 5 ms, 95th percentile is 11 ms and 99th percentile is 15 ms. Resource utilization leveled at about 400 MB RAM and a little under a half CPU utilization.

@@ -63,7 +63,7 @@ Average per file Lines of Code is 55.48 with a median of 51 and a standard devia
 
 ## Load Test Results
 
-Play can be configured to run with a choice of two server backend technologies, eitgher akka http or netty. Here are the per minute outbound post performance results for both. Throughput is in requests per minute. The other columns measure average and percentile based latency in milliseconds.
+Play can be configured to run with a choice of two server backend technologies, either akka http or netty. Here are the per minute outbound post performance results for both. Throughput is in requests per minute. The other columns measure average and percentile based latency in milliseconds.
 
 | backend | throughput | mean | median | 95th | 99th |
 |---------|------------|------|--------|------|------|
