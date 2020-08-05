@@ -16,6 +16,19 @@ sbt test
 
 ### Running Locally
 
+Either running locally or load testing locally, you will need to set up
+port forwarding so that the service can access the back end data sources.
+
+```bash
+kubectl port-forward deployment/cassandra 9042:9042 &
+export NOSQL_HOST=127.0.0.1
+kubectl port-forward deployment/mysql 3306:3306 &
+kubectl port-forward deployment/redis 6379:6379 &
+export CACHE_HOST=127.0.0.1
+kubectl port-forward deployment/elasticsearch 9200:9200 & 
+export SEARCH_HOST=127.0.0.1
+```
+
 The following at the command prompt will start up Play in development mode:
 
 ```bash
@@ -23,7 +36,6 @@ sbt "run 8080"
 ```
 
 Play will start up on the HTTP port at <http://localhost:8080/>.   You don't need to deploy or reload anything -- changing any source code while the server is running will automatically recompile and hot-reload the application on the next HTTP request.
-
 
 ### Load Testing
 

@@ -86,6 +86,10 @@ https://glennengstrand.info/software/architecture/microservice/graphql
 
 news feed microservice in Scala on Vert.x
 
+### feed 12
+
+news feed microservice in Scala on Play
+
 ### solr
 
 The supporting directory structure and configuration files needed to augment an instance of Solr to support keyword search capability for the news feed on outbound activity.
@@ -171,7 +175,7 @@ These applications are expected to be run on the client(s).
 
 ### load
 
-This Clojure application is what I used to load test the feed web service on AWS.
+This Clojure application is what I used to load test the feed web service on public clouds.
 
 ### offline analysis
 
@@ -219,7 +223,7 @@ https://glennengstrand.info/software/architecture/ml/oss
 
 ## License
 
-Copyright © 2013 - 2019 Glenn Engstrand
+Copyright © 2013 - 2020 Glenn Engstrand
 
 Distributed under the Eclipse Public License
 
