@@ -86,9 +86,13 @@ https://glennengstrand.info/software/architecture/microservice/graphql
 
 news feed microservice in Scala on Vert.x
 
+https://glennengstrand.info/software/architecture/microservice/vertx/play
+
 ### feed 12
 
 news feed microservice in Scala on Play
+
+https://glennengstrand.info/software/architecture/microservice/vertx/play
 
 ### solr
 

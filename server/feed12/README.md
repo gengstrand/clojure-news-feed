@@ -1,6 +1,6 @@
 # news feed microservice on play and scala
 
-This is another implementation of the news feed microservice written in [Scala](https://www.scala-lang.org/) on the [Play Framework](https://www.playframework.com/). This project started from the example project for [Making a REST API in Play](http://developer.lightbend.com/guides/play-rest-api/index.html).
+This is another implementation of the news feed microservice written in [Scala](https://www.scala-lang.org/) on the [Play Framework](https://www.playframework.com/). This project started from the example project for [Making a REST API in Play](http://developer.lightbend.com/guides/play-rest-api/index.html). I covered this microservice implementation in my blog on [Writing Reactive Microservices for the JVM](https://glennengstrand.info/software/architecture/microservice/vertx/play).
 
 ## Deving
 

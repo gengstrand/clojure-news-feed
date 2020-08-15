@@ -1,6 +1,6 @@
 # News feed microservice in Scala on Vert.x
 
-This version of the news feed service is written in Scala using the [Vert.x framework](https://vertx.io/blog/scala-is-here/). Another big difference between this implementation and the previous implementations is that this is designed in a style known as [reactive programming](https://www.reactivemanifesto.org/).
+This version of the news feed service is written in Scala using the [Vert.x framework](https://vertx.io/blog/scala-is-here/). Another big difference between this implementation and the previous implementations is that this is designed in a style known as [reactive programming](https://www.reactivemanifesto.org/). I covered this microservice implementation in my blog on [Writing Reactive Microservices for the JVM](https://glennengstrand.info/software/architecture/microservice/vertx/play).
 
 ## Building
 
