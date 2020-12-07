@@ -2,9 +2,8 @@ apiVersion: v1
 kind: Service
 metadata:
   name: kibana-logger
-  createTimestamp: null
   labels:
-    io.kompose.service: kibana-logger
+    name: kibana-logger
   name: kibana-logger
 spec:
   type: LoadBalancer
@@ -13,6 +12,4 @@ spec:
     protocol: TCP
     targetPort: ui
   selector:
-    io.kompose.service: kibana-logger
-status:
-  loadBalancer: {}
+    name: kibana-logger

@@ -1,9 +1,8 @@
 apiVersion: v1
 kind: Service
 metadata:
-  creationTimestamp: null
   labels:
-    io.kompose.service: cassandra
+    name: cassandra
   name: cassandra
 spec:
   type: NodePort
@@ -17,4 +16,4 @@ spec:
     - port: 9160
       name: rpc-port
   selector:
-    io.kompose.service: cassandra
+    name: cassandra
