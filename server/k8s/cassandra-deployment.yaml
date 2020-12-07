@@ -1,16 +1,16 @@
-apiVersion: extensions/v1beta1
+apiVersion: apps/v1
 kind: Deployment
 metadata:
-  creationTimestamp: null
   name: cassandra
 spec:
   replicas: 1
-  strategy: {}
+  selector:
+    matchLabels:
+      name: cassandra
   template:
     metadata:
-      creationTimestamp: null
       labels:
-        io.kompose.service: cassandra
+        name: cassandra
     spec:
       containers:
       - args:
@@ -22,6 +22,5 @@ spec:
         name: cassandra
         ports:
         - containerPort: 9042
-        resources: {}
       restartPolicy: Always
-status: {}
+

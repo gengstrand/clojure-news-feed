@@ -1,15 +1,16 @@
-apiVersion: extensions/v1beta1
+apiVersion: apps/v1
 kind: Deployment
 metadata:
   name: kibana-logger
-  creationTimestamp: null
 spec:
   replicas: 1
+  selector:
+    matchLabels:
+      name: kibana-logger
   template:
     metadata:
-      creationTimestamp: null
       labels:
-        io.kompose.service: kibana-logger
+        name: kibana-logger
     spec:
       containers:
       - name: kibana-logger
