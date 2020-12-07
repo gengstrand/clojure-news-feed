@@ -1,4 +1,4 @@
-connexion == 1.1.9
+connexion == 2.6.0
 python_dateutil == 2.6.0
 setuptools >= 21.0.0
 Flask-SQLAlchemy >= 2.2
