@@ -16,10 +16,10 @@ spec:
     spec:
       containers:
       - env:
-        image: feed5:1.0
+        image: gengstrand/feed5:1.0
         name: feed
         ports:
         - containerPort: 8080
-        imagePullPolicy: Never
+        imagePullPolicy: Always
       restartPolicy: Always
 
