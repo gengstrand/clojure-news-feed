@@ -1,4 +1,4 @@
-apiVersion: apps/v1beta2
+apiVersion: apps/v1
 kind: Deployment
 metadata:
   name: feed
@@ -16,10 +16,10 @@ spec:
     spec:
       containers:
       - env:
-        image: gengstrand/feed5:1.0
+        image: feed5:1.0
         name: feed
         ports:
         - containerPort: 8080
-        imagePullPolicy: Always
+        imagePullPolicy: Never
       restartPolicy: Always
 
