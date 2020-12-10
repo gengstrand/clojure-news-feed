@@ -40,8 +40,8 @@ Here are illustrative curl calls to test out the service. This assumes that Joe'
 ```
 curl -H "Content-Type: application/json" -d '{"name":"joe flask"}' http://localhost:8080/participant/new
 curl -H "Content-Type: application/json" -d '{"name":"betty python"}' http://localhost:8080/participant/new
-curl -H "Content-Type: application/json" -d '{"from":1,"to":2}' http://localhost:8080/friends/new
-curl -H "Content-Type: application/json" -d '{"from":1,"subject":"testing flask","story":"python on flask is cool"}' http://localhost:8080/outbound/new
+curl -H "Content-Type: application/json" -d '{"from":"/participant/1","to":"/participant/2"}' http://localhost:8080/friends/new
+curl -H "Content-Type: application/json" -d '{"from":"/participant/1","subject":"testing flask","story":"python on flask is cool"}' http://localhost:8080/outbound/new
 curl http://localhost:8080/inbound/2
 ```
 To see the API documentation, open http://localhost:8080/ui/ in your favorite web browser.
@@ -52,19 +52,23 @@ sudo pip install tox
 tox
 ```
 
-## Running with Docker
+## Running on Kubernetes
 
-To run the server on a Docker container, please execute the following from the root directory:
+How to build the image.
 
 ```bash
-# building the image
-docker build -t swagger_server .
-
-# starting up a container
-docker run -p 8080:8080 swagger_server
+docker build -t feed5:1.0 .
 ```
+
+See k8s/feed5-deployment.yaml for how to run this docker image.
 
 ## Load Test Results
 
-I used the standard load test (see client/load). Average outbound post throughput was 5,470 RPM. Average duration was 12 ms with a mean of 11 ms and a 99th percentile of 25 ms.
+Here are some 2 hour load test results for creating outbound posts.
+
+| server backend | throughput | mean latency | 99th percentile |
+|----------------|------------|--------------|-----------------|
+| developer | 5,470 RPM | 12 ms | 25 ms |
+| nginx/uWSGI | 9,909 RPM | 6 ms | 12 ms |
+
 
