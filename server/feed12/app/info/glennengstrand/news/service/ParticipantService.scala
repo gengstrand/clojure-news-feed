@@ -39,7 +39,7 @@ class ParticipantService @Inject()(
             })
           }
           case Right(p) => {
-            Future(p)
+            Future.successful(p)
           }
         }
       }

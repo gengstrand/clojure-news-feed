@@ -15,7 +15,7 @@ class OutboundDao extends DataAccess[Outbound] {
   private lazy val selectStmt = CassandraDao.session.prepare(selectCql)
   
   override def fetchSingle(id: Int): Future[Outbound] = {
-    Future(Outbound(None, None, None, None))
+    Future.successful(Outbound(None, None, None, None))
   }
   override def insert(ob: Outbound): Future[Outbound] = {
     val bs = insertStmt.bind(new java.lang.Integer(extractId(ob.from.get.toString.asInstanceOf[String]).toInt), ob.subject.get.toString.asInstanceOf[String], ob.story.get.toString.asInstanceOf[String])
@@ -27,6 +27,6 @@ class OutboundDao extends DataAccess[Outbound] {
     val retVal = for {
       r <- CassandraDao.session.execute(bs).iterator().asScala
     } yield Outbound(Option(toLink(id.toLong)), Option(r.getInstant(0).toString()), Option(r.getString(1)), Option(r.getString(2)))
-    Future(retVal.toSeq)
+    Future.successful(retVal.toSeq)
   }
 }

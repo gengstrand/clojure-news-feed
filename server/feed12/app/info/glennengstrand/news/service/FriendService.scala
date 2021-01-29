@@ -45,7 +45,7 @@ class FriendService @Inject()(
             })
           }
           case Right(f) => {
-            Future(f)
+            Future.successful(f)
           }
         }
       }

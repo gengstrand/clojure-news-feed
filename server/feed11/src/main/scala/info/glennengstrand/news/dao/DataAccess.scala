@@ -17,8 +17,6 @@ trait DataAccess[T] {
   def fetchSingle(id: Int): Future[T]
   def insert(t: T): Future[T]
   def fetchMulti(id: Int): Future[Seq[T]] = {
-    Future {
-      Seq()
-    }
+    Future.successful(Seq())
   }
 }
