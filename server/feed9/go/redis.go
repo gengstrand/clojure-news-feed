@@ -5,6 +5,7 @@ import (
         "fmt"
 	"time"
 	"github.com/go-redis/redis"
+	"golang.org/x/net/context"
 )
 
 func GetCache() (*redis.Client) {
@@ -30,11 +31,11 @@ type CacheWrapper interface {
 }
 
 func (rw RedisWrapper) Get (key string) (string, error) {
-     return rw.Cache.Get(key).Result()
+     return rw.Cache.Get(context.Background(), key).Result()
 }
 
 func (rw RedisWrapper) Set (key string, value string, ttl time.Duration) {
-     rw.Cache.Set(key, value, ttl)
+     rw.Cache.Set(context.Background(), key, value, ttl)
 }
 
 func (rw RedisWrapper) Close() {

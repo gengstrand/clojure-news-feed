@@ -9,6 +9,7 @@ RUN go get -u github.com/go-redis/redis
 RUN go get -u github.com/gocql/gocql
 RUN go get -u github.com/google/uuid
 RUN go get -u gopkg.in/olivere/elastic.v3
+RUN go get -u golang.org/x/net/context
 RUN go build -o main .
 RUN adduser -S -D -H -h /app appuser
 USER appuser
