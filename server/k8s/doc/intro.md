@@ -110,3 +110,37 @@ You have to use port forwarding to access the microservice.
 kubectl port-forward deployment/feed 8080:8080
 FEED_URL=http://127.0.0.1:8080
 ```
+
+# configuring grafana
+
+average latency (seconds)
+
+rate(outbound_POST_200_sum[5m]) / rate(outbound_POST_200_count[5m])
+
+rate(participant_POST_200_sum[5m]) / rate(participant_POST_200_count[5m])
+
+rate(friends_POST_200_sum[5m]) / rate(friends_POST_200_count[5m])
+
+95th percentile latency (seconds)
+
+histogram_quantile(0.95, sum(rate(outbound_POST_200_bucket[5m])) by (le))
+
+histogram_quantile(0.95, sum(rate(participant_POST_200_bucket[5m])) by (le))
+
+histogram_quantile(0.95, sum(rate(friends_POST_200_bucket[5m])) by (le))
+
+99th percentile latency (seconds)
+
+histogram_quantile(0.99, sum(rate(outbound_POST_200_bucket[5m])) by (le))
+
+histogram_quantile(0.99, sum(rate(participant_POST_200_bucket[5m])) by (le))
+
+histogram_quantile(0.99, sum(rate(friends_POST_200_bucket[5m])) by (le))
+
+median latency (seconds)
+
+histogram_quantile(0.50, sum(rate(outbound_POST_200_bucket[5m])) by (le))
+
+histogram_quantile(0.50, sum(rate(participant_POST_200_bucket[5m])) by (le))
+
+histogram_quantile(0.50, sum(rate(friends_POST_200_bucket[5m])) by (le))
