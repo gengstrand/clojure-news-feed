@@ -111,9 +111,20 @@ kubectl port-forward deployment/feed 8080:8080
 FEED_URL=http://127.0.0.1:8080
 ```
 
-# configuring grafana
+# Setting Up Grafana
 
-average latency (seconds)
+You need to add two more pods to your test lab.
+
+```bash
+kubectl create -f prometheus.yaml
+kubectl create -f grafana.yaml
+# wait a bit
+kubectl get svc grafana
+```
+
+Point your browser to port 3000 of the external IP that gets created. Go to the settings and connect to the prometheus service on port 9090. Create a dashboard. Here are some latency based queries for you to use in various panels for that dashboard.
+
+## average latency (seconds)
 
 rate(outbound_POST_200_sum[5m]) / rate(outbound_POST_200_count[5m])
 
@@ -121,7 +132,7 @@ rate(participant_POST_200_sum[5m]) / rate(participant_POST_200_count[5m])
 
 rate(friends_POST_200_sum[5m]) / rate(friends_POST_200_count[5m])
 
-95th percentile latency (seconds)
+## 95th percentile latency (seconds)
 
 histogram_quantile(0.95, sum(rate(outbound_POST_200_bucket[5m])) by (le))
 
@@ -137,7 +148,7 @@ histogram_quantile(0.99, sum(rate(participant_POST_200_bucket[5m])) by (le))
 
 histogram_quantile(0.99, sum(rate(friends_POST_200_bucket[5m])) by (le))
 
-median latency (seconds)
+## median latency (seconds)
 
 histogram_quantile(0.50, sum(rate(outbound_POST_200_bucket[5m])) by (le))
 
