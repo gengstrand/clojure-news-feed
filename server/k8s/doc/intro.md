@@ -140,7 +140,7 @@ histogram_quantile(0.95, sum(rate(participant_POST_200_bucket[5m])) by (le))
 
 histogram_quantile(0.95, sum(rate(friends_POST_200_bucket[5m])) by (le))
 
-99th percentile latency (seconds)
+## 99th percentile latency (seconds)
 
 histogram_quantile(0.99, sum(rate(outbound_POST_200_bucket[5m])) by (le))
 
