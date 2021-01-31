@@ -227,7 +227,7 @@ https://glennengstrand.info/software/architecture/ml/oss
 
 ## License
 
-Copyright © 2013 - 2020 Glenn Engstrand
+Copyright © 2013 - 2021 Glenn Engstrand
 
 Distributed under the Eclipse Public License
 
