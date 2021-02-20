@@ -17,18 +17,3 @@ cassandra | com.datastax.oss | java-driver-mapper-runtime | 4.10.0 | [repo](http
 elasticsearch | org.elasticsearch.client | elasticsearch-rest-high-level-client | 7.11.1 | [Java High Level REST Client](https://www.elastic.co/guide/en/elasticsearch/client/java-rest/current/java-rest-high.html)
 json | org.clojure | data.json | 1.0.0 | [repo](https://github.com/clojure/data.json)
 
-
-
-
-
-(defn -main
-  "Application entry point"
-  [& args]
-  (->
-    (create-donkey)
-    (create-server
-      {:port   8080
-       :routes [{:handler (handler/api (wrap-json-body app-routes))
-                 :handler-mode :blocking}]})
-    start
-    (on-success (fn [_] (println "Server started listening on port 8080")))))

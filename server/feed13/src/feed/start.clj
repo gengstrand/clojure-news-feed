@@ -2,6 +2,7 @@
   (:require [com.appsflyer.donkey.core :refer [create-donkey create-server]]
           [com.appsflyer.donkey.server :refer [start]]
           [com.appsflyer.donkey.result :refer [on-success]]
+          [com.appsflyer.donkey.middleware.params :refer [parse-query-params]]
           [compojure.core :refer :all]
           [compojure.route :as route]
           [compojure.handler :as handler]
@@ -15,8 +16,8 @@
 (defn parse-int [s]
    (Integer. (re-find  #"\d+" s )))
 
-(defn extract-id [id]
-   (Integer. (re-find #"/participant/(\d+)" id)))
+(defn extract-id [s]
+   (Integer. (second (re-find #"/participant/(\d+)" s))))
 
 (defn get-participant
   "fetch participant wrapper"
@@ -155,7 +156,7 @@
 
 (defn create-outbound
   "create outbound wrapper"
-  [request]
+  [request respond raise]
   (let [body (apply str (map char (:body request)))
         parsed (json/read-str body)
         from (extract-id (get parsed "from"))
@@ -163,22 +164,43 @@
         subject (get parsed "subject")
         story (get parsed "story")]
         (try
-          {:status 200
-           :body (json/write-str (o/create from occurred subject story))}
+          (respond {:status 200
+                    :body (json/write-str (o/create from occurred subject story))})
           (catch Exception e
             (.println System/out (.getMessage e))
-            {:status 500
-             :body (str "{\"from\":" from ",\"error\":\"" (.getMessage  e) "\"}")}))))
+            (raise (.getMessage  e))))))
 
 (defn handle-create-outbound
   "handle create outbound routing"
   []
-  {:handler (fn [request] (create-friend request))
-   :handler-mode :blocking
+  {:handler (fn [request respond raise] (create-outbound request respond raise))
+   :handler-mode :non-blocking
    :path "/participant/:id/outbound"
    :match-type :simple
    :methods [:post]
    :consumes ["application/json"]
+   :produces ["application/json"]})
+
+(defn search-outbound
+  "search outbound wrapper"
+  [keywords]
+  (try 
+    {:status 200
+     :body (json/write-str (o/search keywords))}
+    (catch Exception e
+      (.println System/out (.getMessage e))
+      {:status 500
+       :body (str "{\"error\":\"" (.getMessage  e) "\"}")})))
+
+(defn handle-search-outbound
+  "handle search outbound routing"
+  []
+  {:handler (fn [request] (get-outbound (get-in request [:query-params "keywords"])))
+   :handler-mode :blocking
+   :path "/outbound"
+   :match-type :simple
+   :methods [:get]
+   :middleware [(parse-query-params)]
    :produces ["application/json"]})
 
 (defn -main
@@ -194,6 +216,7 @@
                 (handle-create-friend)
                 (handle-get-inbound)
                 (handle-get-outbound)
-                (handle-create-outbound)]})
+                (handle-create-outbound)
+                (handle-search-outbound)]})
     start
     (on-success (fn [_] (println "Server started listening on port 8080")))))
