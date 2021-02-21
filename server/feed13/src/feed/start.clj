@@ -3,14 +3,12 @@
           [com.appsflyer.donkey.server :refer [start]]
           [com.appsflyer.donkey.result :refer [on-success]]
           [com.appsflyer.donkey.middleware.params :refer [parse-query-params]]
-          [compojure.core :refer :all]
-          [compojure.route :as route]
-          [compojure.handler :as handler]
           [clojure.data.json :as json]
           [feed.services.participant :as p]
           [feed.services.friends :as f]
           [feed.services.inbound :as i]
-          [feed.services.outbound :as o])
+          [feed.services.outbound :as o]
+          [feed.daos.relational :as r])
   (:gen-class :main true))
 
 (defn parse-int [s]
@@ -206,6 +204,7 @@
 (defn -main
   "Application entry point"
   [& args]
+  (r/connect)
   (->
     (create-donkey)
     (create-server

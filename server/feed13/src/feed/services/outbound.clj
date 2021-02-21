@@ -1,11 +1,10 @@
 (ns feed.services.outbound
-  (:require [feed.daos.outbound :as o]
-  	    [feed.daos.cache :as c]))
+  (:require [feed.daos.outbound :as o]))
 
 (defn fetch
   "fetch the outbound news feed items for a participant"
   [id]
-  (c/get id o/fetch))
+  (o/fetch id))
 
 (defn create
   "create an outbound news feed item for a participant"
@@ -15,4 +14,4 @@
 (defn search
   "search participants who posted this content"
   [keywords]
-  ["/participant/1"])
+  (o/search keywords))

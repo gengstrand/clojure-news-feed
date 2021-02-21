@@ -2,8 +2,6 @@
 
 [Donkey](https://github.com/AppsFlyer/donkey) is an HTTP server that uses Vert.x
 
-Routes are defined using [Compojure](https://github.com/weavejester/compojure)
-
 Here are the list of dependencies that I am considering.
 
 library | group | artifact | version | url
