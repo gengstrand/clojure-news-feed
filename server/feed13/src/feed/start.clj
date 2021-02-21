@@ -12,11 +12,14 @@
   (:gen-class :main true))
 
 (defn parse-int [s]
-   (Integer. (re-find  #"\d+" s )))
+  (Integer. (re-find  #"\d+" s )))
 
 (defn extract-id [s]
-   (Integer. (second (re-find #"/participant/(\d+)" s))))
+  (Integer. (second (re-find #"/participant/(\d+)" s))))
 
+(defn embed-id [id]
+  (str "/participant/" id))
+  
 (defn get-participant
   "fetch participant wrapper"
   [id]
@@ -63,16 +66,23 @@
    :consumes ["application/json"]
    :produces ["application/json"]})
 
+(defn convert-friend
+  "change friend by changing ids to hateoas uris"
+  [friend]
+  {:id (:id friend)
+   :from (embed-id (:from friend))
+   :to (embed-id (:to friend))})
+   
 (defn get-friends
   "fetch friends wrapper"
   [id]
   (try 
     {:status 200
-     :body (json/write-str (f/fetch (parse-int id)))}
+     :body (json/write-str (map #(convert-friend %) (f/fetch (parse-int id))))}
     (catch Exception e
       (.println System/out (.getMessage e))
       {:status 500
-       :body (str "{\"from\":" id ",\"to\":0,\"error\":\"" (.getMessage  e) "\"}")})))
+       :body (str "[{\"from\":" id ",\"to\":0,\"error\":\"" (.getMessage  e) "\"}]")})))
 
 (defn handle-get-friends
   "handle get friends routing"
@@ -110,16 +120,25 @@
    :consumes ["application/json"]
    :produces ["application/json"]})
 
+(defn convert-inbound
+  "change inbound by changing ids to hateoas uris"
+  [inbound]
+  {:from (embed-id (:from inbound))
+   :to (embed-id (:to inbound))
+   :occurred (:occurred inbound)
+   :subject (:subject inbound)
+   :story (:story inbound)})
+
 (defn get-inbound
   "fetch inbound wrapper"
   [id]
   (try 
     {:status 200
-     :body (json/write-str (i/fetch (parse-int id)))}
+     :body (json/write-str (map #(convert-inbound %) (i/fetch (parse-int id))))}
     (catch Exception e
       (.println System/out (.getMessage e))
       {:status 500
-       :body (str "{\"to\":0,\"error\":\"" (.getMessage  e) "\"}")})))
+       :body (str "[{\"to\":0,\"error\":\"" (.getMessage  e) "\"}]")})))
 
 (defn handle-get-inbound
   "handle get inbound routing"
@@ -131,12 +150,20 @@
    :methods [:get]
    :produces ["application/json"]})
 
+(defn convert-outbound
+  "change outbound by changing ids to hateoas uris"
+  [outbound]
+  {:from (embed-id (:from outbound))
+   :occurred (:occurred outbound)
+   :subject (:subject outbound)
+   :story (:story outbound)})
+
 (defn get-outbound
   "fetch outbound wrapper"
   [id]
   (try 
     {:status 200
-     :body (json/write-str (o/fetch (parse-int id)))}
+     :body (json/write-str (map #(convert-outbound %) (o/fetch (parse-int id))))}
     (catch Exception e
       (.println System/out (.getMessage e))
       {:status 500
@@ -163,7 +190,7 @@
         story (get parsed "story")]
         (try
           (respond {:status 200
-                    :body (json/write-str (o/create from occurred subject story))})
+            :body (json/write-str (convert-outbound (o/create from occurred subject story)))})
           (catch Exception e
             (.println System/out (.getMessage e))
             (raise (.getMessage  e))))))
@@ -184,7 +211,7 @@
   [keywords]
   (try 
     {:status 200
-     :body (json/write-str (o/search keywords))}
+     :body (json/write-str (map #(embed-id %) (o/search keywords)))}
     (catch Exception e
       (.println System/out (.getMessage e))
       {:status 500

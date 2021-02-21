@@ -3,7 +3,7 @@
 (defn fetch
   "fetch the inbound news feed items for a participant"
   [id]
-  [{:from "/participant/1" :to "/participant/2" :occurred "2021-02-18" :subject "test" :story "test story"}])
+  [{:from 1 :to 2 :occurred "2021-02-18" :subject "test" :story "test story"}])
 
 (defn create
   "create an inbound news feed item for a participant"

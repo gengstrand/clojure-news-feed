@@ -3,7 +3,7 @@
 (defn fetch
   "fetch the friends for a participant"
   [id]
-  [{:id id :from "/participant/1" :to "/participant/2"}])
+  [{:id id :from 1 :to 2}])
 
 (defn create
   "associate two participants as friends"
