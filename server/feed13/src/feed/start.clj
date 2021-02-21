@@ -195,7 +195,7 @@
 (defn handle-search-outbound
   "handle search outbound routing"
   []
-  {:handler (fn [request] (get-outbound (get-in request [:query-params "keywords"])))
+  {:handler (fn [request] (search-outbound (get-in request [:query-params "keywords"])))
    :handler-mode :blocking
    :path "/outbound"
    :match-type :simple

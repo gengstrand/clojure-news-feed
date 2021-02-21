@@ -1,11 +1,13 @@
-(ns feed.services.participant)
+(ns feed.services.participant
+  (:require [feed.daos.participant :as p]
+  	    [feed.daos.cache :as c]))
 
 (defn fetch
   "fetch a participant"
   [id]
-  {:id id :name "test"})
+  (c/get id p/fetch))
 
 (defn create
   "create a participant"
   [name]
-  {:id 0 :name name})
+  (p/create name))

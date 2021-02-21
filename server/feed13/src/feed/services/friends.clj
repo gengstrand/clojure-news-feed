@@ -1,11 +1,13 @@
-(ns feed.services.friends)
+(ns feed.services.friends
+  (:require [feed.daos.friends :as f]
+  	    [feed.daos.cache :as c]))
 
 (defn fetch
   "fetch the friends for a participant"
   [id]
-  [{:id id :from "/participant/1" :to "/participant/2"}])
+  (c/get id f/fetch))
 
 (defn create
   "associate two participants as friends"
   [from to]
-  {:id 0 :from from :to to})
+  (f/create from to))

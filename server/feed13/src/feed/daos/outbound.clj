@@ -1,16 +1,14 @@
-(ns feed.services.outbound
-  (:require [feed.daos.outbound :as o]
-  	    [feed.daos.cache :as c]))
+(ns feed.daos.outbound)
 
 (defn fetch
   "fetch the outbound news feed items for a participant"
   [id]
-  (c/get id o/fetch))
+  [{:from "/participant/1" :occurred "2021-02-18" :subject "test" :story "test story"}])
 
 (defn create
   "create an outbound news feed item for a participant"
   [from occurred subject story]
-  (o/create from occurred subject story))
+  {:from from :occurred occurred :subject subject :story story})
 
 (defn search
   "search participants who posted this content"
