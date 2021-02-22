@@ -103,7 +103,7 @@
         to (extract-id (get parsed "to"))]
         (try
           {:status 200
-           :body (json/write-str (f/create from to))}
+           :body (json/write-str (convert-friend (f/create from to)))}
           (catch Exception e
             (.println System/out (.getMessage e))
             {:status 500

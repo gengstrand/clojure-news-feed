@@ -10,6 +10,7 @@
                  [com.h2database/h2 "1.4.200"]
                  [com.appsflyer/donkey "0.4.2"]]
   :main feed.start
-  :profiles {:uberjar {:aot :all}}
+  :profiles {:uberjar {:aot :all}
+             :test {:dependencies [[mockery "0.1.4"]]}}
   :jvm-opts ["-Dvertx.threadChecks=false"
              "-Dvertx.disableContextTimings=true"])

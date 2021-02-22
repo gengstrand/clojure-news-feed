@@ -5,7 +5,8 @@
 
 (defn create-db
   [handle]
-  (.execute handle "create table Participant (ParticipantID int not null primary key auto_increment, Moniker varchar(50))" (into-array Object [])))
+  (.execute handle "create table Participant (ParticipantID int not null primary key auto_increment, Moniker varchar(50))" (into-array Object []))
+  (.execute handle "create table Friends (FriendsID int not null primary key auto_increment, FromParticipantID int not null, ToParticipantID int not null)" (into-array Object [])))
 
 (defn connect
   "initialize connection to relational database"
