@@ -13,7 +13,7 @@
   [id]
   (let [h (.open @r/jdbi)]
     (try
-      (let [q (.createQuery h "select * from Friends where FromParticipantID = :id")
+      (let [q (.createQuery h "call FetchFriends(:id)")
             bq (.bind q "id" id)
             rq (.mapToMap bq)]
             (map #(to-friend %) (.list rq)))
@@ -24,9 +24,10 @@
   [from to]
   (let [h (.open @r/jdbi)]
     (try
-      (let [q (.createUpdate h "insert into Friends (FromParticipantID, ToParticipantID) values (:from, :to)")
+      (let [q (.createQuery h "call UpsertFriends(:from, :to)")
             bq1 (.bind q "from" from)
-            bq2 (.bind bq1 "to" to)]
-            (.execute bq2))
-      (finally (.close h))))
-  {:id 0 :from from :to to})
+            bq2 (.bind bq1 "to" to)
+            rq (.mapTo bq2 Long)]
+            {:id (.first rq) :from from :to to})
+      (finally (.close h)))))
+

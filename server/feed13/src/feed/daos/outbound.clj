@@ -1,20 +1,41 @@
-(ns feed.daos.outbound)
+(ns feed.daos.outbound
+  (:require [feed.daos.widecolumn :as wc]
+            [feed.daos.search :as s])
+  (:import (com.datastax.oss.driver.api.core CqlIdentifier)
+           (org.joda.time DateTime)))
+
+(defn convert-outbound
+  "convert a row from the result to a map"
+  [row id]
+  {:from id
+   :occurred (.toString (DateTime. (.getLocalDate (CqlIdentifier/fromCql "Occurred"))) "yyyy-MM-dd")
+   :subject (.getString (CqlIdentifier/fromCql "Subject"))
+   :story (.getString (CqlIdentifier/fromCql "Story"))})
 
 (defn fetch
   "fetch the outbound news feed items for a participant"
   [id]
-  [{:from 1 :occurred "2021-02-18" :subject "test" :story "test story"}])
+  (let [cql (str "select toTimestamp(occurred) as Occurred, Subject, Story from Outbound where participantid = " id " order by occurred desc")
+        s (.execute @wc/cassandra cql)]
+        (map #(convert-outbound % id) (.all s))))
 
 (defn create
   "create an outbound news feed item for a participant"
   [from occurred subject story]
+  (let [cleansed-subject (.replaceAll subject "'" "")
+        cleansed-story (.replaceAll story "'" "")
+        cql (str "insert into Outbound (ParticipantID, Occurred, Subject, Story) values (" from ", now(), '" cleansed-subject "', '" cleansed-story "') using ttl 7776000")]
+        (.execute @wc/cassandra cql))
   {:from from :occurred occurred :subject subject :story story})
 
 (defn search
   "search participants who posted this content"
   [keywords]
-  [1])
+  (s/search keywords))
 
 (defn index
   "index participant story as searchable"
-  [from story])
+  [from story]
+  (s/index (fn [doc]
+               (.field doc "sender" from)
+               (.field doc "story" story))))

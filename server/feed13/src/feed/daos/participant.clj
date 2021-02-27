@@ -3,7 +3,7 @@
 
 (defn get-name
   [handle id]
-  (let [q (.createQuery handle "select Moniker from Participant where ParticipantID = :id")
+  (let [q (.createQuery handle "call FetchParticipant(:id)")
         bq (.bind q "id" id)
         rq (.mapToMap bq)
         rm (.first rq)]
@@ -11,9 +11,10 @@
 
 (defn insert-name
   [handle name]
-  (let [q (.createUpdate handle "insert into Participant (Moniker) values (:name)")
-        bq (.bind q "name" name)]
-        (.execute bq)))
+  (let [q (.createQuery handle "call UpsertParticipant(:moniker)")
+        bq (.bind q "moniker" name)
+        rq (.mapTo bq Long)]
+        (.first rq)))
 
 (defn fetch
   "fetch a participant"
@@ -28,8 +29,6 @@
   [name]
   (let [h (.open @r/jdbi)]
     (try
-      (insert-name h name)
-      {:id 0 :name name}
+      {:id (insert-name h name) :name name}
       (finally (.close h)))))
-
 

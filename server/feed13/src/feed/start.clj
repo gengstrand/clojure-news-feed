@@ -6,13 +6,19 @@
           [feed.controllers.friends :as f]
           [feed.controllers.inbound :as i]
           [feed.controllers.outbound :as o]
-          [feed.daos.relational :as r])
+          [feed.daos.relational :as r]
+          [feed.daos.cache :as c]
+          [feed.daos.search :as s]
+          [feed.daos.widecolumn :as w])
   (:gen-class :main true))
 
 (defn -main
   "Application entry point"
   [& args]
   (r/connect)
+  (c/connect)
+  (w/connect)
+  (s/connect)
   (->
     (create-donkey)
     (create-server

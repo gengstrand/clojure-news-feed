@@ -3,17 +3,13 @@
 
 (def jdbi (atom "jdbc:h2:mem:feed;DB_CLOSE_DELAY=-1"))
 
-(defn create-db
-  [handle]
-  (.execute handle "create table Participant (ParticipantID int not null primary key auto_increment, Moniker varchar(50))" (into-array Object []))
-  (.execute handle "create table Friends (FriendsID int not null primary key auto_increment, FromParticipantID int not null, ToParticipantID int not null)" (into-array Object [])))
-
 (defn connect
   "initialize connection to relational database"
   []
-  (swap! jdbi (fn [cs] (Jdbi/create cs)))
-  (let [h (.open @jdbi)]
-    (try
-      (create-db h)
-      (catch Exception e (.println System/out (.getMessage e)))
-      (finally (.close h)))))
+  (let [host (or (System/getenv "MYSQL_HOST") "mysql")
+        port (or (System/getenv "MYSQL_PORT") "3306")
+        db (or (System/getenv "MYSQL_DB") "feed")
+        user (or (System/getenv "MYSQL_USR") "feed")
+        password (or (System/getenv "MYSQL_PWD") "feed1234")]
+        (swap! jdbi (fn [cs] (Jdbi/create (str "jdbc:mysql://" host ":" port "/" db) user password)))))
+
