@@ -3,10 +3,10 @@
 
 (defn to-friend
   "convert from db row to api response"
-  [item]
+  [item from]
   {:id (get item "friendsid")
-   :from (get item "fromparticipantid")
-   :to (get item "toparticipantid")})
+   :from from
+   :to (get item "participantid")})
 
 (defn fetch
   "fetch the friends for a participant"
@@ -16,7 +16,7 @@
       (let [q (.createQuery h "call FetchFriends(:id)")
             bq (.bind q "id" id)
             rq (.mapToMap bq)]
-            (map #(to-friend %) (.list rq)))
+            (map #(to-friend % id) (.list rq)))
       (finally (.close h)))))
 
 (defn create

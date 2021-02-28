@@ -12,7 +12,9 @@
 
 (deftest create-friend-test
   (testing "testing create friends"
-    (with-mock _
-      {:target :feed.daos.friends/create
-       :return {:id 1 :from 1 :to 2}}
+    (with-mocks
+      [dao {:target :feed.daos.friends/create
+            :return {:id 1 :from 1 :to 2}}
+       cache {:target :feed.daos.cache/del
+              :return nil}]
       (is (= (:to (f/create 1 2)) 2)))))

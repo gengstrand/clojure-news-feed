@@ -19,11 +19,25 @@
         
 (defn get-entity
   "fetch an item from the cache. if miss then load from db and update cache"
-  [key load]
+  [namespace key load]
   (let [p (.getResource @pool)]
         (try
-          (let [rrv (.get p key)
+          (let [nk (str namespace "::" key)
+                rrv (.get p nk)
                 prv (if (= rrv nil) (load key) (json/read-str rrv))]
-                (if (= rrv nil) (.set p key (json/write-str prv)))
-                prv)
+                (if (= rrv nil)
+                    (let [rv (json/write-str prv)]
+                         (.set p nk rv)
+                         (json/read-str rv))
+                     prv))
+          (catch Exception e (.println System/out (.getMessage e)))
+          (finally (.close p)))))
+
+(defn del
+  "delete an entry from the cache"
+  [namespace key]
+  (let [p (.getResource @pool)]
+        (try
+          (.del p (str namespace "::" key))
+          (catch Exception e (.println System/out (.getMessage e)))
           (finally (.close p)))))

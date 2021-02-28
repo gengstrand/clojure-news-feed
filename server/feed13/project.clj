@@ -7,7 +7,6 @@
                  [org.jdbi/jdbi3-core "3.16.0"]
                  [redis.clients/jedis "3.5.1"]
                  [com.datastax.oss/java-driver-core "4.10.0"]
-                 [joda-time/joda-time "2.10.10"]
                  [org.elasticsearch.client/elasticsearch-rest-high-level-client "7.11.1"]
                  [ch.qos.logback/logback-classic "1.2.3"]
                  [javax.servlet/servlet-api "2.5"]

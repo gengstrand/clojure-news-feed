@@ -1,16 +1,15 @@
 (ns feed.daos.outbound
   (:require [feed.daos.widecolumn :as wc]
             [feed.daos.search :as s])
-  (:import (com.datastax.oss.driver.api.core CqlIdentifier)
-           (org.joda.time DateTime)))
+  (:import (com.datastax.oss.driver.api.core CqlIdentifier)))
 
 (defn convert-outbound
   "convert a row from the result to a map"
   [row id]
   {:from id
-   :occurred (.toString (DateTime. (.getLocalDate (CqlIdentifier/fromCql "Occurred"))) "yyyy-MM-dd")
-   :subject (.getString (CqlIdentifier/fromCql "Subject"))
-   :story (.getString (CqlIdentifier/fromCql "Story"))})
+   :occurred (.toString (.getInstant row (CqlIdentifier/fromCql "Occurred")))
+   :subject (.getString row (CqlIdentifier/fromCql "Subject"))
+   :story (.getString row (CqlIdentifier/fromCql "Story"))})
 
 (defn fetch
   "fetch the outbound news feed items for a participant"

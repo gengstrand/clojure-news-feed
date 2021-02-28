@@ -1,5 +1,6 @@
 (ns feed.daos.widecolumn
-  (:import (com.datastax.oss.driver.api.core CqlSession CqlIdentifier)))
+  (:import (com.datastax.oss.driver.api.core CqlSession CqlIdentifier)
+           (java.net InetSocketAddress)))
 
 (def cassandra (atom ""))
 
@@ -9,7 +10,7 @@
   (let [h (or (System/getenv "NOSQL_HOST") "cassandra")
         ks (or (System/getenv "NOSQL_KEYSPACE") "activity")
         s (-> (CqlSession/builder)
-              (.addContactPoint h)
+              (.addContactPoint (InetSocketAddress. h 9042))
               (.withLocalDatacenter "datacenter1")
               (.withKeyspace (CqlIdentifier/fromCql ks))
               (.build))]

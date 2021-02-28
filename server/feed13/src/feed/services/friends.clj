@@ -5,9 +5,12 @@
 (defn fetch
   "fetch the friends for a participant"
   [id]
-  (c/get-entity id f/fetch))
+  (c/get-entity "Friends" id f/fetch))
 
 (defn create
   "associate two participants as friends"
   [from to]
-  (f/create from to))
+  (let [rv (f/create from to)]
+       (c/del "Friends" from)
+       (c/del "Friends" to)
+       rv))

@@ -5,7 +5,7 @@
 (defn fetch
   "fetch a participant"
   [id]
-  (c/get-entity id p/fetch))
+  (c/get-entity "Participant" id p/fetch))
 
 (defn create
   "create a participant"

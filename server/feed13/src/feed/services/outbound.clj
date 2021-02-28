@@ -11,11 +11,13 @@
 (defn create
   "create an outbound news feed item for a participant"
   [from occurred subject story]
-  (future 
-    (doseq [friend (f/fetch from)]
-      (i/create from (:to friend) occurred subject story))
-    (o/index from story)
-    (o/create from occurred subject story))
+  (future
+    (try
+      (doseq [friend (f/fetch from)]
+        (i/create from (get friend "to") occurred subject story))
+      (o/index from story)
+      (o/create from occurred subject story)
+      (catch Exception e (.println System/out (.getMessage e)))))
   {:from from :occurred occurred :subject subject :story story})
 
 (defn search

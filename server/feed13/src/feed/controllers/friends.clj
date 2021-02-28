@@ -6,9 +6,9 @@
 (defn convert-friend
   "change friend by changing ids to hateoas uris"
   [friend]
-  {:id (:id friend)
-   :from (u/embed-id (:from friend))
-   :to (u/embed-id (:to friend))})
+  {:id (get friend "id")
+   :from (u/embed-id (get friend "from"))
+   :to (u/embed-id (get friend "to"))})
    
 (defn get-friends
   "fetch friends wrapper"
