@@ -7,9 +7,8 @@
   "initialize connection to relational database"
   []
   (let [host (or (System/getenv "MYSQL_HOST") "mysql")
-        port (or (System/getenv "MYSQL_PORT") "3306")
         db (or (System/getenv "MYSQL_DB") "feed")
         user (or (System/getenv "MYSQL_USR") "feed")
         password (or (System/getenv "MYSQL_PWD") "feed1234")]
-        (swap! jdbi (fn [cs] (Jdbi/create (str "jdbc:mysql://" host ":" port "/" db) user password)))))
+        (swap! jdbi (fn [cs] (Jdbi/create (str "jdbc:mysql://" host ":3306/" db) user password)))))
 
