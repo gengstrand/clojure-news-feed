@@ -1,8 +1,11 @@
 # news feed server built with clojure on donkey
 
-[Donkey](https://github.com/AppsFlyer/donkey) is an HTTP server that uses Vert.x
+I wanted to revisit Clojure by building and testing the news feed service in Clojure on 
+[Donkey](https://github.com/AppsFlyer/donkey) which is an HTTP server that is built on [Vert.x](https://vertx.io/)
 
-Here are the list of dependencies that I am considering.
+## Internals
+
+Dependencies that this project uses.
 
 library | group | artifact | version | url
 ------- | ----- | -------- | ------- | ---
@@ -15,3 +18,24 @@ cassandra | com.datastax.oss | java-driver-mapper-runtime | 4.10.0 | [repo](http
 elasticsearch | org.elasticsearch.client | elasticsearch-rest-high-level-client | 7.11.1 | [Java High Level REST Client](https://www.elastic.co/guide/en/elasticsearch/client/java-rest/current/java-rest-high.html)
 json | org.clojure | data.json | 1.0.0 | [repo](https://github.com/clojure/data.json)
 
+## Usage
+
+Some dev friendly commands to get going.
+
+```bash
+lein test
+lein uberjar
+docker build -t feed13:1.0 .
+cd ../k8s
+kubectl create -f feed13-deployment.yaml
+```
+
+## Performance Under Load
+
+Create outbound is reactive (i.e. returns before completing) and both create participant and friends are synchronous.
+
+entity | operation | throughput (RPM) | mean latency (ms) | 99th percentile latency (ms)
+------ | --------- | ---------------- | ---------------------- | ---------------------------------
+outbound | create | 15,098 | 3 | 12
+participant | create | 2,567 | 17 | 31
+friends | create | 1,732 | 18 | 29
