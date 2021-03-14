@@ -94,6 +94,12 @@ news feed microservice in Scala on Play
 
 https://glennengstrand.info/software/architecture/microservice/vertx/play
 
+### feed 13
+
+news feed microservice in Clojure on Vert.x
+
+https://glennengstrand.info/software/architecture/microservice/clojure/vertx
+
 ### solr
 
 The supporting directory structure and configuration files needed to augment an instance of Solr to support keyword search capability for the news feed on outbound activity.

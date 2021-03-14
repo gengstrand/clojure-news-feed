@@ -1,7 +1,7 @@
 # news feed server built with clojure on donkey
 
-I wanted to revisit Clojure by building and testing the news feed service in Clojure on 
-[Donkey](https://github.com/AppsFlyer/donkey) which is an HTTP server that is built on [Vert.x](https://vertx.io/)
+This project is the code behind a 2021 blog where I was [Revisiting Clojure](https://glennengstrand.info/software/architecture/microservice/clojure/vertx) by
+building and testing the news feed service in Clojure on [Donkey](https://github.com/AppsFlyer/donkey) which is an HTTP server that is built on [Vert.x](https://vertx.io/)
 
 ## Internals
 
