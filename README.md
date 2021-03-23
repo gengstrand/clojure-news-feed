@@ -70,7 +70,7 @@ News feed microservice implemented in Java with Spring Boot
 
 https://glennengstrand.info/software/performance/springboot/dropwizard
 
-### feed 9 (Go on Mux
+### feed 9 (Go on Mux)
 
 News feed microservice implemented in golang.
 
