@@ -10,13 +10,13 @@ All of the code written by me in these evaluations is open source and is availab
 
 These components are expected to be run on the server(s).
 
-### feed
+### feed (Clojure on Ring)
 
 When I started this repo, a big trend had started in Java to use new programming languages, designed to run in the Java Virtual Machine, that support Functional Programming concepts. Clojure is a variant of Lisp that is one of the leaders in this trend. The question that I wanted to answer was this. Is Clojure ready for delivering services at web scale? This folder contains a basic news feed web service written in Clojure that I blogged about there.
 
 https://glennengstrand.info/software/architecture/oss/clojure
 
-### feed2
+### feed 2 (Scala on Finatra)
 
 Scala originally gained recognition with the big data community through the Apache Spark project which is basically perceived as a faster form of map reduce. Its creator, Martin Odersky, advocated that Scala demonstrates that you can have object orientation on equal footing with functional programming. I covered the Scala implementation and how it was different from the Clojure version in terms of code.
 
@@ -34,69 +34,69 @@ I documented my research into how this microservice performed when integrated wi
 
 https://glennengstrand.info/software/performance/elasticsearch/solr
 
-### feed3
+### feed 3 (Java on Dropwizard)
 
 I returned back to Java and blogged about how the DropWizard version compared to the Clojure version of the news feed.
 
 https://glennengstrand.info/software/performance/clojure/dropwizard
 
-### feed4
+### feed 4 (JavaScript on Express)
 
 For something completely different, I blogged about a news feed microservice implementation in Node.js and how it compared with the DropWizard version.
 
 https://glennengstrand.info/software/performance/nodejs/dropwizard
 
-### feed5
+### feed 5 (Python on Flask)
 
 This time, the news feed microservice is implemented in Python running on Flask.
 
 https://glennengstrand.info/software/performance/nodejs/python
 
-### feed6
+### feed 6 (Scala on Scalatra)
 
 This time, the scala microservice was rewritten in an attempt to lower complexity and improve performance.
 
 https://glennengstrand.info/software/architecture/scala/rewrite
 
-### feed7
+### feed 7 (JavaScript on Hyperledger Composer)
 
-News feed microservice built on top of Hyperledger Composer.
+Source code behind this InfoQ article
 
 https://www.infoq.com/articles/evaluating-hyperledger-composer
 
-### feed8
+### feed 8 (Java on Spring Framework)
 
 News feed microservice implemented in Java with Spring Boot
 
 https://glennengstrand.info/software/performance/springboot/dropwizard
 
-### feed9
+### feed 9 (Go on Mux
 
 News feed microservice implemented in golang.
 
 https://glennengstrand.info/software/architecture/microservice/golang
 
-### feed 10
+### feed 10 (TypeScript on Apollo)
 
 News feed microservice implemented in TypeScript and GraphQL
 
 https://glennengstrand.info/software/architecture/microservice/graphql
 
-### feed 11
+### feed 11 (Scala on Vert.x)
 
-news feed microservice in Scala on Vert.x
-
-https://glennengstrand.info/software/architecture/microservice/vertx/play
-
-### feed 12
-
-news feed microservice in Scala on Play
+news feed microservice in Scala on Vert.x using the embedded message bus
 
 https://glennengstrand.info/software/architecture/microservice/vertx/play
 
-### feed 13
+### feed 12 (Scala on Play)
 
-news feed microservice in Clojure on Vert.x
+news feed microservice in Scala on the Play framework by LightBend
+
+https://glennengstrand.info/software/architecture/microservice/vertx/play
+
+### feed 13 (Clojure on Donkey)
+
+news feed microservice in Clojure on Donkey which uses the Vert.x server backend
 
 https://glennengstrand.info/software/architecture/microservice/clojure/vertx
 
