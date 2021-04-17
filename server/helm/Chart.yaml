@@ -1,0 +1,6 @@
+apiVersion: v2
+name: feed
+description: a test lab for news feed microservice
+type: application
+version: 0.1.0
+AppVersion: "1.0"

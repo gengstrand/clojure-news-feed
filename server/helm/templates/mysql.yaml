@@ -1,0 +1,97 @@
+apiVersion: v1
+kind: Service
+metadata:
+  labels:
+    name: mysql
+  name: mysql
+spec:
+  type: NodePort
+  ports:
+  - name: headless
+    port: 3306
+    targetPort: 0
+  selector:
+    name: mysql
+---
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: mysql
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      name: mysql
+  template:
+    metadata:
+      labels:
+        name: mysql
+    spec:
+      containers:
+      - env:
+        - name: MYSQL_ROOT_PASSWORD
+          value: feed
+        image: "mysql:{{ .Values.mysqlVersion }}"
+        name: mysql
+        ports:
+        - containerPort: 3306
+        lifecycle:
+          postStart:
+            exec:
+              command:
+                - "sh"
+                - "-c"
+                - |
+                  until [ -S "/var/run/mysqld/mysqld.sock" ]
+                  do
+                    sleep 20
+                  done
+                  until mysqladmin ping --host=localhost --user=root --password=feed
+                  do
+                    sleep 20
+                  done
+                  mysql --host=localhost --user=root --password=feed <<EOF
+                  create user 'feed'@'%' identified by 'feed1234';
+                  create database feed;
+                  grant all on feed.* to 'feed'@'%';
+                  EOF
+                  sleep 10
+                  mysql --host=localhost --user=feed --password=feed1234 --database=feed <<EOF
+                  create table Participant (
+                  ParticipantID int not null primary key auto_increment,
+                  Moniker varchar(50));
+                  create table Friends (
+                  FriendsID int not null primary key auto_increment,
+                  FromParticipantID int not null,
+                  ToParticipantID int not null,
+                  foreign key (FromParticipantID) references Participant(ParticipantID),
+                  foreign key (ToParticipantID) references Participant(ParticipantID));
+                  delimiter &&
+                  create procedure UpsertParticipant(
+                  in \$Moniker varchar(50))
+                  begin
+                  insert into Participant (Moniker) values (\$Moniker);
+                  select last_insert_id() as id;
+                  end&&
+                  create procedure FetchParticipant(
+                  in \$ParticipantID int)
+                  begin
+                  select Moniker from Participant where ParticipantID = \$ParticipantID;
+                  end&&
+                  create procedure UpsertFriends(
+                  in \$FromParticipantID int,
+                  in \$ToParticipantID int)
+                  begin
+                  insert into Friends (FromParticipantID, ToParticipantID) values (\$FromParticipantID, \$ToParticipantID);
+                  select last_insert_id() as id;
+                  end&&
+                  create procedure FetchFriends(
+                  in \$ParticipantID int)
+                  begin
+                  select FriendsID, ToParticipantID as ParticipantID from Friends where FromParticipantID = \$ParticipantID
+                  union
+                  select FriendsID, FromParticipantID as ParticipantID from Friends where ToParticipantID = \$ParticipantID;
+                  end&&           
+                  EOF
+      restartPolicy: Always
+

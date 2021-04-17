@@ -1,0 +1,57 @@
+{{- $feedVersion := printf ",%s," .Values.image.feed }}
+apiVersion: v1
+kind: Service
+metadata:
+  labels:
+    app: feed
+  name: feed
+spec:
+  type: LoadBalancer
+  ports:
+  - name: "8080"
+    port: 8080
+    targetPort: 8080
+  selector:
+    app: feed
+---
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: feed
+spec:
+  replicas: 1
+  strategy:
+    type: Recreate
+  selector:
+    matchLabels:
+      app: feed
+  template:
+    metadata:
+      labels:
+        app: feed
+    spec:
+      containers:
+      {{- if contains $feedVersion ",4,6,9,10,11,13," }}
+      - name: feed
+        envFrom:
+        - configMapRef:
+            name: feed-config
+      {{- else }}
+      - env:
+        - name: KAFKA_ENABLED
+          value: "false"
+        - name: MESSAGING_ENABLED
+          value: "false"
+        name: feed
+      {{- end }}
+      {{- if .Values.image.local }}
+        image: "feed{{ .Values.image.feed }}:{{ .Values.image.version | default .Chart.AppVersion }}"
+        imagePullPolicy: Never
+      {{- else }}
+        image: "{{ .Values.image.account }}/feed{{ .Values.image.feed }}:{{ .Values.image.version | default .Chart.AppVersion }}"
+        imagePullPolicy: Always
+      {{- end }}
+        ports:
+        - containerPort: 8080
+      restartPolicy: Always
+

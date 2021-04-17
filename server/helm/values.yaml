@@ -1,0 +1,10 @@
+mysqlVersion: "5.7"
+redisVersion: "3.2"
+cassandraVersion: "2.2"
+elasticSearchVersion: "2.4"
+
+image:
+  account: gengstrand
+  feed: "3"
+  version: ""
+  local: false

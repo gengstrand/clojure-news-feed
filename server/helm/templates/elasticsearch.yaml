@@ -1,0 +1,64 @@
+apiVersion: v1
+kind: Service
+metadata:
+  labels:
+    name: elasticsearch
+  name: elasticsearch
+spec:
+  type: LoadBalancer
+  ports:
+  - name: "9200"
+    port: 9200
+    targetPort: 9200
+  selector:
+    name: elasticsearch
+---
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: elasticsearch
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      name: elasticsearch
+  template:
+    metadata:
+      labels:
+        name: elasticsearch
+    spec:
+      containers:
+      - env:
+        image: "elasticsearch:{{ .Values.elasticSearchVersion }}"
+        name: elasticsearch
+        ports:
+        - containerPort: 9200
+          hostIP: 127.0.0.1
+        lifecycle:
+          postStart:
+            exec:
+              command:
+                - "sh"
+                - "-c"
+                - |
+                  S=$(curl http://localhost:9200/_cat/health | grep green | wc -l)
+                  until [ $S -eq 1 ]
+                  do
+                    sleep 20
+                    S=$(curl http://localhost:9200/_cat/health | grep green | wc -l)
+                  done
+                  curl -XPOST http://localhost:9200/feed -d '{
+                      "settings" : {
+                         "number_of_shards" : 1
+                       },
+                         "mappings" : {
+                           "stories" : {
+                             "properties" : {
+                               "id" : { "type" : "string", "index" : "not_analyzed" },
+                               "sender" : { "type" : "string", "index" : "not_analyzed" },
+                               "story" : { "type" : "string"}
+                              }
+                            }
+                          }
+                       }'
+      restartPolicy: Always

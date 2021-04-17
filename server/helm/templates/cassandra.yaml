@@ -1,0 +1,75 @@
+apiVersion: v1
+kind: Service
+metadata:
+  labels:
+    name: cassandra
+  name: cassandra
+spec:
+  type: NodePort
+  ports: 
+    - port: 9042
+      name: container-port
+    - port: 7000
+      name: storage-port
+    - port: 7001
+      name: ssl-storage-port
+    - port: 9160
+      name: rpc-port
+  selector:
+    name: cassandra
+---
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: cassandra
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      name: cassandra
+  template:
+    metadata:
+      labels:
+        name: cassandra
+    spec:
+      containers:
+      - args:
+        - /bin/bash
+        - -c
+        - sleep 1 && echo ' -- Pausing to let system catch up ... -->' && /docker-entrypoint.sh
+          cassandra -f
+        image: "cassandra:{{ .Values.cassandraVersion }}"
+        name: cassandra
+        ports:
+        - containerPort: 9042
+        lifecycle:
+          postStart:
+            exec:
+              command:
+                - "sh"
+                - "-c"
+                - |
+                  until [ -d "/opt/cassandra/data/data" ]
+                  do
+                    sleep 20
+                  done
+                  sleep 60
+                  cqlsh <<EOF
+                  create keyspace activity with replication = {'class': 'SimpleStrategy', 'replication_factor': 1};
+                  use activity;
+                  create table Inbound (
+                  ParticipantID int,
+                  Occurred timeuuid,
+                  FromParticipantID int,
+                  Subject text,
+                  Story text,
+                  primary key (ParticipantID, Occurred));
+                  create table Outbound (
+                  ParticipantID int,
+                  Occurred timeuuid,
+                  Subject text,
+                  Story text,
+                  primary key (ParticipantID, Occurred));
+                  EOF
+      restartPolicy: Always
+
