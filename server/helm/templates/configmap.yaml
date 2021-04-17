@@ -1,0 +1,11 @@
+apiVersion: v1
+kind: ConfigMap
+metadata:
+  name: feed-config
+data:
+  MYSQL_HOST: mysql
+  NOSQL_HOST: cassandra
+  NOSQL_KEYSPACE: activity
+  REDIS_HOST: redis
+  CACHE_HOST: redis
+  SEARCH_HOST: elasticsearch
