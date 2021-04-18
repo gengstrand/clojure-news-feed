@@ -1,0 +1,42 @@
+{{- if .Values.loadTest -}}
+apiVersion: v1
+kind: Service
+metadata:
+  labels:
+    app: kong-proxy
+  name: kong-proxy
+spec:
+  type: NodePort
+  ports:
+  - name: kong-proxy
+    port: 8000
+    targetPort: 8000
+    protocol: TCP
+  selector:
+    app: kong-proxy
+---
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: kong-proxy
+spec:
+  replicas: 1
+  strategy:
+    type: Recreate
+  selector:
+    matchLabels:
+      app: kong-proxy
+  template:
+    metadata:
+      labels:
+        app: kong-proxy
+    spec:
+      containers:
+      - env:
+        image: gengstrand/proxy:1.0
+        name: kong-proxy
+        ports:
+        - containerPort: 8000
+        imagePullPolicy: Always
+      restartPolicy: Always
+{{- end }}

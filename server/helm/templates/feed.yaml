@@ -6,7 +6,11 @@ metadata:
     app: feed
   name: feed
 spec:
+  {{- if .Values.useIngress }}
+  type: NodePort
+  {{- else }}
   type: LoadBalancer
+  {{- end }}
   ports:
   - name: "8080"
     port: 8080

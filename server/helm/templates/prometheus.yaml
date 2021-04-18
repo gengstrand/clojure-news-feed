@@ -1,0 +1,42 @@
+{{- if .Values.loadTest -}}
+apiVersion: v1
+kind: Service
+metadata:
+  labels:
+    app: prometheus
+  name: prometheus
+spec:
+  type: NodePort
+  ports:
+  - name: prometheus
+    port: 9090
+    targetPort: 9090
+    protocol: TCP
+  selector:
+    app: prometheus
+---
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: prometheus
+spec:
+  replicas: 1
+  strategy:
+    type: Recreate
+  selector:
+    matchLabels:
+      app: prometheus
+  template:
+    metadata:
+      labels:
+        app: prometheus
+    spec:
+      containers:
+      - env:
+        image: gengstrand/prometheus:1.0
+        name: prometheus
+        ports:
+        - containerPort: 9090
+        imagePullPolicy: Always
+      restartPolicy: Always
+{{- end }}

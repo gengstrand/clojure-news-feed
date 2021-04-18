@@ -1,0 +1,46 @@
+{{- if .Values.loadTest -}}
+apiVersion: v1
+kind: Service
+metadata:
+  labels:
+    app: grafana
+  name: grafana
+spec:
+  {{- if .Values.useIngress }}
+  type: NodePort
+  {{- else }}
+  type: LoadBalancer
+  {{- end }}
+  ports:
+  - name: grafana
+    port: 3000
+    targetPort: 3000
+    protocol: TCP
+  selector:
+    app: grafana
+---
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: grafana
+spec:
+  replicas: 1
+  strategy:
+    type: Recreate
+  selector:
+    matchLabels:
+      app: grafana
+  template:
+    metadata:
+      labels:
+        app: grafana
+    spec:
+      containers:
+      - env:
+        image: grafana/grafana
+        name: grafana
+        ports:
+        - containerPort: 3000
+        imagePullPolicy: Always
+      restartPolicy: Always
+{{- end }}

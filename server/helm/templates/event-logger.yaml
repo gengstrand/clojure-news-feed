@@ -1,0 +1,38 @@
+{{- if .Values.loadTest -}}
+apiVersion: v1
+kind: Service
+metadata:
+  labels:
+    name: kong-logger
+  name: kong-logger
+spec:
+  type: NodePort
+  ports:
+  - name: "8888"
+    port: 8888
+    targetPort: 8888
+  selector:
+    name: kong-logger
+---
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: kong-logger
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      name: kong-logger
+  template:
+    metadata:
+      labels:
+        name: kong-logger
+    spec:
+      containers:
+      - env:
+        image: gengstrand/kong-logger:1.0
+        name: kong-logger
+        ports:
+        - containerPort: 8888
+      restartPolicy: Always
+{{- end }}
