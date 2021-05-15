@@ -7,6 +7,6 @@ useIngress: false
 
 image:
   account: gengstrand
-  feed: "3"
+  feed: "5"
   version: ""
   local: false

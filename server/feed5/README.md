@@ -38,11 +38,11 @@ python3 -m swagger_server
 Here are illustrative curl calls to test out the service. This assumes that Joe's id is 1 and Betty's id is 2.
 
 ```
-curl -H "Content-Type: application/json" -d '{"name":"joe flask"}' http://localhost:8080/participant/new
-curl -H "Content-Type: application/json" -d '{"name":"betty python"}' http://localhost:8080/participant/new
-curl -H "Content-Type: application/json" -d '{"from":"/participant/1","to":"/participant/2"}' http://localhost:8080/friends/new
-curl -H "Content-Type: application/json" -d '{"from":"/participant/1","subject":"testing flask","story":"python on flask is cool"}' http://localhost:8080/outbound/new
-curl http://localhost:8080/inbound/2
+curl -H "Content-Type: application/json" -d '{"name":"joe flask"}' http://localhost:8080/participant
+curl -H "Content-Type: application/json" -d '{"name":"betty python"}' http://localhost:8080/participant
+curl -H "Content-Type: application/json" -d '{"from":"/participant/1","to":"/participant/2"}' http://localhost:8080/participant/1/friends
+curl -H "Content-Type: application/json" -d '{"from":"/participant/1","subject":"testing flask","story":"python on flask is cool"}' http://localhost:8080/participant/1/outbound
+curl http://localhost:8080/participant/2/inbound
 ```
 To see the API documentation, open http://localhost:8080/ui/ in your favorite web browser.
 

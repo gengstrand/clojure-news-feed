@@ -1,5 +1,7 @@
 import React from "react"
 import Inbound from "./features/inbound/Inbound"
+import Outbound from "./features/outbound/Outbound"
+import Friends from "./features/friends/Friends"
 import {
   createMuiTheme,
   withStyles,
@@ -13,6 +15,16 @@ import {
   CssBaseline,
 } from "@material-ui/core"
 import purple from "@material-ui/core/colors/purple"
+import Drawer from '@material-ui/core/Drawer'
+import Divider from '@material-ui/core/Divider'
+import {
+  BrowserRouter as Router,
+  Switch,
+  Route,
+  Link
+} from "react-router-dom"
+
+const drawerWidth = 400;
 
 const theme = createMuiTheme({
   palette: {
@@ -42,6 +54,11 @@ const styles: (theme: Theme) => StyleRules<string> = theme =>
       justifyContent: "center",
       fontSize: "calc(10px + 2vmin)"
     },
+    drawer: {
+      width: drawerWidth,
+      textAlign: "left", 
+      flexShrink: 0,
+    },
     appLink: {
       color: "rgb(112, 76, 182)"
     }
@@ -54,7 +71,38 @@ const App = ({ classes }: AppProps) => (
     <CssBaseline />
     <div className={classes.app}>
       <header className={classes.appHeader}>
-        <Inbound />
+        <Router>
+          <div>
+            <Drawer
+               className={classes.drawer}
+               variant="permanent"
+               classes={{
+                 paper: classes.drawerPaper,
+               }}
+               anchor="left"
+            >
+              <nav>
+                  <Divider />
+                  <Link to="/">Inbound</Link>
+                  <Divider />
+                  <Link to="/outbound">Outbound</Link>
+                  <Divider />
+                  <Link to="/friends">Friends</Link>
+              </nav>
+            </Drawer>
+            <Switch>
+              <Route exact path="/">
+                <Inbound />
+              </Route>
+              <Route exact path="/outbound">
+                <Outbound />
+              </Route>
+              <Route exact path="/friends">
+                <Friends />
+              </Route>
+            </Switch>
+          </div>
+        </Router>
       </header>
     </div>
   </MuiThemeProvider>

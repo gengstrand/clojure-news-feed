@@ -1,5 +1,7 @@
 import axios from 'axios'
 
+const HOST = 'http://127.0.0.1:8080'
+
 export class OutboundModel {
    readonly from: p.ParticipantModel
    readonly occurred: Date
@@ -27,7 +29,7 @@ export class ParticipantModel {
       this.name = moniker
    }
 }
-export class FriendModel {
+export class FriendsModel {
    readonly id: number
    readonly from: ParticipantModel
    readonly to: ParticipantModel
@@ -47,7 +49,15 @@ export class OutboundApi {
     return OutboundApi.instance
   }
   get(id: number): Promise<Array<OutboundModel>> {
-    return new Promise((resolve, reject) => resolve([ new OutboundModel(new ParticipantModel(id, ''), new Date(), '', '') ]))
+    return new Promise((resolve, reject) => {
+      resolve(axios.get<OutboundModel[]>(HOST + `/participant/${id}/outbound`).then(resp => {
+        if (resp.status === 200) {
+          return resp.data
+        } else {
+          console.log(JSON.stringify(resp))
+          return []
+        }
+      }))})
   }
   add(ob: OutboundModel): void {
   }
@@ -63,7 +73,7 @@ export class InboundApi {
   }
   public get(id: number): Promise<Array<InboundModel>> {
     return new Promise((resolve, reject) => {
-      resolve(axios.get<InboundModel[]>(`http://127.0.0.1:8080/participant/${id}/inbound`).then(resp => {
+      resolve(axios.get<InboundModel[]>(HOST + `/participant/${id}/inbound`).then(resp => {
         if (resp.status === 200) {
           return resp.data
         } else {
@@ -84,10 +94,18 @@ export class FriendsApi {
     }
     return FriendsApi.instance
   }
-  get(id: number): Promise<Array<FriendModel>> {
-    return new Promise((resolve, reject) => resolve([ new FriendModel(0, new ParticipantModel(id, ''), new ParticipantModel(0, '')) ]))
+  get(id: number): Promise<Array<FriendsModel>> {
+    return new Promise((resolve, reject) => {
+      resolve(axios.get<FriendsModel[]>(HOST + `/participant/${id}/friends`).then(resp => {
+        if (resp.status === 200) {
+          return resp.data
+        } else {
+          console.log(JSON.stringify(resp))
+          return []
+        }
+      }))})
   }
-  add(fb: FriendModel): void {
+  add(fb: FriendsModel): void {
   }
 }
 export class PartcipantApi {
@@ -100,7 +118,15 @@ export class PartcipantApi {
     return ParticipantApi.instance
   }
   get(id: number): Promise<ParticipantModel> {
-    return new Promise((resolve, reject) => resolve(new ParticipantModel(id, '')))
+    return new Promise((resolve, reject) => {
+      resolve(axios.get<ParticipantModel[]>(HOST + `/participant/${id}`).then(resp => {
+        if (resp.status === 200) {
+          return resp.data
+        } else {
+          console.log(JSON.stringify(resp))
+          return new ParticipantModel(0, 'error')
+        }
+      }))})
   }
   add(inb: ParticipantModel): void {
   }
