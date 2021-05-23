@@ -110,15 +110,13 @@ function Friends({ classes }: FriendsProps) {
             <Table className={classes.table} aria-label="simple table">
               <TableHead>
                 <TableRow>
-                  <TableCell>from</TableCell>
-                  <TableCell>to</TableCell>
+                  <TableCell>friends</TableCell>
                 </TableRow>
               </TableHead>
               <TableBody>
                 {rows.map((row) => (
                   <TableRow key={Math.random()}>
                     <TableCell component="th" scope="row">{row.from}</TableCell>
-                    <TableCell>{row.to}</TableCell>
                   </TableRow>
                 ))}
               </TableBody>

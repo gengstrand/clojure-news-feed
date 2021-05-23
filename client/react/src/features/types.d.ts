@@ -2,12 +2,30 @@ import axios from 'axios'
 
 const HOST = 'http://127.0.0.1:8080'
 
+export class Util {
+  private static instance: Util
+  private re: RegExp = new RegExp('/participant/([0-9]+)')
+  private constructor() {}
+  public extract(id: string): number {
+    const m = this.re.exec(id)
+    if (m) {
+      return parseInt(m[1])
+    }
+    return parseInt(id)
+  }
+  public static getInstance(): Util {
+    if (!Util.instance) {
+      Util.instance = new Util()
+    }
+    return Util.instance
+  }
+}
 export class OutboundModel {
-   readonly from: p.ParticipantModel
+   readonly from: string
    readonly occurred: Date
    readonly subject: string
    readonly story: string
-   constructor(from: p.ParticipantModel, occurred: Date, subject: string, story: string) {
+   constructor(from: string, occurred: Date, subject: string, story: string) {
       this.from = from
       this.occurred = occurred
       this.subject = subject
@@ -15,8 +33,8 @@ export class OutboundModel {
    }
 }
 export class InboundModel extends OutboundModel {
-   readonly to: ParticipantModel
-   constructor(from: ParticipantModel, to: ParticipantModel, occurred: Date, subject: string, story: string) {
+   readonly to: string
+   constructor(from: string, to: string, occurred: Date, subject: string, story: string) {
       super(from, occurred, subject, story)
       this.to = to
    }
@@ -31,9 +49,9 @@ export class ParticipantModel {
 }
 export class FriendsModel {
    readonly id: number
-   readonly from: ParticipantModel
-   readonly to: ParticipantModel
-   constructor(id: number, from: ParticipantModel, to: ParticipantModel) {
+   readonly from: string
+   readonly to: string
+   constructor(id: number, from: string, to: string) {
       this.id = id
       this.from = from
       this.to = to
@@ -108,7 +126,7 @@ export class FriendsApi {
   add(fb: FriendsModel): void {
   }
 }
-export class PartcipantApi {
+export class ParticipantApi {
   private static instance: ParticipantApi
   private constructor() {}
   public static getInstance(): ParticipantApi {

@@ -1,6 +1,6 @@
 import { createAsyncThunk, createSlice, PayloadAction } from '@reduxjs/toolkit'
 import { RootState } from '../../app/store'
-import { InboundModel, InboundApi } from '../types.d'
+import { InboundModel, InboundApi, ParticipantApi, Util } from '../types.d'
 
 interface InboundState {
   feed: Array<InboundModel>
@@ -9,7 +9,24 @@ interface InboundState {
 export const fetchInboundByFrom = createAsyncThunk(
   'inbound/fetchByFrom',
   async (id: number) => {
-    return await InboundApi.getInstance().get(id)
+    const u = Util.getInstance()
+    const p = ParticipantApi.getInstance()
+    const ia = await InboundApi.getInstance().get(id)
+    const rv = []
+    const am = new Map()
+    const ak: string[] = []
+    for (var i of ia) {
+      if (ak.includes(i.from)) {
+        rv.push(new InboundModel(am.get(i.from), i.to, i.occurred, i.subject, i.story))
+      } else {
+        const fid = u.extract(i.from)
+        const fp = await p.get(fid)
+        rv.push(new InboundModel(fp.name, i.to, i.occurred, i.subject, i.story))
+        am.set(i.from, fp.name)
+        ak.push(i.from)
+      }
+    }
+    return rv
   }
 )
 
