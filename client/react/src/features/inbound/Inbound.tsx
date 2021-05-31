@@ -11,20 +11,18 @@ import {
   createStyles,
   WithStyles
 } from "@material-ui/core"
-import Table from '@material-ui/core/Table'
-import TableBody from '@material-ui/core/TableBody'
-import TableCell from '@material-ui/core/TableCell'
-import TableContainer from '@material-ui/core/TableContainer'
-import TableHead from '@material-ui/core/TableHead'
-import TableRow from '@material-ui/core/TableRow'
 import Paper from '@material-ui/core/Paper'
 
 const styles: (theme: Theme) => StyleRules<string> = theme =>
   createStyles({
-    value: {
-      fontSize: "78px",
-      fontFamily: "'Courier New', Courier, monospace"
-    },
+  root: {
+    flexGrow: 1,
+  },
+  paper: {
+    padding: theme.spacing(2),
+    textAlign: 'center',
+    color: theme.palette.text.secondary,
+  },
     button: {
       color: "rgb(112, 76, 182)",
       appearance: "none",
@@ -49,32 +47,8 @@ const styles: (theme: Theme) => StyleRules<string> = theme =>
       "&:active": {
         backgroundColor: "rgba(112, 76, 182, 0.2)"
       }
-    },
-    textbox: {
-      fontSize: "32px",
-      width: "64px",
-      textAlign: "center"
-    },
-    asyncButton: {
-      "&:after": {
-        content: "",
-        backgroundColor: "rgba(112, 76, 182, 0.15)",
-        display: "block",
-        position: "absolute",
-        width: "100%",
-        height: "100%",
-        left: "0",
-        top: "0",
-        opacity: "0",
-        transition: "width 1s linear, opacity 0.5s ease 1s"
-      },
-      "&:active:after": {
-        width: "0%",
-        opacity: "1",
-        transition: "0s"
-      }
-    }
-  })
+   }
+})
 
 type InboundProps = {} & WithStyles<typeof styles>
 
@@ -99,36 +73,29 @@ function Inbound({ classes }: InboundProps) {
       </Grid>
       <Grid
         container
-	xs={12}
+        xs={12}
         direction="row"
         alignItems="center"
         justify="center"
         spacing={3}
       >
-        <Grid item >
-          <TableContainer component={Paper}>
-            <Table className={classes.table} aria-label="simple table">
-              <TableHead>
-                <TableRow>
-                  <TableCell>from</TableCell>
-                  <TableCell>occurred</TableCell>
-                  <TableCell>subject</TableCell>
-                  <TableCell>story</TableCell>
-                </TableRow>
-              </TableHead>
-              <TableBody>
-                {rows.map((row) => (
-                  <TableRow key={Math.random()}>
-                    <TableCell component="th" scope="row">{row.from}</TableCell>
-                    <TableCell>{row.occurred}</TableCell>
-                    <TableCell>{row.subject}</TableCell>
-                    <TableCell>{row.story}</TableCell>
-                  </TableRow>
-                ))}
-              </TableBody>
-            </Table>
-          </TableContainer>
-	</Grid>
+        {rows.map((row) => (
+          <Grid container xs={12} spacing={3} justify="center">
+            <Grid item xs={4}>
+              <Paper className={classes.paper}>{row.from}</Paper>
+            </Grid>
+            <Grid item xs={4}>
+              <Paper className={classes.paper}>{row.occurred}</Paper>
+            </Grid>
+            <Grid item xs={4}>
+              <Paper className={classes.paper}>{row.subject}</Paper>
+            </Grid>
+            <Grid item xs={12}>
+              <Paper className={classes.paper}>{row.story}</Paper>
+            </Grid>
+            <Grid item xs={12}></Grid>
+          </Grid>
+        ))}
       </Grid>
     </React.Fragment>
   )
