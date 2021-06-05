@@ -55,20 +55,14 @@ type InboundProps = {} & WithStyles<typeof styles>
 function Inbound({ classes }: InboundProps) {
   const dispatch = useAppDispatch()
   React.useEffect(() => {
-    dispatch(fetchInboundByFrom(2))
+    dispatch(fetchInboundByFrom())
   }, [dispatch])
   const rows: Array<InboundModel> = useAppSelector(select).feed
   return (
     <React.Fragment>
       <Grid container xs={12} alignItems="center" justify="center" spacing={3}>
         <Grid item >
-          <Button
-            className={classes.button}
-            aria-label="Add"
-            onClick={() => console.log('TODO: add inbound')}
-          >
-            Add
-          </Button>
+          This is the list of news feed posts from your friends.
         </Grid>
       </Grid>
       <Grid

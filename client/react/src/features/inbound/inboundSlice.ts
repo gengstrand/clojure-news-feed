@@ -8,10 +8,10 @@ interface InboundState {
 
 export const fetchInboundByFrom = createAsyncThunk(
   'inbound/fetchByFrom',
-  async (id: number) => {
+  async () => {
     const u = Util.getInstance()
     const p = ParticipantApi.getInstance()
-    const ia = await InboundApi.getInstance().get(id)
+    const ia = await InboundApi.getInstance().get(u.getToken())
     const rv = []
     const am = new Map()
     const ak: string[] = []

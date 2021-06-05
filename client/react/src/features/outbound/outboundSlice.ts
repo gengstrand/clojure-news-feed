@@ -1,6 +1,6 @@
 import { createAsyncThunk, createSlice, PayloadAction } from '@reduxjs/toolkit'
 import { RootState } from '../../app/store'
-import { OutboundModel, OutboundApi } from '../types.d'
+import { OutboundModel, OutboundApi, Util } from '../types.d'
 
 interface OutboundState {
   feed: Array<OutboundModel>
@@ -8,15 +8,17 @@ interface OutboundState {
 
 export const fetchOutboundByFrom = createAsyncThunk(
   'outbound/fetchByFrom',
-  async (id: number) => {
-    return await OutboundApi.getInstance().get(id)
+  async () => {
+    const u = Util.getInstance()
+    return await OutboundApi.getInstance().get(u.getToken())
   }
 )
 
 const addOutbound = createAsyncThunk (
   'outbound/add',
-  async (inb: OutboundModel, thunkAPI) => {
-    await OutboundApi.getInstance().add(inb)
+  (inb: OutboundModel, thunkAPI) => {
+    const u = Util.getInstance()
+    OutboundApi.getInstance().add(u.getToken(), inb)
     return inb
   }
 )

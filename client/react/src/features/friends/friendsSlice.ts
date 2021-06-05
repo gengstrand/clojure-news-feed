@@ -8,14 +8,14 @@ interface FriendsState {
 
 export const fetchFriendsByFrom = createAsyncThunk(
   'friends/fetchByFrom',
-  async (id: number) => {
+  async () => {
     const u = Util.getInstance()
     const p = ParticipantApi.getInstance()
-    const fa = await FriendsApi.getInstance().get(id)
+    const fa = await FriendsApi.getInstance().get(u.getToken())
     const rv = []
     for (var f of fa) {
       var fid = u.extract(f.from)
-      if (fid === id) {
+      if (fid === u.getId()) {
         fid = u.extract(f.to)
       }
       const fp = await p.get(fid)

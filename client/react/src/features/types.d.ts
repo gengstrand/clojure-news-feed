@@ -5,6 +5,8 @@ const HOST = 'http://127.0.0.1:8080'
 export class Util {
   private static instance: Util
   private re: RegExp = new RegExp('/participant/([0-9]+)')
+  private token: string = '2'
+  private id: number = 2
   private constructor() {}
   public extract(id: string): number {
     const m = this.re.exec(id)
@@ -12,6 +14,12 @@ export class Util {
       return parseInt(m[1])
     }
     return parseInt(id)
+  }
+  public getId(): number {
+    return this.id
+  }
+  public getToken(): string {
+    return this.token
   }
   public static getInstance(): Util {
     if (!Util.instance) {
@@ -66,9 +74,9 @@ export class OutboundApi {
     }
     return OutboundApi.instance
   }
-  get(id: number): Promise<Array<OutboundModel>> {
+  get(token: string): Promise<Array<OutboundModel>> {
     return new Promise((resolve, reject) => {
-      resolve(axios.get<OutboundModel[]>(HOST + `/participant/${id}/outbound`).then(resp => {
+      resolve(axios.get<OutboundModel[]>(HOST + `/participant/${token}/outbound`).then(resp => {
         if (resp.status === 200) {
           return resp.data
         } else {
@@ -77,7 +85,8 @@ export class OutboundApi {
         }
       }))})
   }
-  add(ob: OutboundModel): void {
+  add(token: string, ob: OutboundModel): void {
+    axios.post(HOST + `/participant/${token}/outbound`, ob)
   }
 }
 export class InboundApi {
@@ -89,9 +98,9 @@ export class InboundApi {
     }
     return InboundApi.instance
   }
-  public get(id: number): Promise<Array<InboundModel>> {
+  public get(token: string): Promise<Array<InboundModel>> {
     return new Promise((resolve, reject) => {
-      resolve(axios.get<InboundModel[]>(HOST + `/participant/${id}/inbound`).then(resp => {
+      resolve(axios.get<InboundModel[]>(HOST + `/participant/${token}/inbound`).then(resp => {
         if (resp.status === 200) {
           return resp.data
         } else {
@@ -112,9 +121,9 @@ export class FriendsApi {
     }
     return FriendsApi.instance
   }
-  get(id: number): Promise<Array<FriendsModel>> {
+  get(token: string): Promise<Array<FriendsModel>> {
     return new Promise((resolve, reject) => {
-      resolve(axios.get<FriendsModel[]>(HOST + `/participant/${id}/friends`).then(resp => {
+      resolve(axios.get<FriendsModel[]>(HOST + `/participant/${token}/friends`).then(resp => {
         if (resp.status === 200) {
           return resp.data
         } else {

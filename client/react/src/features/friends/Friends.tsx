@@ -81,7 +81,7 @@ type FriendsProps = {} & WithStyles<typeof styles>
 function Friends({ classes }: FriendsProps) {
   const dispatch = useAppDispatch()
   React.useEffect(() => {
-    dispatch(fetchFriendsByFrom(2))
+    dispatch(fetchFriendsByFrom())
   }, [dispatch])
   const rows: Array<FriendsModel> = useAppSelector(select).feed
   return (
@@ -99,7 +99,7 @@ function Friends({ classes }: FriendsProps) {
       </Grid>
       <Grid
         container
-	xs={12}
+        xs={12}
         direction="row"
         alignItems="center"
         justify="center"
@@ -122,7 +122,7 @@ function Friends({ classes }: FriendsProps) {
               </TableBody>
             </Table>
           </TableContainer>
-	</Grid>
+        </Grid>
       </Grid>
     </React.Fragment>
   )

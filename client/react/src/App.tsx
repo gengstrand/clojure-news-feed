@@ -161,7 +161,7 @@ const App = ({ classes }: AppProps) => (
           >
              <nav>
                 <Divider />
-                <Link to="/">
+                <Link to="/my-friends-posts">
                   <div className={classes.toolbarIcon}>
                     <IconButton>
                       <HearingIcon />
@@ -170,7 +170,7 @@ const App = ({ classes }: AppProps) => (
                   </div>
                 </Link>
                 <Divider />
-                <Link to="/outbound">
+                <Link to="/my-posts">
                   <div className={classes.toolbarIcon}>
                     <IconButton>
                       <RecordVoiceOverIcon />
@@ -179,7 +179,7 @@ const App = ({ classes }: AppProps) => (
                   </div>
                 </Link>
                 <Divider />
-                <Link to="/friends">
+                <Link to="/my-friends">
                   <div className={classes.toolbarIcon}>
                     <IconButton>
                       <PeopleIcon />
@@ -197,12 +197,21 @@ const App = ({ classes }: AppProps) => (
           <div className={classes.appBarSpacer} />
           <Switch>
             <Route exact path="/">
+              <Typography
+                 component="h1"
+                 variant="h6"
+                 color="inherit"
+              >
+              Welcome to this rudimentary news feed application written in typescript on react.
+              </Typography>
+            </Route>
+            <Route exact path="/my-friends-posts">
               <Inbound />
             </Route>
-            <Route exact path="/outbound">
+            <Route exact path="/my-posts">
               <Outbound />
             </Route>
-            <Route exact path="/friends">
+            <Route exact path="/my-friends">
               <Friends />
             </Route>
           </Switch>
