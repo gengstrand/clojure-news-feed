@@ -3,6 +3,7 @@ package edge
 import (
      "encoding/json"
      "fmt"
+     "log"
      "bytes"
      "io"
      "errors"
@@ -41,13 +42,22 @@ func init() {
      })
      ctx = context.Background()
      clientStore = store.NewClientStore()
+     u, err := uuid.NewRandom()
+     if err != nil {
+        log.Printf("cannot generate secret")
+     }
+     secret := fmt.Sprintf("%s", u)
+     clientStore.Set("1", &models.Client{
+       ID:     "1",
+       Secret: secret,
+       Domain: Domainvar,
+     })
      manager = manage.NewDefaultManager()
      manager.SetAuthorizeCodeTokenCfg(manage.DefaultAuthorizeCodeTokenCfg)
      manager.MustTokenStorage(store.NewMemoryTokenStore())
      manager.MapAccessGenerate(generates.NewAccessGenerate())
      manager.MapClientStorage(clientStore)
      srv = server.NewServer(server.NewConfig(), manager)
-     srv.SetPasswordAuthorizationHandler(validateCredentialsHandler)
      srv.SetUserAuthorizationHandler(userAuthorizeHandler)
      ttl = time.Hour
 }
@@ -69,7 +79,10 @@ func AuthorizeHandler(w http.ResponseWriter, r *http.Request) {
      var form url.Values
      if v, ok := store.Get("ReturnUri"); ok {
           form = v.(url.Values)
+          log.Printf(form.Encode())
      }
+     // form.Add("redirect_uri", Domainvar)
+     // form.Add("client_id", 
      r.Form = form
      store.Delete("ReturnUri")
      store.Save()
@@ -108,59 +121,59 @@ func TestHandler(w http.ResponseWriter, r *http.Request) {
      e.Encode(data)
 }
      
-func validateCredentialsHandler(username, password string) (userID string, err error) {
+func validateCredentials(username, password string) (userID string, err error) {
      var fc FeedCredentials
+     log.Printf("entering validateCredentialsHandler")
      c, err := credDB.Get(username).Result()
      switch {
      case err == redis.Nil:
        ip := Participant{0, username, ""}
        b, err := json.Marshal(ip)
        if err != nil {
+          log.Printf("username not well founded")
           return "", errors.New("username not well founded")
        }
        resp, err := http.Post("http://feed:8080/participant", "application/json", bytes.NewReader(b))
        if err != nil {
+          log.Printf("cannot create participant")
           return "", errors.New("cannot create participant")
        }
        var p Participant
        body, err := io.ReadAll(resp.Body)
        if err != nil {
+          log.Printf("cannot fetch response from create participant call")
           return "", errors.New("cannot fetch response from create participant call")
        }
        err = json.Unmarshal([]byte(string(body)), &p)
        if err != nil {
+          log.Printf("create participant invalid response")
           return "", errors.New("create participant invalid response")
        }
        sid := strconv.FormatInt(p.Id, 10)
        fc = FeedCredentials {password, sid}
        bb, err := json.Marshal(fc)
        if err != nil {
+          log.Printf("password has illegal characters")
           return "", errors.New("password has illegal characters")
        }
        credDB.Set(username, bb, ttl)
-       u, err := uuid.NewRandom()
-       if err != nil {
-          return "", errors.New("cannot generate secret")
-       }
-       secret := fmt.Sprintf("%s", u)
-       clientStore.Set(sid, &models.Client{
-         ID:     sid,
-         Secret: secret,
-         Domain: Domainvar,
-       })
        return sid, nil
      case err == nil:
+       log.Printf("cannot connect to redis")
        return "", errors.New("cannot connect to redis")
      case c == "":
+       log.Printf("invalid credentials format")
        return "", errors.New("invalid credentials format")
      default:
        err = json.Unmarshal([]byte(c), &fc)
        if err != nil {
+          log.Printf("invalid credentials schema")
           return "", errors.New("invalid credentials schema")
        } else {
          if fc.Password == password {
             return fc.UserId, nil
          } else {
+            log.Printf("incorrect password")
             return "", errors.New("incorrect password")
          }
        }
@@ -183,27 +196,52 @@ func userAuthorizeHandler(w http.ResponseWriter, r *http.Request) (userID string
      }
      store, err := session.Start(r.Context(), w, r)
      if err != nil {
-          return
+        log.Printf("cannot start session")
+        return
      }
 
-     uid, ok := store.Get("LoggedInUserID")
+     uname, ok := store.Get("LoggedInUserName")
      if !ok {
-          if r.Form == nil {
-               r.ParseForm()
-          }
+        log.Printf("no logged in user name in session store")
+        if r.Form == nil {
+             r.ParseForm()
+        }
 
-          store.Set("ReturnUri", r.Form)
-          store.Save()
+        store.Set("ReturnUri", r.Form)
+        store.Save()
 
-          w.Header().Set("Location", "/login")
-          w.WriteHeader(http.StatusFound)
-          return
+        w.Header().Set("Location", "/login")
+        w.WriteHeader(http.StatusFound)
+        return
      }
 
-     userID = uid.(string)
-     store.Delete("LoggedInUserID")
+     username := uname.(string)
+     upass, ok := store.Get("LoggedInUserPass")
+     if !ok {
+        log.Printf("no logged in user password in session store")
+        if r.Form == nil {
+             r.ParseForm()
+        }
+        store.Set("ReturnUri", r.Form)
+        store.Save()
+
+        w.Header().Set("Location", "/login")
+        w.WriteHeader(http.StatusFound)
+        return
+     }
+
+     passwd := upass.(string)
+     store.Delete("LoggedInUserName")
+     store.Delete("LoggedInUserPass")
      store.Save()
-     return
+     id, err := validateCredentials(username, passwd)
+     if err != nil {
+        log.Printf("error validating credentials for user %s, pass %s", username, passwd)
+        w.Header().Set("Location", "/login")
+        w.WriteHeader(http.StatusNotFound)
+        return
+     }
+     return id, nil
 }
 
 func LoginHandler(w http.ResponseWriter, r *http.Request) {
@@ -223,7 +261,8 @@ func LoginHandler(w http.ResponseWriter, r *http.Request) {
                     return
                }
           }
-          store.Set("LoggedInUserID", r.Form.Get("username"))
+          store.Set("LoggedInUserName", r.Form.Get("username"))
+          store.Set("LoggedInUserPass", r.Form.Get("password"))
           store.Save()
 
           w.Header().Set("Location", "/auth")
@@ -243,7 +282,7 @@ func AuthHandler(w http.ResponseWriter, r *http.Request) {
           return
      }
 
-     if _, ok := store.Get("LoggedInUserID"); !ok {
+     if _, ok := store.Get("LoggedInUserName"); !ok {
           w.Header().Set("Location", "/login")
           w.WriteHeader(http.StatusFound)
           return

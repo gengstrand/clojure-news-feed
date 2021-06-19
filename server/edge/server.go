@@ -14,7 +14,7 @@ func init() {
      flag.BoolVar(&edge.Dumpvar, "d", true, "Dump requests and responses")
      flag.StringVar(&edge.Domainvar, "r", "http://localhost:3000", "The domain of the redirect url")
      flag.IntVar(&portvar, "p", 8080, "the base port for the server")
-     flag.IntVar(&edge.Pollvar, "p", 10, "seconds between polling inbound") 
+     flag.IntVar(&edge.Pollvar, "s", 10, "seconds between polling inbound") 
 }
 
 func main() {

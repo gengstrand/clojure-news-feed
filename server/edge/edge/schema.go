@@ -133,16 +133,47 @@ var participantStateType = graphql.NewObject(graphql.ObjectConfig{
 var rootQuery = graphql.NewObject(graphql.ObjectConfig{
         Name: "RootQuery",
         Fields: graphql.Fields{
-                "participant": &graphql.Field{
-                        Type: participantStateType,
+                "me": &graphql.Field{
+                        Type: participantType,
                         Description: "",
                         Args: graphql.FieldConfigArgument{
                               "id": &graphql.ArgumentConfig{
                                     Type: graphql.String,
                               },
                         },
+                        Resolve: getParticipant,
                 },
-        },
+                "friends": &graphql.Field{
+                        Type: graphql.NewList(participantType),
+                        Description: "",
+                        Args: graphql.FieldConfigArgument{
+                              "id": &graphql.ArgumentConfig{
+                                    Type: graphql.String,
+                              },
+                        },
+                        Resolve: getFriends,
+                },
+                "inbound": &graphql.Field{
+                        Type: graphql.NewList(InboundType),
+                        Description: "",
+                        Args: graphql.FieldConfigArgument{
+                              "id": &graphql.ArgumentConfig{
+                                    Type: graphql.String,
+                              },
+                        },
+                        Resolve: getInbound,
+                },
+                "outbound": &graphql.Field{
+                        Type: graphql.NewList(OutboundType),
+                        Description: "",
+                        Args: graphql.FieldConfigArgument{
+                              "id": &graphql.ArgumentConfig{
+                                    Type: graphql.String,
+                              },
+                        },
+                        Resolve: getOutbound,
+                },
+       },
 })
 
 var NewsFeedSchema, _ = graphql.NewSchema(graphql.SchemaConfig{

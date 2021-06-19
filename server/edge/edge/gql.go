@@ -5,6 +5,7 @@ import (
      "fmt"
      "io"
      "log"
+     "time"
      "errors"
      "net/http"
      "github.com/graphql-go/graphql"
@@ -33,39 +34,69 @@ func getFriends(params graphql.ResolveParams) (interface{}, error) {
            log.Printf("user: %s, cannot read friends response: %s", idQuery, err)
            return 0, errors.New("cannot read friends response")
         }
-        var f []Friend
-        err = json.Unmarshal([]byte(string(body)), &f)
+        var fs []Friend
+        err = json.Unmarshal([]byte(string(body)), &fs)
         if err != nil {
            return "", errors.New("get friends invalid response")
         }
-        return f, nil
+        pidpath := "/participant/" + idQuery
+        rv := make([]Participant, len(fs), cap(fs))
+        for i, f := range fs {
+            fidpath := f.To
+            if fidpath == pidpath {
+               fidpath = f.From
+            }
+            p, err := getParticipantInner(fidpath)
+            if err == nil {
+               rv[i] = p
+            }
+        }
+        return rv, nil
      }
      return nil, errors.New("participant id not specified")
 }
 
+func getParticipantInner(path string) (Participant, error) {
+     var rv Participant
+     resp, err := http.Get("http://feed:8080" + path)
+     if err != nil {
+        log.Printf("user: %s, cannot get participant: %s", path, err)
+        return rv, errors.New("cannot get participant")
+     }
+     defer resp.Body.Close()
+     body, err := io.ReadAll(resp.Body)
+     if err != nil {
+        log.Printf("participant: %s, cannot read response: %s", path, err)
+        return rv, errors.New("cannot read participant response")
+     }
+     err = json.Unmarshal([]byte(string(body)), &rv)
+     if err != nil {
+        return rv, errors.New("get participant invalid response")
+     }
+     return rv, nil
+}
+
 func getParticipant(params graphql.ResolveParams) (interface{}, error) {
+     log.Printf("entering get participant")
      idQuery, isOK := params.Args["id"].(string)
      if isOK {
-        resp, err := http.Get("http://feed:8080/participant/" + idQuery)
-        if err != nil {
-           log.Printf("user: %s, cannot get participant: %s", idQuery, err)
-           return 0, errors.New("cannot get participant")
-        }
-        defer resp.Body.Close()
-        body, err := io.ReadAll(resp.Body)
-        if err != nil {
-           log.Printf("user: %s, cannot read participant response: %s", idQuery, err)
-           return 0, errors.New("cannot read participant response")
-        }
-        var p Participant
-        err = json.Unmarshal([]byte(string(body)), &p)
-        if err != nil {
-           return "", errors.New("get participant invalid response")
-        }
-        return p, nil
+        log.Printf("in get participant id = %s", idQuery)
+        return getParticipantInner("/participant/" + idQuery)
      }
      return nil, errors.New("participant id not specified")
 }
+
+type InboundInner struct {
+
+        From string `json:"from"`
+
+        Occurred time.Time `json:"occurred,omitempty"`
+
+        Subject string `json:"subject,omitempty"`
+
+        Story string `json:"story,omitempty"`
+}
+
 func getInbound(params graphql.ResolveParams) (interface{}, error) {
      idQuery, isOK := params.Args["id"].(string)
      if isOK {
@@ -80,12 +111,25 @@ func getInbound(params graphql.ResolveParams) (interface{}, error) {
            log.Printf("user: %s, cannot read inbound response: %s", idQuery, err)
            return 0, errors.New("cannot read inbound response")
         }
-        var i []Inbound
-        err = json.Unmarshal([]byte(string(body)), &i)
+        var ii []InboundInner
+        err = json.Unmarshal([]byte(string(body)), &ii)
         if err != nil {
            return "", errors.New("get inbound invalid response")
         }
-        return i, nil
+        rv := make([]Inbound, len(ii), cap(ii))
+        for j, i := range ii {
+            p, err := getParticipantInner(i.From)
+            if err == nil {
+               in := Inbound{
+                  From: p,
+                  Occurred: i.Occurred,
+                  Subject: i.Subject,
+                  Story: i.Story,
+               }
+               rv[j] = in
+            }
+        }
+        return rv, nil
      }
      return nil, errors.New("participant id not specified")
 }
