@@ -79,10 +79,7 @@ func AuthorizeHandler(w http.ResponseWriter, r *http.Request) {
      var form url.Values
      if v, ok := store.Get("ReturnUri"); ok {
           form = v.(url.Values)
-          log.Printf(form.Encode())
      }
-     // form.Add("redirect_uri", Domainvar)
-     // form.Add("client_id", 
      r.Form = form
      store.Delete("ReturnUri")
      store.Save()
@@ -123,7 +120,6 @@ func TestHandler(w http.ResponseWriter, r *http.Request) {
      
 func validateCredentials(username, password string) (userID string, err error) {
      var fc FeedCredentials
-     log.Printf("entering validateCredentialsHandler")
      c, err := credDB.Get(username).Result()
      switch {
      case err == redis.Nil:

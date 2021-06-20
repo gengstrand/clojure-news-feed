@@ -7,9 +7,12 @@ import (
      "log"
      "time"
      "errors"
+     "regexp"
      "net/http"
      "github.com/graphql-go/graphql"
 )
+
+var idPattern = regexp.MustCompile(`id:"[0-9]*"`)
 
 type Friend struct {
 
@@ -77,10 +80,8 @@ func getParticipantInner(path string) (Participant, error) {
 }
 
 func getParticipant(params graphql.ResolveParams) (interface{}, error) {
-     log.Printf("entering get participant")
      idQuery, isOK := params.Args["id"].(string)
      if isOK {
-        log.Printf("in get participant id = %s", idQuery)
         return getParticipantInner("/participant/" + idQuery)
      }
      return nil, errors.New("participant id not specified")
@@ -163,15 +164,16 @@ func ExecuteQuery(w http.ResponseWriter, r *http.Request) {
         return
      }
      userId := token.GetUserID()
-     data := r.URL.Query().Get("data")
-     query := fmt.Sprintf("{participant(id:\"%s\")%s}", userId, data)
+     requestQuery := r.URL.Query().Get("query")
+     payload := fmt.Sprintf("id:\"%s\"", userId)
+     finalQuery := idPattern.ReplaceAllLiteralString(requestQuery, payload)
      result := graphql.Do(graphql.Params{
         Schema:        NewsFeedSchema,
-        RequestString: query,
+        RequestString: finalQuery,
      })
      if len(result.Errors) > 0 {
         diag := fmt.Sprintf("wrong result, unexpected errors: %v", result.Errors)
-        log.Printf(query)
+        log.Printf(finalQuery)
         log.Printf(diag)
         http.Error(w, diag, http.StatusBadRequest)
         return
