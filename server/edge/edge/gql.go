@@ -5,7 +5,6 @@ import (
      "fmt"
      "io"
      "log"
-     "time"
      "errors"
      "regexp"
      "net/http"
@@ -91,7 +90,7 @@ type InboundInner struct {
 
         From string `json:"from"`
 
-        Occurred time.Time `json:"occurred,omitempty"`
+        Occurred string `json:"occurred,omitempty"`
 
         Subject string `json:"subject,omitempty"`
 
@@ -134,6 +133,18 @@ func getInbound(params graphql.ResolveParams) (interface{}, error) {
      }
      return nil, errors.New("participant id not specified")
 }
+
+type OutboundInner struct {
+
+     From string `json:"from,omitempty"`
+     
+     Occurred string `json:"occurred,omitempty"`
+
+     Subject string `json:"subject,omitempty"`
+
+     Story string `json:"story,omitempty"`
+}
+
 func getOutbound(params graphql.ResolveParams) (interface{}, error) {
      idQuery, isOK := params.Args["id"].(string)
      if isOK {
@@ -148,12 +159,21 @@ func getOutbound(params graphql.ResolveParams) (interface{}, error) {
            log.Printf("user: %s, cannot read outbound response: %s", idQuery, err)
            return 0, errors.New("cannot read outbound response")
         }
-        var o []Outbound
-        err = json.Unmarshal([]byte(string(body)), &o)
+        var oi []OutboundInner
+        err = json.Unmarshal([]byte(string(body)), &oi)
         if err != nil {
            return "", errors.New("get outbound invalid response")
         }
-        return o, nil
+        rv := make([]Outbound, len(oi), cap(oi))
+        for j, o := range oi {
+           ot := Outbound{
+              Occurred: o.Occurred,
+              Subject: o.Subject,
+              Story: o.Story,
+           }
+           rv[j] = ot
+        }
+        return rv, nil
      }
      return nil, errors.New("participant id not specified")
 }

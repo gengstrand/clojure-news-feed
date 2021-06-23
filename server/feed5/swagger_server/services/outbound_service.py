@@ -16,9 +16,17 @@ elastic = SearchService()
 
 class OutboundService:
 
+    def to_dict(self, o: dict) -> dict:
+        retVal = {}
+        retVal['from'] = to_link(o['from'])
+        retVal['occurred'] = o['occurred']
+        retVal['subject'] = o['subject']
+        retVal['story'] = o['story']
+        return retVal
+
     def fetch(self, id: int) -> Outbound:
         before = int(round(time.time() * 1000))
-        retVal = OutboundDAO(id).load()
+        retVal = list(map(self.to_dict, OutboundDAO(id).load()))
         after = int(round(time.time() * 1000))
         messages.log('outbound', 'get', after - before)
         return retVal

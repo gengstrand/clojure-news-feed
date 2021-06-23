@@ -1,7 +1,6 @@
 package edge
 
 import (
-       "time"
        "github.com/graphql-go/graphql"
 )
 
@@ -30,7 +29,7 @@ type Inbound struct {
 
         From Participant `json:"from"`
 
-        Occurred time.Time `json:"occurred,omitempty"`
+        Occurred string `json:"occurred,omitempty"`
 
         Subject string `json:"subject,omitempty"`
 
@@ -39,7 +38,7 @@ type Inbound struct {
 
 type Outbound struct {
 
-        Occurred time.Time `json:"occurred,omitempty"`
+        Occurred string `json:"occurred,omitempty"`
 
         Subject string `json:"subject,omitempty"`
 
