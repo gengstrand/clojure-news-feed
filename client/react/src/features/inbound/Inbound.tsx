@@ -57,7 +57,7 @@ function Inbound({ classes }: InboundProps) {
   React.useEffect(() => {
     dispatch(fetchInboundByFrom())
   }, [dispatch])
-  const rows: Array<InboundModel> = useAppSelector(select).feed
+  const rows: InboundModel[] = useAppSelector(select).feed
   return (
     <React.Fragment>
       <Grid container xs={12} alignItems="center" justify="center" spacing={3}>
@@ -76,7 +76,7 @@ function Inbound({ classes }: InboundProps) {
         {rows.map((row) => (
           <Grid container xs={12} spacing={3} justify="center">
             <Grid item xs={4}>
-              <Paper className={classes.paper}>{row.from}</Paper>
+              <Paper className={classes.paper}>{row.from.name}</Paper>
             </Grid>
             <Grid item xs={4}>
               <Paper className={classes.paper}>{row.occurred}</Paper>

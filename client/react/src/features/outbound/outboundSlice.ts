@@ -10,7 +10,7 @@ export const fetchOutboundByFrom = createAsyncThunk(
   'outbound/fetchByFrom',
   async () => {
     const u = Util.getInstance()
-    return await OutboundApi.getInstance().get(u.getToken())
+    return await OutboundApi.getInstance(u).get()
   }
 )
 
@@ -18,7 +18,7 @@ const addOutbound = createAsyncThunk (
   'outbound/add',
   (inb: OutboundModel, thunkAPI) => {
     const u = Util.getInstance()
-    OutboundApi.getInstance().add(u.getToken(), inb)
+    OutboundApi.getInstance(u).add(inb)
     return inb
   }
 )

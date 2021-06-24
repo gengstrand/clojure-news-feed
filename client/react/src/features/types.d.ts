@@ -5,8 +5,9 @@ const HOST = 'http://127.0.0.1:8080'
 export class Util {
   private static instance: Util
   private re: RegExp = new RegExp('/participant/([0-9]+)')
-  private token: string = '2'
-  private id: number = 2
+  private token: string = ''
+  private id: number = 0
+  private request_options: object = {}
   private constructor() {}
   public extract(id: string): number {
     const m = this.re.exec(id)
@@ -19,7 +20,23 @@ export class Util {
     return this.id
   }
   public getToken(): string {
+    if (this.token === '') {
+       this.token = new URLSearchParams(window.location.hash).get('access_token')
+       axios.get(HOST + '/test').then(resp => {
+         if (resp.status === 200) {
+            this.id = parseInt(resp.response.user_id)
+         }
+       })
+    }
     return this.token
+  }
+  public getOptions(): object {
+    if (this.request_options === {}) {
+       this.request_options = {
+         headers: {'Authorization': 'Bearer ' + this.getToken()}
+       }
+    }
+    return this.request_options
   }
   public static getInstance(): Util {
     if (!Util.instance) {
@@ -29,22 +46,56 @@ export class Util {
   }
 }
 export class OutboundModel {
-   readonly from: string
    readonly occurred: Date
    readonly subject: string
    readonly story: string
-   constructor(from: string, occurred: Date, subject: string, story: string) {
-      this.from = from
+   constructor(occurred: Date, subject: string, story: string) {
       this.occurred = occurred
       this.subject = subject
       this.story = story
    }
 }
+class OutboundData {
+   readonly outbound: OutboundModel[]
+   constructor(outbound: OutboundModel[]) {
+      this.outbound = outbound
+   }
+}
+class OutboundEnvelope {
+   readonly data: OutboundData
+   constructor(data: OutboundData) {
+      this.data = data
+   }
+}
 export class InboundModel extends OutboundModel {
-   readonly to: string
-   constructor(from: string, to: string, occurred: Date, subject: string, story: string) {
-      super(from, occurred, subject, story)
-      this.to = to
+   readonly from: ParticipantModel
+   constructor(from: ParticipantModel, occurred: Date, subject: string, story: string) {
+      super(occurred, subject, story)
+      this.from = from
+   }
+}
+class InboundData {
+   readonly inbound: InboundModel[]
+   constructor(inbound: InboundModel[]) {
+      this.inbound = inbound
+   }
+}
+class InboundEnvelope {
+   readonly data: InboundData
+   constructor(data: InboundData) {
+      this.data = data
+   }
+}
+class ParticipantData {
+   readonly me: ParticipantModel
+   constructor(me: ParticipantModel) {
+      this.me = me
+   }
+}
+class ParticipantEnvelope {
+   readonly data: ParticipantData
+   constructor(data: ParticipantData) {
+      this.data = data
    }
 }
 export class ParticipantModel {
@@ -53,6 +104,18 @@ export class ParticipantModel {
    constructor(id: number, moniker: string) {
       this.id = id
       this.name = moniker
+   }
+}
+class FriendsData {
+   readonly friends: ParticipantModel[]
+   constructor(friends: ParticipantModel[]) {
+      this.friends = friends
+   }
+}
+class FriendsEnvelope {
+   readonly data: FriendsData
+   constructor(data: FriendsData) {
+      this.data = data
    }
 }
 export class FriendsModel {
@@ -67,94 +130,104 @@ export class FriendsModel {
 }
 export class OutboundApi {
   private static instance: OutboundApi
-  private constructor() {}
-  public static getInstance(): OutboundApi {
+  private util: Util
+  private constructor(util: Util) {
+    this.util = util
+  }
+  public static getInstance(util: Util): OutboundApi {
     if (!OutboundApi.instance) {
-      OutboundApi.instance = new OutboundApi()
+      OutboundApi.instance = new OutboundApi(util)
     }
     return OutboundApi.instance
   }
-  get(token: string): Promise<Array<OutboundModel>> {
+  get(): Promise<OutboundModel[]> {
     return new Promise((resolve, reject) => {
-      resolve(axios.get<OutboundModel[]>(HOST + `/participant/${token}/outbound`).then(resp => {
+      resolve(axios.get<OutboundEnvelope>(HOST + '/graphql?query={outbound(id:"0"){occurred,subject,story}}', this.util.getOptions()).then(resp => {
         if (resp.status === 200) {
-          return resp.data
+          return resp.data.data.outbound
         } else {
           console.log(JSON.stringify(resp))
           return []
         }
       }))})
   }
-  add(token: string, ob: OutboundModel): void {
-    axios.post(HOST + `/participant/${token}/outbound`, ob)
+  add(ob: OutboundModel): void {
+    axios.post(HOST + '/participant/outbound', ob, this.getOptions())
   }
 }
 export class InboundApi {
   private static instance: InboundApi
-  private constructor() {}
-  public static getInstance(): InboundApi {
+  private util: Util
+  private constructor(util: Util) {
+    this.util = util
+  }
+  public static getInstance(util: Util): InboundApi {
     if (!InboundApi.instance) {
-      InboundApi.instance = new InboundApi()
+      InboundApi.instance = new InboundApi(util)
     }
     return InboundApi.instance
   }
-  public get(token: string): Promise<Array<InboundModel>> {
+  public get(): Promise<InboundModel[]> {
     return new Promise((resolve, reject) => {
-      resolve(axios.get<InboundModel[]>(HOST + `/participant/${token}/inbound`).then(resp => {
+      resolve(axios.get<InboundEnvelope[]>(HOST + '/graphql?query={inbound(id:"0"){from{name},occurred,subject,story}}', this.util.getOptions()).then(resp => {
         if (resp.status === 200) {
-          return resp.data
+          return resp.data.data.inbound
         } else {
           console.log(JSON.stringify(resp))
           return []
         }
       }))})
-  }
-  public add(inb: InboundModel): void {
   }
 }
 export class FriendsApi {
   private static instance: FriendsApi
-  private constructor() {}
-  public static getInstance(): FriendsApi {
+  private util: Util
+  private constructor(util: Util) {
+    this.util = util
+  }
+  public static getInstance(util: Util): FriendsApi {
     if (!FriendsApi.instance) {
-      FriendsApi.instance = new FriendsApi()
+      FriendsApi.instance = new FriendsApi(util)
     }
     return FriendsApi.instance
   }
-  get(token: string): Promise<Array<FriendsModel>> {
+  get(): Promise<ParticipantModel[]> {
     return new Promise((resolve, reject) => {
-      resolve(axios.get<FriendsModel[]>(HOST + `/participant/${token}/friends`).then(resp => {
+      resolve(axios.get<FriendsEnvelope[]>(HOST + '/graphql?query={friends(id:"0"){name}}', this.util.getOptions()).then(resp => {
         if (resp.status === 200) {
-          return resp.data
+          return resp.data.data.friends
         } else {
           console.log(JSON.stringify(resp))
           return []
         }
       }))})
   }
-  add(fb: FriendsModel): void {
+  add(pb: ParticipantModel): void {
+    const fb: FriendsModel = new FriendsModel(0, this.util.getId(), pb.id)
+    axios.post(HOST + '/participant/friends', fb, this.getOptions())
   }
 }
 export class ParticipantApi {
   private static instance: ParticipantApi
-  private constructor() {}
-  public static getInstance(): ParticipantApi {
+  private util: Util
+  private constructor(util: Util) {
+    this.util = util
+  }
+  public static getInstance(util: Util): ParticipantApi {
     if (!ParticipantApi.instance) {
-      ParticipantApi.instance = new ParticipantApi()
+      ParticipantApi.instance = new ParticipantApi(util)
     }
     return ParticipantApi.instance
   }
-  get(id: number): Promise<ParticipantModel> {
+  get(): Promise<ParticipantModel> {
     return new Promise((resolve, reject) => {
-      resolve(axios.get<ParticipantModel[]>(HOST + `/participant/${id}`).then(resp => {
+      resolve(axios.get<ParticipantEnvelope>(HOST + '/graphql?query={me(id:"0"){name}}', this.util.getOptions()).then(resp => {
         if (resp.status === 200) {
-          return resp.data
+          return resp.data.data.me
         } else {
           console.log(JSON.stringify(resp))
           return new ParticipantModel(0, 'error')
         }
       }))})
-  }
-  add(inb: ParticipantModel): void {
   }
 }

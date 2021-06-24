@@ -1,7 +1,7 @@
 import React from 'react'
 import { useAppSelector, useAppDispatch } from '../../app/hooks'
 import { select, fetchFriendsByFrom } from "./friendsSlice"
-import { FriendsModel } from '../types.d'
+import { ParticipantModel } from '../types.d'
 import Grid from "@material-ui/core/Grid"
 import Button from "@material-ui/core/Button"
 import {
@@ -83,7 +83,7 @@ function Friends({ classes }: FriendsProps) {
   React.useEffect(() => {
     dispatch(fetchFriendsByFrom())
   }, [dispatch])
-  const rows: Array<FriendsModel> = useAppSelector(select).feed
+  const rows: ParticipantModel[] = useAppSelector(select).feed
   return (
     <React.Fragment>
       <Grid container xs={12} alignItems="center" justify="center" spacing={3}>
@@ -116,7 +116,7 @@ function Friends({ classes }: FriendsProps) {
               <TableBody>
                 {rows.map((row) => (
                   <TableRow key={Math.random()}>
-                    <TableCell component="th" scope="row">{row.from}</TableCell>
+                    <TableCell component="th" scope="row">{row.name}</TableCell>
                   </TableRow>
                 ))}
               </TableBody>

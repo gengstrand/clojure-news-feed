@@ -1,34 +1,24 @@
 import { createAsyncThunk, createSlice, PayloadAction } from '@reduxjs/toolkit'
 import { RootState } from '../../app/store'
-import { FriendsModel, FriendsApi, ParticipantApi, Util } from '../types.d'
+import { ParticipantModel, FriendsApi, Util } from '../types.d'
 
 interface FriendsState {
-  feed: Array<FriendsModel>
+  feed: Array<ParticipantModel>
 }
 
 export const fetchFriendsByFrom = createAsyncThunk(
   'friends/fetchByFrom',
   async () => {
     const u = Util.getInstance()
-    const p = ParticipantApi.getInstance()
-    const fa = await FriendsApi.getInstance().get(u.getToken())
-    const rv = []
-    for (var f of fa) {
-      var fid = u.extract(f.from)
-      if (fid === u.getId()) {
-        fid = u.extract(f.to)
-      }
-      const fp = await p.get(fid)
-      rv.push(new FriendsModel(f.id, fp.name, ''))
-    }
-    return rv
+    return await FriendsApi.getInstance(u).get()
   }
 )
 
 const addFriends = createAsyncThunk (
   'friends/add',
-  async (inb: FriendsModel, thunkAPI) => {
-    await FriendsApi.getInstance().add(inb)
+  async (inb: ParticipantModel, thunkAPI) => {
+    const u = Util.getInstance()
+    await FriendsApi.getInstance(u).add(inb)
     return inb
   }
 )
@@ -43,10 +33,10 @@ export const friendsSlice = createSlice({
   reducers: {
   },
   extraReducers: (builder) => {
-    builder.addCase(fetchFriendsByFrom.fulfilled, (state, action: PayloadAction<Array<FriendsModel>>) => {
+    builder.addCase(fetchFriendsByFrom.fulfilled, (state, action: PayloadAction<Array<ParticipantModel>>) => {
       state.feed = action.payload
     })
-    builder.addCase(addFriends.fulfilled, (state, action: PayloadAction<FriendsModel>) => {
+    builder.addCase(addFriends.fulfilled, (state, action: PayloadAction<ParticipantModel>) => {
       state.feed.push(action.payload)
     })
   }
