@@ -22,16 +22,16 @@ func main() {
      if edge.Dumpvar {
         log.Println("Dumping requests")
      }
-     http.HandleFunc("/login", edge.LoginHandler)
-     http.HandleFunc("/auth", edge.AuthHandler)
-     http.HandleFunc("/oauth/authorize", edge.AuthorizeHandler)
-     http.HandleFunc("/oauth/token", edge.TokenHandler)
-     http.HandleFunc("/test", edge.TestHandler)
-     http.HandleFunc("/inbound/stream", edge.StreamInboundHandler)
-     http.HandleFunc("/graphql", edge.ExecuteQuery)
+     http.HandleFunc("edge/login", edge.LoginHandler)
+     http.HandleFunc("edge/auth", edge.AuthHandler)
+     http.HandleFunc("edge/oauth/authorize", edge.AuthorizeHandler)
+     http.HandleFunc("edge/oauth/token", edge.TokenHandler)
+     http.HandleFunc("edge/test", edge.TestHandler)
+     http.HandleFunc("edge/inbound/stream", edge.StreamInboundHandler)
+     http.HandleFunc("edge/graphql", edge.ExecuteQuery)
+     http.HandleFunc("edge/participant/outbound", edge.CreateOutboundHandler)
+     http.HandleFunc("edge/participant/friends", edge.CreateFriendHandler)
      log.Printf("Server is running at %d port.\n", portvar)
-     log.Printf("Point your OAuth client Auth endpoint to %s:%d%s", "http://localhost", portvar, "/oauth/authorize")
-     log.Printf("Point your OAuth client Token endpoint to %s:%d%s", "http://localhost", portvar, "/oauth/token")
      log.Fatal(http.ListenAndServe(fmt.Sprintf(":%d", portvar), nil))
 }
 

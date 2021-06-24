@@ -1,6 +1,6 @@
 import axios from 'axios'
 
-const HOST = 'http://127.0.0.1:8080'
+const HOST = 'http://127.0.0.1:3000'
 
 export class Util {
   private static instance: Util
@@ -17,16 +17,14 @@ export class Util {
     return parseInt(id)
   }
   public getId(): number {
+    if (this.id === 0) {
+       this.getOptions()
+    }
     return this.id
   }
   public getToken(): string {
     if (this.token === '') {
        this.token = new URLSearchParams(window.location.hash).get('access_token')
-       axios.get(HOST + '/test').then(resp => {
-         if (resp.status === 200) {
-            this.id = parseInt(resp.response.user_id)
-         }
-       })
     }
     return this.token
   }
@@ -35,6 +33,11 @@ export class Util {
        this.request_options = {
          headers: {'Authorization': 'Bearer ' + this.getToken()}
        }
+       axios.get(HOST + '/edge/test', this.request_options).then(resp => {
+         if (resp.status === 200) {
+            this.id = parseInt(resp.response.user_id)
+         }
+       })
     }
     return this.request_options
   }
@@ -142,7 +145,7 @@ export class OutboundApi {
   }
   get(): Promise<OutboundModel[]> {
     return new Promise((resolve, reject) => {
-      resolve(axios.get<OutboundEnvelope>(HOST + '/graphql?query={outbound(id:"0"){occurred,subject,story}}', this.util.getOptions()).then(resp => {
+      resolve(axios.get<OutboundEnvelope>(HOST + '/edge/graphql?query={outbound(id:"0"){occurred,subject,story}}', this.util.getOptions()).then(resp => {
         if (resp.status === 200) {
           return resp.data.data.outbound
         } else {
@@ -152,7 +155,7 @@ export class OutboundApi {
       }))})
   }
   add(ob: OutboundModel): void {
-    axios.post(HOST + '/participant/outbound', ob, this.getOptions())
+    axios.post(HOST + '/edge/participant/outbound', ob, this.getOptions())
   }
 }
 export class InboundApi {
@@ -169,7 +172,7 @@ export class InboundApi {
   }
   public get(): Promise<InboundModel[]> {
     return new Promise((resolve, reject) => {
-      resolve(axios.get<InboundEnvelope[]>(HOST + '/graphql?query={inbound(id:"0"){from{name},occurred,subject,story}}', this.util.getOptions()).then(resp => {
+      resolve(axios.get<InboundEnvelope[]>(HOST + '/edge/graphql?query={inbound(id:"0"){from{name},occurred,subject,story}}', this.util.getOptions()).then(resp => {
         if (resp.status === 200) {
           return resp.data.data.inbound
         } else {
@@ -193,7 +196,7 @@ export class FriendsApi {
   }
   get(): Promise<ParticipantModel[]> {
     return new Promise((resolve, reject) => {
-      resolve(axios.get<FriendsEnvelope[]>(HOST + '/graphql?query={friends(id:"0"){name}}', this.util.getOptions()).then(resp => {
+      resolve(axios.get<FriendsEnvelope[]>(HOST + '/edge/graphql?query={friends(id:"0"){name}}', this.util.getOptions()).then(resp => {
         if (resp.status === 200) {
           return resp.data.data.friends
         } else {
@@ -204,7 +207,7 @@ export class FriendsApi {
   }
   add(pb: ParticipantModel): void {
     const fb: FriendsModel = new FriendsModel(0, this.util.getId(), pb.id)
-    axios.post(HOST + '/participant/friends', fb, this.getOptions())
+    axios.post(HOST + '/edge/participant/friends', fb, this.getOptions())
   }
 }
 export class ParticipantApi {
@@ -221,7 +224,7 @@ export class ParticipantApi {
   }
   get(): Promise<ParticipantModel> {
     return new Promise((resolve, reject) => {
-      resolve(axios.get<ParticipantEnvelope>(HOST + '/graphql?query={me(id:"0"){name}}', this.util.getOptions()).then(resp => {
+      resolve(axios.get<ParticipantEnvelope>(HOST + '/edge/graphql?query={me(id:"0"){name}}', this.util.getOptions()).then(resp => {
         if (resp.status === 200) {
           return resp.data.data.me
         } else {
