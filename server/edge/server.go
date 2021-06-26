@@ -12,7 +12,7 @@ var portvar int
 
 func init() {
      flag.BoolVar(&edge.Dumpvar, "d", true, "Dump requests and responses")
-     flag.StringVar(&edge.Domainvar, "r", "http://localhost:3000", "The domain of the redirect url")
+     flag.StringVar(&edge.Domainvar, "r", "http://127.0.0.1:8080", "The domain of the redirect url")
      flag.IntVar(&portvar, "p", 8080, "the base port for the server")
      flag.IntVar(&edge.Pollvar, "s", 10, "seconds between polling inbound") 
 }
@@ -22,15 +22,15 @@ func main() {
      if edge.Dumpvar {
         log.Println("Dumping requests")
      }
-     http.HandleFunc("edge/login", edge.LoginHandler)
-     http.HandleFunc("edge/auth", edge.AuthHandler)
-     http.HandleFunc("edge/oauth/authorize", edge.AuthorizeHandler)
-     http.HandleFunc("edge/oauth/token", edge.TokenHandler)
-     http.HandleFunc("edge/test", edge.TestHandler)
-     http.HandleFunc("edge/inbound/stream", edge.StreamInboundHandler)
-     http.HandleFunc("edge/graphql", edge.ExecuteQuery)
-     http.HandleFunc("edge/participant/outbound", edge.CreateOutboundHandler)
-     http.HandleFunc("edge/participant/friends", edge.CreateFriendHandler)
+     http.HandleFunc("/login", edge.LoginHandler)
+     http.HandleFunc("/auth", edge.AuthHandler)
+     http.HandleFunc("/oauth/authorize", edge.AuthorizeHandler)
+     http.HandleFunc("/oauth/token", edge.TokenHandler)
+     http.HandleFunc("/test", edge.TestHandler)
+     http.HandleFunc("/inbound/stream", edge.StreamInboundHandler)
+     http.HandleFunc("/graphql", edge.ExecuteQuery)
+     http.HandleFunc("/participant/outbound", edge.CreateOutboundHandler)
+     http.HandleFunc("/participant/friends", edge.CreateFriendHandler)
      log.Printf("Server is running at %d port.\n", portvar)
      log.Fatal(http.ListenAndServe(fmt.Sprintf(":%d", portvar), nil))
 }

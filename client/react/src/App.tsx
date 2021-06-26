@@ -2,6 +2,7 @@ import React from 'react'
 import Inbound from './features/inbound/Inbound'
 import Outbound from './features/outbound/Outbound'
 import Friends from './features/friends/Friends'
+
 import {
   createMuiTheme,
   withStyles,
@@ -110,7 +111,7 @@ const styles: (theme: Theme) => StyleRules<string> = theme =>
 })
 
 type AppProps = {} & WithStyles<typeof styles>
-  
+
 const App = ({ classes }: AppProps) => (
   <MuiThemeProvider theme={theme}>
     <Box>

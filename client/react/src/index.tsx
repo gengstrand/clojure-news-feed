@@ -1,9 +1,14 @@
-import React from 'react';
-import ReactDOM from 'react-dom';
-import App from './App';
-import { store } from './app/store';
-import { Provider } from 'react-redux';
-import * as serviceWorker from './serviceWorker';
+import React from 'react'
+import ReactDOM from 'react-dom'
+import App from './App'
+import { store } from './app/store'
+import { Provider } from 'react-redux'
+import { Util } from './features/types.d'
+import * as serviceWorker from './serviceWorker'
+
+if (Util.getInstance().getToken() === '') {
+   window.location.href = 'http://127.0.0.1:8080/login'
+}
 
 ReactDOM.render(
   <Provider store={store}>
