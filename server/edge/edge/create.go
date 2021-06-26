@@ -9,6 +9,17 @@ import (
      "net/http"
 )
 
+type OutboundFrom struct {
+
+        From string `json:"from,omitempty"`
+        
+        Occurred string `json:"occurred,omitempty"`
+
+        Subject string `json:"subject,omitempty"`
+
+        Story string `json:"story,omitempty"`
+}
+
 func CreateOutboundHandler(w http.ResponseWriter, r *http.Request) {
      token, err := srv.ValidationBearerToken(r)
      if err != nil {
@@ -23,7 +34,24 @@ func CreateOutboundHandler(w http.ResponseWriter, r *http.Request) {
         log.Printf("user: %s, cannot read request body: %s", userId, err)
         http.Error(w, err.Error(), http.StatusBadRequest)
      }
-     resp, err := http.Post(url, "application/json", bytes.NewReader(body))
+     var rbo Outbound
+     err = json.Unmarshal([]byte(string(body)), &rbo)
+     if err != nil {
+        log.Printf("user: %s, invalid outbound request body: %s", userId, err)
+        http.Error(w, err.Error(), http.StatusBadRequest)        
+     }
+     o := OutboundFrom{
+       From: "/participant/" + userId,
+       Occurred: rbo.Occurred,
+       Subject: rbo.Subject,
+       Story: rbo.Story,
+     }
+     b, err := json.Marshal(o)
+     if err != nil {
+        log.Printf("cannot prepare create outbound request as json")
+        http.Error(w, err.Error(), http.StatusBadRequest)
+     }
+     resp, err := http.Post(url, "application/json", bytes.NewReader(b))
      if err != nil {
         log.Printf("cannot create outbound")
         http.Error(w, err.Error(), http.StatusInternalServerError)
@@ -34,9 +62,12 @@ func CreateOutboundHandler(w http.ResponseWriter, r *http.Request) {
         log.Printf("user: %s, cannot read create outbound response: %s", userId, err)
         http.Error(w, err.Error(), http.StatusInternalServerError)
      }
-     w.Header().Set("Content-Type", "application/json; charset=UTF-8")
-     fmt.Fprint(w, string(responseb))
-     w.WriteHeader(resp.StatusCode)
+     if (resp.StatusCode == 200) {
+        w.Header().Set("Content-Type", "application/json; charset=UTF-8")
+        fmt.Fprint(w, string(responseb))
+     } else {
+        w.WriteHeader(resp.StatusCode)
+     }
 }
 
 func CreateFriendHandler(w http.ResponseWriter, r *http.Request) {
@@ -79,7 +110,10 @@ func CreateFriendHandler(w http.ResponseWriter, r *http.Request) {
         log.Printf("user: %s, cannot read create friend response: %s", userId, err)
         http.Error(w, err.Error(), http.StatusInternalServerError)
      }
-     w.Header().Set("Content-Type", "application/json; charset=UTF-8")
-     fmt.Fprint(w, string(responseb))
-     w.WriteHeader(resp.StatusCode)
+     if (resp.StatusCode == 200) {
+        w.Header().Set("Content-Type", "application/json; charset=UTF-8")
+        fmt.Fprint(w, string(responseb))
+     } else {
+        w.WriteHeader(resp.StatusCode)
+     }
 }

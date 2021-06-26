@@ -60,10 +60,10 @@ export class Util {
   }
 }
 export class OutboundModel {
-   readonly occurred: Date
+   readonly occurred: string
    readonly subject: string
    readonly story: string
-   constructor(occurred: Date, subject: string, story: string) {
+   constructor(occurred: string, subject: string, story: string) {
       this.occurred = occurred
       this.subject = subject
       this.story = story
@@ -83,7 +83,7 @@ class OutboundEnvelope {
 }
 export class InboundModel extends OutboundModel {
    readonly from: ParticipantModel
-   constructor(from: ParticipantModel, occurred: Date, subject: string, story: string) {
+   constructor(from: ParticipantModel, occurred: string, subject: string, story: string) {
       super(occurred, subject, story)
       this.from = from
    }
@@ -166,7 +166,7 @@ export class OutboundApi {
       }))})
   }
   add(ob: OutboundModel): void {
-    axios.post(HOST + '/participant/outbound', ob, this.getOptions())
+    axios.post(HOST + '/participant/outbound', ob, this.util.getOptions())
   }
 }
 export class InboundApi {
@@ -218,7 +218,7 @@ export class FriendsApi {
   }
   add(pb: ParticipantModel): void {
     const fb: FriendsModel = new FriendsModel(0, this.util.getId(), pb.id)
-    axios.post(HOST + '/participant/friends', fb, this.getOptions())
+    axios.post(HOST + '/participant/friends', fb, this.util.getOptions())
   }
 }
 export class ParticipantApi {

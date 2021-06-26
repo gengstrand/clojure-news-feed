@@ -75,7 +75,9 @@ function AddOutboundForm(props: OutboundParentProps) {
   const handleSubmit = () => {
     setOpen(false)
     const u: Util = Util.getInstance()
-    const o: OutboundModel = new OutboundModel(new Date(), subject, story)
+    const d: Date = new Date()
+    const df: string = `${d.getFullYear()}-${d.getMonth()}-${d.getDate()}`
+    const o: OutboundModel = new OutboundModel(df, subject, story)
     OutboundApi.getInstance(u).add(o)
     setTimeout(props.refresh, 2000)
   }

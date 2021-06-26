@@ -112,12 +112,8 @@ def deserialize_datetime(string):
     :return: datetime.
     :rtype: datetime
     """
-    try:
-        from dateutil.parser import parse
-        return parse(string)
-    except ImportError:
-        return string
-
+    
+    return datetime.strptime(string, '%Y-%m-%d').date()
 
 def deserialize_model(data, klass):
     """

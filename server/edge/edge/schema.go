@@ -50,15 +50,15 @@ var participantType = graphql.NewObject(graphql.ObjectConfig{
         Fields: graphql.Fields{
                 "id": &graphql.Field{
                         Type: graphql.ID,
-                        Description: "",
+                        Description: "uniquely identifies participant",
                 },
                 "name": &graphql.Field{
                         Type: graphql.String,
-                        Description: "",
+                        Description: "name of participant",
                 },
                 "link": &graphql.Field{
                         Type: graphql.String,
-                        Description: "",
+                        Description: "API URI to fetch participant",
                 },
         },
 })
@@ -68,19 +68,19 @@ var InboundType = graphql.NewObject(graphql.ObjectConfig{
     Fields: graphql.Fields{
             "from": &graphql.Field{
                 Type: participantType,
-                Description: "",
+                Description: "participant who sent this news item",
             },
             "occurred": &graphql.Field{
-                Type: graphql.DateTime,
-                Description: "",
+                Type: graphql.String,
+                Description: "date when item was sent",
             },
             "subject": &graphql.Field{
                 Type: graphql.String,
-                Description: "",
+                Description: "subject of news item",
             },
             "story": &graphql.Field{
                 Type: graphql.String,
-                Description: "",
+                Description: "news item story",
             },
     },
 })
@@ -89,44 +89,18 @@ var OutboundType = graphql.NewObject(graphql.ObjectConfig{
     Name: "Outbound",
     Fields: graphql.Fields{
             "occurred": &graphql.Field{
-                Type: graphql.DateTime,
-                Description: "",
+                Type: graphql.String,
+                Description: "date when item was sent",
             },
             "subject": &graphql.Field{
                 Type: graphql.String,
-                Description: "",
+                Description: "subject of news item",
             },
             "story": &graphql.Field{
                 Type: graphql.String,
-                Description: "",
+                Description: "news item story",
             },
     },
-})
-
-var participantStateType = graphql.NewObject(graphql.ObjectConfig{
-        Name: "ParticipantState",
-        Fields: graphql.Fields{
-                "participant": &graphql.Field{
-                        Type: participantType,
-                        Description: "",
-                        Resolve: getParticipant,
-                },
-                "friends": &graphql.Field{
-                        Type: graphql.NewList(participantType),
-                        Description: "",
-                        Resolve: getFriends,
-                },
-                "inbound": &graphql.Field{
-                        Type: graphql.NewList(InboundType),
-                        Description: "",
-                        Resolve: getInbound,
-                },
-                "outbound": &graphql.Field{
-                        Type: graphql.NewList(OutboundType),
-                        Description: "",
-                        Resolve: getOutbound,
-                },
-        },
 })
 
 var rootQuery = graphql.NewObject(graphql.ObjectConfig{
@@ -134,7 +108,7 @@ var rootQuery = graphql.NewObject(graphql.ObjectConfig{
         Fields: graphql.Fields{
                 "me": &graphql.Field{
                         Type: participantType,
-                        Description: "",
+                        Description: "currently logged in participant",
                         Args: graphql.FieldConfigArgument{
                               "id": &graphql.ArgumentConfig{
                                     Type: graphql.String,
@@ -144,7 +118,7 @@ var rootQuery = graphql.NewObject(graphql.ObjectConfig{
                 },
                 "friends": &graphql.Field{
                         Type: graphql.NewList(participantType),
-                        Description: "",
+                        Description: "friends of currently logged in participant",
                         Args: graphql.FieldConfigArgument{
                               "id": &graphql.ArgumentConfig{
                                     Type: graphql.String,
@@ -154,7 +128,7 @@ var rootQuery = graphql.NewObject(graphql.ObjectConfig{
                 },
                 "inbound": &graphql.Field{
                         Type: graphql.NewList(InboundType),
-                        Description: "",
+                        Description: "posts from friends of current participant",
                         Args: graphql.FieldConfigArgument{
                               "id": &graphql.ArgumentConfig{
                                     Type: graphql.String,
@@ -164,7 +138,7 @@ var rootQuery = graphql.NewObject(graphql.ObjectConfig{
                 },
                 "outbound": &graphql.Field{
                         Type: graphql.NewList(OutboundType),
-                        Description: "",
+                        Description: "current participant posts to friends",
                         Args: graphql.FieldConfigArgument{
                               "id": &graphql.ArgumentConfig{
                                     Type: graphql.String,
