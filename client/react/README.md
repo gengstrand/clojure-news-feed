@@ -1,13 +1,10 @@
 # React News Feed App
 
-This folder contains the code for a web app written in typescript on
-the react framework. The generated assets are hosted with nginx
-which also proxies requests to the news feed service via an edge proxy.
+This folder contains the code for a single page web app written in typescript on the react framework. The generated assets are hosted with nginx which also proxies requests to the news feed service via an edge proxy.
 
 ## Deving
 
-Regrettably, this service depends on the nginx configuration in order
-to properly work with the edge service so npm start won't really help.
+Regrettably, this service currently depends on the nginx configuration in order to properly work with the edge service so npm start won't really help. I will explore [http-proxy-middleware](https://www.npmjs.com/package/http-proxy-middleware) to see if I can bring back that dev friendly capability.
 
 ```bash
 npm test
@@ -19,10 +16,7 @@ kubectl create -f react-deployment.yaml
 kubectl port-forward deployment/react 8080:8080
 ```
 
-Point your web browser to http://127.0.0.1:8080/ where you will be prompted
-to log in. Specifying a new user name and password will automatically
-create a new participant and log you in as that participant. After you
-click the Allow button, the browser will load this app.
+Point your web browser to http://127.0.0.1:8080/ where you will be prompted to log in. Specifying a new user name and password will automatically create a new participant and log you in as that participant. After you click the Allow button, the browser will load this app.
 
 ## Learn More
 

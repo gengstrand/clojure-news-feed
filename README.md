@@ -122,9 +122,22 @@ This folder contains assets for standing up the service, and its dependencies, i
 
 https://glennengstrand.info/software/performance/eks/gke
 
+### helm
+
+This folder contains a helm chart that allows you to launch a news feed microservice, and the components and databases that it depends on, with a single command.
+
+```bash
+cd server/helm
+helm install feed .
+```
+
 ### proxy
 
 An API gateway, written in golang, that proxies requests from the load test app to the news feed service under test and sends performance data to the perf4 service.
+
+### edge
+
+An API gateway, written in golang, that proxies requests from the Nginx hosted web app to the news feed service. It handles such web client specific concerns as authentication, authorization, web streaming, and read access via GraphQL.
 
 ### prometheus
 
@@ -219,6 +232,10 @@ A microservice written in Java with the vert.x framework. It is intended to be c
 ### perf5
 
 A CLI tool that queries either elastic search or solr performance statistics and writes out per time period metrics to the console.
+
+### client/react
+
+A single page web application for the news feed service written in Typescript on React.
 
 ### mobile/feed
 

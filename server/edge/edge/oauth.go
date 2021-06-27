@@ -154,7 +154,7 @@ func validateCredentials(username, password string) (userID string, err error) {
        }
        credDB.Set(username, bb, ttl)
        return sid, nil
-     case err == nil:
+     case err != nil:
        log.Printf("cannot connect to redis")
        return "", errors.New("cannot connect to redis")
      case c == "":
