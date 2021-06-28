@@ -4,6 +4,7 @@ import (
      "io"
      "log"
      "errors"
+     "strconv"
      "net/http"
      "time"
      "github.com/gorilla/websocket"
@@ -30,12 +31,6 @@ func getInboundLength(userId string) (bodyLen int, err error) {
 }
 
 func StreamInboundHandler(w http.ResponseWriter, r *http.Request) {
-     token, err := srv.ValidationBearerToken(r)
-     if err != nil {
-        http.Error(w, err.Error(), http.StatusForbidden)
-        return
-     }
-     userId := token.GetUserID()
      c, err := upgrader.Upgrade(w, r, nil)
      if err != nil {
         log.Printf("user: %s, upgrade: %s", userId, err)
@@ -50,8 +45,9 @@ func StreamInboundHandler(w http.ResponseWriter, r *http.Request) {
         return
      }
      if Dumpvar {
-        log.Printf("user: %s, recv: %s", userId, message)
+        log.Printf("user: %s", message)
      }
+     userId := strconv.ParseInt(message)
      inboundLength := 0
      for {
         time.Sleep(time.Duration(Pollvar) * time.Millisecond)

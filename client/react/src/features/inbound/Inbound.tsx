@@ -1,7 +1,8 @@
 import React from 'react'
+import useWebSocket from 'react-use-websocket'
 import { useAppSelector, useAppDispatch } from '../../app/hooks'
 import { select, fetchInboundByFrom } from "./inboundSlice"
-import { InboundModel } from '../types.d'
+import { InboundModel, Util } from '../types.d'
 import Grid from "@material-ui/core/Grid"
 import {
   withStyles,
@@ -57,6 +58,16 @@ function Inbound({ classes }: InboundProps) {
     dispatch(fetchInboundByFrom())
   }, [dispatch])
   const rows: InboundModel[] = useAppSelector(select).feed
+  const forceUpdate = () => dispatch(fetchInboundByFrom())
+  const u = Util.getInstance()
+  const { sendMessage } = useWebSocket('ws://127.0.0.1:8080/inbound/stream', {
+    onMessage: (msg: string) => {
+       if (msg === 'changed') {
+          forceUpdate()
+       }
+    }
+  })
+  sendMessage(String(u.getId()))
   return (
     <React.Fragment>
       <Grid container xs={12} alignItems="center" justify="center" spacing={3}>
