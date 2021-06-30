@@ -61,8 +61,8 @@ function Inbound({ classes }: InboundProps) {
   const forceUpdate = () => dispatch(fetchInboundByFrom())
   const u = Util.getInstance()
   const { sendMessage } = useWebSocket('ws://127.0.0.1:8080/inbound/stream', {
-    onMessage: (msg: string) => {
-       if (msg === 'changed') {
+    onMessage: (msg: MessageEvent) => {
+       if (msg.data === 'changed') {
           forceUpdate()
        }
     }

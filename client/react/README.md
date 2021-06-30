@@ -7,6 +7,7 @@ This folder contains the code for a single page web app written in typescript on
 Regrettably, this service currently depends on the nginx configuration in order to properly work with the edge service so npm start won't really help. I will explore [http-proxy-middleware](https://www.npmjs.com/package/http-proxy-middleware) to see if I can bring back that dev friendly capability.
 
 ```bash
+npm install
 npm test
 npm run build
 docker build -t react:1.0 .
