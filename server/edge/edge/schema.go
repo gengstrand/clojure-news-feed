@@ -14,15 +14,11 @@ type Participant struct {
 
 }
 
-type ParticipantState struct {
+type SearchResult struct {
 
         Participant Participant `json:"participant"`
 
-        Friends []Participant `json:"friends"`
-
-        Inbound []Inbound `json:"inbound"`
-
-        Outbound []Outbound `json:"outbound"`
+        Outbound Outbound `json:"outbound"`
 }
 
 type Inbound struct {
@@ -81,6 +77,16 @@ var InboundType = graphql.NewObject(graphql.ObjectConfig{
             "story": &graphql.Field{
                 Type: graphql.String,
                 Description: "news item story",
+            },
+    },
+})
+
+var SearchResultType = graphql.NewObject(graphql.ObjectConfig{
+    Name: "SearchResults",
+    Fields: graphql.Fields{
+            "match": &graphql.Field{
+                Type: SearchResult,
+                Description: "participant who matches keyword search",
             },
     },
 })
@@ -145,6 +151,19 @@ var rootQuery = graphql.NewObject(graphql.ObjectConfig{
                               },
                         },
                         Resolve: getOutbound,
+                },
+                "search": &graphql.Field{
+                        Type: graphql.NewList(SearchResultType),
+                        Description: "find participants who post items of interest",
+                        Args: graphql.FieldConfigArgument{
+                              "id": &graphql.ArgumentConfig{
+                                    Type: graphql.String,
+                              },
+                              "keywords": &graphql.ArgumentConfig{
+                                    Type: graphql.String,
+                              },
+                        },
+                        Resolve: getSearchResults,
                 },
        },
 })

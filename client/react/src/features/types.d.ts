@@ -9,6 +9,9 @@ export class Util {
   private id: number = 0
   private request_options: object 
   private constructor() {}
+  public link(pid: number): string {
+    return `/participant/$pid`
+  }
   public extract(id: string): number {
     const m = this.re.exec(id)
     if (m) {
@@ -115,9 +118,11 @@ class ParticipantEnvelope {
 export class ParticipantModel {
    readonly id: number
    readonly name: string
-   constructor(id: number, moniker: string) {
+   readonly link: string
+   constructor(id: number, name: string, link: string) {
       this.id = id
-      this.name = moniker
+      this.name = name
+      this.link = link
    }
 }
 class FriendsData {
@@ -140,6 +145,26 @@ export class FriendsModel {
       this.id = id
       this.from = from
       this.to = to
+   }
+}
+class SearchResultData {
+   readonly match: SearchResultModel[]
+   constructor(match: SearchResultModel[]) {
+      this.match = match
+   }
+}
+class SearchResultEnvelope {
+   readonly data: SearchResultData
+   constructor(data: SearchResultData) {
+      this.data = data
+   }
+}
+export class SearchResultModel {
+   readonly participant: ParticipantModel
+   readonly outbound: OutboundModel
+   constructor(participant: ParticipantModel, outbound: OutboundModel) {
+      this.participant = participant
+      this.outbound = outbound
    }
 }
 export class OutboundApi {
@@ -167,6 +192,17 @@ export class OutboundApi {
   }
   add(ob: OutboundModel): void {
     axios.post(HOST + '/participant/outbound', ob, this.util.getOptions())
+  }
+  search(keywords: string): Promise<SearchResultModel[]> {
+    return new Promise((resolve, reject) => {
+      resolve(axios.get<SearchResultEnvelope>(HOST + '/graphql?query={search(id:"0",keywords:"' + keywords + '"){match{participant{id,name,link},outbound{occurred,subject,story}}}}', this.util.getOptions()).then(resp => {
+        if (resp.status === 200) {
+          return resp.data.data.match
+        } else {
+          console.log(JSON.stringify(resp))
+          return []
+        }
+      }))})
   }
 }
 export class InboundApi {
@@ -217,7 +253,7 @@ export class FriendsApi {
       }))})
   }
   add(pb: ParticipantModel): void {
-    const fb: FriendsModel = new FriendsModel(0, this.util.getId(), pb.id)
+    const fb: FriendsModel = new FriendsModel(0, this.util.link(this.util.getId()), pb.link())
     axios.post(HOST + '/participant/friends', fb, this.util.getOptions())
   }
 }
@@ -240,7 +276,7 @@ export class ParticipantApi {
           return resp.data.data.me
         } else {
           console.log(JSON.stringify(resp))
-          return new ParticipantModel(0, 'error')
+          return new ParticipantModel(0, 'error', 'error')
         }
       }))})
   }
