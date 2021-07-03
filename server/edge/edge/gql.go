@@ -19,9 +19,8 @@ type Friend struct {
    To string `json:"to,omitempty"`
 }
 
-func isFriend(path string, friends []Friend) (boolean) {
-   var rv = false
-   for j, f := range friends {
+func isFriend(path string, friends []Friend) (bool) {
+   for _, f := range friends {
       if f.From == path || f.To == path {
          return true
       }
@@ -98,6 +97,7 @@ func getParticipant(params graphql.ResolveParams) (interface{}, error) {
          log.Printf("user: %s, cannot get participant: %s", idQuery, err)
          return nil, err
       }
+      return rv, nil
    }
    return nil, errors.New("participant id not specified")
 }
@@ -196,17 +196,17 @@ func getOutbound(params graphql.ResolveParams) (interface{}, error) {
 func getSearchResultsInner(keywords string) ([]string, error) {
    resp, err := http.Get("http://feed:8080/outbound?keywords=" + keywords)
    if err != nil {
-      return [], errors.New("cannot search outbound")
+      return nil, errors.New("cannot search outbound")
    }
    defer resp.Body.Close()
    body, err := io.ReadAll(resp.Body)
    if err != nil {
-      return [], errors.New("cannot read search response")
+      return nil, errors.New("cannot read search response")
    }
    var rv []string
    err = json.Unmarshal([]byte(string(body)), &rv)
    if err != nil {
-      return [], errors.New("search invalid response")
+      return nil, errors.New("search invalid response")
    }
    return rv, nil
 }
@@ -228,7 +228,7 @@ func getSearchResults(params graphql.ResolveParams) (interface{}, error) {
          }
          rv := make([]SearchResult, len(ppl), cap(ppl))
          var i = 0
-         for j, p := range ppl {
+         for _, p := range ppl {
             part, err := getParticipantInner(p)
             if err != nil {
                log.Printf("user: %s, cannot get participant: %s", idQuery, p)
@@ -244,9 +244,14 @@ func getSearchResults(params graphql.ResolveParams) (interface{}, error) {
                return nil, errors.New("matching participant has no outbound")
             }
             if !isFriend(part.Link, fs) {
+               oo := Outbound{
+                 Occurred: outb[0].Occurred,
+                 Subject: outb[0].Subject,
+                 Story: outb[0].Story,
+               }
                rv[i] = SearchResult{
                   Participant: part,
-                  Outbound: outb[0],
+                  Outbound: oo,
                }
                i = i + 1
             }

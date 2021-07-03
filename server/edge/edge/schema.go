@@ -84,9 +84,13 @@ var InboundType = graphql.NewObject(graphql.ObjectConfig{
 var SearchResultType = graphql.NewObject(graphql.ObjectConfig{
     Name: "SearchResults",
     Fields: graphql.Fields{
-            "match": &graphql.Field{
-                Type: SearchResult,
-                Description: "participant who matches keyword search",
+            "participant": &graphql.Field{
+                Type: participantType,
+                Description: "matching participant",
+            },
+            "outbound": &graphql.Field{
+                Type: OutboundType,
+                Description: "latest post",
             },
     },
 })

@@ -1,6 +1,6 @@
 import axios from 'axios'
 
-const HOST = 'http://127.0.0.1:8080'
+const HOST = 'http://127.0.0.1:3000'
 
 export class Util {
   private static instance: Util
@@ -148,9 +148,9 @@ export class FriendsModel {
    }
 }
 class SearchResultData {
-   readonly match: SearchResultModel[]
-   constructor(match: SearchResultModel[]) {
-      this.match = match
+   readonly search: SearchResultModel[]
+   constructor(search: SearchResultModel[]) {
+      this.search = search
    }
 }
 class SearchResultEnvelope {

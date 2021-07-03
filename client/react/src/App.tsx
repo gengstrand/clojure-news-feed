@@ -167,7 +167,7 @@ const App = ({ classes }: AppProps) => (
                     <IconButton>
                       <HearingIcon />
                     </IconButton>
-                    Inbound
+                    Posts For Me
                   </div>
                 </Link>
                 <Divider />
@@ -176,7 +176,7 @@ const App = ({ classes }: AppProps) => (
                     <IconButton>
                       <RecordVoiceOverIcon />
                     </IconButton>
-                    Outbound
+                    My Posts
                   </div>
                 </Link>
                 <Divider />
@@ -185,7 +185,7 @@ const App = ({ classes }: AppProps) => (
                     <IconButton>
                       <PeopleIcon />
                     </IconButton>
-                    Friends
+                    My Friends
                   </div>
                 </Link>
               </nav>

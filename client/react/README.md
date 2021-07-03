@@ -1,23 +1,55 @@
 # React News Feed App
 
-This folder contains the code for a single page web app written in typescript on the react framework. The generated assets are hosted with nginx which also proxies requests to the news feed service via an edge proxy.
+This folder contains the code for a single page web app written in typescript on the react framework. Requests to the news feed service need to be proxied to another service called edge. I currently dev using [Kubernetes in Docker](https://kind.sigs.k8s.io/) which explains the kind command. You won't need that command if you are using something else. Once the app has launched, you will be prompted to log in. Specifying a new user name and password will automatically create a new participant and log you in as that participant. After you click the Allow button, the browser will load this app. 
 
-## Deving
+## Deving locally
 
-Regrettably, this service currently depends on the nginx configuration in order to properly work with the edge service so npm start won't really help. I will explore [http-proxy-middleware](https://www.npmjs.com/package/http-proxy-middleware) to see if I can bring back that dev friendly capability.
+The only thing that doesn't work in this configuration is the web socket that automatically syncs inbound.
 
 ```bash
+cd ../../server/edge
+docker build -t edge:1.0 .
+kind load docker-image edge:1.0
+cd ../k8s
+kubectl create -f edge-service.yaml
+kubectl create -f edge-deployment.yaml
+kubectl port-forward deployment/edge 8080:8080 &
+cd ../../client/react
+npm install
+npm test
+npm start
+```
+
+Your web browser should open http://127.0.0.1:3000/ automatically.
+
+## Deving in Kubernetes
+
+The generated assets are hosted with nginx. You have to manually change the port in the code here from 3000 to 8080. 
+
+1. for the HOST in client/react/src/features/types.d.ts 
+2. for edge.Domainvar in server/edge/server.go 
+3. for the redirect_uri in server/edge/static/auth.html
+
+```bash
+cd ../../server/edge
+docker build -t edge:1.0 .
+kind load docker-image edge:1.0
+cd ../k8s
+kubectl create -f edge-service.yaml
+kubectl create -f edge-deployment.yaml
+cd ../../client/react
 npm install
 npm test
 npm run build
 docker build -t react:1.0 .
+kind load docker-image react:1.0
 cd ../../server/k8s
 kubectl create -f react-service.yaml
 kubectl create -f react-deployment.yaml
 kubectl port-forward deployment/react 8080:8080
 ```
 
-Point your web browser to http://127.0.0.1:8080/ where you will be prompted to log in. Specifying a new user name and password will automatically create a new participant and log you in as that participant. After you click the Allow button, the browser will load this app.
+Point your web browser to http://127.0.0.1:8080/ 
 
 ## Learn More
 
