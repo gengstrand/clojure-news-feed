@@ -24,7 +24,11 @@ Your web browser should open http://127.0.0.1:3000/ automatically.
 
 ## Deving in Kubernetes
 
-The generated assets are hosted with Nginx. You have to manually change the port in the code here from 3000 to 8080. 
+The generated assets are hosted with Nginx. XHR and WS calls from the web browser get proxied through the same Nginx service to the edge service which, in turn, proxy requests to the feed service.
+
+<img src="react.png" />
+
+You have to manually change the port in the code here from 3000 to 8080. 
 
 1. for the HOST in client/react/src/features/types.d.ts 
 2. for edge.Domainvar in server/edge/server.go 

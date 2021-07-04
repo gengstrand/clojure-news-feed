@@ -1,0 +1,18 @@
+digraph react_arch {
+	react -> nginx [label="IPL\nport forwarding\nHTTP and WS"];
+	nginx -> ep [label="CORS and WS"];
+	ep -> feed [label="REST and GQL"];
+	ep -> redis [label="credentials"];
+	feed -> cassandra [label="CQL"];
+	feed -> redis [label="CLI"];
+	feed -> es [label="search"];
+	feed -> mysql [label="SQL"];
+	react [shape=box,label="react\nweb\nbrowser"];
+	nginx [shape=box,label="nginx"];
+	cassandra [shape=box,label="cassandra"];
+	redis [shape=box,label="redis"];
+	mysql [shape=box,label="mysql"];
+	es [shape=box,label="elastic\nsearch"];
+	feed [shape=box,label="feed\nmicro\nservice"];
+	ep [shape=box,label="edge\nmicro\nservice"];
+}
