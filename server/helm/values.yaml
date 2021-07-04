@@ -4,6 +4,7 @@ cassandraVersion: "2.2"
 elasticSearchVersion: "2.4"
 loadTest: false
 useIngress: false
+gui: false
 
 image:
   account: gengstrand

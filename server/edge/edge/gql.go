@@ -7,6 +7,7 @@ import (
      "log"
      "errors"
      "regexp"
+     "strings"
      "net/http"
      "github.com/graphql-go/graphql"
 )
@@ -194,7 +195,7 @@ func getOutbound(params graphql.ResolveParams) (interface{}, error) {
 }
 
 func getSearchResultsInner(keywords string) ([]string, error) {
-   resp, err := http.Get("http://feed:8080/outbound?keywords=" + keywords)
+   resp, err := http.Get("http://feed:8080/outbound?keywords=" + strings.ReplaceAll(keywords, " ", "+"))
    if err != nil {
       return nil, errors.New("cannot search outbound")
    }
@@ -221,7 +222,8 @@ func getSearchResults(params graphql.ResolveParams) (interface{}, error) {
             log.Printf("user: %s error getting search results for keyword %s: %s", idQuery, kwQuery, err)
             return nil, err
          }
-         fs, err := getFriendsInner("/participant/" + idQuery)
+         pidpath := "/participant/" + idQuery
+         fs, err := getFriendsInner(pidpath)
          if err != nil {
             log.Printf("user: %s, cannot read friends response: %s", idQuery, err)
             return nil, err
@@ -229,6 +231,9 @@ func getSearchResults(params graphql.ResolveParams) (interface{}, error) {
          rv := make([]SearchResult, len(ppl), cap(ppl))
          var i = 0
          for _, p := range ppl {
+            if p == pidpath {
+               continue
+            }
             part, err := getParticipantInner(p)
             if err != nil {
                log.Printf("user: %s, cannot get participant: %s", idQuery, p)
