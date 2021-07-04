@@ -1,0 +1,40 @@
+{{- if .Values.gui -}}
+apiVersion: v1
+kind: Service
+metadata:
+  labels:
+    app: edge
+  name: edge
+spec:
+  type: NodePort
+  ports:
+  - name: "8080"
+    port: 8080
+    targetPort: 8080
+  selector:
+    app: edge
+---
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: edge
+spec:
+  replicas: 1
+  strategy:
+    type: Recreate
+  selector:
+    matchLabels:
+      app: edge
+  template:
+    metadata:
+      labels:
+        app: edge
+    spec:
+      containers:
+      - name: edge
+        image: gengstrand/edge:1.0
+        ports:
+        - containerPort: 8080
+        imagePullPolicy: Always
+      restartPolicy: Always
+{{- end }}
