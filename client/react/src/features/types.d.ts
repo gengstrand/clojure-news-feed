@@ -7,7 +7,8 @@ export class Util {
   private re: RegExp = new RegExp('/participant/([0-9]+)')
   private token: string = ''
   private id: number = 0
-  private request_options: object 
+  private request_options: object
+  private keywords: string = ''
   private constructor() {}
   public link(pid: number): string {
     return `/participant/$pid`
@@ -54,6 +55,12 @@ export class Util {
        })
     }
     return this.request_options
+  }
+  public getKeywords(): string {
+    return this.keywords
+  }
+  public setKeywords(value: string): void {
+    this.keywords = value
   }
   public static getInstance(): Util {
     if (!Util.instance) {
@@ -193,11 +200,11 @@ export class OutboundApi {
   add(ob: OutboundModel): void {
     axios.post(HOST + '/participant/outbound', ob, this.util.getOptions())
   }
-  search(keywords: string): Promise<SearchResultModel[]> {
+  search(): Promise<SearchResultModel[]> {
     return new Promise((resolve, reject) => {
-      resolve(axios.get<SearchResultEnvelope>(HOST + '/graphql?query={search(id:"0",keywords:"' + keywords + '"){match{participant{id,name,link},outbound{occurred,subject,story}}}}', this.util.getOptions()).then(resp => {
+      resolve(axios.get<SearchResultEnvelope>(HOST + '/graphql?query={search(id:"0",keywords:"' + this.util.getKeywords() + '"){participant{id,name,link},outbound{occurred,subject,story}}}', this.util.getOptions()).then(resp => {
         if (resp.status === 200) {
-          return resp.data.data.match
+          return resp.data.data.search
         } else {
           console.log(JSON.stringify(resp))
           return []
@@ -253,7 +260,7 @@ export class FriendsApi {
       }))})
   }
   add(pb: ParticipantModel): void {
-    const fb: FriendsModel = new FriendsModel(0, this.util.link(this.util.getId()), pb.link())
+    const fb: FriendsModel = new FriendsModel(0, this.util.link(this.util.getId()), pb.link)
     axios.post(HOST + '/participant/friends', fb, this.util.getOptions())
   }
 }

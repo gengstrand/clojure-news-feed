@@ -3,6 +3,8 @@ import { useAppSelector, useAppDispatch } from '../../app/hooks'
 import { select, fetchOutboundByFrom } from "./outboundSlice"
 import { OutboundModel, OutboundApi, Util } from '../types.d'
 import Grid from '@material-ui/core/Grid'
+import Card from '@material-ui/core/Card'
+import CardContent from '@material-ui/core/CardContent'
 import Button from '@material-ui/core/Button'
 import TextField from '@material-ui/core/TextField'
 import Dialog from '@material-ui/core/Dialog'
@@ -10,6 +12,7 @@ import DialogActions from '@material-ui/core/DialogActions'
 import DialogContent from '@material-ui/core/DialogContent'
 import DialogContentText from '@material-ui/core/DialogContentText'
 import DialogTitle from '@material-ui/core/DialogTitle'
+import Typography from '@material-ui/core/Typography'
 import {
   withStyles,
   Theme,
@@ -28,6 +31,15 @@ const styles: (theme: Theme) => StyleRules<string> = theme =>
     padding: theme.spacing(2),
     textAlign: 'center',
     color: theme.palette.text.secondary,
+  },
+  submitted: {
+    fontSize: 14,
+  },
+  subject: {
+    fontSize: 16,
+  },
+  story: {
+    fontSize: 12,
   },
   button: {
       color: "rgb(112, 76, 182)",
@@ -163,18 +175,19 @@ function Outbound({ classes }: OutboundProps) {
         spacing={3}
       >
         {rows.map((row) => (
-          <Grid container xs={12} spacing={3} justify="center">
-            <Grid item xs={6}>
-              <Paper className={classes.paper}>{row.occurred}</Paper>
-            </Grid>
-            <Grid item xs={6}>
-              <Paper className={classes.paper}>{row.subject}</Paper>
-            </Grid>
-            <Grid item xs={12}>
-              <Paper className={classes.paper}>{row.story}</Paper>
-            </Grid>
-            <Grid item xs={12}></Grid>
-          </Grid>
+          <Card className={classes.root} variant="outlined">
+            <CardContent>
+              <Typography className={classes.subject} color="textSecondary" gutterBottom>
+                {row.subject}
+              </Typography>
+              <Typography className={classes.submitted} color="textSecondary">
+                {row.occurred}
+              </Typography>
+              <Typography variant="body2" component="p">
+                {row.story}
+              </Typography>
+            </CardContent>
+          </Card>
         ))}
       </Grid>
     </React.Fragment>

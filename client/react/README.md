@@ -2,7 +2,7 @@
 
 This folder contains the code for a single page web app written in typescript on the react framework. Requests to the news feed service need to be proxied to another service called edge. I currently dev using [Kubernetes in Docker](https://kind.sigs.k8s.io/) which explains the kind command. You won't need that command if you are using something else. Once the app has launched, you will be prompted to log in. Specifying a new user name and password will automatically create a new participant and log you in as that participant. After you click the Allow button, the browser will load this app. 
 
-## Deving locally
+## Deving Locally
 
 The only thing that doesn't work in this configuration is the web socket that automatically syncs inbound.
 
@@ -24,7 +24,7 @@ Your web browser should open http://127.0.0.1:3000/ automatically.
 
 ## Deving in Kubernetes
 
-The generated assets are hosted with nginx. You have to manually change the port in the code here from 3000 to 8080. 
+The generated assets are hosted with Nginx. You have to manually change the port in the code here from 3000 to 8080. 
 
 1. for the HOST in client/react/src/features/types.d.ts 
 2. for edge.Domainvar in server/edge/server.go 

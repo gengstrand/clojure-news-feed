@@ -1,6 +1,7 @@
 import React from 'react'
 import Inbound from './features/inbound/Inbound'
 import Outbound from './features/outbound/Outbound'
+import OutboundSearch from './features/outbound/OutboundSearch'
 import Friends from './features/friends/Friends'
 
 import {
@@ -23,6 +24,7 @@ import IconButton from '@material-ui/core/IconButton'
 import MenuIcon from '@material-ui/icons/Menu'
 import PeopleIcon from '@material-ui/icons/People'
 import HearingIcon from '@material-ui/icons/Hearing'
+import SearchIcon from '@material-ui/icons/Search'
 import RecordVoiceOverIcon from '@material-ui/icons/RecordVoiceOver'
 import ChevronLeftIcon from '@material-ui/icons/ChevronLeft'
 import {
@@ -188,6 +190,15 @@ const App = ({ classes }: AppProps) => (
                     My Friends
                   </div>
                 </Link>
+                <Divider />
+                <Link to="/new-friends">
+                  <div className={classes.toolbarIcon}>
+                    <IconButton>
+                      <SearchIcon />
+                    </IconButton>
+                    New Friends
+                  </div>
+                </Link>
               </nav>
           </Drawer>
         </Drawer>
@@ -214,6 +225,9 @@ const App = ({ classes }: AppProps) => (
             </Route>
             <Route exact path="/my-friends">
               <Friends />
+            </Route>
+            <Route exact path="/new-friends">
+              <OutboundSearch />
             </Route>
           </Switch>
         </Box>
