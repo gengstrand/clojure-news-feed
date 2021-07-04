@@ -1,15 +1,15 @@
 import React from 'react';
 import { render } from '@testing-library/react';
 import { Provider } from 'react-redux';
-import { store } from './app/store';
-import App from './App';
+import { store } from '../../app/store';
+import Outbound from './Outbound';
 
-test('renders ladning page', () => {
+test('renders outbound component', () => {
   const { getByText } = render(
     <Provider store={store}>
-      <App />
+      <Outbound />
     </Provider>
   );
 
-  expect(getByText(/Welcome/i)).toBeInTheDocument();
+  expect(getByText(/news feed posts/i)).toBeInTheDocument();
 });
