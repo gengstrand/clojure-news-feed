@@ -37,7 +37,7 @@ import org.joda.time.DateTime;
 public class Outbound   {
   private String from = null;
 
-  private DateTime occurred = null;
+  private String occurred = null;
 
   private String subject = null;
 
@@ -48,7 +48,7 @@ public class Outbound   {
     @JsonProperty("from")
     String from,
     @JsonProperty("occurred")
-    DateTime occurred,
+    String occurred,
     @JsonProperty("subject")
     String subject,
     @JsonProperty("story")
@@ -74,7 +74,7 @@ public class Outbound   {
     **/
     @JsonProperty("occurred")
     @ApiModelProperty(example = "null", value = "")
-    public DateTime getOccurred() {
+    public String getOccurred() {
       return occurred;
     }
     /**
@@ -142,14 +142,14 @@ public class Outbound   {
 
   public static class OutboundBuilder {
     private String from = null;
-    private DateTime occurred = null;
+    private String occurred = null;
     private String subject = null;
     private String story = null;
     public OutboundBuilder withFrom(String from) {
       this.from = from;
       return this;
     }
-    public OutboundBuilder withOccurred(DateTime occurred) {
+    public OutboundBuilder withOccurred(String occurred) {
       this.occurred = occurred;
       return this;
     }

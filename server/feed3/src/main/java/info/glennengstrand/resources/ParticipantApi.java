@@ -43,7 +43,7 @@ public class ParticipantApi {
 
    private static final Logger LOGGER = LoggerFactory.getLogger(ParticipantApi.class);
    private final ParticipantApiService participantService;
-	
+        
    @Inject
    public ParticipantApi(ParticipantApiService participantService) {
       this.participantService = participantService;
@@ -59,6 +59,19 @@ public class ParticipantApi {
    */
    public Participant addParticipant( Participant body) {
       return participantService.addParticipant(body);
+   }
+
+   @GET
+   @Path("/:id")
+   @Produces("application/json")
+  /**
+   * retrieve the name of the individual participant
+   * fetch participant
+   * @param id uniquely identifies the participant (required)
+   * @return List<Friend>
+   */
+   public Participant getParticipant(@PathParam("id") LongParam id) {
+      return participantService.getParticipant(id.get());
    }
 
    public static interface ParticipantApiService {

@@ -39,7 +39,7 @@ public class Inbound   {
 
   private String to = null;
 
-  private DateTime occurred = null;
+  private String occurred = null;
 
   private String subject = null;
 
@@ -52,7 +52,7 @@ public class Inbound   {
     @JsonProperty("to")
     String to,
     @JsonProperty("occurred")
-    DateTime occurred,
+    String occurred,
     @JsonProperty("subject")
     String subject,
     @JsonProperty("story")
@@ -88,7 +88,7 @@ public class Inbound   {
     **/
     @JsonProperty("occurred")
     @ApiModelProperty(example = "null", value = "")
-    public DateTime getOccurred() {
+    public String getOccurred() {
       return occurred;
     }
     /**
@@ -159,7 +159,7 @@ public class Inbound   {
   public static class InboundBuilder {
     private String from = null;
     private String to = null;
-    private DateTime occurred = null;
+    private String occurred = null;
     private String subject = null;
     private String story = null;
     public InboundBuilder withFrom(String from) {
@@ -170,7 +170,7 @@ public class Inbound   {
       this.to = to;
       return this;
     }
-    public InboundBuilder withOccurred(DateTime occurred) {
+    public InboundBuilder withOccurred(String occurred) {
       this.occurred = occurred;
       return this;
     }

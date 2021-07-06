@@ -67,6 +67,7 @@
   [from-id to-id]
   (log/info "about to broadcast socially")
   (core/test-create-outbound from-id (str "2014-01-0" (+ (rand-int 8) 1) "T19:25:51.490Z") test-subject test-story)
+  (Thread/sleep 10000)
   (let [inbound-message (first (:results (core/test-fetch-inbound to-id)))
         inbound-subject-from-message (get inbound-message "subject")
         inbound-subject-from-cassandra (cassandra/load-inbound-subject-from-db to-id)]
