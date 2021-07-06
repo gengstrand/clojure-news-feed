@@ -261,7 +261,6 @@ definitions:
         type: "string"
       occurred:
         type: "string"
-        format: "date-time"
       subject:
         type: "string"
       story:
@@ -279,7 +278,6 @@ definitions:
         type: "string"
       occurred:
         type: "string"
-        format: "date-time"
       subject:
         type: "string"
       story:

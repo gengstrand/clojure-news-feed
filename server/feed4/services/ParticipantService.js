@@ -61,7 +61,7 @@ exports.getParticipant = function(args, callback) {
 		      var result = rows[0].map(function(row) {
 			  return {'id':args.id.value,'name':row['Moniker'],'link':'/participant/'+args.id.value};
 		      });
-		      const retVal = JSON.stringify(result || {});
+		      const retVal = result.length > 0 ? JSON.stringify(result[0]) : '{}';
 		      cache.set(key, retVal);
 		      conn.release();
 		      cache.quit();
