@@ -48,7 +48,7 @@ database:
 
   password: feed1234
 
-  url: jdbc:mysql://mysql/feed
+  url: jdbc:mysql://mysql/feed?enabledTLSProtocols=TLSv1.2
 
   minSize: 3
 

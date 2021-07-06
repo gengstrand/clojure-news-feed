@@ -46,74 +46,74 @@ import org.junit.Test;
  */
 public class OutboundApiTest extends NewsFeedTestBase {
 
-	private OutboundDAO outDao = null;
-	private OutboundApiService api = null;
-	private Outbound outbound = null;
-	private SearchDAO esdao = new UnitTestSearchDAO();
-	private List<Outbound> outFeed = new ArrayList<Outbound>();
-	private List<String> searchResults = new ArrayList<>();
+        private OutboundDAO outDao = null;
+        private OutboundApiService api = null;
+        private Outbound outbound = null;
+        private SearchDAO esdao = new UnitTestSearchDAO();
+        private List<Outbound> outFeed = new ArrayList<Outbound>();
+        private List<String> searchResults = new ArrayList<>();
 
-	@Before
-	public void setup() {
-		setupFriendSupport();
-		setupInboundSupport();
-		outbound = new Outbound.OutboundBuilder()
-				.withFrom(Link.toLink(TEST_FROM))
-				.withOccurred(new DateTime(System.currentTimeMillis()))
-				.withSubject(TEST_SUBJECT)
-				.withStory(TEST_STORY)
-				.build();
-		outFeed.add(outbound);
-		outDao = mock(OutboundDAO.class);
-		when(outDao.fetch(TEST_FROM)).thenReturn(outFeed);
-		api = new OutboundApiServiceImpl(outDao, inDao, friendApi, esdao, new MessageLogger.DoNothingMessageLogger());
-		searchResults.add(Link.toLink(TEST_FROM));
-	}
+        @Before
+        public void setup() {
+                setupFriendSupport();
+                setupInboundSupport();
+                outbound = new Outbound.OutboundBuilder()
+                                .withFrom(Link.toLink(TEST_FROM))
+                                .withOccurred(new DateTime(System.currentTimeMillis()).toString())
+                                .withSubject(TEST_SUBJECT)
+                                .withStory(TEST_STORY)
+                                .build();
+                outFeed.add(outbound);
+                outDao = mock(OutboundDAO.class);
+                when(outDao.fetch(TEST_FROM)).thenReturn(outFeed);
+                api = new OutboundApiServiceImpl(outDao, inDao, friendApi, esdao, new MessageLogger.DoNothingMessageLogger());
+                searchResults.add(Link.toLink(TEST_FROM));
+        }
 
-	/**
-	 * create a participant news item
-	 *
-	 * socially broadcast participant news
-	 *
-	 */
-	@Test
-	public void addOutboundTest() {
-		assertTrue("Expected add outbound to return the input object but it did not.", api.addOutbound(TEST_FROM, outbound).equals(outbound));
-	}
+        /**
+         * create a participant news item
+         *
+         * socially broadcast participant news
+         *
+         */
+        @Test
+        public void addOutboundTest() {
+                assertTrue("Expected add outbound to return the input object but it did not.", api.addOutbound(TEST_FROM, outbound).equals(outbound));
+        }
 
-	/**
-	 * retrieve the news posted by an individual participant
-	 *
-	 * fetch a participant news
-	 *
-	 */
-	@Test
-	public void getOutboundTest() {
-		assertTrue("Fetch outbound feed did not return expected results.", api.getOutbound(TEST_FROM).equals(outFeed));
-	}
+        /**
+         * retrieve the news posted by an individual participant
+         *
+         * fetch a participant news
+         *
+         */
+        @Test
+        public void getOutboundTest() {
+                assertTrue("Fetch outbound feed did not return expected results.", api.getOutbound(TEST_FROM).equals(outFeed));
+        }
 
-	/**
-	 * create a participant news item
-	 *
-	 * keyword search of participant news
-	 *
-	 */
-	@Test
-	public void searchOutboundTest() {
-		assertTrue("Feed search did not return expected results.", api.searchOutbound(TEST_SUBJECT).equals(searchResults));
-	}
+        /**
+         * create a participant news item
+         *
+         * keyword search of participant news
+         *
+         */
+        @Test
+        public void searchOutboundTest() {
+                assertTrue("Feed search did not return expected results.", api.searchOutbound(TEST_SUBJECT).equals(searchResults));
+        }
 
-	class UnitTestSearchDAO extends SearchDAO {
+        class UnitTestSearchDAO extends SearchDAO {
 
-		@Override
-		public List<Long> find(String keywords) {
-			return searchResults.stream().map(p -> Link.extractId(p)).collect(Collectors.toList());
-		}
+                @Override
+                public List<Long> find(String keywords) {
+                        return searchResults.stream().map(p -> Link.extractId(p)).collect(Collectors.toList());
+                }
 
-		@Override
-		public void upsert(UpsertRequest doc) {
-		}
+                @Override
+                public void upsert(UpsertRequest doc) {
+                }
 
-	}
+        }
 
 }

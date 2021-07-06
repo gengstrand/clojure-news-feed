@@ -26,9 +26,9 @@ class OutboundItemDAO(select: PreparedStatement, upsert: PreparedStatement) exte
     val retVal = for {
       r <- db.execute(bs.bind()).iterator().asScala
       val occurred = r.getTimestamp(0)
-      val from = r.getInt(1)
-      val subject = r.getString(2)
-      val story = r.getString(3)
+      val from = id.toInt
+      val subject = r.getString(1)
+      val story = r.getString(2)
     } yield Outbound(Option(Link.toLink(from.toLong)), Option(occurred), Option(subject), Option(story))
     retVal.toList
   }

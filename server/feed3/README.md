@@ -15,7 +15,7 @@ mvn package
 Build the docker image
 
 ```bash
-cp target/newsfeed-swagger-1.0.0-SNAPSHOT.jar etc
+cp target/newsfeed-dropwizard-1.0.0-SNAPSHOT.jar etc
 cd etc
 docker build -t feed3:1.0 .
 ```
