@@ -233,7 +233,7 @@ A microservice written in Java with the vert.x framework. It is intended to be c
 
 A CLI tool that queries either elastic search or solr performance statistics and writes out per time period metrics to the console.
 
-### client/react
+### react
 
 A single page web application for the news feed service written in Typescript on React.
 

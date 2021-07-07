@@ -1,6 +1,6 @@
 # React News Feed App
 
-This folder contains the code for a single page web app written in typescript on the react framework. Requests to the news feed service need to be proxied to another service called edge. I currently dev using [Kubernetes in Docker](https://kind.sigs.k8s.io/) which explains the kind command. You won't need that command if you are using something else. Once the app has launched, you will be prompted to log in. Specifying a new user name and password will automatically create a new participant and log you in as that participant. After you click the Allow button, the browser will load this app. 
+This folder contains the code for a single page web app written in Typescript on the React framework. Requests to the news feed service need to be proxied to another service called edge. I currently dev using [Kubernetes in Docker](https://kind.sigs.k8s.io/) which explains the kind command. You won't need that command if you are using something else. Once the app has launched, you will be prompted to log in. Specifying a new user name and password will automatically create a new participant and log you in as that participant. After you click the Allow button, the browser will load this app. 
 
 ## Deving Locally
 
@@ -33,6 +33,9 @@ You have to manually change the port in the code here from 3000 to 8080.
 1. for the HOST in client/react/src/features/types.d.ts 
 2. for edge.Domainvar in server/edge/server.go 
 3. for the redirect_uri in server/edge/static/auth.html
+
+Here is how to set up this app for deving in Kubernetes. If you just want to
+try it out with minimal effort, then set the gui switch to true in the ../../server/helm/values.yaml file then install the feed helm chart.
 
 ```bash
 cd ../../server/edge
