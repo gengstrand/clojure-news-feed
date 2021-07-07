@@ -17,7 +17,7 @@
   [id]
   (try 
     {:status 200
-     :body (json/write-str (map #(convert-outbound %) (o/fetch (u/parse-int id))))}
+     :body (clojure.string/replace (json/write-str (map #(convert-outbound %) (o/fetch (u/parse-int id)))) "\\" "")}
     (catch Exception e
       (.println System/out (.getMessage e))
       {:status 500

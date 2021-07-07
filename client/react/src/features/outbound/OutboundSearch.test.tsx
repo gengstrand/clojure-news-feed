@@ -11,5 +11,5 @@ test('renders outbound search component', () => {
     </Provider>
   );
 
-  expect(getByText(/subject or story keywords/i)).toBeInTheDocument();
+  expect(getByText(/story keywords/i)).toBeInTheDocument();
 });

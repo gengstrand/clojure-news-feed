@@ -7,7 +7,6 @@ import (
 	"net/http"
 	"encoding/json"
 	"github.com/gorilla/mux"
-	"golang.org/x/net/context"
 	_ "github.com/go-sql-driver/mysql"
 	"github.com/go-redis/redis"
 )
@@ -64,9 +63,8 @@ func AddFriend(w http.ResponseWriter, r *http.Request) {
 	       ew.LogError(err, "cannot marshal friend response: %s", http.StatusInternalServerError)
 	       return
 	    }
-	    rctx := context.TODO()
-	    cache.Del(rctx, fmt.Sprintf("Friends::%d", from)).Result()
-	    cache.Del(rctx, fmt.Sprintf("Friends::%d", to)).Result()
+	    cache.Del(fmt.Sprintf("Friends::%d", from)).Result()
+	    cache.Del(fmt.Sprintf("Friends::%d", to)).Result()
 	    w.Header().Set("Content-Type", "application/json; charset=UTF-8")
 	    fmt.Fprint(w, string(result))
 	    w.WriteHeader(http.StatusOK)

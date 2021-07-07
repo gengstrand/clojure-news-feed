@@ -12,13 +12,13 @@ package main
 import (
 	"log"
 	"net/http"
-	sw "./go"
+	"newsfeedserver"
 )
 
 func main() {
 	log.Printf("Server started")
 
-	router := sw.NewRouter()
+	router := newsfeedserver.NewRouter()
 
 	log.Fatal(http.ListenAndServe(":8080", router))
 }

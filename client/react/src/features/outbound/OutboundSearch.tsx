@@ -90,7 +90,7 @@ function OutboundSearch({ classes }: OutboundSearchProps) {
   return (
     <React.Fragment>
       <form className={classes.root} noValidate autoComplete="off">
-        <TextField id="keywords" label="subject or story keywords" onChange={handleKeywordsChange} />
+        <TextField id="keywords" label="story keywords" onChange={handleKeywordsChange} />
         <Button onClick={forceUpdate} color="primary">Search</Button>
       </form>
       {rows && rows.map((row) => (

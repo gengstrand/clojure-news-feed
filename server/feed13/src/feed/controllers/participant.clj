@@ -3,12 +3,19 @@
             [feed.util :as u]
             [clojure.data.json :as json]))
 
+(defn convert-participant
+  "include link"
+  [participant]
+  {:id (get participant "id")
+   :name (get participant "name")
+   :link (u/embed-id (get participant "id"))})
+
 (defn get-participant
   "fetch participant wrapper"
   [id]
   (try
     {:status 200
-     :body (json/write-str (p/fetch (u/parse-int id)))}
+     :body (clojure.string/replace (json/write-str (convert-participant (p/fetch (u/parse-int id)))) "\\" "")}
     (catch Exception e
       (.println System/out (.getMessage e))
       {:status 500
