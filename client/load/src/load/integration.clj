@@ -43,12 +43,15 @@
       (log/info "about to fetch participants")
       (let [from-participant (:results (core/test-fetch-participant from-id))
             from-participant-name-via-service (get from-participant "name")
+            from-participant-link-via-service (get from-participant "link")
             to-participant (:results (core/test-fetch-participant to-id))
             to-participant-name-via-service (get to-participant "name")
             extracted-from-participant-cache-value (redis/fetch-from-cache (redis/generate-participant-cache-key from-id))
             extracted-to-participant-cache-value (redis/fetch-from-cache (redis/generate-participant-cache-key to-id))]
         (if (or (nil? extracted-from-participant-cache-value) (nil? extracted-to-participant-cache-value))
           (report-error "fetching participants does not load the cache"))
+        (if (not (= from-participant-link-via-service (str "/participant/" from-id)))
+          (report-error "fetching participants does not return correct link"))
         (if (not (or (starts-with? extracted-from-participant-cache-value "(") (starts-with? extracted-to-participant-cache-value "(")))
           (let [extracted-from-participant (json/read-str extracted-from-participant-cache-value)
                  from-participant-name-via-cache (get extracted-from-participant "name")
@@ -62,22 +65,32 @@
                               (= to-participant-name-via-service to-participant-name-via-cache-for-feed2)))
                   (report-error "error fetching participants")))))))))
 
+(defn today
+  "today's date as UTC formatted string"
+  []
+  (.format (java.text.SimpleDateFormat. "yyyy-MM-dd") (.getTime (java.util.Calendar/getInstance))))
+
 (defn test-verify-social-broadcast
   "post outbound and verify results"
   [from-id to-id]
   (log/info "about to broadcast socially")
-  (core/test-create-outbound from-id (str "2014-01-0" (+ (rand-int 8) 1) "T19:25:51.490Z") test-subject test-story)
-  (Thread/sleep 10000)
-  (let [inbound-message (first (:results (core/test-fetch-inbound to-id)))
+  (let [now (today)]
+    (log/info (str "create outbound with occurred: " now))
+    (core/test-create-outbound from-id now test-subject test-story)
+    (Thread/sleep 10000)
+    (let [inbound-message (first (:results (core/test-fetch-inbound to-id)))
         inbound-subject-from-message (get inbound-message "subject")
+	inbound-occurred-from-message (get inbound-message "occurred")
         inbound-subject-from-cassandra (cassandra/load-inbound-subject-from-db to-id)]
-    (log/info (str "fetch inbound = " inbound-message))
-    (log/info (str "inbound subject from cassandra = " inbound-subject-from-cassandra))
-    (log/info (str "inbound subject from feed = " inbound-subject-from-message))
-    (if (not (and (= inbound-subject-from-message inbound-subject-from-cassandra)
+      (log/info (str "fetch inbound = " inbound-message))
+      (log/info (str "inbound subject from cassandra = " inbound-subject-from-cassandra))
+      (log/info (str "inbound subject from feed = " inbound-subject-from-message))
+      (if (not (and (= inbound-subject-from-message inbound-subject-from-cassandra)
                   (or (= inbound-subject-from-cassandra test-subject)
                       (= inbound-subject-from-cassandra (s/replace test-subject " " "+")))))
-      (report-error "error in social broadcast logic")))
+        (report-error "error in social broadcast logic"))
+      (if (not (= inbound-occurred-from-message now))
+        (report-error "error in occurred logic part of social broadcast"))))
   (Thread/sleep 10000)
   (if (not (>= (count (doall (filter (fn [sender] (= sender from-id)) (elastic/search "test")))) 1))
     (report-error (str "Error in keyword search. Cannot find sender " from-id " in " (json/write-str (elastic/search "test")))))

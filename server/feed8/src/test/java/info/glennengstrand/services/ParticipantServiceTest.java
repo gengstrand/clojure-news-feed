@@ -16,7 +16,6 @@ import org.springframework.boot.test.mock.mockito.MockBean;
 import org.springframework.context.annotation.Bean;
 
 import org.springframework.test.context.junit4.SpringRunner;
-import org.threeten.bp.OffsetDateTime;
 
 import info.glennengstrand.api.Outbound;
 import info.glennengstrand.util.Link;
@@ -27,7 +26,6 @@ import info.glennengstrand.dao.mysql.Friend;
 import info.glennengstrand.dao.mysql.FriendRepository;
 import info.glennengstrand.dao.mysql.ParticipantRepository;
 import info.glennengstrand.resources.ParticipantApi;
-import info.glennengstrand.resources.OutboundApi;
 import io.swagger.configuration.RedisConfiguration.FriendRedisTemplate;
 import io.swagger.configuration.RedisConfiguration.ParticipantRedisTemplate;
 
@@ -90,7 +88,7 @@ public class ParticipantServiceTest {
 
 	@Test
 	public void testAddOutbound() throws IOException {
-		Outbound t = new Outbound().from(Link.toLink(fromParticipantId)).story("test story").subject("test subject").occurred(OffsetDateTime.now());
+		Outbound t = new Outbound().from(Link.toLink(fromParticipantId)).story("test story").subject("test subject");
 		participantService.addOutbound(fromParticipantId, t);
 		Mockito.verify(inboundRepository).save(Mockito.any());
 	}

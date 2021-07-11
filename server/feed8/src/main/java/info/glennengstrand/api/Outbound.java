@@ -1,14 +1,13 @@
 package info.glennengstrand.api;
 
 import java.util.Objects;
+import java.util.Date;
 import com.fasterxml.jackson.annotation.JsonProperty;
-import com.fasterxml.jackson.annotation.JsonCreator;
-import io.swagger.annotations.ApiModel;
+import com.fasterxml.jackson.annotation.JsonFormat;
+
 import io.swagger.annotations.ApiModelProperty;
-import org.threeten.bp.OffsetDateTime;
 import org.springframework.validation.annotation.Validated;
 import javax.validation.Valid;
-import javax.validation.constraints.*;
 
 /**
  * Outbound
@@ -20,7 +19,8 @@ public class Outbound   {
   private String from = null;
 
   @JsonProperty("occurred")
-  private OffsetDateTime occurred = null;
+  @JsonFormat(shape = JsonFormat.Shape.STRING, pattern = "yyyy-MM-dd")
+  private Date occurred = null;
 
   @JsonProperty("subject")
   private String subject = null;
@@ -48,7 +48,7 @@ public class Outbound   {
     this.from = from;
   }
 
-  public Outbound occurred(OffsetDateTime occurred) {
+  public Outbound occurred(Date occurred) {
     this.occurred = occurred;
     return this;
   }
@@ -61,11 +61,11 @@ public class Outbound   {
 
   @Valid
 
-  public OffsetDateTime getOccurred() {
+  public Date getOccurred() {
     return occurred;
   }
 
-  public void setOccurred(OffsetDateTime occurred) {
+  public void setOccurred(Date occurred) {
     this.occurred = occurred;
   }
 

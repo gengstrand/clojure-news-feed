@@ -2,6 +2,7 @@ package info.glennengstrand.services;
 
 import java.util.Optional;
 import java.util.UUID;
+import java.util.Collections;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -158,7 +159,7 @@ public class ParticipantService implements ParticipantApi {
 			List<info.glennengstrand.dao.mysql.Friend> r1 = friendRepository.findByFromParticipantId(id);
 			List<info.glennengstrand.dao.mysql.Friend> r2 = friendRepository.findByToParticipantId(id);
 			if (r1.isEmpty() && r2.isEmpty()) {
-				throw new NotFoundException(404, String.format("no friends for {}", id));
+				return Collections.emptyList();
 			} else {
 				Friends retVal1 = r1.stream().map(dbf -> {
 					return new Friend().id(dbf.getId()).from(Link.toLink(dbf.getFromParticipantId())).to(Link.toLink(dbf.getToParticipantId()));
