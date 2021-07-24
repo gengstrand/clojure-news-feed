@@ -45,7 +45,7 @@ public class OutboundDAO extends CassandraDAO<Outbound> {
                 }, r -> {
                         return new Outbound.OutboundBuilder()
                                         .withFrom(Link.toLink(id))
-                                        .withOccurred(new DateTime(r.getDate(OCCURRED_COLUMN)).toString())
+                                        .withOccurred(DATE_FORMATTER.print(new DateTime(r.getDate(OCCURRED_COLUMN))))
                                         .withSubject(r.getString(SUBJECT_COLUMN))
                                         .withStory(r.getString(STORY_COLUMN))
                                         .build();

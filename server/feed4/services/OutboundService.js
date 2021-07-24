@@ -63,7 +63,7 @@ exports.getOutbound = function(args, callback) {
       const result = rows.rows.map(function(row) {
 	  return {
 	      "from": from,
-	      "occurred": row.occurred, 
+	      "occurred": Link.format_date(row.occurred), 
 	      "subject": row.subject, 
 	      "story": row.story
 	  };

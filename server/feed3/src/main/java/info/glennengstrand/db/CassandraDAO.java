@@ -11,6 +11,9 @@ import java.util.function.Function;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
+import org.joda.time.format.DateTimeFormatter;
+import org.joda.time.format.DateTimeFormat;
+
 import com.datastax.driver.core.BoundStatement;
 import com.datastax.driver.core.ConsistencyLevel;
 import com.datastax.driver.core.PreparedStatement;
@@ -30,6 +33,7 @@ import info.glennengstrand.db.CassandraDAO.DataOperation;
  */
 public abstract class CassandraDAO<E> {
 
+    protected static final DateTimeFormatter DATE_FORMATTER = DateTimeFormat.forPattern("yyyy-MM-dd");
 	private final Session session;
 	private final ConsistencyLevel level;
 	

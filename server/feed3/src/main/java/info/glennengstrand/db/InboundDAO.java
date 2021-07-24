@@ -48,7 +48,7 @@ public class InboundDAO extends CassandraDAO<Inbound> {
                         return new Inbound.InboundBuilder()
                                         .withFrom(Link.toLink(new Integer(r.getInt(FROM_PARTICIPANT_ID_COLUMN)).longValue()))
                                         .withTo(Link.toLink(id))
-                                        .withOccurred(new DateTime(r.getDate(OCCURRED_COLUMN)).toString())
+                                        .withOccurred(DATE_FORMATTER.print(new DateTime(r.getDate(OCCURRED_COLUMN))))
                                         .withSubject(r.getString(SUBJECT_COLUMN))
                                         .withStory(r.getString(STORY_COLUMN))
                                         .build();

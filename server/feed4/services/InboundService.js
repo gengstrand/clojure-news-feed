@@ -35,7 +35,7 @@ exports.getInbound = function(args, callback) {
 	  return {
 	      "from": row.fromparticipantid,
 	      "to": args.id.value,
-	      "occurred": row.occurred, 
+	      "occurred": Link.format_date(row.occurred), 
 	      "subject": row.subject, 
 	      "story": row.story
 	  };

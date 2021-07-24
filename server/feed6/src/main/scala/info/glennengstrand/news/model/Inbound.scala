@@ -15,6 +15,6 @@ import java.util.Date
 case class Inbound(
   from: Option[String],
   to: Option[String],
-  occurred: Option[Date],
+  occurred: Option[String],
   subject: Option[String],
   story: Option[String])

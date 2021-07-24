@@ -25,7 +25,7 @@ class OutboundItemDAO(select: PreparedStatement, upsert: PreparedStatement) exte
     bs.setInt(0, id.toInt)
     val retVal = for {
       r <- db.execute(bs.bind()).iterator().asScala
-      val occurred = r.getTimestamp(0)
+      val occurred = format(r.getTimestamp(0))
       val from = id.toInt
       val subject = r.getString(1)
       val story = r.getString(2)

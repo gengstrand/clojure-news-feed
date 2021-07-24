@@ -19,7 +19,7 @@ class InboundDAO(select: PreparedStatement, upsert: PreparedStatement) extends I
     bs.setInt(0, id.toInt)
     val retVal = for {
       r <- db.execute(bs.bind()).iterator().asScala
-      val occurred = r.getTimestamp(0)
+      val occurred = format(r.getTimestamp(0))
       val from = r.getInt(1)
       val subject = r.getString(2)
       val story = r.getString(3)

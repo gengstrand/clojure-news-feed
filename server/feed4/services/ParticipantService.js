@@ -65,7 +65,7 @@ exports.getParticipant = function(args, callback) {
 		      cache.set(key, retVal);
 		      conn.release();
 		      cache.quit();
-		      callback(null, result);
+		      callback(null, JSON.parse(retVal));
 		  });
 	      });
 	  } else {
