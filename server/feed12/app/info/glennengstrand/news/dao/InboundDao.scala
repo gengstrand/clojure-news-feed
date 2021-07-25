@@ -45,7 +45,7 @@ class InboundDaoImpl @Inject()(nosql: NoSqlDao)(implicit ec: InboundExecutionCon
       val bs = selectStmt.bind(id.asInstanceOf[Object])
       val retVal = for {
         r <- session.execute(bs).iterator().asScala
-      } yield Inbound(Option(toLink(r.getInt(1).toLong)), Option(toLink(id.toLong)), Option(r.getInstant(0).toString()), Option(r.getString(2)), Option(r.getString(3)))
+      } yield Inbound(Option(toLink(r.getInt(1).toLong)), Option(toLink(id.toLong)), Option(format(r.getInstant(0))), Option(r.getString(2)), Option(r.getString(3)))
       retVal.toSeq
     }
   }

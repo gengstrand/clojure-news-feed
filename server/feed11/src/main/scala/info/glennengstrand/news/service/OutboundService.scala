@@ -13,7 +13,7 @@ object OutboundService extends NewsFeedService {
   def create(ob: Outbound, f: Try[Outbound] => Unit): Unit = {
     dao.insert(ob) onComplete {
       case Success(rv) => {
-        search.index(Map("sender" -> ob.from.get, "story" -> ob.story.get))
+        search.index(Map("sender" -> dao.extractId(ob.from.get).asInstanceOf[Object], "story" -> ob.story.get))
         f(Success(rv))
       }
       case Failure(e) => {

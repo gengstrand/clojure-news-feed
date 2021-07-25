@@ -2,14 +2,19 @@
   (:require [feed.daos.widecolumn :as wc])
   (:import (com.datastax.oss.driver.api.core CqlIdentifier)))
 
+(def formatter (org.joda.time.format.DateTimeFormat/forPattern "yyyy-MM-dd"))
+
 (defn convert-inbound
   "convert a row from the result to a map"
   [row id]
-  {:from (.getInt row (CqlIdentifier/fromCql "FromParticipantID"))
-   :to id
-   :occurred (.toString (.getInstant row (CqlIdentifier/fromCql "Occurred")))
-   :subject (.getString row (CqlIdentifier/fromCql "Subject"))
-   :story (.getString row (CqlIdentifier/fromCql "Story"))})
+  (let [occurred-instant (.getInstant row (CqlIdentifier/fromCql "Occurred"))
+        occurred-seconds (.getEpochSecond occurred-instant)
+        occurred-millis (.toMillis (java.time.Duration/ofSeconds occurred-seconds))]
+        {:from (.getInt row (CqlIdentifier/fromCql "FromParticipantID"))
+         :to id
+         :occurred (.print formatter occurred-millis)
+         :subject (.getString row (CqlIdentifier/fromCql "Subject"))
+         :story (.getString row (CqlIdentifier/fromCql "Story"))}))
 
 (defn fetch
   "fetch the inbound news feed items for a participant"

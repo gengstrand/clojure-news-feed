@@ -26,7 +26,7 @@ class OutboundDao extends DataAccess[Outbound] {
     val bs = selectStmt.bind(id.asInstanceOf[Object])
     val retVal = for {
       r <- CassandraDao.session.execute(bs).iterator().asScala
-    } yield Outbound(Option(toLink(id.toLong)), Option(r.getInstant(0).toString()), Option(r.getString(1)), Option(r.getString(2)))
+    } yield Outbound(Option(toLink(id.toLong)), Option(format(r.getInstant(0))), Option(r.getString(1)), Option(r.getString(2)))
     Future.successful(retVal.toSeq)
   }
 }

@@ -3,12 +3,17 @@ package newsfeedserver
 import (
     "log"
     "fmt"
+    "time"
     "regexp"
     "strconv"
     "strings"
 )
 
 var linkMatcher = regexp.MustCompile(`/participant/([0-9]+)`)
+
+func FormatTimeToString(t time.Time) string {
+     return fmt.Sprintf("%d-%02d-%02d", t.Year(), t.Month(), t.Day())
+}
 
 func ObtainId(link string) string {
      m := linkMatcher.FindStringSubmatch(link)

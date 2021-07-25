@@ -150,7 +150,7 @@ func GetOutbound(w http.ResponseWriter, r *http.Request) {
 	for iter.Scan(&occurred, &subject, &story) {
 	    ob := Outbound {
 	      From: ToLink(from),
-	      Occurred: occurred,
+	      Occurred: FormatTimeToString(occurred),
 	      Subject: subject,
 	      Story: story,
 	    }

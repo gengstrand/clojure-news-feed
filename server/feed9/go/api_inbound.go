@@ -34,7 +34,7 @@ func GetInbound(w http.ResponseWriter, r *http.Request) {
 	    inb := Inbound {
 	      From: ToLink(from),
 	      To: ToLink(i),
-	      Occurred: occurred,
+	      Occurred: FormatTimeToString(occurred),
 	      Subject: subject,
 	      Story: story,
 	    }

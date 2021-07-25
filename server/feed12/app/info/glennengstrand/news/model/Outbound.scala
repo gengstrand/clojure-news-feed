@@ -1,5 +1,7 @@
 package info.glennengstrand.news.model
 
+import info.glennengstrand.news.dao.Link
+
 case class Outbound(
   from: Option[String],
   occurred: Option[String],
@@ -13,11 +15,11 @@ case class Outbound(
     } yield (f, sb, st)
     !rv.isEmpty
   }
-  def source: Map[String, Object] = {
+  def source(l: Link): Map[String, Object] = {
     val retVal = for {
       from <- from
       story <- story
-    } yield Map("sender" -> from, "story" -> story)
+    } yield Map("sender" -> l.extractId(from), "story" -> story)
     if (retVal.isEmpty) {
       Map()
     } else {

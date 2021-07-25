@@ -3,13 +3,18 @@
             [feed.daos.search :as s])
   (:import (com.datastax.oss.driver.api.core CqlIdentifier)))
 
+(def formatter (org.joda.time.format.DateTimeFormat/forPattern "yyyy-MM-dd"))
+
 (defn convert-outbound
   "convert a row from the result to a map"
   [row id]
-  {:from id
-   :occurred (.toString (.getInstant row (CqlIdentifier/fromCql "Occurred")))
-   :subject (.getString row (CqlIdentifier/fromCql "Subject"))
-   :story (.getString row (CqlIdentifier/fromCql "Story"))})
+  (let [occurred-instant (.getInstant row (CqlIdentifier/fromCql "Occurred"))
+        occurred-seconds (.getEpochSecond occurred-instant)
+        occurred-millis (.toMillis (java.time.Duration/ofSeconds occurred-seconds))]
+       {:from id
+        :occurred (.print formatter occurred-millis)
+        :subject (.getString row (CqlIdentifier/fromCql "Subject"))
+        :story (.getString row (CqlIdentifier/fromCql "Story"))}))
 
 (defn fetch
   "fetch the outbound news feed items for a participant"

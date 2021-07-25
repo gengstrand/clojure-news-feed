@@ -50,7 +50,7 @@ trait ElasticSearchDAO[D <: AnyRef] extends DocumentDAO[D] {
           case RestStatus.OK => {
             val hits = response.getHits
             if (hits.getTotalHits > 0l) {
-              hits.getHits.map(sh => Link.extractId(sh.getSourceAsMap().get(docResult).asInstanceOf[String]).toInt).toList
+              hits.getHits.map(sh => sh.getSourceAsMap().get(docResult).asInstanceOf[Int]).toList
             } else {
               List()
             }

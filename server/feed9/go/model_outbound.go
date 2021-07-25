@@ -10,15 +10,11 @@
 
 package newsfeedserver
 
-import (
-	"time"
-)
-
 type Outbound struct {
 
 	From string `json:"from,omitempty"`
 
-	Occurred time.Time `json:"occurred,omitempty"`
+	Occurred string `json:"occurred,omitempty"`
 
 	Subject string `json:"subject,omitempty"`
 

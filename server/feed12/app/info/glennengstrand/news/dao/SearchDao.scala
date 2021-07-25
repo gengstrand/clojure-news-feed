@@ -31,7 +31,7 @@ trait SearchDao {
 
 @Singleton
 class SearchDaoImpl @Inject()()(implicit ec: SearchExecutionContext)
-    extends SearchDao {
+    extends SearchDao with Link {
 
   private val logger = Logger(this.getClass)
   private val searchHost = sys.env.get("SEARCH_HOST").getOrElse("localhost")
@@ -81,7 +81,7 @@ class SearchDaoImpl @Inject()()(implicit ec: SearchExecutionContext)
           if (hits.getTotalHits.equals(0L)) {
             Seq()
           } else {
-            hits.getHits.map(sh => sh.getSourceAsMap().get("sender").asInstanceOf[String]).toSeq
+            hits.getHits.map(sh => toLink(sh.getSourceAsMap().get("sender").asInstanceOf[Int].toLong)).toSeq
           }
         }
         case _ => Seq()

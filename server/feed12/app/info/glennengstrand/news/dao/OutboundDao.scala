@@ -48,7 +48,7 @@ class OutboundDaoImpl @Inject()(searchDao: SearchDao, nosql: NoSqlDao)(implicit 
       val bs = selectStmt.bind(id.asInstanceOf[Object])
       val retVal = for {
         r <- session.execute(bs).iterator().asScala
-      } yield Outbound(Option(toLink(id.toLong)), Option(r.getInstant(0).toString()), Option(r.getString(1)), Option(r.getString(2)))
+      } yield Outbound(Option(toLink(id.toLong)), Option(format(r.getInstant(0))), Option(r.getString(1)), Option(r.getString(2)))
       retVal.toSeq
     }
   }
@@ -59,7 +59,7 @@ class OutboundDaoImpl @Inject()(searchDao: SearchDao, nosql: NoSqlDao)(implicit 
           data.subject.get.toString.asInstanceOf[String], 
           data.story.get.toString.asInstanceOf[String])
       session.executeAsync(bs)
-      searchDao.index(data.source)
+      searchDao.index(data.source(this))
       data
     }
   }
