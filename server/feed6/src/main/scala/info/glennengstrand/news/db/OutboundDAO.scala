@@ -73,7 +73,7 @@ class OutboundDocumentDAO(es: RestHighLevelClient) extends ElasticSearchDAO[Outb
     val retVal = for {
       from <- doc.from
       story <- doc.story
-    } yield Map("id" -> key, "sender" -> from, "story" -> story)
+    } yield Map("id" -> key, "sender" -> Link.extractId(from), "story" -> story)
     if (retVal.size > 0) {
       retVal.head.asInstanceOf[Map[String, Object]]
     } else {
