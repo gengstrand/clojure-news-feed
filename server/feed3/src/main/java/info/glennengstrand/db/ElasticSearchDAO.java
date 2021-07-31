@@ -81,6 +81,7 @@ public class ElasticSearchDAO extends SearchDAO {
 		Response response = client.target(elasticSearchHost) 
 				.path(String.format("%s/_search", index))
 				.queryParam("q", keywords)
+				.queryParam("size", 1000)
 				.request(MediaType.APPLICATION_JSON)
 				.get();
 		int status = response.getStatus();

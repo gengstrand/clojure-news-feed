@@ -73,9 +73,9 @@ class HttpVerticleSpec extends VerticleTesting[HttpVerticle] with Matchers {
   
   class ElasticSearchDaoMock extends ElasticSearchDao {
     override def index(doc: Map[String, Object]): Unit = {}
-    override def search(k: String): Seq[String] = {
-      Seq("/participant/1")
-    }    
+    override def search(k: String): Seq[Long] = {
+      Seq(1L)
+    }
   }
 
   "Participant Get" should "serve get participant endpoint" in {

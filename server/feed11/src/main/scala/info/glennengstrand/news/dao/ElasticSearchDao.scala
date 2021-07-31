@@ -27,7 +27,7 @@ class ElasticSearchDao {
     val request = new IndexRequest(docIndex, docType, docId).source(mapAsJavaMap(doc + ("id" -> docId)).asInstanceOf[java.util.Map[java.lang.String, java.lang.Object]])
     es.indexAsync(request, RequestOptions.DEFAULT, listener)
   }
-  def search(keywords: String): Seq[String] = {
+  def search(keywords: String): Seq[Long] = {
     val request = new SearchRequest(docIndex).types(docType)
     val builder = new SearchSourceBuilder()
     builder.query(QueryBuilders.termQuery("story", keywords))
@@ -39,7 +39,7 @@ class ElasticSearchDao {
         if (hits.getTotalHits.equals(0l)) {
           Seq()
         } else {
-          hits.getHits.map(sh => sh.getSourceAsMap().get("sender").asInstanceOf[String]).toSeq
+          hits.getHits.map(sh => sh.getSourceAsMap().get("sender").asInstanceOf[Int].toLong).toSeq
         }
       }
       case _ => Seq()

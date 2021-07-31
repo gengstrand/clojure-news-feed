@@ -34,6 +34,6 @@ object OutboundService extends NewsFeedService {
     }
   }
   def search(keywords: String, f: Try[Seq[String]] => Unit): Unit = {
-    f(Success(search.search(keywords)))
+    f(Success(search.search(keywords).map(r => dao.toLink(r))))
   }
 }
