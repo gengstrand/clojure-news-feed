@@ -24,6 +24,12 @@ use-graphql | should be true for feed 10.
 
 See the README under k8s or the intro under the doc folder here for how to invoke the integration test
 
+How to build to docker image.
+
+```
+docker build -t load:1.1 .
+```
+
 ## License
 
 Copyright © 2014 Glenn Engstrand

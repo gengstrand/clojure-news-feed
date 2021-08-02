@@ -42,13 +42,13 @@
   "perform the function and return the metrics with the new timing information"
   [test-function]
   (try 
-	  (let [before (System/currentTimeMillis)]
+          (let [before (System/currentTimeMillis)]
      (test-function)
-	    {:latency (- (System/currentTimeMillis) before)
-	     :errors 0})
-	  (catch Exception e 
+            {:latency (- (System/currentTimeMillis) before)
+             :errors 0})
+          (catch Exception e 
      (send errors collect-error (.getLocalizedMessage e))
-	    {:latency 0 :errors 1})))
+            {:latency 0 :errors 1})))
 
 (defn run-search 
   "fire off some searches"
@@ -66,7 +66,8 @@
 (defn run-social-broadcast 
   "perform a social broadcast run"
   []
-  (let [participants (create-participants participant-batch-size)
+  (let [now (service/today)
+        participants (create-participants participant-batch-size)
         inviters (into 
                    []
                    (map
@@ -89,11 +90,11 @@
       [from (map #(nth participants %) invited)]
       (doseq
         [sender (take stories-per-user (repeat from))]
-	      (service/test-create-outbound 
-	        sender
-	        (str "2014-01-0" (+ (rand-int 8) 1) "T19:25:51.490Z")
-	        (reduce str (map #(str (rand-int %) " ") (take subject-words (repeat dictionary-size))))
-	        (reduce str (map #(str (rand-int %) " ") (take story-words (repeat dictionary-size)))))))))
+              (service/test-create-outbound 
+                sender
+                now
+                (reduce str (map #(str (rand-int %) " ") (take subject-words (repeat dictionary-size))))
+                (reduce str (map #(str (rand-int %) " ") (take story-words (repeat dictionary-size)))))))))
 
 (defn test-run-social-broadcast
   "create some participants with social graph then make them active"

@@ -9,6 +9,12 @@
 (declare port)
 (declare graphql)
 
+
+(defn today
+  "today's date as UTC formatted string"
+  []
+  (.format (java.text.SimpleDateFormat. "yyyy-MM-dd") (.getTime (java.util.Calendar/getInstance))))
+
 (defn set-json-post 
   "switch to determine whether or not content type is json"
   [switch-value]
@@ -192,10 +198,10 @@
   "create a participant"
   [name]
   (let [r (:results
-		(test-create-entity-service-call
-          	"participant"
-            	nil
-          	{:name name}))]
+                (test-create-entity-service-call
+                "participant"
+                nil
+                {:name name}))]
     (if 
       (vector? r)
       (get (first r) "id")

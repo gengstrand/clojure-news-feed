@@ -65,22 +65,17 @@
                               (= to-participant-name-via-service to-participant-name-via-cache-for-feed2)))
                   (report-error "error fetching participants")))))))))
 
-(defn today
-  "today's date as UTC formatted string"
-  []
-  (.format (java.text.SimpleDateFormat. "yyyy-MM-dd") (.getTime (java.util.Calendar/getInstance))))
-
 (defn test-verify-social-broadcast
   "post outbound and verify results"
   [from-id to-id]
   (log/info "about to broadcast socially")
-  (let [now (today)]
+  (let [now (core/today)]
     (log/info (str "create outbound with occurred: " now))
     (core/test-create-outbound from-id now test-subject test-story)
     (Thread/sleep 10000)
     (let [inbound-message (first (:results (core/test-fetch-inbound to-id)))
         inbound-subject-from-message (get inbound-message "subject")
-	inbound-occurred-from-message (get inbound-message "occurred")
+        inbound-occurred-from-message (get inbound-message "occurred")
         inbound-subject-from-cassandra (cassandra/load-inbound-subject-from-db to-id)]
       (log/info (str "fetch inbound = " inbound-message))
       (log/info (str "inbound subject from cassandra = " inbound-subject-from-cassandra))
