@@ -5,6 +5,7 @@
 **/.gitignore
 **/.settings
 **/.cache*
+**/.terraform
 **/lib_managed
 **/bin
 server/swagger/swagger-output

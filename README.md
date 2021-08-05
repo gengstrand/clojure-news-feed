@@ -131,6 +131,10 @@ cd server/helm
 helm install feed .
 ```
 
+### tf
+
+Assets for provisioning a Kubernetes cluster in the various public clouds using Terraform.
+
 ### proxy
 
 An API gateway, written in golang, that proxies requests from the load test app to the news feed service under test and sends performance data to the perf4 service.
