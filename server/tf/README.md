@@ -1,5 +1,7 @@
 # provisioning a Kubernetes cluster via terraform
 
+See this blog on [Devops Renaissance](https://glennengstrand.info/software/architecture/devops/renaissance) for more information.
+
 ## requirements
 
 1. kubectl

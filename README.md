@@ -131,9 +131,15 @@ cd server/helm
 helm install feed .
 ```
 
+See this blog on Devops Renaissance for more information.
+
+https://glennengstrand.info/software/architecture/devops/renaissance
+
 ### tf
 
-Assets for provisioning a Kubernetes cluster in the various public clouds using Terraform.
+Assets for provisioning a Kubernetes cluster in the various public clouds using Terraform. See this blog on Devops Renaissance for more information.
+
+https://glennengstrand.info/software/architecture/devops/renaissance
 
 ### proxy
 
