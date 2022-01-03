@@ -15,6 +15,7 @@ import (
      "time"
      "context"
      "github.com/google/uuid"
+     "gopkg.in/oauth2.v3"
      "github.com/go-oauth2/oauth2/generates"
      "github.com/go-oauth2/oauth2/manage"
      "github.com/go-oauth2/oauth2/models"
@@ -117,7 +118,40 @@ func TestHandler(w http.ResponseWriter, r *http.Request) {
      e.SetIndent("", "  ")
      e.Encode(data)
 }
-     
+
+func PasswordCredentialsGrantHandler(w http.ResponseWriter, r *http.Request) {
+     if Dumpvar {
+          _ = dumpRequest(os.Stdout, "password credentials grant", r) // Ignore the error
+     }
+     query := r.URL.Query()
+     uid, err := validateCredentials(query.Get("username"), query.Get("password"))
+     if err != nil {
+          http.Error(w, err.Error(), http.StatusBadRequest)
+          return
+     }
+     tgr := oauth2.TokenGenerateRequest{
+       ClientID: "1",
+       RedirectURI: "http://127.0.0.1:3000",
+       UserID: uid,
+       Scope: query.Get("scope"),
+       Request: r,
+     }
+     token, err := manager.GenerateAuthToken(oauth2.Token, &tgr)
+     if err != nil {
+          http.Error(w, err.Error(), http.StatusInternalServerError)
+          return
+     }
+     data := map[string]interface{}{
+     	  "access_token": token.GetAccess(),
+          "expires_in": int64(token.GetAccessCreateAt().Add(token.GetAccessExpiresIn()).Sub(time.Now()).Seconds()),
+          "client_id":  token.GetClientID(),
+          "user_id":    token.GetUserID(),
+     }
+     e := json.NewEncoder(w)
+     e.SetIndent("", "  ")
+     e.Encode(data)
+}
+
 func validateCredentials(username, password string) (userID string, err error) {
      var fc FeedCredentials
      c, err := credDB.Get(username).Result()

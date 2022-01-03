@@ -26,6 +26,7 @@ func main() {
      http.HandleFunc("/auth", edge.AuthHandler)
      http.HandleFunc("/oauth/authorize", edge.AuthorizeHandler)
      http.HandleFunc("/oauth/token", edge.TokenHandler)
+     http.HandleFunc("/oauth/pcg", edge.PasswordCredentialsGrantHandler)
      http.HandleFunc("/test", edge.TestHandler)
      http.HandleFunc("/inbound/stream", edge.StreamInboundHandler)
      http.HandleFunc("/graphql", edge.ExecuteQuery)
