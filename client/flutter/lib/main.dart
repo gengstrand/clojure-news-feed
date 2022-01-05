@@ -4,6 +4,7 @@ import './screens/signin.dart';
 import './screens/outbound.dart';
 import './screens/inbound.dart';
 import './screens/friends.dart';
+import './screens/add_outbound.dart';
 import './providers/auth.dart';
 import './providers/outbound.dart';
 import './providers/inbound.dart';
@@ -51,6 +52,7 @@ class MyApp extends StatelessWidget {
 	  OutboundScreen.routeName: (ctx) => OutboundScreen(),
 	  InboundScreen.routeName: (ctx) => InboundScreen(),
 	  FriendsScreen.routeName: (ctx) => FriendsScreen(),
+	  AddOutboundScreen.routeName: (ctx) => AddOutboundScreen(),
 	},
       ),
     );

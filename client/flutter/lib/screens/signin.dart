@@ -16,6 +16,8 @@ class _SigninWebViewState extends State<SigninWebView> {
 
   var _userName = '';
   var _password = '';
+  var _diagnostic = '';
+  
   final GlobalKey<FormState> _formKey = GlobalKey();
 
   void _submit(AuthProvider authProvider) {
@@ -28,11 +30,15 @@ class _SigninWebViewState extends State<SigninWebView> {
     }
     fs.save(); 
     if (_userName != '' && _password != '') {
-      print('calling login');
-      authProvider.login(_userName, _password);
+      authProvider.login(_userName, _password).then((_) {
+        setState(() => { _diagnostic = '' });
+      })
+      .catchError((error) {
+        setState(() => { _diagnostic = error.toString() });
+      });
     } else {
-      print('user and pass not set');
-    }   
+      setState(() => { _diagnostic = 'neither user name nor password can be blank' });
+    }
   }
   
   @override
@@ -45,7 +51,6 @@ class _SigninWebViewState extends State<SigninWebView> {
 	  actions: <Widget>[
 	  ],
         ),
-	drawer: AppDrawer(),
         body: Container(
 	  padding: EdgeInsets.all(16.0),
 	  child: Form(
@@ -53,6 +58,7 @@ class _SigninWebViewState extends State<SigninWebView> {
 	    child: SingleChildScrollView(
 	      child: Column(
 	        children: <Widget>[
+		  Text(_diagnostic),
 		  TextFormField(
 		    decoration: InputDecoration(labelText: 'user name'),
 		    onSaved: (value) => { _userName = value! },

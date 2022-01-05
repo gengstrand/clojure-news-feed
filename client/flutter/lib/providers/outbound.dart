@@ -16,4 +16,15 @@ class OutboundProvider with ChangeNotifier {
       throw Exception("fetching outbound returned status $resp.statusCode");
     }
   }
+  Future<void> add(String token, String subject, String story) async {
+    final b = json.encode({
+      'subject': subject,
+      'story': story,
+    });
+    var r = Uri.parse(Util.instance.getHost() + '/participant/outbound');
+    var resp = await http.post(r, body: b, headers: Util.instance.getHeaders(token));
+    if (resp.statusCode >= 400) {
+      throw Exception("cannot add outboud status $resp.statusCode");
+    }
+  }
 }
