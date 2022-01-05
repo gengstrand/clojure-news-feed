@@ -24,16 +24,6 @@ class AppDrawer extends StatelessWidget {
 	      Navigator.of(context).pushReplacementNamed(OutboundScreen.routeName);
 	    },
 	  ),
- 	  Divider(),
-	  ListTile(
-	    leading: Icon(
-              Icons.record_voice_over,
-            ),
-	    title: Text('Post New Item'),
-	    onTap: () {
-	      Navigator.of(context).pushReplacementNamed(AddOutboundScreen.routeName);
-	    },
-	  ),
 	  Divider(),
 	  ListTile(
 	    leading: Icon(

@@ -4,7 +4,6 @@ import 'dart:html';
 import 'dart:ui' as ui;
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
-import '../widgets/app_drawer.dart';
 import '../providers/auth.dart';
 import '../providers/outbound.dart';
 
@@ -34,7 +33,7 @@ class _AddOutboundScreenState extends State<AddOutboundScreen> {
     fs.save(); 
     if (_subject != '' && _story != '') {
       outboundProvider.add(authProvider.getToken(), _subject, _story).then((_) {
-        setState(() => { _diagnostic = 'post added' });
+        Navigator.pop(context);
       })
       .catchError((error) {
         setState(() => { _diagnostic = error.toString() });
@@ -54,7 +53,6 @@ class _AddOutboundScreenState extends State<AddOutboundScreen> {
 	  actions: <Widget>[
 	  ],
         ),
-        drawer: AppDrawer(),
         body: Container(
 	  padding: EdgeInsets.all(16.0),
 	  child: Form(
@@ -71,9 +69,18 @@ class _AddOutboundScreenState extends State<AddOutboundScreen> {
 		    decoration: InputDecoration(labelText: 'story'),
 		    onSaved: (value) => { _story = value! },
 		  ),
-		  ElevatedButton(
-		    child: Text('Add'),
-		    onPressed: () => { _submit(authProvider, outboundProvider) },
+		  Row(
+		    crossAxisAlignment: CrossAxisAlignment.start,
+		    children: <Widget>[
+		      ElevatedButton(
+		        child: Text('Cancel'),
+		        onPressed: () => { Navigator.pop(context) },
+		      ),
+		      ElevatedButton(
+		        child: Text('Add'),
+		        onPressed: () => { _submit(authProvider, outboundProvider) },
+		      ),
+		    ],
 		  ),
 		],
 	      ),
