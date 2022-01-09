@@ -6,6 +6,7 @@ import 'dart:convert';
 
 class AuthProvider with ChangeNotifier {
   var _token = '';
+  var _id = '';
 
   Map<String, String> _getQueryParams(String username, String password) {
     return {
@@ -22,6 +23,7 @@ class AuthProvider with ChangeNotifier {
     if (resp.statusCode == 200) {
       final b = json.decode(resp.body);
       _token = b['access_token'];
+      _id = b['user_id'];
       notifyListeners();
     } else {
       throw Exception("cannot login user status $resp.statusCode");
@@ -30,5 +32,9 @@ class AuthProvider with ChangeNotifier {
 
   String getToken() {
     return _token;
+  }
+
+  String getId() {
+    return _id;
   }
 }

@@ -16,7 +16,7 @@ class InboundPost extends StatelessWidget {
 	  children: <Widget>[
 	    ListTile(
 	      title: Text(post.subject, style: const TextStyle(fontWeight: FontWeight.bold)),
-	      subtitle: Text(post.from.name + '/n' + post.occurred, maxLines: 2),
+	      subtitle: Text(post.from.name + '\n' + post.occurred, maxLines: 2),
 	      isThreeLine: true,
 	    ),
 	    Story(post.story),

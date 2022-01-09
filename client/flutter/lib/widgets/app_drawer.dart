@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import '../screens/outbound.dart';
 import '../screens/add_outbound.dart';
+import '../screens/search_outbound.dart';
 import '../screens/inbound.dart';
 import '../screens/friends.dart';
 
@@ -42,6 +43,16 @@ class AppDrawer extends StatelessWidget {
 	    title: Text('My Friends'),
 	    onTap: () {
 	      Navigator.of(context).pushReplacementNamed(FriendsScreen.routeName);
+	    },
+	  ),
+	  Divider(),
+	  ListTile(
+	    leading: Icon(
+              Icons.search,
+            ),
+	    title: Text('New Friends'),
+	    onTap: () {
+	      Navigator.of(context).pushReplacementNamed(SearchOutboundScreen.routeName);
 	    },
 	  ),
 	],

@@ -27,4 +27,14 @@ class OutboundProvider with ChangeNotifier {
       throw Exception("cannot add outboud status $resp.statusCode");
     }
   }
+  Future<List<SearchResultModel>> search(String token, String keywords) async {
+    var r = Uri.parse(Util.instance.getHost() + '/graphql?query={search(id:"0",keywords:"' + keywords + '"){participant{id,name,link},outbound{occurred,subject,story}}}');
+    var resp = await http.get(r, headers: Util.instance.getHeaders(token));
+    if (resp.statusCode == 200) {
+      notifyListeners();
+      return SearchResultEnvelope().build(json.decode(resp.body));
+    } else {
+      throw Exception("searching outbound returned status $resp.statusCode");
+    }
+  }
 }

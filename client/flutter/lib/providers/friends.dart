@@ -14,4 +14,16 @@ class FriendsProvider with ChangeNotifier {
       throw Exception("fetching friends returned status $resp.statusCode");
     }
   }
+  Future<void> add(String token, String from, String to) async {
+    final b = json.encode({
+      'id': 0,
+      'from': from,
+      'to': to,
+    });
+    var r = Uri.parse(Util.instance.getHost() + '/participant/friends');
+    var resp = await http.post(r, body: b, headers: Util.instance.getHeaders(token));
+    if (resp.statusCode >= 400) {
+      throw Exception("cannot add outboud status $resp.statusCode");
+    }
+  }
 }
