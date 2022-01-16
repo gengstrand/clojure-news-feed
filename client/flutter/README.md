@@ -8,6 +8,7 @@ I am deving on an Ubuntu laptop with no android SDK installed.
 
 ```bash
 export CHROME_EXECUTABLE=$(whereis chromium | awk '{ print $2 }')
+flutter test --no-sound-null-safety
 flutter run -d chrome --release --no-sound-null-safety
 ```
 
