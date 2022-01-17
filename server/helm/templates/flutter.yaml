@@ -1,0 +1,40 @@
+{{- if .Values.gui -}}
+apiVersion: v1
+kind: Service
+metadata:
+  labels:
+    app: flutter
+  name: flutter
+spec:
+  type: LoadBalancer
+  ports:
+  - name: "8080"
+    port: 8080
+    targetPort: 8080
+  selector:
+    app: flutter
+---
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: flutter
+spec:
+  replicas: 1
+  strategy:
+    type: Recreate
+  selector:
+    matchLabels:
+      app: flutter
+  template:
+    metadata:
+      labels:
+        app: flutter
+    spec:
+      containers:
+      - name: flutter
+        image: gengstrand/flutter:1.0
+        ports:
+        - containerPort: 8080
+        imagePullPolicy: Always
+      restartPolicy: Always
+{{- end }}

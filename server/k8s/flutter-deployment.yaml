@@ -1,0 +1,24 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: flutter
+spec:
+  replicas: 1
+  strategy:
+    type: Recreate
+  selector:
+    matchLabels:
+      app: flutter
+  template:
+    metadata:
+      labels:
+        app: flutter
+    spec:
+      containers:
+      - name: flutter
+        image: flutter:1.0
+        ports:
+        - containerPort: 8080
+        imagePullPolicy: Never
+      restartPolicy: Always
+
