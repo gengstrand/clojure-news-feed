@@ -1,6 +1,8 @@
-# Mobile Feed Client 🎮
+# Mobile Feed Client 
 
-I started this repo three years ago and have yet to have provided a GUI for the news feed micro-service. It was time to rectify that. 
+A cross OS mobile app for the news feed service written with the Ionic Framework.
+
+https://glennengstrand.info/software/architecture/ionic/react/flutter
 
 <img src="newsfeed.png" width="816" />
 

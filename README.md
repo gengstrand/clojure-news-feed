@@ -247,9 +247,19 @@ A CLI tool that queries either elastic search or solr performance statistics and
 
 A single page web application for the news feed service written in Typescript on React.
 
+https://glennengstrand.info/software/architecture/ionic/react/flutter
+
 ### mobile/feed
 
-A cross mobile platform GUI for the news feed microservice that uses the Ionic Framework.
+A cross OS mobile platform GUI for the news feed microservice that uses the Ionic Framework.
+
+https://glennengstrand.info/software/architecture/ionic/react/flutter
+
+### flutter
+
+A cross OS platform GUI for the news feed microservice written in Flutter.
+
+https://glennengstrand.info/software/architecture/ionic/react/flutter
 
 ### ml
 
@@ -261,7 +271,7 @@ https://glennengstrand.info/software/architecture/ml/oss
 
 ## License
 
-Copyright © 2013 - 2021 Glenn Engstrand
+Copyright © 2013 - 2022 Glenn Engstrand
 
 Distributed under the Eclipse Public License
 

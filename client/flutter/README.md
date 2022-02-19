@@ -2,6 +2,8 @@
 
 The news feed GUI implemented in Flutter.
 
+https://glennengstrand.info/software/architecture/ionic/react/flutter
+
 ## Deving Locally
 
 I am deving on an Ubuntu laptop with no Android SDK installed. Make sure that gui is set to true in server/helm/values.yaml

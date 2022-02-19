@@ -1,4 +1,4 @@
-# edge proxy for web clients
+# edge proxy for front end clients
 
 This service is intended to bridge the gap between the RESTful news feed microservice and what web clients expect. This go application bundles oauth2, web sockets, and graphql access to the underlying news feed microservice.
 
