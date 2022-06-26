@@ -4,6 +4,10 @@ News Feed microservice in [Spring Boot](https://spring.io/projects/spring-boot).
 
 https://glennengstrand.info/software/performance/springboot/dropwizard
 
+This service implementation was also referenced here.
+
+https://glennengstrand.info/software/coding/java/scala
+
 ## Overview  
 
 It connects to MySql, Redis, and Cassandra via [Spring Data](https://spring.io/projects/spring-data) repositories. I was not able to use the Spring Data repository for ElasticSearch because I wanted to use the high level REST client instead of the native transport client. At the time of this writing, that repository did not work with the high level REST client. The ElasticSearch folks recommend the high level rest client over the native transport client which will soon be deprecated.
