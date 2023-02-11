@@ -1,0 +1,23 @@
+name: analyze-source-code
+run-name: ${{ github.actor }} is learning GitHub Actions
+on: [push]
+jobs:
+  count-file-types:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v3
+      - name: ff
+        run: |
+	  import os
+	  if __name__ == '__main__':
+	      ftc = {'py': 0, 'java': 0, 'clj': 0, 'scala': 0, 'ts': 0, 'tsx': 0, 'js': 0, 'go': 0, 'dart': 0, 'md': 0}
+	      for root, dirs, files in os.walk("."):
+	          for name in files:
+	              np = name.split('.')
+	              if len(np) > 1:
+	                  ft = np[1]
+	                  if ft in ftc:
+	                      ftc[ft] = ftc[ft] + 1
+	      for k, v in ftc.items():
+	          print(k, v)
+        shell: python
