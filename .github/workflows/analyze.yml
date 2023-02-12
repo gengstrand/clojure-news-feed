@@ -1,5 +1,5 @@
 name: analyze-source-code
-run-name: ${{ github.actor }} is learning GitHub Actions
+run-name: breakdown of files by type for ${{ github.actor }}
 on: [push]
 jobs:
   count-file-types:
@@ -9,17 +9,29 @@ jobs:
       - name: report-results
         run: |
           import os
+          import csv
           if __name__ == '__main__':
-              ftc = {}
-              for root, dirs, files in os.walk("."):
-                  for name in files:
-                      np = name.split('.')
-                      ft = np[-1]
-                      if len(ft) <= 5:
-                         if ft in ftc:
-                            ftc[ft] = ftc[ft] + 1
-                         else:
-                            ftc[ft] = 1
-              for k, v in ftc.items():
-                  print(k, v)
+             ftc = {}
+             for root, dirs, files in os.walk("."):
+                for name in files:
+                   np = name.split('.')
+                   ft = np[-1]
+                   if len(ft) <= 5:
+                      if ft in ftc:
+                         ftc[ft] = ftc[ft] + 1
+                      else:
+                         ftc[ft] = 1
+             with open('count-file-types.csv', 'w', newline='') as csvfile:
+                fn = ['type', 'count']
+                report = csv.DictWriter(csvfile, fieldnames=fn)
+                report.writeheader()
+                for k, v in ftc.items():
+                   row = {}
+                   row['type'] = k
+                   row['count'] = v
+                   report.writerow(row)
         shell: python
+      - uses: actions/upload-artifact@v3
+        with:
+          name: count-files-type-report
+          path: count-file-types.csv
