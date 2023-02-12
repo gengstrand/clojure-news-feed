@@ -155,6 +155,10 @@ The proxy service has been enhanced to be able to make performance data availabl
 
 ### miscellaneous
 
+This repo currently has the source for about two dozen buildable artifacts using 48 different file types.
+
+<img src="files-by-type.png" width="1200" />
+
 There is a [jupyter notebook](https://github.com/gengstrand/clojure-news-feed/blob/master/server/fc.ipynb) which explores an attempt to quantify code complexity in the various implementations. It is quite inconclusive.
 
 There is an Apache Druid [injection spec](https://github.com/gengstrand/clojure-news-feed/blob/master/server/feedDruidSpec.json) in which you can explore the performance data that I have collected from the various implementations. This example assumes that you have installed Druid locally.
