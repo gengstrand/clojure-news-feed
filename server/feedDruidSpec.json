@@ -6,7 +6,7 @@
             "inputSource": {
                 "type": "http",
                 "uris": [
-                    "http://glennengstrand.info/media/feed.json.gz"
+                    "https://glennengstrand.info/assets/media/feed.json.gz"
                 ]
             },
             "inputFormat": {
