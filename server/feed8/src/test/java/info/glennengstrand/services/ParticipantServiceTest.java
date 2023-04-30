@@ -1,9 +1,13 @@
 package info.glennengstrand.services;
 
+import static org.junit.Assert.assertEquals;
+import static org.mockito.ArgumentMatchers.any;
+
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
+import java.util.Optional;
 
 import org.elasticsearch.client.RestHighLevelClient;
 import org.junit.Before;
@@ -18,6 +22,7 @@ import org.springframework.context.annotation.Bean;
 import org.springframework.test.context.junit4.SpringRunner;
 
 import info.glennengstrand.api.Outbound;
+import info.glennengstrand.api.Participant;
 import info.glennengstrand.util.Link;
 import info.glennengstrand.dao.cassandra.InboundRepository;
 import info.glennengstrand.dao.cassandra.NewsFeedItemKey;
@@ -67,6 +72,7 @@ public class ParticipantServiceTest {
 	
 	private static final Long fromParticipantId = 1L;
 	private static final Long toParticipantId = 2L;
+	private static final String TEST_NAME = "test participant";
 	
 	@Before
 	public void setUp() throws Exception {
@@ -83,9 +89,30 @@ public class ParticipantServiceTest {
 		Mockito.when(friendRepository.findByToParticipantId(fromParticipantId)).thenReturn(Collections.emptyList());
 		Mockito.when(friendRedisTemplate.hasKey(Mockito.anyString())).thenReturn(false);
 		Mockito.when(friendRedisTemplate.boundValueOps(Mockito.anyString())).thenReturn(new FriendRedisOperation());
+		Mockito.when(participantRedisTemplate.hasKey(Mockito.anyString())).thenReturn(false);
+		Mockito.when(participantRedisTemplate.boundValueOps(Mockito.anyString())).thenReturn(new ParticipantRedisOperation());
 		Mockito.when(outboundRepository.save(Mockito.any())).thenReturn(o);
+		info.glennengstrand.dao.mysql.Participant p = new info.glennengstrand.dao.mysql.Participant();
+		p.setId(fromParticipantId);
+		p.setMoniker(TEST_NAME);
+		Mockito.when(participantRepository.save(any())).thenReturn(p);
+		Optional<info.glennengstrand.dao.mysql.Participant> op = Optional.of(p);
+		Mockito.when(participantRepository.findById(any())).thenReturn(op);
 	}
 
+    @Test
+    public void testAddParticipant() {
+        Participant participant = new Participant().name(TEST_NAME);
+        Participant result = participantService.addParticipant(participant);
+        assertEquals(participant.getName(), result.getName());
+    }
+
+    @Test
+    public void testGetParticipant() {
+        Participant result = participantService.getParticipant(fromParticipantId);
+        assertEquals(result.getName(), TEST_NAME);
+    }
+    
 	@Test
 	public void testAddOutbound() throws IOException {
 		Outbound t = new Outbound().from(Link.toLink(fromParticipantId)).story("test story").subject("test subject");
