@@ -73,6 +73,8 @@ public class ParticipantServiceTest {
 	private static final Long fromParticipantId = 1L;
 	private static final Long toParticipantId = 2L;
 	private static final String TEST_NAME = "test participant";
+	private static final String TEST_STORY = "test story";
+	private static final String TEST_SUBJECT = "test subject";
 	
 	@Before
 	public void setUp() throws Exception {
@@ -98,6 +100,13 @@ public class ParticipantServiceTest {
 		Mockito.when(participantRepository.save(any())).thenReturn(p);
 		Optional<info.glennengstrand.dao.mysql.Participant> op = Optional.of(p);
 		Mockito.when(participantRepository.findById(any())).thenReturn(op);
+		List<info.glennengstrand.dao.cassandra.Outbound>  outbounds = new ArrayList<>();
+		info.glennengstrand.dao.cassandra.Outbound o2 = new info.glennengstrand.dao.cassandra.Outbound();
+		o2.setStory(TEST_STORY);
+		o2.setSubject(TEST_SUBJECT);
+		o2.setParticipantId(fromParticipantId);
+		outbounds.add(o2);
+		Mockito.when(outboundRepository.findByNewsFeedItemKey_ParticipantId(Mockito.any())).thenReturn(outbounds.stream());
 	}
 
     @Test
@@ -118,6 +127,15 @@ public class ParticipantServiceTest {
 		Outbound t = new Outbound().from(Link.toLink(fromParticipantId)).story("test story").subject("test subject");
 		participantService.addOutbound(fromParticipantId, t);
 		Mockito.verify(inboundRepository).save(Mockito.any());
+	}
+
+	@Test
+	public void testGetOutbound() {
+		List<Outbound> result = participantService.getOutbound(fromParticipantId);
+		assertEquals(result.size(), 1);
+		Outbound r = result.get(0);
+		assertEquals(r.getStory(), TEST_STORY);
+		assertEquals(r.getSubject(), TEST_SUBJECT);
 	}
 
 }
