@@ -1,18 +1,31 @@
-using Microsoft.AspNetCore.Mvc;
 using newsfeed.Interfaces;
-using newsfeed.Models;
+using StackExchange.Redis;
 
 namespace newsfeed.DAOs;
 
 public class CacheDao : ICacheDao
 {
+    private ConnectionMultiplexer? redis;
+
+    private ConnectionMultiplexer Redis {
+        get {
+            if (redis == null)
+            {
+                redis = ConnectionMultiplexer.Connect($"{Environment.GetEnvironmentVariable("REDIS_HOST")}:6379");
+            }
+            return redis;
+        }
+    }
+
     public async Task<string?> GetValueAsync(string key)
     {
-        throw new NotImplementedException();
+        IDatabase db = Redis.GetDatabase();
+        return await db.StringGetAsync(key);
     }
 
     public async Task<bool> SetValueAsync(string key, string value)
     {
-        throw new NotImplementedException();
+        IDatabase db = Redis.GetDatabase();
+        return await db.StringSetAsync(key, value);
     }
 }
