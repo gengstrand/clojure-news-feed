@@ -6,7 +6,7 @@ namespace newsfeed.DAOs;
 
 public class CacheDao : ICacheDao
 {
-    public async Task<string> GetValueAsync(string key)
+    public async Task<string?> GetValueAsync(string key)
     {
         throw new NotImplementedException();
     }

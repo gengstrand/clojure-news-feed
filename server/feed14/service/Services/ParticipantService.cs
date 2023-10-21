@@ -1,4 +1,5 @@
 using Microsoft.AspNetCore.Mvc;
+using System.Text.Json;
 using newsfeed.Interfaces;
 using newsfeed.Models;
 
@@ -32,17 +33,16 @@ public class ParticipantService : IParticipantService
     public async Task<Outbound> CreateOutbound(string id, Outbound outbound)
     {
         var r =  await _outboundDao.CreateOutboundAsync(id, outbound);
-        if (r != null) {
-            var friends = await _friendDao.GetFriendsAsync(id);
-            if (friends != null) {
-                var d = new DateOnly();
-                foreach(Friend f in friends) {
-                    var t = f.From == id ? f.To : f.From;
-                    var i = new Inbound(id, t, d, outbound.Subject, outbound.Story);
-                    _inboundDao.CreateInboundAsync(id, i);
-                }
+        var friends = await _friendDao.GetFriendsAsync(id);
+        if (friends != null) {
+            var d = new DateOnly();
+            foreach(Friend f in friends) {
+                var t = f.From == id ? f.To : f.From;
+                var i = new Inbound(id, t, d, outbound.Subject, outbound.Story);
+                _inboundDao.CreateInboundAsync(id, i);
             }
         }
+        _searchDao.IndexAsync(Guid.NewGuid().ToString(), outbound.Subject, outbound.Story);
         return r;
     }    
 
@@ -53,7 +53,16 @@ public class ParticipantService : IParticipantService
 
     public async Task<IEnumerable<Friend>> GetFriends(string id)
     {
-        return await _friendDao.GetFriendsAsync(id);
+        string k = "Friend::" + id;
+        string? v = await _cacheDao.GetValueAsync(k);
+        if (v == null) {
+            var rv = await _friendDao.GetFriendsAsync(id);
+            _cacheDao.SetValueAsync(k, JsonSerializer.Serialize(rv));
+            return rv;
+        } else {
+            var rv = JsonSerializer.Deserialize<IEnumerable<Friend>>(v);
+            return rv ?? new List<Friend>();
+        }
     }
 
     public async Task<IEnumerable<Inbound>> GetInbound(string id)
@@ -68,6 +77,19 @@ public class ParticipantService : IParticipantService
 
     public async Task<Participant?> GetParticipant(string id)
     {
-        return await _participantDao.GetParticipantAsync(id);
+        string k = "Participant::" + id;
+        string? v = await _cacheDao.GetValueAsync(k);
+        if (v == null) 
+        {
+            var rv = await _participantDao.GetParticipantAsync(id);
+            if (rv != null) {
+                _cacheDao.SetValueAsync(k, JsonSerializer.Serialize(rv));
+            }
+            return rv;
+        } else {
+            var rv = JsonSerializer.Deserialize<Participant>(v);
+            return rv;
+        
+        }
     }
 }

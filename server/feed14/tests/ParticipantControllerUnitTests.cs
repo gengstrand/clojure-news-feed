@@ -20,6 +20,7 @@ public class ParticipantControllerUnitTests
     static readonly Outbound outbound = new("1", new DateOnly(), "test subject", "test story");
     static readonly Inbound inbound = new("1", "2", new DateOnly(), "test subject", "test story");
     static readonly string ps = JsonSerializer.Serialize(participant);
+    static readonly string fs = JsonSerializer.Serialize(new List<Friend>{friend});
 
     private ParticipantController GetController() {    
         Mock<IParticipantDao> participantDaoMock = new();
@@ -36,7 +37,8 @@ public class ParticipantControllerUnitTests
         outboundDaoMock.Setup(o => o.CreateOutboundAsync(It.IsAny<string>(), It.IsAny<Outbound>())).ReturnsAsync(outbound);
         inboundDaoMock.Setup(i => i.GetInboundAsync(It.IsAny<string>())).ReturnsAsync(new List<Inbound>() { inbound });
         inboundDaoMock.Setup(i => i.CreateInboundAsync(It.IsAny<string>(), It.IsAny<Inbound>())).ReturnsAsync(inbound);
-        cacheDaoMock.Setup(c => c.GetValueAsync(It.IsAny<string>() )).ReturnsAsync(ps);
+        cacheDaoMock.Setup(c => c.GetValueAsync("Participant::1")).ReturnsAsync(ps);
+        cacheDaoMock.Setup(c => c.GetValueAsync("Friend::1")).ReturnsAsync(fs);
         cacheDaoMock.Setup(c => c.SetValueAsync(It.IsAny<string>(), It.IsAny<string>())).ReturnsAsync(true);
         searchDaoMock.Setup(s => s.IndexAsync(It.IsAny<string>(), It.IsAny<string>(), It.IsAny<string>())).ReturnsAsync(true);
         searchDaoMock.Setup(s => s.SearchAsync(It.IsAny<string>())).ReturnsAsync(new List<string>() { "1" });
