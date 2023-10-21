@@ -1,5 +1,8 @@
+using System.Threading.Tasks;
 using Microsoft.AspNetCore.Mvc;
 using newsfeed.Models;
+using newsfeed.Interfaces;
+
 namespace newsfeed.Controllers;
 
 [ApiController]
@@ -7,50 +10,57 @@ namespace newsfeed.Controllers;
 public class ParticipantController : ControllerBase
 {
     private readonly ILogger<ParticipantController> _logger;
+    private readonly IParticipantService _service;
 
-    public ParticipantController(ILogger<ParticipantController> logger)
+    public ParticipantController(ILogger<ParticipantController> logger, IParticipantService service)
     {
         _logger = logger;
+        _service = service;
     }
 
     [HttpGet("{id}")]
-    public ActionResult<Participant> Get(string id)
+    public async Task<Participant> Get(string id)
     {
-	    return NotFound();
+	    var rv = await _service.GetParticipant(id);
+	    if (rv == null) {
+	       Response.StatusCode = 404;
+	    }
+	    return rv;
     }
 
     [HttpPost]
-    public ActionResult<Participant> Create([FromBody] Participant participant)
+    public async Task<Participant> Create([FromBody] Participant participant)
     {
-	    return NotFound();
+	    return await _service.CreateParticipant(participant);
     }
 
     [HttpGet("{id}/friends")]
-    public ActionResult<IEnumerable<Friend>> GetFriends(string id)
+    public async Task<IEnumerable<Friend>> GetFriends(string id)
     {
-	    return NotFound();
+	    return await _service.GetFriends(id);
     }
 
     [HttpPost("{id}/friends")]
-    public ActionResult<Friend> CreateFriend(string id, [FromBody] Friend friend) {
-	    return NotFound();
+    public async Task<Friend> CreateFriend(string id, [FromBody] Friend friend)
+    {
+	    return await _service.CreateFriend(id, friend);
     }
 
     [HttpGet("{id}/outbound")]
-    public ActionResult<IEnumerable<Outbound>> GetOutbound(string id)
+    public async Task<IEnumerable<Outbound>> GetOutbound(string id)
     {
-	    return NotFound();
+	    return await _service.GetOutbound(id);
     }
 
     [HttpPost("{id}/outbound")]
-    public ActionResult<Outbound> CreateOutbound(string id, [FromBody] Outbound outbound) {
-	    return NotFound();
+    public async Task<Outbound> CreateOutbound(string id, [FromBody] Outbound outbound) {
+	    return await _service.CreateOutbound(id, outbound);
     }
 
     [HttpGet("{id}/inbound")]
-    public ActionResult<IEnumerable<Inbound>> GetInbound(string id)
+    public async Task<IEnumerable<Inbound>> GetInbound(string id)
     {
-	    return NotFound();
+	    return await _service.GetInbound(id);
     }
 
 }

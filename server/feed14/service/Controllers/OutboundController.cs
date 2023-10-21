@@ -1,4 +1,6 @@
 using Microsoft.AspNetCore.Mvc;
+using newsfeed.Interfaces;
+using System.Text.Json;
 
 namespace newsfeed.Controllers;
 
@@ -7,15 +9,19 @@ namespace newsfeed.Controllers;
 public class OutboundController : ControllerBase
 {
     private readonly ILogger<OutboundController> _logger;
+    private readonly IOutboundService _service;
 
-    public OutboundController(ILogger<OutboundController> logger)
+    public OutboundController(ILogger<OutboundController> logger, IOutboundService service)
     {
         _logger = logger;
+        _service = service;
     }
 
     [HttpGet]
-    public ActionResult<IEnumerable<string>> Search([FromQuery] string keywords) {
-        return NotFound();
+    public async Task<IEnumerable<string>> Search([FromQuery] string keywords) {
+        var rv = await _service.Search(keywords);
+	Console.WriteLine($"returning {rv.Count()} search result");
+	return rv;
     }
 
 }
