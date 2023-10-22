@@ -9,9 +9,12 @@ public class CacheDao : ICacheDao
 
     private ConnectionMultiplexer Redis {
         get {
-            if (redis == null)
-            {
-                redis = ConnectionMultiplexer.Connect($"{Environment.GetEnvironmentVariable("REDIS_HOST")}:6379");
+            if (redis == null) {
+                lock(this) {
+                    if (redis == null) {
+                        redis = ConnectionMultiplexer.Connect($"{Environment.GetEnvironmentVariable("REDIS_HOST")}:6379");
+                    }
+                }
             }
             return redis;
         }
