@@ -17,10 +17,13 @@ public class ParticipantControllerUnitTests
     static readonly ILogger<ParticipantController> logger = new LoggerFactory().CreateLogger<ParticipantController>();
     static readonly Participant participant = new Participant("1", "Glenn");
     static readonly Friend friend = new("1", "1", "2");
-    static readonly Outbound outbound = new("1", new DateOnly(), "test subject", "test story");
-    static readonly Inbound inbound = new("1", "2", new DateOnly(), "test subject", "test story");
-    static readonly string ps = JsonSerializer.Serialize(participant);
-    static readonly string fs = JsonSerializer.Serialize(new List<Friend>{friend});
+    static readonly Outbound outbound = new("1", new DateOnly().ToString(), "test subject", "test story");
+    static readonly Inbound inbound = new("1", "2", new DateOnly().ToString(), "test subject", "test story");
+    static readonly string ps = JsonSerializer.Serialize(participant, jo);
+    static readonly string fs = JsonSerializer.Serialize(new List<Friend>{friend}, jo);
+    static readonly JsonSerializerOptions jo = new() {
+       PropertyNamingPolicy = JsonNamingPolicy.CamelCase,
+    };
 
     private ParticipantController GetController() {    
         Mock<IParticipantDao> participantDaoMock = new();
@@ -52,6 +55,7 @@ public class ParticipantControllerUnitTests
 	var controller = GetController();
         Participant? result = await controller.Get("1");
         Assert.NotNull(result);
+	Console.WriteLine($"controller get returns {JsonSerializer.Serialize(result, jo)}");
         Assert.Equal(participant.Id, result.Id);
         Assert.Equal(participant.Name, result.Name);
         Assert.Equal(participant.Link, result.Link);
@@ -72,8 +76,8 @@ public class ParticipantControllerUnitTests
 	var controller = GetController();
         IEnumerable<Friend> result = await controller.GetFriends("1");
         Assert.Single(result);
-        Assert.Equal(friend.From, result.First().From);
-        Assert.Equal(friend.To, result.First().To);
+        Assert.Equal($"/participant/{friend.From}", result.First().From);
+        Assert.Equal($"/participant/{friend.To}", result.First().To);
     }
 
     [Fact]

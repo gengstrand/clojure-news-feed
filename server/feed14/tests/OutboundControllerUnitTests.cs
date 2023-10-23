@@ -29,6 +29,6 @@ public class OutboundControllerUnitTests
         IEnumerable<string> result = await controller.Search("test");
         Assert.NotNull(result);
         Assert.Single(result);
-        Assert.Equal("1", result.First());
+        Assert.Equal("/participant/1", result.First());
     }
 }

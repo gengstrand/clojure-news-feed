@@ -29,7 +29,7 @@ public class InboundDao : CassandraDao, IInboundDao
             if (select == null) {
                 lock (logger) {
                     if (select == null) {
-                        select = CassandraSession.Prepare("select Occurred, FromParticipantID, Subject, Story from Inbound where ParticipantID = ? order by Occurred desc");
+                        select = CassandraSession.Prepare("select toTimestamp(Occurred) as Occurred, FromParticipantID, Subject, Story from Inbound where ParticipantID = ? order by Occurred desc");
                     }
                 }
             }
@@ -39,18 +39,21 @@ public class InboundDao : CassandraDao, IInboundDao
 
     public async Task<Outbound> CreateInboundAsync(string id, Inbound inbound)
     {
-        var s = Upsert.Bind(inbound.To, id, inbound.Subject, inbound.Story);
+        var s = Upsert.Bind(int.Parse(inbound.To), int.Parse(id), inbound.Subject, inbound.Story);
         var rs = await CassandraSession.ExecuteAsync(s);
-        return new Inbound(id, inbound.To, new DateOnly(), inbound.Subject, inbound.Story);
+        return new Inbound(id, inbound.To, new DateOnly().ToString(), inbound.Subject, inbound.Story);
     }
 
     public async Task<IEnumerable<Inbound>> GetInboundAsync(string id)
     {
-        var s = Select.Bind(id);
+        var s = Select.Bind(int.Parse(id));
         var rs = await CassandraSession.ExecuteAsync(s);
         List<Inbound> rv = new();
-        foreach (var row in rs) {
-            rv.Add(new Inbound(row.GetValue<string>("FromParticipantID"), id, row.GetValue<DateOnly>("Occurred"), row.GetValue<string>("Subject"), row.GetValue<string>("Story")));
+	var rows = rs.GetRows().ToList();
+        foreach (var row in rows) {
+	    int fid = row.GetValue<int>("fromparticipantid");
+	    DateOnly occurred = DateOnly.FromDateTime(row.GetValue<DateTime>("occurred"));
+            rv.Add(new Inbound(fid.ToString(), id, occurred.ToString(), row.GetValue<string>("subject"), row.GetValue<string>("story")));
         }
         return rv;
     }

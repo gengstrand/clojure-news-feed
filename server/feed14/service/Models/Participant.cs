@@ -2,8 +2,8 @@ namespace newsfeed.Models;
 
 public class Participant
 {
-    public Participant(string id, string name) {
-        Id = id;
+    public Participant(string? id, string name) {
+        Id = id ?? "";
         Name = name;
         Link = $"/participant/{id}";
     }

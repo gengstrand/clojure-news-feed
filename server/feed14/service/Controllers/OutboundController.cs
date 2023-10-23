@@ -19,8 +19,11 @@ public class OutboundController : ControllerBase
 
     [HttpGet]
     public async Task<IEnumerable<string>> Search([FromQuery] string keywords) {
-        var rv = await _service.Search(keywords);
-	Console.WriteLine($"returning {rv.Count()} search result");
+        var r = await _service.Search(keywords);
+	List<string> rv = new();
+	foreach (var i in r) {
+	    rv.Add($"/participant/{i}");
+	}
 	return rv;
     }
 

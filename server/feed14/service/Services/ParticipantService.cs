@@ -8,6 +8,9 @@ namespace newsfeed.Services;
 public class ParticipantService : IParticipantService
 {
     static readonly ILogger<ParticipantService> logger = new LoggerFactory().CreateLogger<ParticipantService>();
+    static readonly JsonSerializerOptions jo = new() {
+       PropertyNamingPolicy = JsonNamingPolicy.CamelCase,
+    };
 
     private readonly IParticipantDao _participantDao;
     private readonly IFriendDao _friendDao;
@@ -35,7 +38,7 @@ public class ParticipantService : IParticipantService
         var r =  await _outboundDao.CreateOutboundAsync(id, outbound);
         var friends = await _friendDao.GetFriendsAsync(id);
         if (friends != null) {
-            var d = new DateOnly();
+            var d = new DateOnly().ToString();
             foreach(Friend f in friends) {
                 var t = f.From == id ? f.To : f.From;
                 var i = new Inbound(id, t, d, outbound.Subject, outbound.Story);
@@ -57,10 +60,10 @@ public class ParticipantService : IParticipantService
         string? v = await _cacheDao.GetValueAsync(k);
         if (v == null) {
             var rv = await _friendDao.GetFriendsAsync(id);
-            _cacheDao.SetValueAsync(k, JsonSerializer.Serialize(rv));
+            _cacheDao.SetValueAsync(k, JsonSerializer.Serialize(rv, jo));
             return rv;
         } else {
-            var rv = JsonSerializer.Deserialize<IEnumerable<Friend>>(v);
+            var rv = JsonSerializer.Deserialize<IEnumerable<Friend>>(v, jo);
             return rv ?? new List<Friend>();
         }
     }
@@ -83,11 +86,11 @@ public class ParticipantService : IParticipantService
         {
             var rv = await _participantDao.GetParticipantAsync(id);
             if (rv != null) {
-                _cacheDao.SetValueAsync(k, JsonSerializer.Serialize(rv));
+                _cacheDao.SetValueAsync(k, JsonSerializer.Serialize(rv, jo));
             }
             return rv;
         } else {
-            var rv = JsonSerializer.Deserialize<Participant>(v);
+            var rv = JsonSerializer.Deserialize<Participant>(v, jo);
             return rv;
         
         }

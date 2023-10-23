@@ -29,7 +29,7 @@ public class OutboundDao : CassandraDao, IOutboundDao
             if (select == null) {
                 lock (logger) {
                     if (select == null) {
-                        select = CassandraSession.Prepare("select Occurred, Subject, Story from Outbound where participantID = ? order by Occurred desc");
+                        select = CassandraSession.Prepare("select toTimestamp(Occurred) as Occurred, Subject, Story from Outbound where participantID = ? order by Occurred desc");
                     }
                 }
             }
@@ -39,18 +39,20 @@ public class OutboundDao : CassandraDao, IOutboundDao
 
     public async Task<Outbound> CreateOutboundAsync(string id, Outbound outbound)
     {
-        var s = Upsert.Bind(id, outbound.Subject, outbound.Story);
+        var s = Upsert.Bind(int.Parse(id), outbound.Subject, outbound.Story);
         var rs = await CassandraSession.ExecuteAsync(s);
-        return new Outbound(id, new DateOnly(), outbound.Subject, outbound.Story);
+        return new Outbound(id, new DateOnly().ToString(), outbound.Subject, outbound.Story);
     }
 
     public async Task<IEnumerable<Outbound>> GetOutboundAsync(string id)
     {
-        var s = Select.Bind(id);
+        var s = Select.Bind(int.Parse(id));
         var rs = await CassandraSession.ExecuteAsync(s);
         List<Outbound> rv = new();
-        foreach (var row in rs) {
-            rv.Add(new Outbound(id, row.GetValue<DateOnly>("Occurred"), row.GetValue<string>("Subject"), row.GetValue<string>("Story")));
+	var rows = rs.GetRows().ToList();
+        foreach (var row in rows) {
+	    DateOnly occurred = DateOnly.FromDateTime(row.GetValue<DateTime>("occurred"));
+            rv.Add(new Outbound(id, occurred.ToString(), row.GetValue<string>("subject"), row.GetValue<string>("story")));
         }
         return rv;
     }

@@ -2,8 +2,8 @@ namespace newsfeed.Models;
 
 public class Friend {
 
-    public Friend(string id, string from, string to) {
-        Id = id;
+    public Friend(string? id, string from, string to) {
+        Id = id ?? "";
         From = from;
         To = to;
     }

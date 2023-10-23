@@ -2,9 +2,9 @@ namespace newsfeed.Models;
 
 public class Outbound
 {
-    public Outbound(string from, DateOnly occurred, string subject, string story) {
+    public Outbound(string from, string? occurred, string subject, string story) {
         From = from;
-        Occurred = occurred.ToString();
+        Occurred = occurred ?? new DateOnly().ToString();
         Subject = subject;
         Story = story;
     }

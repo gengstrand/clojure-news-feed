@@ -20,7 +20,7 @@ public class ParticipantDao : MySqlDao, IParticipantDao
 
     public async Task<Participant?> GetParticipantAsync(string id)
     {
-        MySqlDataReader reader = await MySqlHelper.ExecuteReaderAsync(ConnectionString, "call FetchParticipant(@id);", CancellationToken.None, new MySqlParameter[] { new MySqlParameter("@ing", MySqlDbType.Int32) { Value = int.Parse(id) } }); 
+        MySqlDataReader reader = await MySqlHelper.ExecuteReaderAsync(ConnectionString, "call FetchParticipant(@id);", CancellationToken.None, new MySqlParameter[] { new MySqlParameter("@id", MySqlDbType.Int32) { Value = int.Parse(id) } }); 
         while (reader.Read())
         {
             return new Participant(id, reader.GetString(0));
