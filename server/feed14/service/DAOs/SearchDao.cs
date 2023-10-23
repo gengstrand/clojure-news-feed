@@ -21,43 +21,42 @@ public class SearchDao : ISearchDao
     static readonly ILogger<SearchDao> logger = new LoggerFactory().CreateLogger<SearchDao>();
 
     private static readonly HttpClient client = new() {
-        BaseAddress = new Uri($"http://{Environment.GetEnvironmentVariable("SEARCH_HOST") ?? "elasticsearch"}"),
+        BaseAddress = new Uri($"http://{Environment.GetEnvironmentVariable("SEARCH_HOST") ?? "elasticsearch"}:9200/"),
     };
 
+    static readonly JsonSerializerOptions jo = new() {
+       PropertyNamingPolicy = JsonNamingPolicy.CamelCase,
+    };
+    
     public async Task<bool> IndexAsync(string id, string sender, string story)
     {
         SearchDocument s = new(id, long.Parse(sender), story);
-        JsonContent request = JsonContent.Create<SearchDocument>(s);
-        var r = await client.PutAsync($"/feed/stories/{id}", request);
+	var request = new StringContent(JsonSerializer.Serialize(s, jo), System.Text.Encoding.UTF8, "application/json");
+        var r = client.PutAsync($"feed/stories/{id}", request).Result;
         return r.IsSuccessStatusCode;
     }
 
     public async Task<IEnumerable<string>> SearchAsync(string keywords)
     {
         List<string> rv = new();
-        var resp = await client.GetAsync($"/feed/stories/_search?q={keywords}");
+        var resp = client.GetAsync($"feed/stories/_search?q={keywords}").Result;
         if (resp.IsSuccessStatusCode) {
             var d = await resp.Content.ReadAsStringAsync();
             var jd = JsonSerializer.Deserialize<Dictionary<string, object>>(d);
-            if (jd != null && jd.ContainsKey("hits")) {
-                var hits = jd["hits"] as Dictionary<string, object>;
-                if (hits != null && hits.ContainsKey("hits")) {
-                    var hitsList = hits["hits"] as List<Dictionary<string, object>>;
-                    if (hitsList != null) {
-                        foreach (var h in hitsList) {
-                            if (h != null && h.ContainsKey("_source")) {
-                                var s = h["_source"] as Dictionary<string, object>;
-                                if (s != null && s.ContainsKey("sender")) {
-                                    object o = s["sender"];
-                                    if (o != null) {
-                                        rv.Add(o.ToString());
-                                    }
-                                }
-                            }
-                        }
-                    }
-                }
-            }
+            if (jd != null) {
+	        foreach(KeyValuePair<string, object> kvp in jd) {
+		    if (kvp.Key == "hits") {
+		       var oh = (JsonElement)kvp.Value;
+		       var ih = oh.GetProperty("hits");
+		       foreach(var ihi in ih.EnumerateArray()) {
+		          var ihsrc = ihi.GetProperty("_source");
+			  var ihsnd = ihsrc.GetProperty("sender");
+		          var ihsv = ihsnd.GetInt32();
+		          rv.Add(ihsv.ToString());
+		       }
+		    }
+		}
+	    }
         }
         return rv;
     }

@@ -42,10 +42,10 @@ public class ParticipantService : IParticipantService
             foreach(Friend f in friends) {
                 var t = f.From == id ? f.To : f.From;
                 var i = new Inbound(id, t, d, outbound.Subject, outbound.Story);
-                _inboundDao.CreateInboundAsync(id, i);
+                await _inboundDao.CreateInboundAsync(id, i);
             }
         }
-        _searchDao.IndexAsync(Guid.NewGuid().ToString(), outbound.Subject, outbound.Story);
+        await _searchDao.IndexAsync(Guid.NewGuid().ToString(), outbound.From, outbound.Story);
         return r;
     }    
 
