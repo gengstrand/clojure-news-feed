@@ -19,8 +19,8 @@ public class ParticipantControllerUnitTests
     static readonly Friend friend = new("1", "1", "2");
     static readonly Outbound outbound = new("1", new DateOnly().ToString(), "test subject", "test story");
     static readonly Inbound inbound = new("1", "2", new DateOnly().ToString(), "test subject", "test story");
-    static readonly string ps = JsonSerializer.Serialize(participant, jo);
-    static readonly string fs = JsonSerializer.Serialize(new List<Friend>{friend}, jo);
+    static readonly string ps = "{\"id\":\"1\",\"name\":\"Glenn\",\"link\":\"/participant/1\"}";
+    static readonly string fs = "[{\"id\":\"1\",\"from\":\"1\",\"to\":\"2\"}]";
     static readonly JsonSerializerOptions jo = new() {
        PropertyNamingPolicy = JsonNamingPolicy.CamelCase,
     };
@@ -45,8 +45,8 @@ public class ParticipantControllerUnitTests
         cacheDaoMock.Setup(c => c.SetValueAsync(It.IsAny<string>(), It.IsAny<string>())).ReturnsAsync(true);
         searchDaoMock.Setup(s => s.IndexAsync(It.IsAny<string>(), It.IsAny<string>(), It.IsAny<string>())).ReturnsAsync(true);
         searchDaoMock.Setup(s => s.SearchAsync(It.IsAny<string>())).ReturnsAsync(new List<string>() { "1" });
-	IParticipantService participantService = new ParticipantService(participantDaoMock.Object, friendDaoMock.Object, outboundDaoMock.Object, inboundDaoMock.Object, cacheDaoMock.Object, searchDaoMock.Object);
-	return new ParticipantController(logger, participantService);
+        IParticipantService participantService = new ParticipantService(participantDaoMock.Object, friendDaoMock.Object, outboundDaoMock.Object, inboundDaoMock.Object, cacheDaoMock.Object, searchDaoMock.Object);
+        return new ParticipantController(logger, participantService);
     }
 
     [Fact]
@@ -55,7 +55,6 @@ public class ParticipantControllerUnitTests
 	var controller = GetController();
         Participant? result = await controller.Get("1");
         Assert.NotNull(result);
-	Console.WriteLine($"controller get returns {JsonSerializer.Serialize(result, jo)}");
         Assert.Equal(participant.Id, result.Id);
         Assert.Equal(participant.Name, result.Name);
         Assert.Equal(participant.Link, result.Link);
