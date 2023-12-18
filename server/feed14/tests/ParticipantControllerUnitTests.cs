@@ -25,11 +25,12 @@ public class ParticipantControllerUnitTests
        PropertyNamingPolicy = JsonNamingPolicy.CamelCase,
     };
 
+    Mock<IInboundDao> inboundDaoMock = new();
+
     private ParticipantController GetController() {    
         Mock<IParticipantDao> participantDaoMock = new();
         Mock<IFriendDao> friendDaoMock = new();
         Mock<IOutboundDao> outboundDaoMock = new();
-        Mock<IInboundDao> inboundDaoMock = new();
         Mock<ICacheDao> cacheDaoMock = new();
         Mock<ISearchDao> searchDaoMock = new();
         participantDaoMock.Setup(p => p.GetParticipantAsync(It.IsAny<string>())).ReturnsAsync(participant);
@@ -98,10 +99,11 @@ public class ParticipantControllerUnitTests
 
     [Fact]
     public async void TestCreateOutbound() {
-	var controller = GetController();
+        var controller = GetController();
         Outbound result = await controller.CreateOutbound("1", outbound);
         Assert.Equal(outbound.Subject, result.Subject);
         Assert.Equal(outbound.Story, result.Story);
+        inboundDaoMock.Verify(i => i.CreateInboundAsync(It.IsAny<string>(), It.IsAny<Inbound>()), Times.Once);
     }
 
     [Fact]
