@@ -8,7 +8,11 @@ class ParticipantDao {
     fun getParticipant(id: Long): ParticipantModel {
         return ParticipantModel(id, "test")
     }
-    fun addParticipant(id: Long, p: ParticipantModel): ParticipantModel {
+
+    fun addParticipant(
+        id: Long,
+        p: ParticipantModel,
+    ): ParticipantModel {
         return p
     }
 }

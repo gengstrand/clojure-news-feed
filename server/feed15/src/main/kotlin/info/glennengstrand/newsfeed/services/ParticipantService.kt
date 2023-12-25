@@ -9,24 +9,26 @@ import info.glennengstrand.newsfeed.models.InboundModel
 import info.glennengstrand.newsfeed.models.OutboundModel
 import info.glennengstrand.newsfeed.models.ParticipantModel
 import org.springframework.stereotype.Component
-import java.time.format.DateTimeFormatter
 import java.time.LocalDate
+import java.time.format.DateTimeFormatter
 
 @Component
-class ParticipantService (
+class ParticipantService(
     val participantDao: ParticipantDao,
     val friendDao: FriendDao,
     val inboundDao: InboundDao,
-    val outboundDao: OutboundDao
-    ) {
-
+    val outboundDao: OutboundDao,
+) {
     val fmt = DateTimeFormatter.ofPattern("yyyy-MM-dd")
 
     fun getParticipant(id: Long): ParticipantModel {
         return participantDao.getParticipant(id)
     }
 
-    fun addParticipant(id: Long, p: ParticipantModel): ParticipantModel {
+    fun addParticipant(
+        id: Long,
+        p: ParticipantModel,
+    ): ParticipantModel {
         return participantDao.addParticipant(id, p)
     }
 
@@ -34,11 +36,14 @@ class ParticipantService (
         return friendDao.getFriends(id)
     }
 
-    fun addFriend(id: Long, f: FriendModel): FriendModel {
+    fun addFriend(
+        id: Long,
+        f: FriendModel,
+    ): FriendModel {
         return friendDao.addFriend(id, f)
     }
 
-    fun getInbound(id: Long): List<InboundModel>  {
+    fun getInbound(id: Long): List<InboundModel> {
         return inboundDao.getInbound(id)
     }
 
@@ -46,7 +51,10 @@ class ParticipantService (
         return outboundDao.getOutbound(id)
     }
 
-    fun addOutbound(id: Long, ob: OutboundModel): OutboundModel {
+    fun addOutbound(
+        id: Long,
+        ob: OutboundModel,
+    ): OutboundModel {
         val fp = ParticipantModel(id, "")
         val n = LocalDate.now().format(fmt)
         friendDao.getFriends(id).forEach {

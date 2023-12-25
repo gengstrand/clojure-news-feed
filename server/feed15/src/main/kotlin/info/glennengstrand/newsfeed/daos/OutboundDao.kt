@@ -3,13 +3,14 @@ package info.glennengstrand.newsfeed.daos
 import info.glennengstrand.newsfeed.models.OutboundModel
 import mu.KotlinLogging
 import org.springframework.stereotype.Component
-import java.time.format.DateTimeFormatter
 import java.time.LocalDate
+import java.time.format.DateTimeFormatter
 
 @Component
 class OutboundDao {
     private val f = DateTimeFormatter.ofPattern("yyyy-MM-dd")
     private val logger = KotlinLogging.logger {}
+
     fun getOutbound(id: Long): List<OutboundModel> {
         return listOf(
             OutboundModel(
@@ -20,7 +21,11 @@ class OutboundDao {
             ),
         )
     }
-    fun addOutbound(id: Long, ib: OutboundModel): OutboundModel {
+
+    fun addOutbound(
+        id: Long,
+        ib: OutboundModel,
+    ): OutboundModel {
         return ib
     }
 

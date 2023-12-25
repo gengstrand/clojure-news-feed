@@ -11,12 +11,15 @@ class FriendDao {
             FriendModel(
                 1L,
                 ParticipantModel(id, "test").link,
-                "/participant/2"
-            )
+                "/participant/2",
+            ),
         )
     }
 
-    fun addFriend(id: Long, f: FriendModel): FriendModel {
+    fun addFriend(
+        id: Long,
+        f: FriendModel,
+    ): FriendModel {
         return f
     }
 }
