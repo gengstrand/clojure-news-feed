@@ -7,5 +7,5 @@ import org.springframework.boot.runApplication
 class NewsfeedApplication
 
 fun main(args: Array<String>) {
-        runApplication<NewsfeedApplication>(*args)
+    runApplication<NewsfeedApplication>(*args)
 }

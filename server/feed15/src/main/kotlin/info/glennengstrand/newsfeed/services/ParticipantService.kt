@@ -1,49 +1,59 @@
 package info.glennengstrand.newsfeed.services
 
+import info.glennengstrand.newsfeed.daos.FriendDao
+import info.glennengstrand.newsfeed.daos.InboundDao
+import info.glennengstrand.newsfeed.daos.OutboundDao
+import info.glennengstrand.newsfeed.daos.ParticipantDao
+import info.glennengstrand.newsfeed.models.FriendModel
+import info.glennengstrand.newsfeed.models.InboundModel
+import info.glennengstrand.newsfeed.models.OutboundModel
+import info.glennengstrand.newsfeed.models.ParticipantModel
 import org.springframework.stereotype.Component
-import org.springframework.web.reactive.function.BodyInserters.fromValue
-import org.springframework.web.reactive.function.server.ServerRequest
-import org.springframework.web.reactive.function.server.ServerResponse
-import reactor.core.publisher.Mono
-import java.time.LocalDate
 import java.time.format.DateTimeFormatter
-import info.glennengstrand.newsfeed.models.*
+import java.time.LocalDate
 
 @Component
-class ParticipantService {
+class ParticipantService (
+    val participantDao: ParticipantDao,
+    val friendDao: FriendDao,
+    val inboundDao: InboundDao,
+    val outboundDao: OutboundDao
+    ) {
 
-    val f = DateTimeFormatter.ofPattern("yyyy-MM-dd")
+    val fmt = DateTimeFormatter.ofPattern("yyyy-MM-dd")
 
-    fun getParticipant(request: ServerRequest): Mono<ServerResponse> {
-        val id = request.pathVariable("id")
-        return ServerResponse.ok().body(fromValue(ParticipantModel(id.toLong(), "test")))
-    }
-    fun addParticipant(request: ServerRequest): Mono<ServerResponse> {
-        return request.bodyToMono(ParticipantModel::class.java)
-        .flatMap{p: ParticipantModel -> ServerResponse.ok().body(fromValue(p))}
-    }
-    fun getFriends(request: ServerRequest): Mono<ServerResponse> {
-        val id = request.pathVariable("id")
-        val rv = listOf(FriendModel(1L, ParticipantModel(id.toLong(), "test").link, "/participant/2"))
-        return ServerResponse.ok().body(fromValue(rv))
-    }
-    fun addFriend(request: ServerRequest): Mono<ServerResponse> {
-        return request.bodyToMono(FriendModel::class.java)
-        .flatMap{f: FriendModel -> ServerResponse.ok().body(fromValue(f))}
-    }
-    fun getInbound(request: ServerRequest): Mono<ServerResponse> {
-        val id = request.pathVariable("id")
-        val rv = listOf(InboundModel("/participant/2", ParticipantModel(id.toLong(), "test").link, LocalDate.now().format(f), "test subject", "test story"))
-        return ServerResponse.ok().body(fromValue(rv))
-    }
-    fun getOutbound(request: ServerRequest): Mono<ServerResponse> {
-        val id = request.pathVariable("id")
-        val rv = listOf(OutboundModel(ParticipantModel(id.toLong(), "test").link, LocalDate.now().format(f), "test subject", "test story"))
-        return ServerResponse.ok().body(fromValue(rv))
-    }
-    fun addOutbound(request: ServerRequest): Mono<ServerResponse> {
-        return request.bodyToMono(OutboundModel::class.java)
-        .flatMap{f: OutboundModel -> ServerResponse.ok().body(fromValue(f))}
+    fun getParticipant(id: Long): ParticipantModel {
+        return participantDao.getParticipant(id)
     }
 
+    fun addParticipant(id: Long, p: ParticipantModel): ParticipantModel {
+        return participantDao.addParticipant(id, p)
+    }
+
+    fun getFriends(id: Long): List<FriendModel> {
+        return friendDao.getFriends(id)
+    }
+
+    fun addFriend(id: Long, f: FriendModel): FriendModel {
+        return friendDao.addFriend(id, f)
+    }
+
+    fun getInbound(id: Long): List<InboundModel>  {
+        return inboundDao.getInbound(id)
+    }
+
+    fun getOutbound(id: Long): List<OutboundModel> {
+        return outboundDao.getOutbound(id)
+    }
+
+    fun addOutbound(id: Long, ob: OutboundModel): OutboundModel {
+        val fp = ParticipantModel(id, "")
+        val n = LocalDate.now().format(fmt)
+        friendDao.getFriends(id).forEach {
+            val tp = ParticipantModel(it.id, "")
+            val ib = InboundModel(tp.link, fp.link, n, ob.subject, ob.story)
+            inboundDao.addInbound(id, ib)
+        }
+        return outboundDao.addOutbound(id, ob)
+    }
 }
