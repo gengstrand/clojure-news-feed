@@ -58,7 +58,8 @@ class ParticipantService(
         val fp = ParticipantModel(id, "")
         val n = LocalDate.now().format(fmt)
         friendDao.getFriends(id).forEach {
-            val tp = ParticipantModel(it.id, "")
+            val tid = ParticipantModel.unlink(it.to)
+            val tp = ParticipantModel(tid, "")
             val ib = InboundModel(tp.link, fp.link, n, ob.subject, ob.story)
             inboundDao.addInbound(id, ib)
         }

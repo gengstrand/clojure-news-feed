@@ -10,12 +10,12 @@ import info.glennengstrand.newsfeed.models.OutboundModel
 import info.glennengstrand.newsfeed.models.ParticipantModel
 import info.glennengstrand.newsfeed.services.ParticipantService
 import io.mockk.coEvery
+import io.mockk.coVerify
 import io.mockk.mockk
 import org.junit.jupiter.api.Assertions
 import org.junit.jupiter.api.Test
 import org.springframework.boot.test.context.SpringBootTest
 
-// import io.mockk.coVerify
 // import io.mockk.slot
 
 @SpringBootTest
@@ -97,9 +97,12 @@ class NewsfeedApplicationTests {
             outboundDao.addOutbound(pid, tob)
         } returns tob
         coEvery {
-            friendDao.addFriend(pid, tf)
-        } returns tf
+            friendDao.getFriends(pid)
+        } returns tfl
         val ob = participantService.addOutbound(pid, tob)
+        coVerify {
+            inboundDao.addInbound(pid, any())
+        }
         Assertions.assertEquals(ob.subject, tob.subject)
     }
 }
