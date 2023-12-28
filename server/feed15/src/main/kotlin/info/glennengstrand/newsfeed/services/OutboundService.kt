@@ -1,11 +1,14 @@
 package info.glennengstrand.newsfeed.services
 
-import info.glennengstrand.newsfeed.daos.OutboundDao
+import info.glennengstrand.newsfeed.daos.SearchDao
+import info.glennengstrand.newsfeed.models.ParticipantModel
 import org.springframework.stereotype.Component
 
 @Component
-class OutboundService(val outboundDao: OutboundDao) {
+class OutboundService(
+    val searchDao: SearchDao,
+) {
     fun searchOutbound(keywords: String): List<String> {
-        return outboundDao.searchOutbound(keywords).map { "/participant/$it" }
+        return searchDao.searchOutbound(keywords).map { ParticipantModel(it, "").link }
     }
 }

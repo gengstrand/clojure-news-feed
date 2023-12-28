@@ -28,9 +28,4 @@ class OutboundDao {
     ): OutboundModel {
         return ib
     }
-
-    fun searchOutbound(keywords: String): List<Long> {
-        logger.info("searching for $keywords")
-        return listOf(1L)
-    }
 }

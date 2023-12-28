@@ -8,6 +8,7 @@ import info.glennengstrand.newsfeed.daos.FriendDao
 import info.glennengstrand.newsfeed.daos.InboundDao
 import info.glennengstrand.newsfeed.daos.OutboundDao
 import info.glennengstrand.newsfeed.daos.ParticipantDao
+import info.glennengstrand.newsfeed.daos.SearchDao
 import info.glennengstrand.newsfeed.models.FriendModel
 import info.glennengstrand.newsfeed.models.InboundModel
 import info.glennengstrand.newsfeed.models.OutboundModel
@@ -23,6 +24,7 @@ class ParticipantService(
     val inboundDao: InboundDao,
     val outboundDao: OutboundDao,
     val cacheDao: CacheDao,
+    val searchDao: SearchDao,
 ) {
     val fmt = DateTimeFormatter.ofPattern("yyyy-MM-dd")
 
@@ -101,6 +103,7 @@ class ParticipantService(
             val ib = InboundModel(it.to, ob.from, n, ob.subject, ob.story)
             inboundDao.addInbound(id, ib)
         }
+        searchDao.indexStory(id, ob.story)
         return outboundDao.addOutbound(id, ob)
     }
 }

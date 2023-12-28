@@ -25,3 +25,13 @@ These additional references should also help you:
 ## Missing R2DBC Driver
 
 Make sure to include a [R2DBC Driver](https://r2dbc.io/drivers/) to connect to your database.
+
+## Other drivers
+
+Start looking at these.
+
+[elasticsearch](https://github.com/jillesvangurp/kt-search)
+
+[cassandra](https://docs.datastax.com/en/developer/java-driver/4.17/manual/mapper/config/kotlin/)
+
+Just use jedis for accessing redis.

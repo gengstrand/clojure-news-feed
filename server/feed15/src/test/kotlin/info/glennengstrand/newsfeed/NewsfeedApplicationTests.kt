@@ -5,10 +5,12 @@ import info.glennengstrand.newsfeed.daos.FriendDao
 import info.glennengstrand.newsfeed.daos.InboundDao
 import info.glennengstrand.newsfeed.daos.OutboundDao
 import info.glennengstrand.newsfeed.daos.ParticipantDao
+import info.glennengstrand.newsfeed.daos.SearchDao
 import info.glennengstrand.newsfeed.models.FriendModel
 import info.glennengstrand.newsfeed.models.InboundModel
 import info.glennengstrand.newsfeed.models.OutboundModel
 import info.glennengstrand.newsfeed.models.ParticipantModel
+import info.glennengstrand.newsfeed.services.OutboundService
 import info.glennengstrand.newsfeed.services.ParticipantService
 import io.mockk.coEvery
 import io.mockk.coVerify
@@ -26,6 +28,7 @@ class NewsfeedApplicationTests {
     private val inboundDao = mockk<InboundDao>(relaxed = true)
     private val outboundDao = mockk<OutboundDao>(relaxed = true)
     private val cacheDao = mockk<CacheDao>(relaxed = true)
+    private val searchDao = mockk<SearchDao>(relaxed = true)
     private val participantService =
         ParticipantService(
             participantDao,
@@ -33,7 +36,9 @@ class NewsfeedApplicationTests {
             inboundDao,
             outboundDao,
             cacheDao,
+            searchDao,
         )
+    private val outboundService = OutboundService(searchDao)
     private val pid = 1L
     private val tp = ParticipantModel(pid, "test")
     private val tf = FriendModel(pid, tp.link, "/participant/2")
@@ -118,6 +123,19 @@ class NewsfeedApplicationTests {
         coVerify {
             inboundDao.addInbound(pid, any())
         }
+        coVerify {
+            searchDao.indexStory(pid, any())
+        }
         Assertions.assertEquals(ob.subject, tob.subject)
+    }
+
+    @Test
+    fun searchOutbound() {
+        coEvery {
+            searchDao.searchOutbound(any())
+        } returns listOf(pid)
+        val t = outboundService.searchOutbound("test")
+        Assertions.assertEquals(t.size, 1)
+        Assertions.assertEquals(t.first(), ParticipantModel(pid, "").link)
     }
 }
