@@ -1,5 +1,9 @@
 package info.glennengstrand.newsfeed.services
 
+import com.google.gson.Gson
+import com.google.gson.reflect.TypeToken
+import info.glennengstrand.newsfeed.daos.Cachable
+import info.glennengstrand.newsfeed.daos.CacheDao
 import info.glennengstrand.newsfeed.daos.FriendDao
 import info.glennengstrand.newsfeed.daos.InboundDao
 import info.glennengstrand.newsfeed.daos.OutboundDao
@@ -18,11 +22,48 @@ class ParticipantService(
     val friendDao: FriendDao,
     val inboundDao: InboundDao,
     val outboundDao: OutboundDao,
+    val cacheDao: CacheDao,
 ) {
     val fmt = DateTimeFormatter.ofPattern("yyyy-MM-dd")
 
-    fun getParticipant(id: Long): ParticipantModel {
-        return participantDao.getParticipant(id)
+    class ParticipantCachable(val dao: ParticipantDao) : Cachable<ParticipantModel> {
+        val gson = Gson()
+
+        override fun parse(value: String): ParticipantModel {
+            return gson.fromJson(value, ParticipantModel::class.java)
+        }
+
+        override fun format(value: ParticipantModel): String {
+            return gson.toJson(value)
+        }
+
+        override fun read(id: Long): ParticipantModel? {
+            return dao.getParticipant(id)
+        }
+    }
+
+    class FriendCachable(val dao: FriendDao) : Cachable<List<FriendModel>> {
+        val gson = Gson()
+        val friendListType = object : TypeToken<List<FriendModel>>() {}.type
+
+        override fun parse(value: String): List<FriendModel> {
+            return gson.fromJson(value, friendListType)
+        }
+
+        override fun format(value: List<FriendModel>): String {
+            return gson.toJson(value)
+        }
+
+        override fun read(id: Long): List<FriendModel>? {
+            return dao.getFriends(id)
+        }
+    }
+
+    val pcache = ParticipantCachable(participantDao)
+    val fcache = FriendCachable(friendDao)
+
+    fun getParticipant(id: Long): ParticipantModel? {
+        return cacheDao.get<ParticipantModel>(id, pcache)
     }
 
     fun addParticipant(
@@ -33,7 +74,7 @@ class ParticipantService(
     }
 
     fun getFriends(id: Long): List<FriendModel> {
-        return friendDao.getFriends(id)
+        return cacheDao.get<List<FriendModel>>(id, fcache) ?: listOf()
     }
 
     fun addFriend(
@@ -55,12 +96,9 @@ class ParticipantService(
         id: Long,
         ob: OutboundModel,
     ): OutboundModel {
-        val fp = ParticipantModel(id, "")
         val n = LocalDate.now().format(fmt)
         friendDao.getFriends(id).forEach {
-            val tid = ParticipantModel.unlink(it.to)
-            val tp = ParticipantModel(tid, "")
-            val ib = InboundModel(tp.link, fp.link, n, ob.subject, ob.story)
+            val ib = InboundModel(it.to, ob.from, n, ob.subject, ob.story)
             inboundDao.addInbound(id, ib)
         }
         return outboundDao.addOutbound(id, ob)

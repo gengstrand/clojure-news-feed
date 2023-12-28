@@ -1,5 +1,6 @@
 package info.glennengstrand.newsfeed
 
+import info.glennengstrand.newsfeed.daos.CacheDao
 import info.glennengstrand.newsfeed.daos.FriendDao
 import info.glennengstrand.newsfeed.daos.InboundDao
 import info.glennengstrand.newsfeed.daos.OutboundDao
@@ -24,7 +25,15 @@ class NewsfeedApplicationTests {
     private val friendDao = mockk<FriendDao>(relaxed = true)
     private val inboundDao = mockk<InboundDao>(relaxed = true)
     private val outboundDao = mockk<OutboundDao>(relaxed = true)
-    private val participantService = ParticipantService(participantDao, friendDao, inboundDao, outboundDao)
+    private val cacheDao = mockk<CacheDao>(relaxed = true)
+    private val participantService =
+        ParticipantService(
+            participantDao,
+            friendDao,
+            inboundDao,
+            outboundDao,
+            cacheDao,
+        )
     private val pid = 1L
     private val tp = ParticipantModel(pid, "test")
     private val tf = FriendModel(pid, tp.link, "/participant/2")
@@ -38,7 +47,10 @@ class NewsfeedApplicationTests {
         coEvery {
             participantDao.getParticipant(pid)
         } returns tp
-        val p = participantService.getParticipant(pid)
+        coEvery {
+            cacheDao.get<ParticipantModel>(pid, any())
+        } returns participantDao.getParticipant(pid)
+        val p = participantService.getParticipant(pid)!!
         Assertions.assertEquals(p.name, tp.name)
     }
 
@@ -56,6 +68,9 @@ class NewsfeedApplicationTests {
         coEvery {
             friendDao.getFriends(pid)
         } returns tfl
+        coEvery {
+            cacheDao.get<List<FriendModel>>(pid, any())
+        } returns friendDao.getFriends(pid)
         val f = participantService.getFriends(pid)
         Assertions.assertEquals(f.size, tfl.size)
         Assertions.assertEquals(f.first().to, tfl.first().to)

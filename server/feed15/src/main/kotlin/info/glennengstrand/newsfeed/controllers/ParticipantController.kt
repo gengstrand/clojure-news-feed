@@ -29,7 +29,9 @@ class ParticipantController(private val participantService: ParticipantService) 
     fun getParticipant(request: ServerRequest): Mono<ServerResponse> {
         val id = request.pathVariable("id").toLongOrNull()
         if (id == null) return ServerResponse.badRequest().body(fromValue("invalid id"))
-        return ServerResponse.ok().body(fromValue(participantService.getParticipant(id)))
+        val rv = participantService.getParticipant(id)
+        if (rv == null) return ServerResponse.notFound().build()
+        return ServerResponse.ok().body(fromValue(rv))
     }
 
     fun addParticipant(request: ServerRequest): Mono<ServerResponse> {

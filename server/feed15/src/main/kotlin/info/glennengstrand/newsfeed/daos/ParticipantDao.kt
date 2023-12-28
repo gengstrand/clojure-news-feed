@@ -5,7 +5,7 @@ import org.springframework.stereotype.Component
 
 @Component
 class ParticipantDao {
-    fun getParticipant(id: Long): ParticipantModel {
+    fun getParticipant(id: Long): ParticipantModel? {
         return ParticipantModel(id, "test")
     }
 
