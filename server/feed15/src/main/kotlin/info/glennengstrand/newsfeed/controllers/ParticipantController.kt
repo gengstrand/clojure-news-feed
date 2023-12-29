@@ -18,7 +18,7 @@ class ParticipantController(private val participantService: ParticipantService) 
     fun participantRouter() =
         router {
             GET("/participant/{id}", ::getParticipant)
-            POST("/participant/{id}", ::addParticipant)
+            POST("/participant", ::addParticipant)
             GET("/participant/{id}/friends", ::getFriends)
             POST("/participant/{id}/friends", ::addFriend)
             GET("/participant/{id}/inbound", ::getInbound)
@@ -35,11 +35,9 @@ class ParticipantController(private val participantService: ParticipantService) 
     }
 
     fun addParticipant(request: ServerRequest): Mono<ServerResponse> {
-        val id = request.pathVariable("id").toLongOrNull()
-        if (id == null) return ServerResponse.badRequest().body(fromValue("invalid id"))
         return request.bodyToMono(ParticipantModel::class.java)
             .flatMap {
-                val p = participantService.addParticipant(id, it)
+                val p = participantService.addParticipant(it)
                 ServerResponse.ok().body(fromValue(p))
             }
     }

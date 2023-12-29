@@ -9,10 +9,7 @@ class ParticipantDao {
         return ParticipantModel(id, "test")
     }
 
-    fun addParticipant(
-        id: Long,
-        p: ParticipantModel,
-    ): ParticipantModel {
+    fun addParticipant(p: ParticipantModel): ParticipantModel {
         return p
     }
 }

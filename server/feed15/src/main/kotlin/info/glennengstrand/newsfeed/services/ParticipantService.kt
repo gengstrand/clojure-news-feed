@@ -68,11 +68,8 @@ class ParticipantService(
         return cacheDao.get<ParticipantModel>(id, pcache)
     }
 
-    fun addParticipant(
-        id: Long,
-        p: ParticipantModel,
-    ): ParticipantModel {
-        return participantDao.addParticipant(id, p)
+    fun addParticipant(p: ParticipantModel): ParticipantModel {
+        return participantDao.addParticipant(p)
     }
 
     fun getFriends(id: Long): List<FriendModel> {

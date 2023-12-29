@@ -62,9 +62,9 @@ class NewsfeedApplicationTests {
     @Test
     fun addParticipant() {
         coEvery {
-            participantDao.addParticipant(pid, tp)
+            participantDao.addParticipant(tp)
         } returns tp
-        val p = participantService.addParticipant(pid, tp)
+        val p = participantService.addParticipant(tp)
         Assertions.assertEquals(p.name, tp.name)
     }
 
