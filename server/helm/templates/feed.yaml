@@ -35,7 +35,7 @@ spec:
         app: feed
     spec:
       containers:
-      {{- if contains $feedVersion ",4,6,9,10,11,13,14," }}
+      {{- if contains $feedVersion ",4,6,9,10,11,13,14,15," }}
       - name: feed
         envFrom:
         - configMapRef:

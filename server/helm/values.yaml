@@ -8,6 +8,6 @@ gui: false
 
 image:
   account: gengstrand
-  feed: "5"
-  version: ""
-  local: false
+  feed: "15"
+  version: "1.0"
+  local: true

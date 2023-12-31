@@ -17,11 +17,8 @@ import io.mockk.coVerify
 import io.mockk.mockk
 import org.junit.jupiter.api.Assertions
 import org.junit.jupiter.api.Test
-import org.springframework.boot.test.context.SpringBootTest
+import reactor.core.publisher.Mono
 
-// import io.mockk.slot
-
-@SpringBootTest
 class NewsfeedApplicationTests {
     private val participantDao = mockk<ParticipantDao>(relaxed = true)
     private val friendDao = mockk<FriendDao>(relaxed = true)
@@ -51,44 +48,52 @@ class NewsfeedApplicationTests {
     fun getParticipant() {
         coEvery {
             participantDao.getParticipant(pid)
-        } returns tp
+        } returns Mono.just(tp)
         coEvery {
             cacheDao.get<ParticipantModel>(pid, any())
         } returns participantDao.getParticipant(pid)
-        val p = participantService.getParticipant(pid)!!
-        Assertions.assertEquals(p.name, tp.name)
+        val t = participantService.getParticipant(pid)
+        t.subscribe { Assertions.assertEquals(it.name, tp.name) }
+        t.block()
     }
 
     @Test
     fun addParticipant() {
         coEvery {
             participantDao.addParticipant(tp)
-        } returns tp
-        val p = participantService.addParticipant(tp)
-        Assertions.assertEquals(p.name, tp.name)
+        } returns Mono.just(tp)
+        val t = participantService.addParticipant(tp)
+        t.subscribe { Assertions.assertEquals(it.name, tp.name) }
+        t.block()
     }
 
     @Test
     fun getFriends() {
         coEvery {
             friendDao.getFriends(pid)
-        } returns tfl
+        } returns Mono.just(tfl)
         coEvery {
             cacheDao.get<List<FriendModel>>(pid, any())
         } returns friendDao.getFriends(pid)
-        val f = participantService.getFriends(pid)
-        Assertions.assertEquals(f.size, tfl.size)
-        Assertions.assertEquals(f.first().to, tfl.first().to)
+        val t = participantService.getFriends(pid)
+        t.subscribe {
+            Assertions.assertEquals(it.size, tfl.size)
+            Assertions.assertEquals(it.first().to, tfl.first().to)
+        }
+        t.block()
     }
 
     @Test
     fun addFriend() {
         coEvery {
             friendDao.addFriend(pid, tf)
-        } returns tf
-        val f = participantService.addFriend(pid, tf)
-        Assertions.assertEquals(f.from, tf.from)
-        Assertions.assertEquals(f.to, tf.to)
+        } returns Mono.just(tf)
+        val t = participantService.addFriend(pid, tf)
+        t.subscribe {
+            Assertions.assertEquals(it.from, tf.from)
+            Assertions.assertEquals(it.to, tf.to)
+        }
+        t.block()
     }
 
     @Test
@@ -118,7 +123,7 @@ class NewsfeedApplicationTests {
         } returns tob
         coEvery {
             friendDao.getFriends(pid)
-        } returns tfl
+        } returns Mono.just(tfl)
         val ob = participantService.addOutbound(pid, tob)
         coVerify {
             inboundDao.addInbound(pid, any())

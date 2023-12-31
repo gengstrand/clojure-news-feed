@@ -29,34 +29,29 @@ class ParticipantController(private val participantService: ParticipantService) 
     fun getParticipant(request: ServerRequest): Mono<ServerResponse> {
         val id = request.pathVariable("id").toLongOrNull()
         if (id == null) return ServerResponse.badRequest().body(fromValue("invalid id"))
-        val rv = participantService.getParticipant(id)
-        if (rv == null) return ServerResponse.notFound().build()
-        return ServerResponse.ok().body(fromValue(rv))
+        return participantService.getParticipant(id)
+            .flatMap { ServerResponse.ok().body(fromValue(it)) }
     }
 
     fun addParticipant(request: ServerRequest): Mono<ServerResponse> {
         return request.bodyToMono(ParticipantModel::class.java)
-            .flatMap {
-                val p = participantService.addParticipant(it)
-                ServerResponse.ok().body(fromValue(p))
-            }
+            .flatMap { participantService.addParticipant(it) }
+            .flatMap { ServerResponse.ok().body(fromValue(it)) }
     }
 
     fun getFriends(request: ServerRequest): Mono<ServerResponse> {
         val id = request.pathVariable("id").toLongOrNull()
         if (id == null) return ServerResponse.badRequest().body(fromValue("invalid id"))
-        val rv = participantService.getFriends(id)
-        return ServerResponse.ok().body(fromValue(rv))
+        return participantService.getFriends(id)
+            .flatMap { ServerResponse.ok().body(fromValue(it)) }
     }
 
     fun addFriend(request: ServerRequest): Mono<ServerResponse> {
         val id = request.pathVariable("id").toLongOrNull()
         if (id == null) return ServerResponse.badRequest().body(fromValue("invalid id"))
         return request.bodyToMono(FriendModel::class.java)
-            .flatMap {
-                val f = participantService.addFriend(id, it)
-                ServerResponse.ok().body(fromValue(f))
-            }
+            .flatMap { participantService.addFriend(id, it) }
+            .flatMap { ServerResponse.ok().body(fromValue(it)) }
     }
 
     fun getInbound(request: ServerRequest): Mono<ServerResponse> {

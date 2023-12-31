@@ -2,7 +2,7 @@ package info.glennengstrand.newsfeed.models
 
 import kotlin.text.Regex
 
-data class ParticipantModel(val id: Long, val name: String) {
+data class ParticipantModel(val id: Long?, val name: String) {
     val link: String
         get() = "/participant/$id"
 
