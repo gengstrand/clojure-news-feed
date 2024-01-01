@@ -32,12 +32,14 @@ class ParticipantService(
     class ParticipantCachable(val dao: ParticipantDao) : Cachable<ParticipantModel> {
         val gson = Gson()
 
-        override fun parse(value: Mono<String>): Mono<ParticipantModel> {
-            return value.map { gson.fromJson(it, ParticipantModel::class.java) }
+        override fun key(id: Long): String = "Participant::$id"
+
+        override fun parse(value: String): ParticipantModel {
+            return gson.fromJson(value, ParticipantModel::class.java)
         }
 
-        override fun format(value: Mono<ParticipantModel>): Mono<String> {
-            return value.map { gson.toJson(it) }
+        override fun format(value: ParticipantModel): String {
+            return gson.toJson(value)
         }
 
         override fun read(id: Long): Mono<ParticipantModel> {
@@ -49,12 +51,14 @@ class ParticipantService(
         val gson = Gson()
         val friendListType = object : TypeToken<List<FriendModel>>() {}.type
 
-        override fun parse(value: Mono<String>): Mono<List<FriendModel>> {
-            return value.map { gson.fromJson(it, friendListType) }
+        override fun key(id: Long): String = "Friends::$id"
+
+        override fun parse(value: String): List<FriendModel> {
+            return gson.fromJson(value, friendListType)
         }
 
-        override fun format(value: Mono<List<FriendModel>>): Mono<String> {
-            return value.map { gson.toJson(it) }
+        override fun format(value: List<FriendModel>): String {
+            return gson.toJson(value)
         }
 
         override fun read(id: Long): Mono<List<FriendModel>> {
