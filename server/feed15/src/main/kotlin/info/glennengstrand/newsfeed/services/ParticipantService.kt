@@ -88,18 +88,18 @@ class ParticipantService(
         return friendDao.addFriend(id, f)
     }
 
-    fun getInbound(id: Long): List<InboundModel> {
+    fun getInbound(id: Long): Mono<List<InboundModel>> {
         return inboundDao.getInbound(id)
     }
 
-    fun getOutbound(id: Long): List<OutboundModel> {
+    fun getOutbound(id: Long): Mono<List<OutboundModel>> {
         return outboundDao.getOutbound(id)
     }
 
     fun addOutbound(
         id: Long,
         ob: OutboundModel,
-    ): OutboundModel {
+    ): Mono<OutboundModel> {
         val n = LocalDate.now().format(fmt)
         friendDao.getFriends(id).subscribe {
             it.forEach {

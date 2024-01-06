@@ -100,38 +100,47 @@ class NewsfeedApplicationTests {
     fun getInbound() {
         coEvery {
             inboundDao.getInbound(pid)
-        } returns tib
+        } returns Mono.just(tib)
         val ib = participantService.getInbound(pid)
-        Assertions.assertEquals(ib.size, tib.size)
-        Assertions.assertEquals(ib.first().subject, tib.first().subject)
+        ib.subscribe {
+            Assertions.assertEquals(it.size, tib.size)
+            Assertions.assertEquals(it.first().subject, tib.first().subject)
+        }
+        ib.block()
     }
 
     @Test
     fun getOutbound() {
         coEvery {
             outboundDao.getOutbound(pid)
-        } returns tobl
+        } returns Mono.just(tobl)
         val ob = participantService.getOutbound(pid)
-        Assertions.assertEquals(ob.size, tobl.size)
-        Assertions.assertEquals(ob.first().subject, tob.subject)
+        ob.subscribe {
+            Assertions.assertEquals(it.size, tobl.size)
+            Assertions.assertEquals(it.first().subject, tob.subject)
+        }
+        ob.block()
     }
 
     @Test
     fun addOutbound() {
         coEvery {
             outboundDao.addOutbound(pid, tob)
-        } returns tob
+        } returns Mono.just(tob)
         coEvery {
             friendDao.getFriends(pid)
         } returns Mono.just(tfl)
         val ob = participantService.addOutbound(pid, tob)
+        ob.subscribe {
+            Assertions.assertEquals(it.subject, tob.subject)
+        }
+        ob.block()
         coVerify {
             inboundDao.addInbound(pid, any())
         }
         coVerify {
             searchDao.indexStory(pid, any())
         }
-        Assertions.assertEquals(ob.subject, tob.subject)
     }
 
     @Test

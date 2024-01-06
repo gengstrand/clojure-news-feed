@@ -32,6 +32,3 @@ Start looking at these.
 
 [elasticsearch](https://github.com/jillesvangurp/kt-search)
 
-[cassandra](https://docs.datastax.com/en/developer/java-driver/4.17/manual/mapper/config/kotlin/)
-
-Just use jedis for accessing redis.
