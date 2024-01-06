@@ -32,9 +32,9 @@ dependencies {
     implementation("ch.qos.logback:logback-classic")
     implementation("com.google.code.gson:gson:2.10.1")
     implementation("redis.clients:jedis:3.2.0")
-    implementation("com.datastax.oss:java-driver-core:4.5.1")
-    implementation("com.datastax.oss:java-driver-query-builder:4.5.1")
-    implementation("com.datastax.oss:java-driver-mapper-runtime:4.5.1")
+    implementation("com.datastax.oss:java-driver-core:4.17.0")
+    implementation("com.datastax.oss:java-driver-query-builder:4.17.0")
+    implementation("com.datastax.oss:java-driver-mapper-runtime:4.17.0")
     testImplementation("org.springframework.boot:spring-boot-starter-test") {
         exclude(group = "org.mockito", module = "mockito-core")
     }

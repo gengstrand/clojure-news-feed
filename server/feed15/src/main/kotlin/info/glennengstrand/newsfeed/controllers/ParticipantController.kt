@@ -57,24 +57,22 @@ class ParticipantController(private val participantService: ParticipantService) 
     fun getInbound(request: ServerRequest): Mono<ServerResponse> {
         val id = request.pathVariable("id").toLongOrNull()
         if (id == null) return ServerResponse.badRequest().body(fromValue("invalid id"))
-        val rv = participantService.getInbound(id)
-        return ServerResponse.ok().body(fromValue(rv))
+        return participantService.getInbound(id)
+            .flatMap { ServerResponse.ok().body(fromValue(it)) }
     }
 
     fun getOutbound(request: ServerRequest): Mono<ServerResponse> {
         val id = request.pathVariable("id").toLongOrNull()
         if (id == null) return ServerResponse.badRequest().body(fromValue("invalid id"))
-        val rv = participantService.getOutbound(id)
-        return ServerResponse.ok().body(fromValue(rv))
+        return participantService.getOutbound(id)
+            .flatMap { ServerResponse.ok().body(fromValue(it)) }
     }
 
     fun addOutbound(request: ServerRequest): Mono<ServerResponse> {
         val id = request.pathVariable("id").toLongOrNull()
         if (id == null) return ServerResponse.badRequest().body(fromValue("invalid id"))
         return request.bodyToMono(OutboundModel::class.java)
-            .flatMap {
-                val ob = participantService.addOutbound(id, it)
-                ServerResponse.ok().body(fromValue(ob))
-            }
+            .flatMap { participantService.addOutbound(id, it) }
+            .flatMap { ServerResponse.ok().body(fromValue(it)) }
     }
 }

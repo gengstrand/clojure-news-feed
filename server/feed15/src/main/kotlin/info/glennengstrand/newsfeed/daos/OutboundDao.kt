@@ -8,13 +8,11 @@ import info.glennengstrand.newsfeed.models.ParticipantModel
 import mu.KotlinLogging
 import org.springframework.stereotype.Component
 import reactor.core.publisher.Mono
-import java.time.format.DateTimeFormatter
 import java.util.concurrent.CompletableFuture
 
 @Component
 class OutboundDao {
     private val n = NoSqlDao()
-    private val f = DateTimeFormatter.ofPattern("yyyy-MM-dd")
     private val logger = KotlinLogging.logger {}
     private val selectCql = """select toTimestamp(occurred) as occurred, subject, story 
     from Outbound where participantid = ? order by occurred desc"""
@@ -38,14 +36,14 @@ class OutboundDao {
         val from = ParticipantModel(id, "").link
         return Mono.fromFuture {
             CompletableFuture.supplyAsync<List<OutboundModel>> {
-                val bs = selectStatement.bind(id)
+                val bs = selectStatement.bind(id.toInt())
                 val rs = session.execute(bs)
                 val rv = mutableListOf<OutboundModel>()
                 rs.forEach {
                     rv.add(
                         OutboundModel(
                             from,
-                            f.format(it.getInstant(0)),
+                            n.format(it.getInstant(0)),
                             it.getString(1)!!,
                             it.getString(2)!!,
                         ),
@@ -58,15 +56,15 @@ class OutboundDao {
 
     fun addOutbound(
         id: Long,
-        ib: OutboundModel,
+        ob: OutboundModel,
     ): Mono<OutboundModel> {
         val bs =
             insertStatement.bind(
-                id,
-                ib.subject,
-                ib.story,
+                id.toInt(),
+                ob.subject,
+                ob.story,
             )
         session.executeAsync(bs)
-        return Mono.just(ib)
+        return Mono.just(ob)
     }
 }
