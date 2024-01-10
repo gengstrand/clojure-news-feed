@@ -20,7 +20,7 @@ class OutboundController(private val outboundService: OutboundService) {
     fun searchOutbound(request: ServerRequest): Mono<ServerResponse> {
         val keywords = request.queryParam("keywords")
         if (keywords.isEmpty()) return ServerResponse.badRequest().body(fromValue("keywords missing"))
-        val rv = outboundService.searchOutbound(keywords.get())
-        return ServerResponse.ok().body(fromValue(rv))
+        val rv: Mono<List<String>> = outboundService.searchOutbound(keywords.get())
+        return rv.flatMap { ServerResponse.ok().body(fromValue(it)) }
     }
 }

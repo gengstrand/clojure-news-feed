@@ -147,9 +147,12 @@ class NewsfeedApplicationTests {
     fun searchOutbound() {
         coEvery {
             searchDao.searchOutbound(any())
-        } returns listOf(pid)
+        } returns Mono.just(listOf(pid))
         val t = outboundService.searchOutbound("test")
-        Assertions.assertEquals(t.size, 1)
-        Assertions.assertEquals(t.first(), ParticipantModel(pid, "").link)
+        t.subscribe {
+            Assertions.assertEquals(it.size, 1)
+            Assertions.assertEquals(it.first(), ParticipantModel(pid, "").link)
+        }
+        t.block()
     }
 }
