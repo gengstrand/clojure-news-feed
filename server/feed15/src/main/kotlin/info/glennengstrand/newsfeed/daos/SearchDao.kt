@@ -2,6 +2,8 @@ package info.glennengstrand.newsfeed.daos
 
 import com.google.gson.Gson
 import com.google.gson.reflect.TypeToken
+import kotlinx.coroutines.launch
+import kotlinx.coroutines.runBlocking
 import mu.KotlinLogging
 import org.springframework.http.MediaType
 import org.springframework.stereotype.Component
@@ -39,7 +41,7 @@ class SearchDao {
                     h2.filter { it.containsKey("_source") }
                         .map { it["_source"] as Map<String, Any> }
                         .filter { it.containsKey("sender") }
-                        .map { it["sender"] as Long },
+                        .map { (it["sender"] as Double).toLong() },
                 )
             } else {
                 logger.error("inner hits missing from es response")
@@ -56,11 +58,18 @@ class SearchDao {
     ) {
         logger.info("indexing $story for participant $id")
         val d = SearchDoc(id, story)
-        esClient.put()
-            .uri("/feed/stories/${d.id}")
-            .contentType(MediaType.APPLICATION_JSON)
-            .body(fromValue(d))
-            .retrieve()
+        runBlocking {
+            launch {
+                esClient.put()
+                    .uri("/feed/stories/${d.id}")
+                    .contentType(MediaType.APPLICATION_JSON)
+                    .body(fromValue(d))
+                    .retrieve()
+                    .toEntity(String::class.java)
+                    .block()
+            }
+        }
+        return
     }
 
     fun searchOutbound(keywords: String): Mono<List<Long>> {
