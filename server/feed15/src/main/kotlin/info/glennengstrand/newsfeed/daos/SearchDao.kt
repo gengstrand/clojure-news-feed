@@ -17,13 +17,13 @@ import kotlin.random.Random
 
 @Component
 class SearchDao {
-    @Value("es.pool.core")
+    @Value("\${es.pool.core}")
     private var corePoolSize: Int = 3
 
-    @Value("es.pool.max")
+    @Value("\${es.pool.max}")
     private var maxPoolSize: Int = 5
 
-    @Value("es.pool.min")
+    @Value("\${es.pool.min}")
     private var minPoolSize: Int = 2
 
     private val logger = KotlinLogging.logger {}

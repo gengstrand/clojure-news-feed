@@ -13,13 +13,13 @@ import java.util.concurrent.TimeUnit
 
 @Component
 class NoSqlDao {
-    @Value("cql.pool.core")
+    @Value("\${cql.pool.core}")
     private var corePoolSize: Int = 10
 
-    @Value("cql.pool.max")
+    @Value("\${cql.pool.max}")
     private var maxPoolSize: Int = 15
 
-    @Value("cql.pool.min")
+    @Value("\${cql.pool.min}")
     private var minPoolSize: Int = 5
 
     private val noSqlHost = System.getenv("NOSQL_HOST") ?: "localhost"
