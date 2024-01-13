@@ -92,12 +92,10 @@ class SearchDao {
                 .toEntity(String::class.java)
                 .block()
         }
-        logger.info("indexing $story for participant $id")
         CompletableFuture.runAsync(::upsert, pool)
     }
 
     fun searchOutbound(keywords: String): Mono<List<Long>> {
-        logger.info("searching for $keywords")
         return esClient.get()
             .uri { uriBuilder ->
                 uriBuilder
