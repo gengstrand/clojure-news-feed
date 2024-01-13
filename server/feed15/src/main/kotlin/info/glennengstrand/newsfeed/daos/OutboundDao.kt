@@ -11,8 +11,9 @@ import reactor.core.publisher.Mono
 import java.util.concurrent.CompletableFuture
 
 @Component
-class OutboundDao {
-    private val n = NoSqlDao()
+class OutboundDao(
+    private val n: NoSqlDao,
+) {
     private val logger = KotlinLogging.logger {}
     private val selectCql = """select toTimestamp(occurred) as occurred, subject, story 
     from Outbound where participantid = ? order by occurred desc"""
@@ -34,23 +35,25 @@ class OutboundDao {
 
     fun getOutbound(id: Long): Mono<List<OutboundModel>> {
         val from = ParticipantModel(id, "").link
-        return Mono.fromFuture {
-            CompletableFuture.supplyAsync<List<OutboundModel>> {
-                val bs = selectStatement.bind(id.toInt())
-                val rs = session.execute(bs)
-                val rv = mutableListOf<OutboundModel>()
-                rs.forEach {
-                    rv.add(
-                        OutboundModel(
-                            from,
-                            n.format(it.getInstant(0)),
-                            it.getString(1)!!,
-                            it.getString(2)!!,
-                        ),
-                    )
-                }
-                rv
+
+        fun fetch(): List<OutboundModel> {
+            val bs = selectStatement.bind(id.toInt())
+            val rs = session.execute(bs)
+            val rv = mutableListOf<OutboundModel>()
+            rs.forEach {
+                rv.add(
+                    OutboundModel(
+                        from,
+                        n.format(it.getInstant(0)),
+                        it.getString(1)!!,
+                        it.getString(2)!!,
+                    ),
+                )
             }
+            return rv
+        }
+        return Mono.fromFuture {
+            CompletableFuture.supplyAsync<List<OutboundModel>>(::fetch, n.pool)
         }
     }
 

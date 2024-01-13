@@ -11,8 +11,9 @@ import reactor.core.publisher.Mono
 import java.util.concurrent.CompletableFuture
 
 @Component
-class InboundDao {
-    private val n = NoSqlDao()
+class InboundDao(
+    private val n: NoSqlDao,
+) {
     private val logger = KotlinLogging.logger {}
     private val selectCql = """select toTimestamp(occurred) as occurred, fromparticipantid, subject, story 
     from Inbound where participantid = ? order by occurred desc"""
@@ -34,24 +35,26 @@ class InboundDao {
 
     fun getInbound(id: Long): Mono<List<InboundModel>> {
         val from = ParticipantModel(id, "").link
-        return Mono.fromFuture {
-            CompletableFuture.supplyAsync<List<InboundModel>> {
-                val bs = selectStatement.bind(id.toInt())
-                val rs = session.execute(bs)
-                val rv = mutableListOf<InboundModel>()
-                rs.forEach {
-                    rv.add(
-                        InboundModel(
-                            ParticipantModel(it.getInt(1).toLong(), "").link,
-                            from,
-                            n.format(it.getInstant(0)),
-                            it.getString(2)!!,
-                            it.getString(3)!!,
-                        ),
-                    )
-                }
-                rv
+
+        fun fetch(): List<InboundModel> {
+            val bs = selectStatement.bind(id.toInt())
+            val rs = session.execute(bs)
+            val rv = mutableListOf<InboundModel>()
+            rs.forEach {
+                rv.add(
+                    InboundModel(
+                        ParticipantModel(it.getInt(1).toLong(), "").link,
+                        from,
+                        n.format(it.getInstant(0)),
+                        it.getString(2)!!,
+                        it.getString(3)!!,
+                    ),
+                )
             }
+            return rv
+        }
+        return Mono.fromFuture {
+            CompletableFuture.supplyAsync<List<InboundModel>>(::fetch, n.pool)
         }
     }
 

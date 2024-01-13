@@ -2,24 +2,50 @@ package info.glennengstrand.newsfeed.daos
 
 import com.google.gson.Gson
 import com.google.gson.reflect.TypeToken
-import kotlinx.coroutines.launch
-import kotlinx.coroutines.runBlocking
 import mu.KotlinLogging
+import org.springframework.beans.factory.annotation.Value
 import org.springframework.http.MediaType
 import org.springframework.stereotype.Component
 import org.springframework.web.reactive.function.BodyInserters.fromValue
 import org.springframework.web.reactive.function.client.WebClient
 import reactor.core.publisher.Mono
 import java.time.Instant
+import java.util.concurrent.CompletableFuture
+import java.util.concurrent.ForkJoinPool
+import java.util.concurrent.TimeUnit
 import kotlin.random.Random
 
 @Component
 class SearchDao {
+    @Value("es.pool.core")
+    private var corePoolSize: Int = 3
+
+    @Value("es.pool.max")
+    private var maxPoolSize: Int = 5
+
+    @Value("es.pool.min")
+    private var minPoolSize: Int = 2
+
     private val logger = KotlinLogging.logger {}
     private val gson = Gson()
     private val esRespType = object : TypeToken<Map<String, Any>>() {}.type
     private val esHost = System.getenv("SEARCH_HOST") ?: "localhost"
     private val esClient = WebClient.create("http://$esHost:9200")
+
+    public val pool: ForkJoinPool by lazy {
+        ForkJoinPool(
+            Runtime.getRuntime().availableProcessors(),
+            ForkJoinPool.defaultForkJoinWorkerThreadFactory,
+            null,
+            true,
+            corePoolSize,
+            maxPoolSize,
+            minPoolSize,
+            null,
+            60,
+            TimeUnit.SECONDS,
+        )
+    }
 
     data class SearchDoc(val sender: Long, val story: String) {
         val id: String
@@ -56,20 +82,18 @@ class SearchDao {
         id: Long,
         story: String,
     ) {
-        logger.info("indexing $story for participant $id")
-        val d = SearchDoc(id, story)
-        runBlocking {
-            launch {
-                esClient.put()
-                    .uri("/feed/stories/${d.id}")
-                    .contentType(MediaType.APPLICATION_JSON)
-                    .body(fromValue(d))
-                    .retrieve()
-                    .toEntity(String::class.java)
-                    .block()
-            }
+        fun upsert() {
+            val d = SearchDoc(id, story)
+            esClient.put()
+                .uri("/feed/stories/${d.id}")
+                .contentType(MediaType.APPLICATION_JSON)
+                .body(fromValue(d))
+                .retrieve()
+                .toEntity(String::class.java)
+                .block()
         }
-        return
+        logger.info("indexing $story for participant $id")
+        CompletableFuture.runAsync(::upsert, pool)
     }
 
     fun searchOutbound(keywords: String): Mono<List<Long>> {
