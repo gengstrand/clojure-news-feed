@@ -11,22 +11,29 @@ public class FriendDao : MySqlDao, IFriendDao
     public async Task<Friend> CreateFriendAsync(string id, Friend friend)
     {
         var otherId = id == friend.From ? friend.To : friend.From;
-        MySqlDataReader reader = await MySqlHelper.ExecuteReaderAsync(ConnectionString, "call UpsertFriends(@from, @to);", CancellationToken.None, new MySqlParameter[] { new("@from", MySqlDbType.Int32) { Value = int.Parse(id) }, new("@to", MySqlDbType.Int32) { Value = int.Parse(otherId) } }); 
+        using MySqlConnection connection = new MySqlConnection(ConnectionString);
+        await connection.OpenAsync();
+        MySqlDataReader reader = await MySqlHelper.ExecuteReaderAsync(connection, "call UpsertFriends(@from, @to);", CancellationToken.None, new MySqlParameter[] { new("@from", MySqlDbType.Int32) { Value = int.Parse(id) }, new("@to", MySqlDbType.Int32) { Value = int.Parse(otherId) } }); 
+        Friend rv = friend;
         while (reader.Read())
         {
-            return new Friend(reader.GetString(0), id, otherId);
+            rv = new Friend(reader.GetString(0), id, otherId);
         }
-        return friend;
+        reader.Close();
+        return rv;
     }
 
     public async Task<IEnumerable<Friend>> GetFriendsAsync(string id)
     {
-        MySqlDataReader reader = await MySqlHelper.ExecuteReaderAsync(ConnectionString, "call FetchFriends(@id);", CancellationToken.None, new MySqlParameter[] { new MySqlParameter("@id", MySqlDbType.Int32) { Value = int.Parse(id) } }); 
+        using MySqlConnection connection = new MySqlConnection(ConnectionString);
+        await connection.OpenAsync();
+        MySqlDataReader reader = await MySqlHelper.ExecuteReaderAsync(connection, "call FetchFriends(@id);", CancellationToken.None, new MySqlParameter[] { new MySqlParameter("@id", MySqlDbType.Int32) { Value = int.Parse(id) } }); 
         List<Friend> rv = new();
         while (reader.Read())
         {
             rv.Add(new Friend(reader.GetString(0), id, reader.GetString(1)));
         }
+        reader.Close();
         return rv;
     }
 }

@@ -10,21 +10,29 @@ public class ParticipantDao : MySqlDao, IParticipantDao
 
     public async Task<Participant> CreateParticipantAsync(Participant participant)
     {
-        MySqlDataReader reader = await MySqlHelper.ExecuteReaderAsync(ConnectionString, "call UpsertParticipant(@moniker);", CancellationToken.None, new MySqlParameter[] { new MySqlParameter("@moniker", MySqlDbType.String) { Value = participant.Name } }); 
+        using MySqlConnection connection = new MySqlConnection(ConnectionString);
+        await connection.OpenAsync();
+        MySqlDataReader reader = await MySqlHelper.ExecuteReaderAsync(connection, "call UpsertParticipant(@moniker);", CancellationToken.None, new MySqlParameter[] { new MySqlParameter("@moniker", MySqlDbType.String) { Value = participant.Name } });
+        Participant rv = participant;
         while (reader.Read())
         {
-            return new Participant(reader.GetString(0), participant.Name);
+            rv = new Participant(reader.GetString(0), participant.Name);
         }
-        return participant;
+        reader.Close();
+        return rv;
     }
 
     public async Task<Participant?> GetParticipantAsync(string id)
     {
-        MySqlDataReader reader = await MySqlHelper.ExecuteReaderAsync(ConnectionString, "call FetchParticipant(@id);", CancellationToken.None, new MySqlParameter[] { new MySqlParameter("@id", MySqlDbType.Int32) { Value = int.Parse(id) } }); 
+        using MySqlConnection connection = new MySqlConnection(ConnectionString);
+        await connection.OpenAsync();
+        MySqlDataReader reader = await MySqlHelper.ExecuteReaderAsync(connection, "call FetchParticipant(@id);", CancellationToken.None, new MySqlParameter[] { new MySqlParameter("@id", MySqlDbType.Int32) { Value = int.Parse(id) } }); 
+        Participant? rv = null;
         while (reader.Read())
         {
-            return new Participant(id, reader.GetString(0));
+            rv = new Participant(id, reader.GetString(0));
         }
-        return null;
+        reader.Close();
+        return rv;
     }
 }

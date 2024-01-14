@@ -13,7 +13,8 @@ Here is how you can use Terraform to provision a GKE cluster suitable for runnin
 Here are the commands to provision the cluster.
 
 ```bash
-gcloud config get-value project
+gcloud auth application-default login
+gcloud config set project PROJECT_ID
 vi terraform.tfvars # set your project_id and possibly default region
 terraform init
 terraform validate
