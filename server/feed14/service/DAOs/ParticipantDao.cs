@@ -10,16 +10,27 @@ public class ParticipantDao : MySqlDao, IParticipantDao
 
     public async Task<Participant> CreateParticipantAsync(Participant participant)
     {
-        using MySqlConnection connection = new MySqlConnection(ConnectionString);
-        await connection.OpenAsync();
-        MySqlDataReader reader = await MySqlHelper.ExecuteReaderAsync(connection, "call UpsertParticipant(@moniker);", CancellationToken.None, new MySqlParameter[] { new MySqlParameter("@moniker", MySqlDbType.String) { Value = participant.Name } });
-        Participant rv = participant;
-        while (reader.Read())
+        try
         {
-            rv = new Participant(reader.GetString(0), participant.Name);
+            MySqlConnection connection = new MySqlConnection(ConnectionString);
+            using (connection) {
+                await connection.OpenAsync();
+                MySqlDataReader reader = await MySqlHelper.ExecuteReaderAsync(connection, "call UpsertParticipant(@moniker);", CancellationToken.None, new MySqlParameter[] { new MySqlParameter("@moniker", MySqlDbType.String) { Value = participant.Name } });
+                using (reader) {
+                    Participant rv = participant;
+                    while (reader.Read())
+                    {
+                        rv = new Participant(reader.GetString(0), participant.Name);
+                    }
+                    return rv;
+                }
+            }
         }
-        reader.Close();
-        return rv;
+        catch (Exception e)
+        {
+            logger.LogError(e.ToString());
+            throw;
+        }
     }
 
     public async Task<Participant?> GetParticipantAsync(string id)

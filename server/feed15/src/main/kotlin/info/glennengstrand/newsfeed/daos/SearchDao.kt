@@ -30,8 +30,15 @@ class SearchDao {
     private val gson = Gson()
     private val esRespType = object : TypeToken<Map<String, Any>>() {}.type
     private val esHost = System.getenv("SEARCH_HOST") ?: "localhost"
-    private val esClient = WebClient.create("http://$esHost:9200")
-
+    private val esClient =
+        WebClient.builder()
+            .baseUrl("http://$esHost:9200")
+            .codecs { configurer ->
+                configurer
+                    .defaultCodecs()
+                    .maxInMemorySize(2 * 1024 * 1024)
+            }
+            .build()
     public val pool: ForkJoinPool by lazy {
         ForkJoinPool(
             Runtime.getRuntime().availableProcessors(),
@@ -96,12 +103,13 @@ class SearchDao {
     }
 
     fun searchOutbound(keywords: String): Mono<List<Long>> {
-        return esClient.get()
+        return esClient
+            .get()
             .uri { uriBuilder ->
                 uriBuilder
                     .path("/feed/_search")
                     .queryParam("q", keywords)
-                    .queryParam("size", 1000)
+                    .queryParam("size", 200)
                     .build()
             }
             .retrieve()
