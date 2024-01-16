@@ -31,7 +31,7 @@ public class SearchDao : ISearchDao
     public async Task<bool> IndexAsync(string id, string sender, string story)
     {
         SearchDocument s = new(id, long.Parse(sender), story);
-	var request = new StringContent(JsonSerializer.Serialize(s, jo), System.Text.Encoding.UTF8, "application/json");
+	    var request = new StringContent(JsonSerializer.Serialize(s, jo), System.Text.Encoding.UTF8, "application/json");
         var r = client.PutAsync($"feed/stories/{id}", request).Result;
         return r.IsSuccessStatusCode;
     }

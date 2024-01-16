@@ -38,9 +38,7 @@ public class ParticipantControllerUnitTests
         friendDaoMock.Setup(f => f.GetFriendsAsync(It.IsAny<string>())).ReturnsAsync(new List<Friend>() { friend });
         friendDaoMock.Setup(f => f.CreateFriendAsync(It.IsAny<string>(), It.IsAny<Friend>())).ReturnsAsync(friend);
         outboundDaoMock.Setup(o => o.GetOutboundAsync(It.IsAny<string>())).ReturnsAsync(new List<Outbound>() { outbound });
-        outboundDaoMock.Setup(o => o.CreateOutboundAsync(It.IsAny<string>(), It.IsAny<Outbound>())).ReturnsAsync(outbound);
         inboundDaoMock.Setup(i => i.GetInboundAsync(It.IsAny<string>())).ReturnsAsync(new List<Inbound>() { inbound });
-        inboundDaoMock.Setup(i => i.CreateInboundAsync(It.IsAny<string>(), It.IsAny<Inbound>())).ReturnsAsync(inbound);
         cacheDaoMock.Setup(c => c.GetValueAsync("Participant::1")).ReturnsAsync(ps);
         cacheDaoMock.Setup(c => c.GetValueAsync("Friend::1")).ReturnsAsync(fs);
         cacheDaoMock.Setup(c => c.SetValueAsync(It.IsAny<string>(), It.IsAny<string>())).ReturnsAsync(true);

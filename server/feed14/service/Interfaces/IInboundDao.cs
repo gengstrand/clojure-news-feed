@@ -5,5 +5,5 @@ namespace newsfeed.Interfaces;
 
 public interface IInboundDao {
     Task<IEnumerable<Inbound>> GetInboundAsync(string id);
-    Task<Outbound> CreateInboundAsync(string id, Inbound inbound);
+    void CreateInboundAsync(string id, Inbound inbound);
 }

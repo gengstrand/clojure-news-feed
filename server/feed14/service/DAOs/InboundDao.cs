@@ -37,11 +37,10 @@ public class InboundDao : CassandraDao, IInboundDao
         }
     }
 
-    public async Task<Outbound> CreateInboundAsync(string id, Inbound inbound)
+    public void CreateInboundAsync(string id, Inbound inbound)
     {
         var s = Upsert.Bind(int.Parse(inbound.To), int.Parse(id), inbound.Subject, inbound.Story);
-        var rs = await CassandraSession.ExecuteAsync(s);
-        return new Inbound(id, inbound.To, new DateOnly().ToString(), inbound.Subject, inbound.Story);
+        CassandraSession.ExecuteAsync(s);
     }
 
     public async Task<IEnumerable<Inbound>> GetInboundAsync(string id)
@@ -49,10 +48,10 @@ public class InboundDao : CassandraDao, IInboundDao
         var s = Select.Bind(int.Parse(id));
         var rs = await CassandraSession.ExecuteAsync(s);
         List<Inbound> rv = new();
-	var rows = rs.GetRows().ToList();
+        var rows = rs.GetRows().ToList();
         foreach (var row in rows) {
-	    int fid = row.GetValue<int>("fromparticipantid");
-	    DateOnly occurred = DateOnly.FromDateTime(row.GetValue<DateTime>("occurred"));
+            int fid = row.GetValue<int>("fromparticipantid");
+            DateOnly occurred = DateOnly.FromDateTime(row.GetValue<DateTime>("occurred"));
             rv.Add(new Inbound(fid.ToString(), id, occurred.ToString(), row.GetValue<string>("subject"), row.GetValue<string>("story")));
         }
         return rv;

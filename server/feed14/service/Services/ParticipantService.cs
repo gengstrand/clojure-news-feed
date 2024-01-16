@@ -35,18 +35,18 @@ public class ParticipantService : IParticipantService
 
     public async Task<Outbound> CreateOutbound(string id, Outbound outbound)
     {
-        var r =  await _outboundDao.CreateOutboundAsync(id, outbound);
+        _outboundDao.CreateOutboundAsync(id, outbound);
         var friends = await _friendDao.GetFriendsAsync(id);
         if (friends != null) {
             var d = new DateOnly().ToString();
             foreach(Friend f in friends) {
                 var t = f.From == id ? f.To : f.From;
                 var i = new Inbound(id, t, d, outbound.Subject, outbound.Story);
-                await _inboundDao.CreateInboundAsync(id, i);
+                _inboundDao.CreateInboundAsync(id, i);
             }
         }
-        await _searchDao.IndexAsync(Guid.NewGuid().ToString(), outbound.From, outbound.Story);
-        return r;
+        _searchDao.IndexAsync(Guid.NewGuid().ToString(), outbound.From, outbound.Story);
+        return outbound;
     }    
 
     public async Task<Participant> CreateParticipant(Participant participant)
