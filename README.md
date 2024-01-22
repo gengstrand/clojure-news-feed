@@ -4,7 +4,7 @@ Part of what I do as a Software Architect is to evaluate and recommend various t
 
 When I decide to learn more about a particular technology or programming language, I use it to build a rudimentary news feed microservice. I document the developer experience. I subject it to various load tests whose performance is measured. Finally, I collect those measurements and analyze them. Since each news feed implementation has feature parity, I can blog about how the technology under evaluation compares to the other technologies previously implemented here.
 
-All of the code written by me in these evaluations is open source and is available here in this repository. Here is how it is organized.
+All of the code written in these evaluations is open source and is available here in this repository. Here is how it is organized.
 
 ## by the numbers
 
@@ -16,9 +16,9 @@ Here is the average duration in milliseconds of that same load.
 
 <img src="feedavgduration.png" width="949" />
 
-This repo currently has the source for about two dozen buildable artifacts using 48 different file types.
+This repo currently has the source for about two dozen buildable artifacts using 52 different file types. This chart shows the number of files for the top half most used types, their average lines of code per file with the standard deviation.
 
-<img src="files-by-type.png" width="1200" />
+<img src="files-by-type.png" width="959" />
 
 ## server
 
@@ -247,7 +247,7 @@ https://glennengstrand.info/software/architecture/ml/oss
 
 ## License
 
-Copyright © 2013 - 2023 Glenn Engstrand
+Copyright © 2013 - 2024 Glenn Engstrand
 
 Distributed under the Eclipse Public License
 
