@@ -1,0 +1,28 @@
+{
+  "queryType": "timeseries",
+  "dataSource": "feed",
+  "granularity": "minute",
+  "descending": "false",
+  "filter": {
+    "type": "and",
+    "fields": [
+      { "type": "selector", "dimension": "entity", "value": "outbound" },
+      { "type": "selector", "dimension": "feed", "value": "14" }
+    ]
+  },
+  "aggregations": [
+      { "type": "count", "name": "count" },
+      { "type": "longSum", "name": "rpm_sum", "fieldName": "rpm" },
+  ],
+  "postAggregations" : [
+      { "type"  : "arithmetic",
+        "name"  : "rpm_outbound",
+        "fn"    : "/",
+        "fields": [
+          { "type" : "fieldAccess", "name": "rpm_sum", "fieldName" : "rpm_sum" },
+          { "type" : "fieldAccess", "name": "count", "fieldName" : "count" }
+        ]
+      }
+  ],
+  "intervals": [ "2024-01-17T03:17:00.000/2024-01-17T05:18:01.000" ]
+}

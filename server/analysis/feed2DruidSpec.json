@@ -1,0 +1,73 @@
+{
+    "type": "index_parallel",
+    "spec": {
+        "ioConfig": {
+            "type": "index_parallel",
+            "inputSource": {
+                "type": "http",
+                "uris": [
+                    "https://glennengstrand.info/assets/media/feed2.json.gz"
+                ]
+            },
+            "inputFormat": {
+                "type": "json"
+            },
+            "appendToExisting": true
+        },
+        "tuningConfig": {
+            "type": "index_parallel",
+            "partitionsSpec": {
+                "type": "dynamic"
+            }
+        },
+        "dataSchema": {
+            "dataSource": "feed",
+            "granularitySpec": {
+                "type": "uniform",
+                "queryGranularity": "MINUTE",
+                "rollup": true,
+                "segmentGranularity": "HOUR"
+            },
+            "timestampSpec": {
+                "column": "ts",
+                "format": "iso"
+            },
+            "dimensionsSpec": {
+                "dimensions": [
+                    "cloud",
+                    "entity",
+                    "operation",
+                    {
+                        "type": "string",
+                        "name": "status"
+                    },
+                    {
+                        "type": "string",
+                        "name": "feed"
+                    }
+                ]
+            },
+            "metricsSpec": [
+                {
+                    "name": "rpm",
+                    "type": "count"
+                },
+                {
+                    "name": "sum_duration",
+                    "type": "longSum",
+                    "fieldName": "duration"
+                },
+                {
+                    "name": "max_duration",
+                    "type": "longMax",
+                    "fieldName": "duration"
+                },
+                {
+                    "name": "quantile_duration",
+                    "type": "quantilesDoublesSketch",
+                    "fieldName": "duration"
+                }
+            ]
+        }
+    }
+}

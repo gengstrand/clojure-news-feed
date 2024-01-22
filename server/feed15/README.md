@@ -1,4 +1,8 @@
-# Getting Started
+# news feed written in Kotlin on Spring Web-Flux
+
+This graph shows the RPM of the create requests of the various entities during the load test on GKE.
+
+<img src="feed15throughput.png" width="1270" />
 
 ### Reference Documentation
 For further reference, please consider the following sections:

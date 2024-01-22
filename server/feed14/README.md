@@ -21,3 +21,8 @@ dotnet test
 cd ../service
 dotnet run
 ```
+
+This graph shows the RPM of the create requests of the various entities during the load test on GKE.
+
+<img src="feed14throughput.png" width="1270" />
+

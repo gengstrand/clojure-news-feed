@@ -38,4 +38,7 @@ With Spring boot you can switch out the underlying servlet engine. Here are the 
  
 The above benchmark numbers were run with the default Hikari connection pool size of 10. I ran the load test with a pool size of 18 (because that is the pool size for the [dropwizard version](https://github.com/gengstrand/clojure-news-feed/tree/master/server/feed3) of the news feed microservice) but the throughput was one third of what you see here and the latency was double.
 
+This graph shows the RPM of the create requests of the various entities during the load test on GKE.
+
+<img src="feed8throughput.png" width="1266" />
 
