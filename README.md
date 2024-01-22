@@ -170,6 +170,8 @@ cd path/to/local/druid
 cd path/to/this/repo
 curl -X 'POST' -H 'Content-Type:application/json' -d @server/feedDruidSpec.json http://localhost:8081/druid/indexer/v1/task
 # wait a bit
+curl -X 'POST' -H 'Content-Type:application/json' -d @server/feed2DruidSpec.json http://localhost:8081/druid/indexer/v1/task
+# wait a bit
 cd path/to/local/druid
 ./bin/dsql
 select cloud, feed, avg(rpm) as rpm, sum(sum_duration) / sum(rpm) as avg_duration, 

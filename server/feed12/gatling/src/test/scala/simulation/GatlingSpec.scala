@@ -24,9 +24,9 @@ class GatlingSpec extends Simulation {
       "{\"from\":\"" + fid + "\",\"to\":\"" + tid + "\"}"
   }
   def createNewsItemBody(fid: String): String = {
-      "{\"from\":\"" + fid + "\",\"subject\":\"testing\",\"story\":\"load test\"}"
+      "{\"from\":\"" + fid + "\",\"occurred\":\"2024-01-20\",\"subject\":\"testing\",\"story\":\"load test\"}"
   }
-  val httpConf: HttpProtocolBuilder = http.baseUrl("http://localhost:9000")
+  val httpConf: HttpProtocolBuilder = http.baseUrl("http://localhost:8080")
 
   val createParticipantReq = repeat(rpt) {
       exec(http("create-participant").post("/participant").header(HttpHeaderNames.ContentType, HttpHeaderValues.ApplicationJson).body(StringBody("{\"name\":\"test\"}")).check(status.is(200)))
