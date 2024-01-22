@@ -43,7 +43,9 @@ ggplot(raw, aes(x = feed, y = p95, fill = entity)) + geom_bar(position = "dodge"
 
 sca_raw <- read_csv("count-file-types.csv")
 
-sca <- filter(sca_raw, count > 10) %>% gather(metric, count, -type)
+sca <- filter(sca_raw, count > 10) %>%
+       filter(std_loc < 1000) %>%
+       gather(metric, count, -type)
 
 ggplot(sca, aes(x = type, y = count, group=metric, fill=metric)) + geom_bar(stat = "identity")
 
