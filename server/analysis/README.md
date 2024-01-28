@@ -2,7 +2,7 @@
 
 There is a [jupyter notebook](https://github.com/gengstrand/clojure-news-feed/blob/master/server/analysis/fc.ipynb) which explores an attempt to quantify code complexity in the various implementations. It is quite inconclusive.
 
-There is an Apache Druid [injection spec](https://github.com/gengstrand/clojure-news-feed/blob/master/server/feedDruidSpec.json) in which you can explore the performance data that I have collected from the various implementations. This example assumes that you have installed Druid locally.
+There are a couple of Apache Druid [injection spec 1](https://github.com/gengstrand/clojure-news-feed/blob/master/server/analysis/feedDruidSpec.json) and [injection spec 2](https://github.com/gengstrand/clojure-news-feed/blob/master/server/analysis/feed2DruidSpec.json) in which you can explore the performance data that I have collected from the various implementations. This example assumes that you have installed Druid locally and have an appropriate version of both Java and Python installed.
 
 ```
 cd path/to/local/druid
@@ -13,6 +13,7 @@ curl -X 'POST' -H 'Content-Type:application/json' -d @server/analysis/feedDruidS
 # wait a bit
 curl -X 'POST' -H 'Content-Type:application/json' -d @server/analysis/feed2DruidSpec.json http://localhost:8081/druid/indexer/v1/task
 # wait a bit
+# you can also monitor the status of the ingestion at http://localhost:8888/
 cd path/to/local/druid
 ./bin/dsql
 select cloud, feed, avg(rpm) as rpm, sum(sum_duration) / sum(rpm) as avg_duration, 
@@ -51,3 +52,5 @@ order by feed, cloud;
 └───────┴──────┴───────┴──────────────┴──────┴──────┴──────┴──────────────┘
 Retrieved 18 rows in 3.95s.
 ```
+
+There are some native Druid queries for collecting the time series data for the load test runs for feeds 8, 14, and 15 on GKE. The query output is also here as CSV files. The analyze.r file has some sample R programming language scripts for analyzing and graphing the data using the tidyverse packages. There is also a python script static.py for collecting the static code analysis.

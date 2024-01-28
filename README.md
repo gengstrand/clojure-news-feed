@@ -4,8 +4,6 @@ Part of what I do as a Software Architect is to evaluate and recommend various t
 
 When I decide to learn more about a particular technology or programming language, I use it to build a rudimentary news feed microservice. I document the developer experience. I subject it to various load tests whose performance is measured. Finally, I collect those measurements and analyze them. Since each news feed implementation has feature parity, I can blog about how the technology under evaluation compares to the other technologies previously implemented here.
 
-All of the code written in these evaluations is open source and is available here in this repository. Here is how it is organized.
-
 ## by the numbers
 
 Here is a graphical summary of the average Requests Per Minute throughput, broken down by implementation, for creating the different entities that occur during the load test run in GKE.
@@ -20,13 +18,15 @@ This repo currently has the source for about two dozen buildable artifacts using
 
 <img src="files-by-type.png" width="959" />
 
+All of the code written in these evaluations is open source and is available here in this repository. This code is intended to serve in an educational capacity only. This is not production quality code. As of the time of this writing, there are 16 high severity vulnerabilities identified by dependabot and the MySql password appears in the code in plain text 33 times. The resulting build artifacts have not been evaluated in a production level environment. Here is how it is organized.
+
 ## server
 
 These components are expected to be run on the server(s).
 
 ### feed 15 (Kotlin on Spring Web-Flux)
 
-news feed microservice written in Kotlin on Spring Web-Flux reactive framework.
+news feed microservice written in Kotlin on the Spring Web-Flux reactive framework.
 
 ### feed 14 (CSharp on ASP.NET)
 
@@ -177,7 +177,7 @@ The proxy service has been enhanced to be able to make performance data availabl
 
 ### analysis
 
-This folder contains various assets used to analyze the performance data and generate the various graphs.
+This folder contains various assets used to analyze the performance data and generate the various graphs near the top of this README.
 
 ## client
 
