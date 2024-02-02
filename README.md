@@ -185,7 +185,25 @@ These applications are expected to be run on the client(s).
 
 ### load
 
-This Clojure application is what I used to load test the feed web service on public clouds.
+This Clojure application is what I used to load test the feed web service on public clouds. It also has an integration test mode.
+
+### react
+
+A single page web application for the news feed service written in Typescript on React.
+
+https://glennengstrand.info/software/architecture/ionic/react/flutter
+
+### mobile/feed
+
+A cross OS mobile platform GUI for the news feed microservice that uses the Ionic Framework.
+
+https://glennengstrand.info/software/architecture/ionic/react/flutter
+
+### flutter
+
+A cross OS platform GUI for the news feed microservice written in Flutter.
+
+https://glennengstrand.info/software/architecture/ionic/react/flutter
 
 ### offline analysis
 
@@ -218,24 +236,6 @@ A microservice written in Java with the vert.x framework. It is intended to be c
 ### perf5
 
 A CLI tool that queries either elastic search or solr performance statistics and writes out per time period metrics to the console.
-
-### react
-
-A single page web application for the news feed service written in Typescript on React.
-
-https://glennengstrand.info/software/architecture/ionic/react/flutter
-
-### mobile/feed
-
-A cross OS mobile platform GUI for the news feed microservice that uses the Ionic Framework.
-
-https://glennengstrand.info/software/architecture/ionic/react/flutter
-
-### flutter
-
-A cross OS platform GUI for the news feed microservice written in Flutter.
-
-https://glennengstrand.info/software/architecture/ionic/react/flutter
 
 ### ml
 
