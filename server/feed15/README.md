@@ -1,38 +1,16 @@
 # news feed written in Kotlin on Spring Web-Flux
 
+The dockerfile is multi-stage which both builds the uber jar and runs it.
+
+```
+docker build -t feed815:1.0 .
+```
+
 This graph shows the RPM of the create requests of the various entities during the load test on GKE.
 
 <img src="feed15throughput.png" width="1270" />
 
-### Reference Documentation
-For further reference, please consider the following sections:
+Here is a screenshot from JDK Mission Control displaying a Java Flight Recorder session of feed 15 when run locally under the Gatling load test from feed 12.
 
-* [Official Gradle documentation](https://docs.gradle.org)
-* [Spring Boot Gradle Plugin Reference Guide](https://docs.spring.io/spring-boot/docs/3.2.0/gradle-plugin/reference/html/)
-* [Create an OCI image](https://docs.spring.io/spring-boot/docs/3.2.0/gradle-plugin/reference/html/#build-image)
-* [Coroutines section of the Spring Framework Documentation](https://docs.spring.io/spring/docs/6.1.1/spring-framework-reference/languages.html#coroutines)
-* [Spring Data R2DBC](https://docs.spring.io/spring-boot/docs/3.2.0/reference/htmlsingle/index.html#data.sql.r2dbc)
-* [Spring Reactive Web](https://docs.spring.io/spring-boot/docs/3.2.0/reference/htmlsingle/index.html#web.reactive)
-
-### Guides
-The following guides illustrate how to use some features concretely:
-
-* [Accessing data with R2DBC](https://spring.io/guides/gs/accessing-data-r2dbc/)
-* [Building a Reactive RESTful Web Service](https://spring.io/guides/gs/reactive-rest-service/)
-
-### Additional Links
-These additional references should also help you:
-
-* [Gradle Build Scans – insights for your project's build](https://scans.gradle.com#gradle)
-* [R2DBC Homepage](https://r2dbc.io)
-
-## Missing R2DBC Driver
-
-Make sure to include a [R2DBC Driver](https://r2dbc.io/drivers/) to connect to your database.
-
-## Other drivers
-
-Start looking at these.
-
-[elasticsearch](https://github.com/jillesvangurp/kt-search)
+<img src="feed15profiler.png" width="1027" />
 

@@ -42,3 +42,6 @@ This graph shows the RPM of the create requests of the various entities during t
 
 <img src="feed8throughput.png" width="1266" />
 
+Here is a screenshot from JDK Mission Control displaying a Java Flight Recorder session of feed 8 when run locally under the Gatling load test from feed 12.
+
+<img src="feed8profiler.png" width="1027" />
