@@ -136,7 +136,12 @@ class NewsfeedApplicationTests {
         }
         ob.block()
         coVerify {
-            inboundDao.addInbound(pid, any())
+            inboundDao.addInbound(
+                pid,
+                withArg {
+                    Assertions.assertEquals(it.from, "/participant/1")
+                }
+            )
         }
         coVerify {
             searchDao.indexStory(pid, any())
