@@ -28,9 +28,13 @@ These components are expected to be run on the server(s).
 
 news feed microservice written in Kotlin on the Spring Web-Flux reactive framework.
 
+https://glennengstrand.info/software/coding/csharp/kotlin
+
 ### feed 14 (CSharp on ASP.NET)
 
 news feed microservice written in C# on the modern post-Balmer DotNet framework.
+
+https://glennengstrand.info/software/coding/csharp/kotlin
 
 ### feed 13 (Clojure on Donkey)
 

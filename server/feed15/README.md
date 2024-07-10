@@ -1,5 +1,7 @@
 # news feed written in Kotlin on Spring Web-Flux
 
+You can read more about this project on the [C# vs Kotlin](https://glennengstrand.info/software/coding/csharp/kotlin) blog.
+
 The dockerfile is multi-stage which both builds the uber jar and runs it.
 
 ```

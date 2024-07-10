@@ -1,5 +1,7 @@
 # news feed in C# on ASP.NET
 
+You can read more about this project on the [C# vs Kotlin](https://glennengstrand.info/software/coding/csharp/kotlin) blog.
+
 local dev setup
 
 ```bash
