@@ -44,19 +44,19 @@ public class SearchDao : ISearchDao
             var d = await resp.Content.ReadAsStringAsync();
             var jd = JsonSerializer.Deserialize<Dictionary<string, object>>(d);
             if (jd != null) {
-	        foreach(KeyValuePair<string, object> kvp in jd) {
-		    if (kvp.Key == "hits") {
-		       var oh = (JsonElement)kvp.Value;
-		       var ih = oh.GetProperty("hits");
-		       foreach(var ihi in ih.EnumerateArray()) {
-		          var ihsrc = ihi.GetProperty("_source");
-			  var ihsnd = ihsrc.GetProperty("sender");
-		          var ihsv = ihsnd.GetInt32();
-		          rv.Add(ihsv.ToString());
-		       }
-		    }
-		}
-	    }
+                foreach(KeyValuePair<string, object> kvp in jd) {
+                    if (kvp.Key == "hits") {
+                        var oh = (JsonElement)kvp.Value;
+                        var ih = oh.GetProperty("hits");
+                        foreach(var ihi in ih.EnumerateArray()) {
+                            var ihsrc = ihi.GetProperty("_source");
+                            var ihsnd = ihsrc.GetProperty("sender");
+                            var ihsv = ihsnd.GetInt32();
+                            rv.Add(ihsv.ToString());
+                        }
+                    }
+                }
+            }
         }
         return rv;
     }
