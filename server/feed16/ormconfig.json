@@ -1,0 +1,28 @@
+{
+    "type": "mysql",
+    "host": "mysql",
+    "port": 3306,
+    "username": "feed",
+    "password": "feed1234",
+    "database": "feed",
+    "synchronize": false,
+    "logging": false,
+    "extra": {
+       "connectionLimit": 18
+    }, 
+    "entities": [
+       "src/entity/**/*.ts"
+    ],
+    "migrations": [
+       "src/migration/**/*.ts"
+    ],
+    "subscribers": [
+       "src/subscriber/**/*.ts"
+    ],
+    "cli": {
+       "entitiesDir": "src/entity",
+       "migrationsDir": "src/migration",
+       "subscribersDir": "src/subscriber"
+    }
+}
+ 
