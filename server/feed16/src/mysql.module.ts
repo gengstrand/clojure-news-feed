@@ -8,7 +8,7 @@ import { Participant } from './entity/participant';
   imports: [
     TypeOrmModule.forRoot({
       type: 'mysql',
-      host: 'mysql',
+      host: process.env["MYSQL_HOST"],
       port: 3306,
       username: 'feed',
       password: 'feed1234',

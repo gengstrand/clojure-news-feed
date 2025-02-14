@@ -1,19 +1,32 @@
-import { Injectable, , Inject, NotFoundException } from '@nestjs/common';
+import { Injectable, Inject, NotFoundException } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
 import { Participant } from '../entity/participant';
 import { Friend } from '../entity/friend';
-import { Inbound, Outbound } from './participant.controller';
 import { Repository } from 'typeorm';
 import { CACHE_MANAGER } from '@nestjs/cache-manager';
 import { Cache } from 'cache-manager';
 import { SearchService, SearchDocument } from '../search.service';
 
-import { Client } from 'cassandra-driver'
+import { Client, types } from 'cassandra-driver'
 
 export class CassandraRepository {
    protected nosqlClient: Client
-   constructor(nosqlClient: Client) {
-      this.nosqlClient = nosqlClient
+   constructor() {
+      const distance = types.distance
+      const cassandraHost: string = process.env["NOSQL_HOST"] ?? 'localhost'
+      const ks: string = process.env["NOSQL_KEYSPACE"] ?? 'activity'
+      this.nosqlClient = new Client({
+        contactPoints: [ cassandraHost ],
+        localDataCenter: 'datacenter1',
+        keyspace: ks,
+        pooling: {
+           coreConnectionsPerHost: {
+              [distance.local]: 4,
+              [distance.remote]: 2
+           } 
+        }
+      })
+      this.nosqlClient.connect()
    }
 }
 
@@ -27,8 +40,8 @@ export class OutboundModel {
 
 @Injectable()
 export class OutboundService extends CassandraRepository {
-  constructor(nosqlClient: Client) {
-     super(nosqlClient)
+  constructor() {
+     super()
   }
   public async get(id: number): Promise<OutboundModel[]> {
      const np = new ParticipantModel(id, '');
@@ -53,16 +66,16 @@ export class InboundModel extends OutboundModel{
 }
 
 export class InboundService extends CassandraRepository {
-  constructor(nosqlClient: Client) {
-     super(nosqlClient)
+  constructor() {
+     super()
   }
   public async get(id: number): Promise<InboundModel[]> {
      const query = 'select toTimestamp(occurred) as occurred, fromparticipantid, subject, story from Inbound where participantid = ? order by occurred desc'
 
      const results = await this.nosqlClient.execute(query, [id], {prepare: true})
      return results.rows.map((row) => {
-        const fp = new p.ParticipantModel(row.fromparticipantid, '')
-        const tp = new p.ParticipantModel(id, '')
+        const fp = new ParticipantModel(row.fromparticipantid, '')
+        const tp = new ParticipantModel(id, '')
         return new InboundModel(fp, tp, row.occurred, row.subject, row.story)
      })
   }
@@ -91,7 +104,6 @@ export class ParticipantService {
     private readonly participantRepository: Repository<Participant>,
     @InjectRepository(Friend)
     private readonly friendRepository: Repository<Friend>,
-    private readonly inboundRepository: Repository<Inbound>,
     private readonly outboundService: OutboundService,
     private readonly inboundService: InboundService,
     @Inject(CACHE_MANAGER) private cacheManager: Cache,

@@ -9,7 +9,19 @@ describe('ParticipantApiController', () => {
     const app: TestingModule = await Test.createTestingModule({
       controllers: [ParticipantApiController],
       providers: [ParticipantService],
-    }).compile();
+    })
+    .useMocker((token) => {
+      if (token === ParticipantService) {
+        return {
+          getParticipant: jest.fn((id: number) => new Participant(id, 'Hello World!')),
+          addFriend: jest.fn((id: number, fm: any) => fm),
+          getFriends: jest.fn((id: number) => []),
+          getOutbound: jest.fn((id: number) => []),
+          getInbound: jest.fn((id: number) => []),
+        };
+      }
+    })
+    .compile();
 
     appController = app.get<ParticipantApiController>(ParticipantApiController);
   });

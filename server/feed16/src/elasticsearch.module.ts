@@ -7,7 +7,7 @@ import { SearchService } from './search.service';
   imports: [
     ElasticsearchModule.registerAsync({
       useFactory: () => ({
-        node: 'http://localhost:9200',
+        node: `http://${process.env["SEARCH_HOST"]}:9200`,
         maxRetries: 10,
         requestTimeout: 60000,
         pingTimeout: 60000,
