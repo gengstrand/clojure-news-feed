@@ -10,7 +10,7 @@
                 useFactory: async () => {
                     const store = await redisStore({
                         socket: {  
-                            host: process.env["REDIS_HOST"],  
+                            host: process.env["REDIS_HOST"] ?? 'localhost',  
                             port: 6379,  
                           }
                     });
