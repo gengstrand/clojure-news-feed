@@ -13,7 +13,7 @@ export class Participant {
     public readonly name: string
   ) {}
 
-  accessor link = "/participant/".concat(this.id.toString());
+  accessor link = `/participant/${this.id}`;
 }
 
 export class Inbound {

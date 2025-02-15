@@ -30,6 +30,7 @@
 
 ```bash
 $ npm install
+nvm use 22.13.1
 ```
 
 ## Compile and run the project

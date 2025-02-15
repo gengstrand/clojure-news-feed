@@ -89,11 +89,17 @@ export class InboundService extends CassandraRepository {
 export class ParticipantModel {
   constructor(public readonly id: number, public readonly moniker: string) {
   }
-  accessor link = "/participant/".concat(this.id.toString());
+  accessor link = `/participant/${this.id}`;
+  public toString(): string {
+    return JSON.stringify(this);
+  }
 }
 
 export class FriendModel {
   constructor(public readonly id: number, public readonly from: ParticipantModel, public readonly to: ParticipantModel) {
+  }
+  public toString(): string {
+    return JSON.stringify(this);
   }
 }
 
