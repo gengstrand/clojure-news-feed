@@ -1,6 +1,6 @@
 import { Controller, Get, Post, Body, Param } from '@nestjs/common';
 import { ParticipantService, FriendModel, ParticipantModel, OutboundModel, InboundModel } from './participant.service';
-import { ApiTags, ApiOperation, ApiResponse, ApiParam } from '@nestjs/swagger';
+import { ApiTags, ApiOperation, ApiResponse } from '@nestjs/swagger';
 
 export class Friend {
   constructor(public readonly id: number, public readonly from: string, public readonly to: string) {
