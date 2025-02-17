@@ -26,6 +26,8 @@
 
 [Nest](https://github.com/nestjs/nest) framework TypeScript starter repository.
 
+Take a look at [nestjs-cluster](https://github.com/danudenny/nestjs-cluster) which is another starter project template that uses node cluster.
+
 ## Project setup
 
 ```bash

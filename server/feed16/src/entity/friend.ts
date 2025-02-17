@@ -1,6 +1,8 @@
-import { Entity, Column, PrimaryGeneratedColumn } from 'typeorm';
+import { Entity, Column, PrimaryGeneratedColumn, Repository } from 'typeorm';
 
-@Entity()
+export class FriendRepository extends Repository<Friend> {}
+
+@Entity('Friends')
 export class Friend {
   @PrimaryGeneratedColumn('increment', { name: 'FriendsID' })
   friendsId: number;

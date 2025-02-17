@@ -106,9 +106,9 @@ export class FriendModel {
 @Injectable()
 export class ParticipantService {
   constructor(
-    @InjectRepository(Participant)
+    @Inject('PARTICIPANT_REPOSITORY')
     private readonly participantRepository: Repository<Participant>,
-    @InjectRepository(Friend)
+    @Inject('FRIEND_REPOSITORY')
     private readonly friendRepository: Repository<Friend>,
     private readonly outboundService: OutboundService,
     private readonly inboundService: InboundService,
