@@ -8,14 +8,18 @@ export class OutboundApiController {
   constructor(private readonly outboundService: OutboundService) {}
 
   @Get()
-  @ApiOperation({ summary: 'Retrieve participants who posted stories containing these keywords' })
+  @ApiOperation({
+    summary:
+      'Retrieve participants who posted stories containing these keywords',
+  })
   @ApiResponse({
     status: 200,
     description: 'Successful operation',
     type: [String],
   })
-  public async searchOutbound(@Query('keywords') keywords: string): Promise<string[]> {
+  public async searchOutbound(
+    @Query('keywords') keywords: string,
+  ): Promise<string[]> {
     return await this.outboundService.searchOutbound(keywords);
   }
-
 }

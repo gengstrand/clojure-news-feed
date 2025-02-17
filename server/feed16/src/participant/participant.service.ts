@@ -1,5 +1,4 @@
 import { Injectable, Inject, NotFoundException } from '@nestjs/common';
-import { InjectRepository } from '@nestjs/typeorm';
 import { Participant } from '../entity/participant';
 import { Friend } from '../entity/friend';
 import { Repository } from 'typeorm';
@@ -7,88 +6,109 @@ import { CACHE_MANAGER } from '@nestjs/cache-manager';
 import { Cache } from 'cache-manager';
 import { SearchService, SearchDocument } from '../search.service';
 
-import { Client, types } from 'cassandra-driver'
+import { Client, types } from 'cassandra-driver';
 
 export class CassandraRepository {
-   protected nosqlClient: Client
-   constructor() {
-      const distance = types.distance
-      const cassandraHost: string = process.env["NOSQL_HOST"] ?? 'localhost'
-      const ks: string = process.env["NOSQL_KEYSPACE"] ?? 'activity'
-      this.nosqlClient = new Client({
-        contactPoints: [ cassandraHost ],
-        localDataCenter: 'datacenter1',
-        keyspace: ks,
-        pooling: {
-           coreConnectionsPerHost: {
-              [distance.local]: 4,
-              [distance.remote]: 2
-           } 
-        }
-      })
-      this.nosqlClient.connect()
-   }
+  protected nosqlClient: Client;
+  constructor() {
+    const distance = types.distance;
+    const cassandraHost: string = process.env['NOSQL_HOST'] ?? 'localhost';
+    const ks: string = process.env['NOSQL_KEYSPACE'] ?? 'activity';
+    this.nosqlClient = new Client({
+      contactPoints: [cassandraHost],
+      localDataCenter: 'datacenter1',
+      keyspace: ks,
+      pooling: {
+        coreConnectionsPerHost: {
+          [distance.local]: 4,
+          [distance.remote]: 2,
+        },
+      },
+    });
+    this.nosqlClient.connect();
+  }
 }
 
 export class OutboundModel {
-  constructor(public readonly from: ParticipantModel, 
-    public readonly occurred: Date, 
-    public readonly subject: string, 
-    public readonly story: string) {
-    }
+  constructor(
+    public readonly from: ParticipantModel,
+    public readonly occurred: Date,
+    public readonly subject: string,
+    public readonly story: string,
+  ) {}
 }
 
 @Injectable()
 export class OutboundService extends CassandraRepository {
   constructor() {
-     super()
+    super();
   }
   public async get(id: number): Promise<OutboundModel[]> {
-     const np = new ParticipantModel(id, '');
-     const query = 'select toTimestamp(occurred) as occurred, subject, story from Outbound where participantid = ? order by occurred desc';
-     const results = await this.nosqlClient.execute(query, [id], {prepare: true});
-     return results.rows.map((row) => {
-        return new OutboundModel(np, row.occurred, row.subject, row.story);
-     })
+    const np = new ParticipantModel(id, '');
+    const query =
+      'select toTimestamp(occurred) as occurred, subject, story from Outbound where participantid = ? order by occurred desc';
+    const results = await this.nosqlClient.execute(query, [id], {
+      prepare: true,
+    });
+    return results.rows.map((row) => {
+      return new OutboundModel(np, row.occurred, row.subject, row.story);
+    });
   }
-  
+
   public async save(o: OutboundModel): Promise<OutboundModel> {
-     const cql = 'insert into Outbound (ParticipantID, Occurred, Subject, Story) values (?, now(), ?, ?)';
-     this.nosqlClient.execute(cql, [o.from.id, o.subject, o.story], {prepare: true});
-     return o;
+    const cql =
+      'insert into Outbound (ParticipantID, Occurred, Subject, Story) values (?, now(), ?, ?)';
+    await this.nosqlClient.execute(cql, [o.from.id, o.subject, o.story], {
+      prepare: true,
+    });
+    return o;
   }
 }
 
-export class InboundModel extends OutboundModel{
-  constructor(from: ParticipantModel, public readonly to: ParticipantModel, occurred: Date, subject: string, story: string) {
-     super(from, occurred, subject, story)
+export class InboundModel extends OutboundModel {
+  constructor(
+    from: ParticipantModel,
+    public readonly to: ParticipantModel,
+    occurred: Date,
+    subject: string,
+    story: string,
+  ) {
+    super(from, occurred, subject, story);
   }
 }
 
 export class InboundService extends CassandraRepository {
   constructor() {
-     super()
+    super();
   }
   public async get(id: number): Promise<InboundModel[]> {
-     const query = 'select toTimestamp(occurred) as occurred, fromparticipantid, subject, story from Inbound where participantid = ? order by occurred desc'
+    const query =
+      'select toTimestamp(occurred) as occurred, fromparticipantid, subject, story from Inbound where participantid = ? order by occurred desc';
 
-     const results = await this.nosqlClient.execute(query, [id], {prepare: true})
-     return results.rows.map((row) => {
-        const fp = new ParticipantModel(row.fromparticipantid, '')
-        const tp = new ParticipantModel(id, '')
-        return new InboundModel(fp, tp, row.occurred, row.subject, row.story)
-     })
+    const results = await this.nosqlClient.execute(query, [id], {
+      prepare: true,
+    });
+    return results.rows.map((row) => {
+      const fp = new ParticipantModel(row.fromparticipantid, '');
+      const tp = new ParticipantModel(id, '');
+      return new InboundModel(fp, tp, row.occurred, row.subject, row.story);
+    });
   }
   public async save(i: InboundModel): Promise<InboundModel> {
-     const cql = 'insert into Inbound (ParticipantID, FromParticipantID, Occurred, Subject, Story) values (?, ?, now(), ?, ?)';
-     this.nosqlClient.execute(cql, [i.to.id, i.from.id, i.subject, i.story], {prepare: true})
-     return i
+    const cql =
+      'insert into Inbound (ParticipantID, FromParticipantID, Occurred, Subject, Story) values (?, ?, now(), ?, ?)';
+    this.nosqlClient.execute(cql, [i.to.id, i.from.id, i.subject, i.story], {
+      prepare: true,
+    });
+    return i;
   }
 }
 
 export class ParticipantModel {
-  constructor(public readonly id: number, public readonly moniker: string) {
-  }
+  constructor(
+    public readonly id: number,
+    public readonly moniker: string,
+  ) {}
   accessor link = `/participant/${this.id}`;
   public toString(): string {
     return JSON.stringify(this);
@@ -96,8 +116,11 @@ export class ParticipantModel {
 }
 
 export class FriendModel {
-  constructor(public readonly id: number, public readonly from: ParticipantModel, public readonly to: ParticipantModel) {
-  }
+  constructor(
+    public readonly id: number,
+    public readonly from: ParticipantModel,
+    public readonly to: ParticipantModel,
+  ) {}
   public toString(): string {
     return JSON.stringify(this);
   }
@@ -118,9 +141,12 @@ export class ParticipantService {
 
   async addParticipant(body: ParticipantModel): Promise<ParticipantModel> {
     const participant = new Participant();
-    participant.moniker = body.moniker
+    participant.moniker = body.moniker;
     const savedParticipant = await this.participantRepository.save(participant);
-    return new ParticipantModel(savedParticipant.participantId, savedParticipant.moniker);
+    return new ParticipantModel(
+      savedParticipant.participantId,
+      savedParticipant.moniker,
+    );
   }
 
   async getInbound(id: number): Promise<InboundModel[]> {
@@ -129,15 +155,21 @@ export class ParticipantService {
 
   async getParticipant(id: number): Promise<ParticipantModel> {
     const cacheKey = `participant:${id}`;
-    const cachedParticipant = await this.cacheManager.get<ParticipantModel>(cacheKey);
+    const cachedParticipant =
+      await this.cacheManager.get<ParticipantModel>(cacheKey);
     if (cachedParticipant) {
       return cachedParticipant;
     }
-    const participant = await this.participantRepository.findOneBy({ participantId: id });
+    const participant = await this.participantRepository.findOneBy({
+      participantId: id,
+    });
     if (!participant) {
       throw new NotFoundException(`Participant ${id} not found`);
     }
-    const rv = new ParticipantModel(participant.participantId, participant.moniker);
+    const rv = new ParticipantModel(
+      participant.participantId,
+      participant.moniker,
+    );
     this.cacheManager.set(cacheKey, rv);
     return rv;
   }
@@ -159,14 +191,18 @@ export class ParticipantService {
     }
     const friends = await this.friendRepository
       .createQueryBuilder('friend')
-      .where('friend.fromParticipantId = :id OR friend.toParticipantId = :id', { id })
+      .where('friend.fromParticipantId = :id OR friend.toParticipantId = :id', {
+        id,
+      })
       .getMany();
-    const rv = friends.map((f) => (
-      new FriendModel(
-        f.friendsId,
-        new ParticipantModel(f.fromParticipantId, ''),
-        new ParticipantModel(f.toParticipantId, ''),
-      )));
+    const rv = friends.map(
+      (f) =>
+        new FriendModel(
+          f.friendsId,
+          new ParticipantModel(f.fromParticipantId, ''),
+          new ParticipantModel(f.toParticipantId, ''),
+        ),
+    );
     this.cacheManager.set(cacheKey, rv);
     return rv;
   }
@@ -175,7 +211,13 @@ export class ParticipantService {
     const savedOutbound = await this.outboundService.save(body);
     const friends = await this.getFriends(id);
     for (const friend of friends) {
-      const im = new InboundModel(body.from, friend.to, body.occurred, body.subject, body.story);
+      const im = new InboundModel(
+        body.from,
+        friend.to,
+        body.occurred,
+        body.subject,
+        body.story,
+      );
       await this.inboundService.save(im);
     }
     const doc = new SearchDocument(id.toString(), body.from.link, body.story);
@@ -184,7 +226,6 @@ export class ParticipantService {
   }
 
   async getOutbound(id: number): Promise<OutboundModel[]> {
-    return await this.outboundService.get(id)
+    return await this.outboundService.get(id);
   }
-
 }

@@ -1,16 +1,24 @@
 import { Controller, Get, Post, Body, Param } from '@nestjs/common';
-import { ParticipantService, FriendModel, ParticipantModel, OutboundModel, InboundModel } from './participant.service';
+import {
+  ParticipantService,
+  FriendModel,
+  ParticipantModel,
+  OutboundModel,
+} from './participant.service';
 import { ApiTags, ApiOperation, ApiResponse } from '@nestjs/swagger';
 
 export class Friend {
-  constructor(public readonly id: number, public readonly from: string, public readonly to: string) {
-  }
+  constructor(
+    public readonly id: number,
+    public readonly from: string,
+    public readonly to: string,
+  ) {}
 }
 
 export class Participant {
   constructor(
     public readonly id: number,
-    public readonly name: string
+    public readonly name: string,
   ) {}
 
   accessor link = `/participant/${this.id}`;
@@ -22,7 +30,7 @@ export class Inbound {
     public readonly to: string,
     public readonly occurred: Date,
     public readonly subject: string,
-    public readonly story: string
+    public readonly story: string,
   ) {}
 }
 
@@ -31,7 +39,7 @@ export class Outbound {
     public readonly from: string,
     public readonly occurred: Date,
     public readonly subject: string,
-    public readonly story: string
+    public readonly story: string,
   ) {}
 }
 
@@ -47,8 +55,15 @@ export class ParticipantApiController {
     description: 'Successful operation',
     type: Friend,
   })
-  public async addFriend(@Param('id') id: number, @Body() body: Friend): Promise<Friend> {
-    const fm = new FriendModel(body.id, new ParticipantModel(parseInt(body.from.split('/').pop() as string), ''), new ParticipantModel(parseInt(body.to.split('/').pop() as string), ''));
+  public async addFriend(
+    @Param('id') id: number,
+    @Body() body: Friend,
+  ): Promise<Friend> {
+    const fm = new FriendModel(
+      body.id,
+      new ParticipantModel(parseInt(body.from.split('/').pop() as string), ''),
+      new ParticipantModel(parseInt(body.to.split('/').pop() as string), ''),
+    );
     const saved = await this.participantApiService.addFriend(id, fm);
     const from = new Participant(saved.from.id, '');
     const to = new Participant(saved.to.id, '');
@@ -62,8 +77,16 @@ export class ParticipantApiController {
     description: 'Successful operation',
     type: Outbound,
   })
-  public async addOutbound(@Param('id') id: number, @Body() body: Outbound): Promise<Outbound> {
-    const om = new OutboundModel(new ParticipantModel(id, ''), body.occurred, body.subject, body.story);
+  public async addOutbound(
+    @Param('id') id: number,
+    @Body() body: Outbound,
+  ): Promise<Outbound> {
+    const om = new OutboundModel(
+      new ParticipantModel(id, ''),
+      body.occurred,
+      body.subject,
+      body.story,
+    );
     await this.participantApiService.addOutbound(id, om);
     return body;
   }
@@ -76,13 +99,15 @@ export class ParticipantApiController {
     type: Participant,
   })
   public async addParticipant(@Body() body: Participant): Promise<Participant> {
-    const pm = new ParticipantModel(body.id, body.name)
+    const pm = new ParticipantModel(body.id, body.name);
     const saved = await this.participantApiService.addParticipant(pm);
     return new Participant(saved.id, saved.moniker);
   }
 
   @Get(':id/friends')
-  @ApiOperation({ summary: 'Retrieve the list of friends for an individual participant' })
+  @ApiOperation({
+    summary: 'Retrieve the list of friends for an individual participant',
+  })
   @ApiResponse({
     status: 200,
     description: 'Successful operation',
@@ -98,7 +123,9 @@ export class ParticipantApiController {
   }
 
   @Get(':id/inbound')
-  @ApiOperation({ summary: 'Retrieve the inbound feed for an individual participant' })
+  @ApiOperation({
+    summary: 'Retrieve the inbound feed for an individual participant',
+  })
   @ApiResponse({
     status: 200,
     description: 'Successful operation',
@@ -114,7 +141,9 @@ export class ParticipantApiController {
   }
 
   @Get(':id/outbound')
-  @ApiOperation({ summary: 'Retrieve the news posted by an individual participant' })
+  @ApiOperation({
+    summary: 'Retrieve the news posted by an individual participant',
+  })
   @ApiResponse({
     status: 200,
     description: 'Successful operation',

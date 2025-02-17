@@ -1,8 +1,21 @@
 import { Test, TestingModule } from '@nestjs/testing';
-import { ParticipantApiController, Participant, Friend, Inbound, Outbound } from './participant.controller';
+import {
+  ParticipantApiController,
+  Participant,
+  Friend,
+  Inbound,
+  Outbound,
+} from './participant.controller';
 import { Friend as FriendEntity } from '../entity/friend';
 import { Participant as ParticipantEntity } from '../entity/participant';
-import { ParticipantService, OutboundService, InboundService, InboundModel, OutboundModel, ParticipantModel } from './participant.service';
+import {
+  ParticipantService,
+  OutboundService,
+  InboundService,
+  InboundModel,
+  OutboundModel,
+  ParticipantModel,
+} from './participant.service';
 import { SearchService } from '../search.service';
 
 describe('ParticipantApiController', () => {
@@ -23,8 +36,19 @@ describe('ParticipantApiController', () => {
     fe.toParticipantId = 2;
     const pm1: ParticipantModel = new ParticipantModel(1, 'Hello World!');
     const pm2: ParticipantModel = new ParticipantModel(2, 'foo bar');
-    const im: InboundModel = new InboundModel(pm1, pm2, nowAsDate, 'test subject', 'test story');
-    const om: OutboundModel = new OutboundModel(pm1, nowAsDate, 'test subject', 'test story');
+    const im: InboundModel = new InboundModel(
+      pm1,
+      pm2,
+      nowAsDate,
+      'test subject',
+      'test story',
+    );
+    const om: OutboundModel = new OutboundModel(
+      pm1,
+      nowAsDate,
+      'test subject',
+      'test story',
+    );
     const app: TestingModule = await Test.createTestingModule({
       imports: [],
       controllers: [ParticipantApiController],
@@ -38,17 +62,17 @@ describe('ParticipantApiController', () => {
           },
         },
         {
-          provide: 'ParticipantRepository',
+          provide: 'PARTICIPANT_REPOSITORY',
           useValue: {
             findOneBy: jest.fn().mockReturnValue(Promise.resolve(pe)),
             save: jest.fn().mockImplementation(() => {
               participantSaved++;
               return Promise.resolve(pe);
-            })
-          }
+            }),
+          },
         },
         {
-          provide: 'FriendRepository',
+          provide: 'FRIEND_REPOSITORY',
           useValue: {
             save: jest.fn().mockImplementation(() => {
               friendSaved++;
@@ -75,7 +99,7 @@ describe('ParticipantApiController', () => {
           useValue: {
             get: jest.fn().mockReturnValue(Promise.resolve([im])),
             save: jest.fn().mockImplementation(() => {
-              inboundSaved++;nowAsDate
+              inboundSaved++;
               return Promise.resolve(im);
             }),
           },
@@ -89,8 +113,7 @@ describe('ParticipantApiController', () => {
         },
         ParticipantService,
       ],
-    })
-    .compile();
+    }).compile();
 
     appController = app.get<ParticipantApiController>(ParticipantApiController);
   });
@@ -105,6 +128,7 @@ describe('ParticipantApiController', () => {
       const p: Participant = new Participant(1, 'Hello World!');
       const t: Participant | undefined = await appController?.addParticipant(p);
       expect(participantSaved).toBeGreaterThan(0);
+      expect(t).toStrictEqual(p);
     });
   });
   describe('friend', () => {
@@ -145,9 +169,12 @@ describe('ParticipantApiController', () => {
     });
     it('add should call underlying repository add', async () => {
       const p1: Participant = new Participant(1, 'Hello World!');
-      const p2: Participant = new Participant(2, 'foo bar');
-      const f: Friend = new Friend(1, p1.link, p2.link);
-      const o: Outbound = new Outbound(p1.link, nowAsDate, 'test subject', 'test story');
+      const o: Outbound = new Outbound(
+        p1.link,
+        nowAsDate,
+        'test subject',
+        'test story',
+      );
       const t: Outbound | undefined = await appController?.addOutbound(1, o);
       expect(outboundSaved).toBeGreaterThan(0);
       expect(inboundSaved).toBeGreaterThan(0);
