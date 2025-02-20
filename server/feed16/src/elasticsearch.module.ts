@@ -12,11 +12,8 @@ import { SearchService } from './search.service';
         maxRetries: 10,
         requestTimeout: 60000,
         pingTimeout: 60000,
-        sniffOnStart: true,
-        auth: {
-          username: 'elastic',
-          password: 'elastic',
-        },
+        sniffOnStart: false,
+	sniffInterval: false,
       }),
     }),
   ],

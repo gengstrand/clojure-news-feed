@@ -32,12 +32,49 @@ spec:
         name: elasticsearch
     spec:
       containers:
-      - env:
-        image: "elasticsearch:{{ .Values.elasticSearchVersion }}"
-        name: elasticsearch
+      - name: elasticsearch
         ports:
         - containerPort: 9200
           hostIP: 127.0.0.1
+      {{- if hasPrefix "8." .Values.elasticSearchVersion }}
+        image: "docker.elastic.co/elasticsearch/elasticsearch:{{ .Values.elasticSearchVersion }}"
+        resources:
+          limits:
+            memory: 1Gi
+        env:
+        - name: "ES_SETTING_NODE_STORE_ALLOW__MMAP"
+          value: "false"
+        - name: "ES_SETTING_XPACK_SECURITY_ENABLED"
+          value: "false"
+        - name: "ES_SETTING_DISCOVERY_TYPE"
+          value: "single-node"
+        lifecycle:
+          postStart:
+            exec:
+              command:
+                - "sh"
+                - "-c"
+                - |
+                  S=$(curl http://localhost:9200/_cat/health | grep green | wc -l)
+                  until [ $S -eq 1 ]
+                  do
+                    sleep 20
+                    S=$(curl http://localhost:9200/_cat/health | grep green | wc -l)
+                  done
+                  curl -X PUT http://localhost:9200/feed -H 'Content-Type: application/json' -d '{
+                      "settings" : {
+                         "number_of_shards" : 1
+                       },
+                         "mappings" : {
+                             "properties" : {
+                               "id" : { "type" : "keyword", "index" : false },
+                               "sender" : { "type" : "keyword", "index" : false },
+                               "story" : { "type" : "text", "index" : true }
+                              }
+                            }
+                       }'
+      {{- else }}
+        image: "elasticsearch:{{ .Values.elasticSearchVersion }}"
         lifecycle:
           postStart:
             exec:
@@ -65,4 +102,5 @@ spec:
                             }
                           }
                        }'
+      {{- end }}
       restartPolicy: Always

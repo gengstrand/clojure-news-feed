@@ -1,7 +1,7 @@
 mysqlVersion: "5.7"
 redisVersion: "3.2"
 cassandraVersion: "2.2"
-elasticSearchVersion: "2.4"
+elasticSearchVersion: "8.15.1"
 loadTest: false
 useIngress: false
 gui: false

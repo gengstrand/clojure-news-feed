@@ -25,6 +25,7 @@ describe('ParticipantApiController', () => {
   let inboundSaved: number = 0;
   let outboundSaved: number = 0;
   const nowAsDate: Date = new Date();
+  const nowAsDateOnly: string = nowAsDate.toISOString().slice(0, 10)
 
   beforeEach(async () => {
     const pe: ParticipantEntity = new ParticipantEntity();
@@ -120,12 +121,12 @@ describe('ParticipantApiController', () => {
 
   describe('participant', () => {
     it('fetch should return mocked entity', async () => {
-      const p: Participant = new Participant(1, 'Hello World!');
+      const p: Participant = new Participant(1, 'Hello World!', '/participant/1');
       const t: Participant | undefined = await appController?.getParticipant(1);
       expect(t).toStrictEqual(p);
     });
     it('add should call underlying repository add', async () => {
-      const p: Participant = new Participant(1, 'Hello World!');
+      const p: Participant = new Participant(1, 'Hello World!', '/participant/1');
       const t: Participant | undefined = await appController?.addParticipant(p);
       expect(participantSaved).toBeGreaterThan(0);
       expect(t).toStrictEqual(p);
@@ -139,8 +140,8 @@ describe('ParticipantApiController', () => {
       expect(t?.[0].to).toBe('/participant/2');
     });
     it('add should call underlying repository add', async () => {
-      const p1: Participant = new Participant(1, 'Hello World!');
-      const p2: Participant = new Participant(2, 'foo bar');
+      const p1: Participant = new Participant(1, 'Hello World!', '/participant/1');
+      const p2: Participant = new Participant(2, 'foo bar', '/participant/2');
       const f: Friend = new Friend(1, p1.link, p2.link);
       const t: Friend | undefined = await appController?.addFriend(1, f);
       expect(friendSaved).toBeGreaterThan(0);
@@ -153,7 +154,7 @@ describe('ParticipantApiController', () => {
       expect(t?.length).toBe(1);
       expect(t?.[0].from).toBe('/participant/1');
       expect(t?.[0].to).toBe('/participant/2');
-      expect(t?.[0].occurred).toStrictEqual(nowAsDate);
+      expect(t?.[0].occurred).toStrictEqual(nowAsDateOnly);
       expect(t?.[0].subject).toBe('test subject');
       expect(t?.[0].story).toBe('test story');
     });
@@ -168,7 +169,7 @@ describe('ParticipantApiController', () => {
       expect(t?.[0].story).toBe('test story');
     });
     it('add should call underlying repository add', async () => {
-      const p1: Participant = new Participant(1, 'Hello World!');
+      const p1: Participant = new Participant(1, 'Hello World!', '/participant/1');
       const o: Outbound = new Outbound(
         p1.link,
         nowAsDate,

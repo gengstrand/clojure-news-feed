@@ -107,7 +107,7 @@ export class InboundService extends CassandraRepository {
 export class ParticipantModel {
   constructor(
     public readonly id: number,
-    public readonly moniker: string,
+    public readonly name: string,
   ) {}
   accessor link = `/participant/${this.id}`;
   public toString(): string {
@@ -141,7 +141,7 @@ export class ParticipantService {
 
   async addParticipant(body: ParticipantModel): Promise<ParticipantModel> {
     const participant = new Participant();
-    participant.moniker = body.moniker;
+    participant.moniker = body.name;
     const savedParticipant = await this.participantRepository.save(participant);
     return new ParticipantModel(
       savedParticipant.participantId,
@@ -154,7 +154,7 @@ export class ParticipantService {
   }
 
   async getParticipant(id: number): Promise<ParticipantModel> {
-    const cacheKey = `participant:${id}`;
+    const cacheKey = 'Participant::' + `${id}`;
     const cachedParticipant =
       await this.cacheManager.get<ParticipantModel>(cacheKey);
     if (cachedParticipant) {
@@ -179,12 +179,13 @@ export class ParticipantService {
     friend.fromParticipantId = id;
     friend.toParticipantId = body.to.id;
     const savedFriend = await this.friendRepository.save(friend);
-    this.cacheManager.del(`friend:${id}`);
+    this.cacheManager.del('Friend::' + `${id}`);
+    this.cacheManager.del('Friend::' + `${body.to.id}`);
     return new FriendModel(savedFriend.friendsId, body.from, body.to);
   }
 
   async getFriends(id: number): Promise<FriendModel[]> {
-    const cacheKey = `friend:${id}`;
+    const cacheKey = 'Friend::' + `${id}`;
     const cachedFriends = await this.cacheManager.get<FriendModel[]>(cacheKey);
     if (cachedFriends) {
       return cachedFriends;
