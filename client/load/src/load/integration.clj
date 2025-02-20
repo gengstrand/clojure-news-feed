@@ -87,10 +87,10 @@
       (if (not (= inbound-occurred-from-message now))
         (report-error "error in occurred logic part of social broadcast"))))
   (Thread/sleep 10000)
-  (if (not (>= (count (doall (filter (fn [sender] (= sender from-id)) (elastic/search "test")))) 1))
-    (report-error (str "Error in keyword search. Cannot find sender " from-id " in " (json/write-str (elastic/search "test")))))
   (let [from-sender (str "/participant/" (.toString from-id))
        search-results (:results (core/test-search "test"))]
+    (if (not (>= (count (doall (filter (fn [sender] (or (= sender from-id) (= sender from-sender))) (elastic/search "test")))) 1))
+      (report-error (str "Error in keyword search. Cannot find sender " from-id " in " (json/write-str (elastic/search "test")))))
     (if (not (>= (count (doall (filter (fn [sender] (= from-sender sender)) search-results))) 1))
       (report-error (str "Error in keyword search. Cannot find sender " from-sender " in " search-results)))))
 

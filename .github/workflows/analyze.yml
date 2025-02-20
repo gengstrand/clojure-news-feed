@@ -31,7 +31,8 @@ jobs:
                    row['count'] = v
                    report.writerow(row)
         shell: python
-      - uses: actions/upload-artifact@v3
+      - uses: actions/upload-artifact@v4
         with:
           name: count-files-type-report
           path: count-file-types.csv
+          overwrite: true
